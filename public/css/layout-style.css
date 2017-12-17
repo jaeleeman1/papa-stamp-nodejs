@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Raleway');
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f4f4f4;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  position: relative;
+}
+
+.wrapper {
+  margin: 0 auto;
+  min-width: 400px;
+  max-width: 920px;
+  position: relative;
+
+}
+
+.top-status-bar {
+  padding: 5px 8px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index:10;
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  background-color: #f4f4f4;
+  color: #555;
+
+  font-size: .65em;
+  font-weight: 900;
+  transform: translate3d(0, 0, 0);
+}
+
+.stamp_icon {
+  width: 30px;
+  height: 30px;
+}
+
+.top-title {
+  font-size: 2em;
+}
+
+.top-description {
+  text-align: center;
+}
+
+.content {
+  margin-top: 20px;
+}
+
+.footer-menu {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 15px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 5px;
+  background-color: #f4f4f4;
+
+  color: #ffffff;
+  z-index: 10;
+}
+
+.footer-menu .menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-around;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: .9em;
+  color: #ffffff;
+  margin-top: 4px;
+}
+
+.footer-menu .icon-wrapper.active {
+  color: #007bff;
+}
+
+.game {
+  content: '\f135';
+}
+
+/* menu icon */
+.custom-icon {
+  background: #666;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 100%;
+  border: 6px solid #fff;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.46);
+  display: table-cell;
+  font-size: 45px;
+  height: 70px;
+  padding: 13px;
+  text-align: center;
+  transition: .5s;
+  vertical-align: middle;
+  width: 70px;
+}
+.custom-icon:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+.fix-editor {
+  display: none;
+}
+.icon-wrapper {
+  display: inline-block;
+}
+
+.img-repeat {
+  margin-left:25px;
+}
+
+
