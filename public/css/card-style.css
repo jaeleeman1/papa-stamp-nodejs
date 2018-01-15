@@ -1,0 +1,416 @@
+
+/**{
+  box-sizing:border-box;
+}
+html, body{
+  width:100%;
+  height:100%;
+}
+body{
+  background: whitesmoke;
+  font-weight: 400;
+  font-size: 2.5em;
+  font-family: 'Raleway', Arial, sans-serif;
+}*/
+
+.my-container{
+    margin-left: 23px;
+}
+
+.container, figure{
+    width: 700px;
+    height: 420px;
+}
+
+.container{
+    position:absolute;
+    perspective:1000px;
+    margin-top:-155px;
+    top:33%;
+}
+
+figure{
+    background: #2e5d5a;
+    color: #fff;
+    backface-visibility: hidden;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.9);
+}
+
+figure.front{
+    transform: rotateY(0deg);
+    z-index: 2;
+}
+
+figure.back,
+.card.flipped{
+    transform: rotateY(180deg);
+}
+
+figure .base-img{
+    width: 100%;
+    position: relative;
+    display: block;
+    min-height: 100%;
+    opacity: 0.7;
+}
+
+.front h2{
+    word-spacing: -0.15em;
+    font-weight: 300;
+    font-size: 1.6em;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    color: #272833;
+    transition: transform 0.35s, color 0.35s;
+    transform: translate3d(0,-50%,0);
+}
+
+.front h2 span {
+    font-weight: bold;
+}
+
+.front h2:after{
+    position: absolute;
+    bottom: -10px;
+    left: 70px;
+    right: 70px;
+    height: 2px;
+    background: #fff;
+    content: '';
+    transition: transform 0.35s;
+    transform: translate3d(-130%,0,0);
+}
+
+.front:hover h2 {
+    color: #fff;
+    -webkit-transform: translate3d(0,-50%,0) translate3d(0,-40px,0);
+    transform: translate3d(0,-50%,0) translate3d(0,-40px,0);
+}
+
+.front:hover h2:after {
+    transform: translate3d(0,0,0);
+}
+
+.front p {
+    letter-spacing: 1px;
+    font-size: 68.5%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 2em;
+    width: 100%;
+    opacity: 0;
+    transform: translate3d(0,10px,0);
+    transition: opacity 0.35s, transform 0.35s;
+}
+
+.back dl{
+    font-family:'Lato', Arial, sans-serif;
+    font-weight:300;
+    bottom:40px;
+    left:40px;
+    position: absolute;
+    opacity: 0;
+    transition: opacity .35s, transform .35s;
+    transition-delay: .85s;
+    transform: translate3d(-40px,0,0);
+}
+
+.card.flipped .back dl {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+}
+
+dl dt{
+    float: left;
+    width: 60px;
+    overflow: hidden;
+    clear: left;
+    text-align: right;
+    font-weight:700;
+}
+
+dl dd{
+    margin-left: 80px;
+    text-align:left;
+}
+
+dl dd:before,
+dl dd:after{
+    display: table;
+    content: " ";
+}
+
+dl dd:after{
+    clear: both;
+}
+
+.front:hover p {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+}
+
+figure a{
+    z-index: 1000;
+    text-indent: 200%;
+    white-space: nowrap;
+    font-size: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 450px) {
+    .container{
+        left: 50%;
+        margin-left:-390px;
+    }
+}
+
+
+
+
+
+/* stamp image */
+.stamp-img{
+    top:-350px;
+    width:80px;
+    border-radius:5px;
+    position:relative;
+    background-color:#ef8080;
+    margin-left:30px;
+}
+
+
+
+
+
+
+/* stamp action */
+.stamp-action{
+    top:-220px;
+    border-radius:5px;
+    position:relative;
+    background-color:#ef8080;
+    -webkit-animation-name: pulse;
+    animation-name: pulse;
+    animation-delay:2.5s;
+    -webkit-animation-delay:0.5s;
+    -webkit-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+    opacity: 0;
+    -webkit-animation-fill-mode:forwards;
+    animation-fill-mode:forwards;
+}
+
+@-webkit-keyframes pulse{
+    0%{
+        opacity: 0;
+    }
+    10%{
+        opacity:.50;
+        transform-origin: 50% 50%;
+        transform: rotate(-2deg) scale(5);
+        transition: all .3s cubic-bezier(0.6, 0.04, 0.98, 0.335);
+    }
+    100%{
+        opacity:1;
+        transform: rotate(-15deg) scale(1);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.shadow:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: inherit;
+    height: inherit;
+    z-index: -2;
+    box-sizing: border-box;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.13);
+    margin-bottom: 5vh;
+}
+
+.shadow:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: inherit;
+    height: inherit;
+    z-index: -2;
+    box-sizing: border-box;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.08);
+}
+
+.card {
+    margin-top: 20px;
+    transition: 0.4s all;
+    transform-style: preserve-3d;
+}
+
+.card-img {
+    position: relative;
+    height: 460px;
+    width: 90%;
+    float: right;
+}
+
+.card-img.open {
+    height: 200px;
+    background: #ffffff;
+}
+
+@media only screen and (min-width: 600px) {
+    .card-img {
+        margin-bottom:50px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.card-list {
+    margin: 0 auto;
+    width: 90%;
+    perspective: 1200px;
+}
+
+.card:last-child {
+    margin-bottom: 0;
+}
+
+.card-shop {
+    width: 90%;
+    background: #fff;
+    border-radius: 3px;
+    height: 460px;
+    margin-left: 50px;
+    margin-bottom: 5vh;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.1);
+    transform-origin: bottom center;
+}
+
+.hero-shop {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30vh;
+    background: #b651d8;
+    border-bottom: 1rem solid rgba(0,0,0,0.9);
+    z-index: -10;
+}
+
+.hero-stamp {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30vh;
+    background: #71c55e;
+    border-bottom: 1rem solid rgba(0,0,0,0.5);
+    z-index: -10;
+}
+
+.hero-card {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30vh;
+    background: #71c55e;
+    border-bottom: 1rem solid rgba(0,0,0,0.5);
+    z-index: -10;
+}
+
+.hero-map {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30vh;
+    background: #71c55e;
+    border-bottom: 1rem solid rgba(0,0,0,0.5);
+    z-index: -10;
+}
+
+.hero-setting {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30vh;
+    background: #71c55e;
+    border-bottom: 1rem solid rgba(0,0,0,0.5);
+    z-index: -10;
+}
+
+
+
+

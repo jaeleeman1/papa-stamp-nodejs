@@ -11,17 +11,28 @@ html {
 }
 
 body {
-  background-color: #f4f4f4;
+  background-color: #B5B5B5;
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
   position: relative;
+  /*background: url(https://images.unsplash.com/photo-1459445364195-16475050193c?dpr=1&auto=format&crop=entropy&fit=crop&w=1500&h=1163&q=80&cs=tinysrgb);*/
+  /*background-size: cover;
+  display: flex;*/
+  justify-content: center;
+  /*align-items: center;
+  overflow: hidden;*/
 }
 
-.wrapper {
+.frame {
   margin: 0 auto;
   min-width: 400px;
   max-width: 920px;
   position: relative;
 
+}
+
+.header {
+  text-align: center;
+  background: #eee;
 }
 
 .top-status-bar {
@@ -35,46 +46,48 @@ body {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  background-color: #f4f4f4;
-  color: #555;
-
+  background-color: #8C9093;
+  border-color: #e7e7e7;
+  color: #fff;
   font-size: .65em;
   font-weight: 900;
   transform: translate3d(0, 0, 0);
 }
 
 .stamp_icon {
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
 }
 
 .top-title {
-  font-size: 2em;
+  font-size: 25pt;
+  float: none;
 }
 
 .top-description {
+  font-size: 12pt;
   text-align: center;
 }
 
 .content {
-  margin-top: 20px;
+  margin-top: 70px;
+  overflow: hidden;
+  padding-bottom:70px;
 }
 
 .footer-menu {
   max-width: 920px;
   margin: 0 auto;
-  padding: 15px;
+  padding: 6px;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-radius: 5px;
-  background-color: #f4f4f4;
-
+  border-radius: 20px;
+  background-color: #ffffff;;
   color: #ffffff;
   z-index: 10;
 }
@@ -97,38 +110,170 @@ body {
   color: #007bff;
 }
 
-.game {
-  content: '\f135';
-}
-
-/* menu icon */
 .custom-icon {
-  background: #666;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 100%;
-  border: 6px solid #fff;
-  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.46);
-  display: table-cell;
-  font-size: 45px;
-  height: 70px;
-  padding: 13px;
-  text-align: center;
-  transition: .5s;
-  vertical-align: middle;
-  width: 70px;
-}
-.custom-icon:hover {
-  background: rgba(0, 0, 0, 0.6);
-}
-.fix-editor {
-  display: none;
-}
-.icon-wrapper {
-  display: inline-block;
+  font-size: 20pt;
+  color: #222;
+  padding: 15px 0px 0px 50px;
 }
 
-.img-repeat {
-  margin-left:25px;
+nav {
+  margin: 0 auto;
 }
+
+menu:after , menu:before {
+  display : table;
+  content : ' ';
+}
+
+menu:after {
+  clear : both;
+}
+
+li {
+  background-color : #B5B5B5;
+  list-style-type: none;
+  float : left;
+  margin-right : 5px;
+}
+
+li a {
+  position: relative;
+  display : block;
+  text-align : center;
+  text-decoration: none;
+  width  : 172px;
+  height : 70px;
+}
+
+a span {
+  display : block;
+  font-size : 45px;
+  padding : 2px 15px;
+  color   : #222;
+  position: absolute;
+  top : 0;
+  left : 0;
+  z-index : 100;
+  transition : all .2s;
+}
+
+a:before {
+  display: block;
+  content : ' ';
+  position: absolute;
+  transition : all .2s;
+}
+
+a:hover span {
+  color : #fff;
+  transition : all .2s;
+}
+
+a:hover:before {
+  transition : all .3s;
+}
+
+.c1:before{
+  background-color: #b651d8;
+}
+
+.c2:before {
+  background-color: #71c55e;
+}
+
+.c3:before {
+  background-color: #fab904;
+}
+
+.c4:before  {
+  background-color: #e94739;
+}
+
+.c5:before  {
+  background-color: #407ded;
+}
+
+hr {
+  width  : 100px;
+  margin : 50px auto;
+}
+
+/* Top
+********************/
+nav.top
+a:before {
+  top    : 0;
+  left   : 0;
+  height : 5px;
+  width : 100%;
+}
+
+nav.top
+a:hover:before {
+  height : 100%;
+}
+
+/* left
+********************/
+nav.left
+a:before {
+  top    : 0;
+  left   : 0;
+  height : 100%;
+  width  : 5px;
+}
+
+nav.left
+a:hover:before {
+  width : 100%;
+}
+
+/* bottom
+********************/
+nav.bottom
+a:before {
+  bottom : 0;
+  left   : 0;
+  height : 5px;
+  width : 100%;
+}
+nav.bottom
+a:hover:before {
+  height : 100%;
+}
+
+/* right
+********************/
+nav.right
+a:before {
+  top    : 0;
+  right  : 0;
+  width : 5px;
+  height : 100%;
+}
+nav.right
+a:hover:before {
+  width : 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
