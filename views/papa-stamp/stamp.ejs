@@ -1,27 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html id="wrapper">
 <head>
   <title><%= title %></title>
   <link rel='stylesheet' href='/css/layout-style.css' />
   <link rel='stylesheet' href='/css/card-style.css' />
+  <link rel='stylesheet' href='/css/popup.css' />
 
   <script src="/js/jquery-2.2.3.min.js"></script>
+  <script src="/js/popup.js"></script>
 
   <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
   <script src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
 
 </head>
 
+<form action="/v1/shop/main" method="get" style="display:none" name="papa_shop" id="papa_shop">
+</form>
+<form action="/v1/stamp/main" method="get" style="display:none" name="papa_stamp" id="papa_stamp">
+</form>
+<form action="/v1/coupon/main" method="get" style="display:none" name="papa_coupon" id="papa_coupon">
+</form>
+<form action="/v1/map/main" method="get" style="display:none" name="papa_map" id="papa_map">
+</form>
+<form action="/v1/setting/main" method="get" style="display:none" name="papa_setting" id="papa_setting">
+</form>
+
 <body>
 <div class="frame">
 
   <div class="header">
     <div class="top-status-bar">
-      <div class="top-icon">
-        <img class="stamp_icon" src="/images/papastamp_icon.png"></img>
-      </div>
-      <div class="top-title">Papa Stamp</div>
-      <div class="top-description">온라인 스탬프<br>관리 시스템</div>
+      <img class="top-icon" src="/images/papastamp_icon.png"></img>
+      <div class="top-title">파파스탬프</div>
+      <div class="top-description">스탬프<br>관리 시스템</div>
     </div>
   </div>
 
@@ -32,128 +43,149 @@
 
       <div class="hero-stamp"></div>
 
-      <ul class="card-list">
-        <li class="card-shop">
-          <div class="my-container">
-            <div class="card">
-              <figure class="front">
-                <img class="base-img" src="http://www.jboeijenga.nl/img/back.jpg" alt="back">
-                <div class="img-repeat">
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/papastamp_icon.png"  style="display:block;"></img>
+
+        <ul class="my-card-list">
+
+
+
+
+          <li class="my-card-shop">
+            <div class="my-container">
+              <div class="my-card" onclick="openLayer('layerCardPopup');">
+                <figure class="front">
+                  <img class="base-img" src="/images/shop-card/cafe-jass-back.png" alt="back">
+                  <div class="img-repeat">
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
                   </div>
-                  <div style="border: 1px solid red; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/papastamp_icon.png"  style="display:block;"></img>
+                </figure>
+              </div>
+            </div>
+          </li>
+
+
+
+
+          <li class="my-card-shop">
+            <div class="my-container">
+              <div class="my-card">
+                <figure class="front">
+                  <img class="base-img" src="/images/shop-card/steak-n-pho-back.png" alt="back">
+                  <div class="img-repeat">
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/steak-n-pho-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/steak-n-pho-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/steak-n-pho-stamp.png"  style="display:block;"></img>
+                    </div>
                   </div>
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/papastamp_icon.png"  style="display:block;"></img>
+                </figure>
+              </div>
+            </div>
+          </li>
+
+        </ul>
+
+
+
+
+
+
+      <div id="layerCardPopup">
+        <div class="pop_up_body">
+          <p class="btn_txt_nor mt20"><span class="delete-card" id="carda_deletef">카드 삭제</span><span onclick="closeLayer('layerCardPopup')">닫기</span></p>
+          <div class="card-img">
+            <div class="container">
+              <div class="card flipped">
+                <figure class="front">
+                  <img class="base-img" src="/images/shop-card/cafe-jass-front.png" alt="front">
+                </figure>
+                <figure class="back">
+                  <img class="base-img" src="/images/shop-card/cafe-jass-back.png" alt="back">
+                  <div class="img-repeat">
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
+                    <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
+                      <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                    </div>
                   </div>
-                  <div style="border: 1px solid red; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/papastamp_icon.png"  style="display:block;"></img>
-                  </div>
-                </div>
-              </figure>
+                </figure>
+              </div>
             </div>
           </div>
-        </li>
-
-
-        <li class="card-shop">
-          <div class="my-container">
-            <div class="card">
-              <figure class="front">
-                <img class="base-img" src="/images/shop-card/cafe-jass-back.png" alt="back">
-                <div class="img-repeat">
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
-                  </div>
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
-                  </div>
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
-                  </div>
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
-                  </div>
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
-                  </div>
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
-                  </div>
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
-                  </div>
-                </div>
-              </figure>
-            </div>
-          </div>
-        </li>
-
-
-        <li class="card-shop">
-          <div class="my-container">
-            <div class="card">
-              <figure class="front">
-                <img class="base-img" src="/images/shop-card/steak-n-pho-back.png" alt="back">
-                <div class="img-repeat">
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/steak-n-pho-stamp.png"  style="display:block;"></img>
-                  </div>
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/steak-n-pho-stamp.png"  style="display:block;"></img>
-                  </div>
-                  <div style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                    <img class="stamp-img" src="/images/shop-stamp/steak-n-pho-stamp.png"  style="display:block;"></img>
-                  </div>
-                </div>
-              </figure>
-            </div>
-          </div>
-        </li>
-
-      </ul>
-
+          <p class="ti">해당 지점 쿠폰 사용</p>
+        </div>
+      </div>
 
 
 
     </div>
   </div>
 
-
-
   <div class="footer-menu">
     <nav class="bottom">
       <menu>
-        <li>
-          <a class="c1" href="#" >
-            <div class="custom-icon">Shop</div>
-            <span>🏠</span>
+        <li id="menu-shop">
+          <a class="c1 menu-toggle" href="#" >
+            <span>🏠<div class="menu-text">홈</div></span>
           </a>
         </li>
-        <li>
-          <a class="c2" href="#" >
-            <div class="custom-icon">Stamp</div>
-            <span>✪</span>
+        <li id="menu-stamp">
+          <a class="c2 menu-toggle show" href="#" >
+            <span>✪<div class="menu-text">마이스탬프</div></span>
           </a>
         </li>
-        <li>
-          <a class="c3" href="#" >
-            <div class="custom-icon">Coupon</div>
-            <span>📙</span>
+        <li id="menu-coupon">
+          <a class="c3 menu-toggle" href="#" >
+            <span>📙<div class="menu-text">마이쿠폰</div></span>
           </a>
         </li>
-        <li>
-          <a class="c4" href="#" >
-            <div class="custom-icon">Map</div>
-            <span>🔘</span>
+        <li id="menu-map">
+          <a class="c4 menu-toggle" href="#" >
+            <span>🔘<div class="menu-text">지도</div></span>
           </a>
         </li>
-        <li>
-          <a class="c5" href="#" >
-            <div class="custom-icon">Setting</div>
-            <span>✴</span>
+        <li id="menu-setting">
+          <a class="c5 menu-toggle" href="#" >
+            <span>✴<div class="menu-text">설정</div></span>
           </a>
         </li>
       </menu>
@@ -166,23 +198,39 @@
 </html>
 
 <script type="text/javascript">
-    // somebody should clean up this mess
-    var setCardTransform = function setCardTransform(cardIndex, angle){
-        var card = $('.card-list .card').eq(cardIndex).css('transform', 'rotate3d(1, 0, 0, ' + angle + 'deg)');
-        $('.card-list .card').not(card).css('transform', 'none');
-    };
-
     $(function () {
-        var $window = $(window);
-        var windowHeight = $window.height();
+        $('.card').click(function(){
+            $(this).toggleClass('flipped');
+        });
 
-        $window.resize(function (e) {
-            windowHeight = $window.height();
-        });
-        $window.resize(function (e) {
-            var cardPercent = (window.scrollY % (windowHeight / 2) / windowHeight * 2);
-            var cardCount = Math.floor(window.scrollY / (windowHeight / 2));
-            setCardTransform(cardCount, cardPercent * 50);
-        });
+        $("#menu-shop").click(
+            function() {
+                $("#papa_shop").submit();
+            }
+        );
+
+        $("#menu-stamp").click(
+            function() {
+                $("#papa_stamp").submit();
+            }
+        );
+
+        $("#menu-coupon").click(
+            function() {
+                $("#papa_coupon").submit();
+            }
+        );
+
+        $("#menu-map").click(
+            function() {
+                $("#papa_map").submit();
+            }
+        );
+
+        $("#menu-setting").click(
+            function() {
+                $("#papa_setting").submit();
+            }
+        );
     });
 </script>

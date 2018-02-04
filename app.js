@@ -6,6 +6,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var shop = require('./routes/shop');
+var stamp = require('./routes/stamp');
+var coupon = require('./routes/coupon');
+var map = require('./routes/map');
+var setting = require('./routes/setting');
 
 var app = express();
 
@@ -22,8 +26,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const shopUrl = '/v1/shop';
+const stampUrl = '/v1/stamp';
+const couponUrl = '/v1/coupon';
+const mapUrl = '/v1/map';
+const settingUrl = '/v1/setting';
 
 app.use(shopUrl, shop);
+app.use(stampUrl, stamp);
+app.use(couponUrl, coupon);
+app.use(mapUrl, map);
+app.use(settingUrl, setting);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
