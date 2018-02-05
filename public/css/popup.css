@@ -35,16 +35,16 @@
 }
 
 #layerCardPopup .pop_up_body .ti {
-    width: 40%;
+    width: 50%;
     opacity: 0.87;
     background-color: #777;
     color: #fff;
-    font-size: 25px;
+    font-size: 40px;
     text-align: center;
     line-height:29px;
-    margin: 600px 250px;
+    margin: 600px 230px;
     border-radius: 10px;
-    padding: 10px 7px;
+    padding: 18px 7px;
     font-weight: bold;
 }
 
