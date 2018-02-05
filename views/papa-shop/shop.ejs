@@ -18,7 +18,7 @@
 </form>
 <form action="/v1/coupon/main" method="get" style="display:none" name="papa_coupon" id="papa_coupon">
 </form>
-<form action="/v1/map/main" method="get" style="display:none" name="papa_map" id="papa_map">
+<form action="/v1/event/main" method="get" style="display:none" name="papa_event" id="papa_event">
 </form>
 <form action="/v1/setting/main" method="get" style="display:none" name="papa_setting" id="papa_setting">
 </form>
@@ -107,9 +107,9 @@
                         <span>📙<div class="menu-text">마이쿠폰</div></span>
                     </a>
                 </li>
-                <li id="menu-map">
+                <li id="menu-event">
                     <a class="c4 menu-toggle" href="#" >
-                        <span>🔘<div class="menu-text">지도</div></span>
+                        <span>🔘<div class="menu-text">이벤트</div></span>
                     </a>
                 </li>
                 <li id="menu-setting">
@@ -150,9 +150,9 @@
             }
         );
 
-        $("#menu-map").click(
+        $("#menu-event").click(
             function() {
-                $("#papa_map").submit();
+                $("#papa_event").submit();
             }
         );
 

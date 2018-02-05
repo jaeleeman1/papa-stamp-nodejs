@@ -56,25 +56,26 @@ body {
 .top-icon {
   width: 65px;
   height: 65px;
-  margin-left: 320px;
+  margin-left: 300px;
+  margin-top: 5px;
 }
 
 .top-title {
-  font-size: 30pt;
+  font-size: 38pt;
   float: none;
-  margin-right: 230px;
+  margin-right: 180px;
 }
 
 .top-description {
-  font-size: 14pt;
+  font-size: 18pt;
   text-align: center;
   padding-top: 5px;
 }
 
 .content {
-  margin-top: 100px;
+  margin-top: 120px;
   overflow: hidden;
-  padding-bottom:90px;
+  padding-bottom: 140px;
 }
 
 .footer-menu {
@@ -88,6 +89,7 @@ body {
   align-items: center;
   background-color: #ffffff;
   z-index: 10;
+  opacity: 0.87;
 }
 
 .footer-menu .menu {
@@ -134,14 +136,14 @@ li a {
   text-align : center;
   text-decoration: none;
   width  : 195px;
-  height : 120px;
+  height : 160px;
 }
 
 a span {
   width: 100%;
   text-align : center;
   display : block;
-  font-size : 47px;
+  font-size : 60px;
   padding : 2px 5px;
   color   : #222;
   position: absolute;
@@ -152,7 +154,7 @@ a span {
 }
 
 .menu-text {
-  font-size : 30px;
+  font-size : 35px;
 }
 
 a:before {

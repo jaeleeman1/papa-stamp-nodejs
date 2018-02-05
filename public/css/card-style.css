@@ -18,14 +18,14 @@ body{
 }
 
 .container, figure{
-    width: 700px;
-    height: 420px;
+    width: 900px;
+    height: 540px;
 }
 
 .container{
     position:absolute;
     perspective:1000px;
-    margin-top:-155px;
+    margin-top:-200px;
     top:36%;
 }
 
@@ -137,7 +137,7 @@ figure .caption h6{
     margin-top: 1em;
     letter-spacing: 2px;
     font-weight: 500;
-    line-height: 1.7em;
+    line-height: 20em;
     font-family: 'Yantramanav', sans-serif;
 }
 
@@ -266,7 +266,7 @@ figure a{
 @media (min-width: 450px) {
     .container{
         left: 50%;
-        margin-left:-390px;
+        margin-left:-450px;
     }
 }
 
@@ -412,8 +412,8 @@ figure a{
 
 .card-img {
     position: relative;
-    height: 450px;
-    width: 90%;
+    height: 560px;
+    width: 100%;
     float: right;
 }
 
@@ -456,7 +456,7 @@ figure a{
 
 .my-card-list {
     margin: 0 auto;
-    width: 90%;
+    width: 100%;
     perspective: 1200px;
 }
 
@@ -465,11 +465,11 @@ figure a{
 }
 
 .my-card-shop {
-    width: 86%;
+    width: 100%;
     background: #000000;
     border-radius: 3px;
-    height: 433px;
-    margin-left: 60px;
+    height: 552px;
+    margin-left: 7px;
     margin-bottom: 5vh;
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
@@ -489,22 +489,22 @@ figure a{
 }
 
 .my-card-coupon {
-    width: 86%;
+    width: 100%;
     background: #ffffff;
     border-radius: 3px;
-    height: 433px;
-    margin-left: 60px;
+    height: 552px;
+    margin-left: 7px;
     margin-bottom: 5vh;
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
 }
 
 .card-setting {
-    width: 86%;
+    width: 100%;
     background: #848484;
     border-radius: 3px;
-    height: 433px;
-    margin-left: 60px;
+    height: 552px;
+    margin-left: 7px;
     margin-bottom: 5vh;
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
