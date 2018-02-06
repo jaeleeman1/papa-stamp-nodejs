@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var shop = require('./routes/shop');
 var stamp = require('./routes/stamp');
 var coupon = require('./routes/coupon');
-var map = require('./routes/event');
+var event = require('./routes/event');
 var setting = require('./routes/setting');
 
 var app = express();
@@ -28,13 +28,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 const shopUrl = '/v1/shop';
 const stampUrl = '/v1/stamp';
 const couponUrl = '/v1/coupon';
-const mapUrl = '/v1/map';
+const eventUrl = '/v1/event';
 const settingUrl = '/v1/setting';
 
 app.use(shopUrl, shop);
 app.use(stampUrl, stamp);
 app.use(couponUrl, coupon);
-app.use(mapUrl, map);
+app.use(eventUrl, event);
 app.use(settingUrl, setting);
 
 // catch 404 and forward to error handler
