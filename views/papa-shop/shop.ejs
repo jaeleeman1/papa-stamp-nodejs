@@ -1,44 +1,18 @@
 <div class="cards">
-
+    <% var shopListCnt = shopListData.length %>
+    <% for (var i=0; i<shopListCnt; i++) {%>
     <div class="card-img shadow">
         <div class="container">
             <div class="card flipped">
                 <figure class="front">
-                    <img class="papa-base-img" src="http://www.jboeijenga.nl/img/back.jpg" alt="back">
+                    <img class="papa-base-img" src="/images/shop-card/<%= shopListData[i].SHOP_BACK_IMG %>" alt="back">
                 </figure>
 
                 <figure class="back">
-                    <img class="papa-base-img" src="http://www.jboeijenga.nl/img/front.jpg" alt="front">
+                    <img class="papa-base-img" src="/images/shop-card/<%= shopListData[i].SHOP_FRONT_IMG %>" alt="front">
                 </figure>
             </div>
         </div>
     </div>
-
-    <div class="card-img shadow">
-        <div class="container">
-            <div class="card flipped">
-                <figure class="front">
-                    <img class="papa-base-img" src="/images/shop-card/cafe-jass-back.png" alt="back">
-                </figure>
-
-                <figure class="back">
-                    <img class="papa-base-img" src="/images/shop-card/cafe-jass-front.png" alt="front">
-                </figure>
-            </div>
-        </div>
-    </div>
-
-    <div class="card-img shadow">
-        <div class="container">
-            <div class="card flipped">
-                <figure class="front">
-                    <img class="papa-base-img" src="/images/shop-card/steak-n-pho-back.png" alt="back">
-                </figure>
-
-                <figure class="back">
-                    <img class="papa-base-img" src="/images/shop-card/steak-n-pho-front.png" alt="front">
-                </figure>
-            </div>
-        </div>
-    </div>
+    <%}%>
 </div>
