@@ -20,11 +20,7 @@ function openLayer(IdName, tpos, lpos, height){
     });
     $('#deemed').css('height', height+'px');
 }
-//deem 닫기
-function closeDeemLayer( IdName ){
-    var pop = dEI(IdName);
-    pop.style.display = "none";
-}
+
 //레이어 팝엽 닫기
 function closeLayer( IdName ){
     var pop = dEI(IdName);
@@ -33,4 +29,14 @@ function closeLayer( IdName ){
     var momEl = parent.dEI("wrapper");
     momEl.removeChild(clearEl);
     $('#wrapper').off('scroll touchmove mousewheel');
+}
+
+function openMapLayer( IdName ){
+    var mapPop = dEI(IdName);
+    mapPop.style.display = "block";
+}
+
+function closeMapLayer( IdName ) {
+    var mapPop = dEI(IdName);
+    mapPop.style.display = "none";
 }

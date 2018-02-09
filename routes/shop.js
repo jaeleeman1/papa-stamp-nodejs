@@ -7,7 +7,7 @@ var mysql = require('mysql');
 
 /* GET shop page. */
 router.get('/main', function(req, res, next) {
-  res.render('papa-shop/shop', { title: 'Express', url:config.url, userId:'7c28d1c5088f01cda7e4ca654ec88ef8' });
+    res.render('common/papa-stamp', { view: 'shop', url:config.url, userId:'7c28d1c5088f01cda7e4ca654ec88ef8' });
 });
 
 module.exports = router;

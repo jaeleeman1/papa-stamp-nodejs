@@ -25,7 +25,7 @@ body {
 .frame {
   margin: 0 auto;
   min-width: 400px;
-  max-width: 920px;
+  max-width: 960px;
   position: relative;
 
 }
@@ -223,13 +223,16 @@ a.show:before {
   width: 100%;
   min-height: 680px;
   border: none;
-  margin-bottom: 200px;
+  margin-bottom: 10px;
 }
 
 .map_wrap.agileits {
   padding-top: 0.2em;
 }
 
+.layerMapPopup {
+  display: none;
+}
 
 
 /* map */
@@ -272,25 +275,13 @@ img {
   vertical-align: middle;
 }
 
-
-.header-map {
-  font-size: 50px;
-  margin: 5px 0 0 10px;
-}
-
 .header-title {
-  font-size: 42px;
+  margin: 6px;
+  width: 100px;
 }
 
 
 
-
-.container {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
 
 .contact-row.agileits-w3layouts {
   width: 97.6%;

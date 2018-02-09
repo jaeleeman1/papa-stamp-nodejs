@@ -266,9 +266,11 @@ figure a{
 @media (min-width: 450px) {
     .container{
         left: 50%;
-        margin-left:-450px;
+        margin-left:-458px;
     }
 }
+
+
 
 
 
@@ -289,20 +291,21 @@ figure a{
 
 
 
+
+
+
 /* stamp action */
 .stamp-action{
-    top:-220px;
+    z-index: 100;
+    width:300px;
+    top:120px;
+    right:300px;
     border-radius:5px;
-    position:relative;
+    position:absolute;
     background-color:#ef8080;
-    -webkit-animation-name: pulse;
     animation-name: pulse;
-    animation-delay:2.5s;
-    -webkit-animation-delay:0.5s;
-    -webkit-animation-duration: 0.5s;
     animation-duration: 0.5s;
     opacity: 0;
-    -webkit-animation-fill-mode:forwards;
     animation-fill-mode:forwards;
 }
 
@@ -410,10 +413,14 @@ figure a{
     transform-style: preserve-3d;
 }
 
+.cards {
+    margin-top: 110px;
+}
+
 .card-img {
     position: relative;
     height: 560px;
-    width: 100%;
+    width: 98%;
     float: right;
 }
 
@@ -424,9 +431,9 @@ figure a{
 
 @media only screen and (min-width: 600px) {
     .card-img {
-        margin-bottom:50px;
-        margin-left:auto;
-        margin-right:auto;
+        margin-bottom: 80px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -455,7 +462,7 @@ figure a{
 
 
 .my-card-list {
-    margin: 0 auto;
+    margin: 110px auto;
     width: 100%;
     perspective: 1200px;
 }
@@ -465,11 +472,11 @@ figure a{
 }
 
 .my-card-shop {
-    width: 100%;
+    width: 95%;
     background: #000000;
     border-radius: 3px;
     height: 552px;
-    margin-left: 7px;
+    margin-left: 25px;
     margin-bottom: 5vh;
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
@@ -489,22 +496,33 @@ figure a{
 }
 
 .my-card-coupon {
-    width: 100%;
+    width: 95%;
     background: #ffffff;
     border-radius: 3px;
     height: 552px;
-    margin-left: 7px;
+    margin-left: 25px;
+    margin-bottom: 5vh;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
+}
+
+.card-event {
+    width: 95%;
+    background: #407ded;
+    border-radius: 3px;
+    height: 552px;
+    margin-left: 25px;
     margin-bottom: 5vh;
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
 }
 
 .card-setting {
-    width: 100%;
+    width: 95%;
     background: #848484;
     border-radius: 3px;
     height: 552px;
-    margin-left: 7px;
+    margin-left: 25px;
     margin-bottom: 5vh;
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
