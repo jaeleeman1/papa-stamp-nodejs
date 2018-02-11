@@ -55,6 +55,11 @@
     padding: 15px;
 }
 
+#layerCardPopup .close-card {
+    float: right;
+    margin: 12px 12px;
+}
+
 #deemed {
     width:100%;
     height:100%;

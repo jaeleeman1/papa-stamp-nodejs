@@ -54,14 +54,14 @@ body {
 }
 
 .top-icon {
-  width: 65px;
-  height: 65px;
-  margin-left: 190px;
+  width: 70px;
+  height: 70px;
+  margin-left: 150px;
   margin-top: 5px;
 }
 
 .top-title {
-  font-size: 38pt;
+  font-size: 40pt;
   float: none;
   margin-right: 180px;
 }
@@ -221,9 +221,8 @@ a.show:before {
 
 .map_wrap{
   width: 100%;
-  min-height: 680px;
+  min-height: 650px;
   border: none;
-  margin-bottom: 10px;
 }
 
 .map_wrap.agileits {
@@ -232,15 +231,16 @@ a.show:before {
 
 .layerMapPopup {
   display: none;
+  margin-top: -34px;
 }
 
 
 /* map */
 .custom_zoomcontrol {
-  width: 36px;
+  width: 52px;
   right: 15px;
   position: relative;
-  top: 100px;
+  top: 150px;
   float: right;
   overflow: hidden;
   z-index: 2;
@@ -259,14 +259,15 @@ a.show:before {
 
 .custom_zoomcontrol span {
   display: block;
-  width: 36px;
+  width: 50px;
+  height: 60px;
   text-align: center;
   cursor: pointer;
 }
 
 .custom_zoomcontrol span img {
-  width: 15px;
-  padding: 12px 0;
+  width: 30px;
+  padding: 14px 0;
   border: none;
 }
 
@@ -283,23 +284,67 @@ img {
 
 
 
+
+
+
+
+
+
 .contact-row.agileits-w3layouts {
-  width: 97.6%;
-  left: 1%;
+  width: 96%;
+  left: 2%;
+  background: #fff;
+  position: absolute;
+  z-index: 9;
+  padding: 0.5em 1em;
+  box-shadow: 0 0 14px 7px rgba(224, 224, 224, 0.5);
+  box-sizing: border-box;
+  margin-top: -60px;
 }
 
 .contact-w3lsright {
   float: none;
   width: 100%;
   padding: 0 1em;
+  position: relative;
+  min-height: 1px;
 }
 
 .address-row {
-  margin-top: 1.8em;
+  margin-top: 0.8em;
 }
 
-.address-left {
-  padding: 0;
-  text-align: center;
+.icon {
+  float: right;
 }
+
+.guide {
+  width: 100px;
+}
+
+.select-shop-name {
+  font-size: 2.2em;
+  color: #000;
+  font-weight: 300;
+  font-family: 'Berkshire Swash', cursive;
+}
+
+.select-shop-phone {
+  color: blue;
+  letter-spacing: 0.8px;
+  margin-left: 50px;
+  font-size: 0.9em;
+  line-height: 1.42857143;
+  font-family: 'Yantramanav', sans-serif;
+}
+
+.select-shop-addr {
+  font-size: 1em;
+  color: #999;
+  line-height: 2em;
+  box-sizing: border-box;
+}
+
+
+
 

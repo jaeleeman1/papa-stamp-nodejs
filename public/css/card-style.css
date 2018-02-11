@@ -127,6 +127,7 @@ figure .caption h4 span{
 figure .caption span{
     font-size: 4em;
     color: #999;
+    margin-left: -150px;
 }
 
 figure .caption h6{
@@ -561,7 +562,7 @@ figure a{
     z-index: -10;
 }
 
-.hero-map {
+.hero-event {
     position: fixed;
     left: 0;
     right: 0;
@@ -609,3 +610,20 @@ figure a{
     margin-top: 1em;
 }
 
+
+
+
+.custom-icon {
+    background: #666;
+    border-radius: 100%;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.46);
+    color: #fff;
+    height: 60px;
+    padding: 8px;
+    text-align: center;
+    transition: .5s;
+    width: 60px;
+    float: left;
+    margin: 28px 0 0 150px;
+}

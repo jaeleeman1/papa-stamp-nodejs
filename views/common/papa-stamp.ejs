@@ -20,8 +20,8 @@
     <input type="hidden" name="view" id="view" value="<%= view %>"/>
     <input type="hidden" name="url" id="url" value="<%= url %>"/>
     <input type="hidden" name="userId" id="userId" value="<%= userId %>"/>
-    <input type="hidden" name="current_lat" id="current_lat" value=""/>
-    <input type="hidden" name="current_lng" id="current_lng" value=""/>
+    <input type="hidden" name="current_lat" id="current_lat" value="<%= currentLocationData.CURRENT_LAT %>"/>
+    <input type="hidden" name="current_lng" id="current_lng" value="<%= currentLocationData.CURRENT_LNG %>"/>
 </form>
 
 <form action="/v1/shop/main" method="get" style="display:none" name="papa_shop" id="papa_shop">
@@ -40,7 +40,7 @@
 
     <div class="header">
         <div class="top-status-bar">
-            <div class="header-title" id="map-title"><i class="fa fa-map-marker" style="font-size: 62px;color: whitesmoke"></i></div>
+            <div class="header-title" id="map-icon"><i class="fa fa-map-marker" style="font-size: 70px;color: whitesmoke"></i></div>
             <img class="top-icon" src="/images/papastamp_icon.png"></img>
             <div class="top-title">파파스탬프</div>
             <div class="top-description">스탬프<br>관리 시스템</div>
@@ -60,7 +60,7 @@
                 <div id="map" class="map_wrap"></div>
                 <!-- //map -->
 
-                <div class="container">
+                <div class="shop-container">
                     <div class="contact-row agileits-w3layouts">
                         <div class="col-xs-6 col-sm-6 contact-w3lsright" id="map_list_wrap">
                         </div>
@@ -76,10 +76,13 @@
                 <div class="hero-stamp"></div>
                 <% include ../papa-stamp/stamp.ejs %>
             <% } else if(view == 'coupon') { %>
+                <div class="hero-coupon"></div>
                 <% include ../papa-coupon/coupon.ejs %>
             <% } else if(view == 'event') { %>
+                <div class="hero-event"></div>
                 <% include ../papa-event/event.ejs %>
             <% } else { %>
+                <div class="hero-setting"></div>
                 <% include ../papa-setting/setting.ejs %>
             <% } %>
         </div>
@@ -124,7 +127,7 @@
 
 <script type="text/javascript">
     $(function () {
-        $('.card').click(function(){
+        $(document).on('click', '.card', function(){
             $(this).toggleClass('flipped');
         });
 
@@ -163,375 +166,30 @@
             }
         });
 
-        var mapTitle = document.getElementById('map-title');
+        var mapIcon = document.getElementById('map-icon');
 
         if(initView != 'setting') {
             if($('.my-card-list li').hasClass('blank-card')) {
-                mapTitle.innerHTML = '<i class="fa fa-map-marker" style="font-size: 62px;color: black"></i>';
+                mapIcon.innerHTML = '<i class="fa fa-map-marker" style="font-size: 70px;color: black"></i>';
             }else {
-                $("#map-title").click(
+                $("#map-icon").click(
                     function() {
-                        var clickMapData = document.getElementById('map-title');
                         if($("#mapPop").css("display") == "none") {
+                            $("#card-list").css("display", "none");
                             openMapLayer("mapPop");
                             changeShop();
-                            clickMapData.innerHTML = '<i class="fa fa-map-marker" style="font-size: 62px;color: red"></i>';
+                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="font-size: 70px;color: red"></i>';
                         }else {
+                            $("#select-card").remove();
+                            $("#card-list").css("display", "block");
                             closeMapLayer("mapPop");
-                            clickMapData.innerHTML = '<i class="fa fa-map-marker" style="font-size: 62px;color: whitesmoke"></i>';
+                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="font-size: 70px;color: whitesmoke"></i>';
                         }
                     }
                 );
             }
         }else {
-            mapTitle.innerHTML = '<i class="fa fa-map-marker" style="font-size: 62px;color: black"></i>';
+            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="font-size: 62px;color: black"></i>';
         }
     });
-</script>
-
-
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1a30d2b7d0dec9ecdbd9665afa6ea7b1&autoload=false&libraries=clusterer,services"></script>
-
-<script type="text/javascript">
-    var map='';
-
-    daum.maps.load(function() {
-        var currentLat = '';//37.4979887529;
-        var currentLng = '';//127.0296421998;
-
-        var headers = {};
-        headers["user_id"] = $("#userId").val();
-
-        /*$.ajax({
-         url: $("#url").val() + '/map/v1.0/currentLocation',
-         type: 'GET',
-         headers : headers,
-         dataType: 'json',
-         success: function(data) {
-         var currentLocationData = data.currentLocationData;
-         currentLat = currentLocationData.CURRENT_LAT;
-         currentLng = currentLocationData.CURRENT_LNG;
-
-         $("#current_lat").val(currentLat);
-         $("#current_lng").val(currentLng);
-
-         changeShop();
-         },
-         error: function(request, status, error) {
-         console.error("currentLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-         }
-         });*/
-    });
-
-    function changeShop() {
-        //console.log("change shop list");
-        $("#current_lat").val('37.4924887529');
-        $("#current_lng").val('127.0393421998');
-
-        var currentLat = $("#current_lat").val();
-        var currentLng = $("#current_lng").val();
-
-        var currentMarkerSrc = '/images/shop-map/current_point.png', // 현재 위치 마커이미지
-            currentMarkerSize = new daum.maps.Size(35, 49), // 현재 위치 마커이미지의 크기
-            currentMarkerOption = {offset: new daum.maps.Point(19, 58)}; // 현재 위치 마커이미지의 옵션
-
-        var currentMarkerImage = new daum.maps.MarkerImage(currentMarkerSrc, currentMarkerSize, currentMarkerOption);
-        var currentMarkerPosition = new daum.maps.LatLng(currentLat, currentLng); // 마커가 표시될 위치
-
-        // 마커와 인포윈도우를 표시합니다
-        displayMarker(currentMarkerPosition, currentMarkerImage);
-
-//        var cooperatorName = document.getElementById("cooperatorList").value;
-        var cooperatorName = 'papaShop';
-        var cooperatorShopUrl ='/mapData/cooperator/papaShop.json';
-
-        if(cooperatorName == "papaShop") {
-            //shop list data 초기화
-            var shopDataList = document.getElementById('map_list_wrap');
-            shopDataList.innerHTML = '';
-
-            // 마커 클러스터러를 생성합니다
-            var clusterer = new daum.maps.MarkerClusterer({
-                map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
-                averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-                minLevel: 8 // 클러스터 할 최소 지도 레벨
-            });
-
-            var selectedMarker = null;
-
-            $.get(cooperatorShopUrl, function(data) {
-                var imageSrc = '/images/shop-map/shop_point.png';
-                var clickImageSrc = '/images/shop-map/select_point.png';
-
-                // 표시될 shop data
-                var imageSize = new daum.maps.Size(35, 49), // 마커이미지의 크기입니다
-                    imageOprion = {offset: new daum.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-                var normalImage = new daum.maps.MarkerImage(imageSrc, imageSize, imageOprion);
-
-                // 클릭된 shop data
-                var clickImageSize = new daum.maps.Size(35, 49), // 마커이미지의 크기입니다
-                    clickImageOprion = {offset: new daum.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-                var clickImage = new daum.maps.MarkerImage(clickImageSrc, clickImageSize, clickImageOprion);
-
-                var markers = $(data.positions).map(function(i, position) {
-                    var marker = new daum.maps.Marker({
-                        position : new daum.maps.LatLng(position.lat, position.lng),
-                        image:normalImage
-                    });
-
-                    daum.maps.event.addListener(marker, 'click', function() {
-                        // 클릭된 마커가 없고, click 마커가 클릭된 마커가 아니면 마커의 이미지를 클릭 이미지로 변경
-                        if (!selectedMarker || selectedMarker !== marker) {
-                            // 클릭된 마커 객체가 null이 아니면 클릭된 마커의 이미지를 기본 이미지로 변경하고
-                            !!selectedMarker && selectedMarker.setImage(normalImage);
-
-                            // 현재 클릭된 마커의 이미지는 클릭 이미지로 변경합니다
-                            marker.setImage(clickImage);
-                        }
-                        // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
-                        selectedMarker = marker;
-                        var headers = {};
-                        headers["user_id"] = $("#userId").val();
-
-                        //shop data
-                        var dataString = {'current_lat': position.lat, 'current_lng': position.lng};
-                        $.ajax({
-                            url: $("#url").val() + '/v1/event/shopData',
-                            type: 'GET',
-                            headers : headers,
-                            dataType: 'json',
-                            data: dataString,
-                            success: function(data) {
-                                var shopData = data.shopData;
-                                var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//data.userId;
-                                var clickShopData = document.getElementById('map_list_wrap');
-                                clickShopData.innerHTML = '';
-
-                                clickShopData.innerHTML += '<div class="address-row">' +
-                                    '<div class="col-xs-2 address-left">' +
-                                    '<a href="/shop/v1.0/shopInfo/'+ shopData.SHOP_ID +'/'+userId+'"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>' +
-                                    '</div>' +
-                                    '<div class="col-xs-10 address-right">' +
-                                    '<a href="javascript:"><span class="icon" style="width:55px;height:55px;" onclick="guidePapaShopLoad('+ shopData.SHOP_LAT+','+ shopData.SHOP_LNG+')"><img src="/images/shop-map/map_load_pin.png" style="width:50px;"></span></a>' +
-                                    '<h5 id="select_shop_name">'+ shopData.SHOP_NAME +'</h5>' +
-                                    '<span class="phone">TEL : '+ shopData.SHOP_PHONE +'</span>' +
-                                    '<p>'+ shopData.SHOP_ADDR +'</p>' +
-                                    '</div>' +
-                                    '<div class="clearfix"> </div>' +
-                                    '</div>';
-                            },
-                            error: function(request, status, error) {
-                                console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                                console.log('Error occured');
-                            }
-                        });
-                    });
-
-                    if(i == 0) {
-                        daum.maps.event.trigger(marker, 'click', '');
-                    }
-
-                    return marker;
-                });
-
-                // 클러스터러에 마커들을 추가합니다
-                clusterer.addMarkers(markers);
-            });
-        }else {
-            //user shop list data 가져오기
-            userShopList(currentLat, currentLng);
-        }
-    }
-
-    // 지도에 마커와 인포윈도우를 표시하는 함수입니다
-    function displayMarker(currentMarkerPosition, currentMarkerImage) {
-        map = new daum.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
-            center : currentMarkerPosition, // 지도의 중심좌표
-            level : 8 // 지도의 확대 레벨
-        });
-
-        // 현재 위치 마커를 생성합니다
-        var marker = new daum.maps.Marker({
-            map: map,
-            position: currentMarkerPosition,
-            image: currentMarkerImage // 마커이미지 설정
-        });
-        marker.setMap(map);
-    };
-
-    function guidePapaShopLoad(shopLat, shopLng) {
-        // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성합니다
-        var bounds = new daum.maps.LatLngBounds();
-
-        var mouseEvent = {
-            latLng: new daum.maps.LatLng(shopLat, shopLng)
-        };
-
-        daum.maps.event.trigger(map, 'click', mouseEvent);
-
-        // LatLngBounds 객체에 좌표를 추가합니다
-        bounds.extend(new daum.maps.LatLng(shopLat, shopLng));
-
-        // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다. 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
-        map.setBounds(bounds);
-    }
-
-    //Shop List
-    function userShopList(currentLat, currentLng) {
-        var headers = {};
-        headers["user_id"] = $("#userId").val();
-
-        var initShopId = $("#initShopId").val();
-
-        var dataString = {'current_lat': currentLat, 'current_lng': currentLng};
-        $.ajax({
-            url: $("#url").val() + '/map/v1.0/shopList',
-            type: 'GET',
-            headers : headers,
-            dataType: 'json',
-            data: dataString,
-            success: function(data) {
-                var shopData = data.shopListData;
-                if(shopData.length == 0 || shopData[0].USER_ID == initShopId) {
-                    $("#cooperatorList").val("papaShop");
-                    changeShop();
-                }else {
-                    var mypositions = [];
-
-                    for(var i=0; i<shopData.length; i++) {
-                        mypositions[i] = {'index': i, 'lat': shopData[i].SHOP_LAT,'lng': shopData[i].SHOP_LNG,'stamp': shopData[i].USER_STAMP};
-                    }
-
-                    showClusterer(mypositions);
-                }
-            },
-            error: function(request, status, error) {
-                console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                console.log('Error occured');
-            }
-        });
-    }
-
-    function showClusterer(mypositions) {
-        // 마커 클러스터러를 생성합니다
-        var clusterer = new daum.maps.MarkerClusterer({
-            map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
-            averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-            minLevel: 8 // 클러스터 할 최소 지도 레벨
-        });
-
-        var selectedMarker = null;
-        var changeImage = null;
-
-        var markers = $(mypositions).map(function (i, position) {
-            var convertStamp = position.stamp % 10;
-
-            var imageSrc = '/images/shop-map/my_point'+convertStamp+'.png';
-            var clickImageSrc = '/images/shop-map/select_point'+convertStamp+'.png';
-
-            // 표시될 shop data
-            var imageSize = new daum.maps.Size(35, 49), // 마커이미지의 크기입니다
-                imageOprion = {offset: new daum.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-            var normalImage = new daum.maps.MarkerImage(imageSrc, imageSize, imageOprion);
-
-            // 클릭된 shop data
-            var clickImageSize = new daum.maps.Size(35, 49), // 마커이미지의 크기입니다
-                clickImageOprion = {offset: new daum.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-            var clickImage = new daum.maps.MarkerImage(clickImageSrc, clickImageSize, clickImageOprion);
-
-            var marker = new daum.maps.Marker({
-                position: new daum.maps.LatLng(position.lat, position.lng),
-                image: normalImage
-            });
-
-            daum.maps.event.addListener(marker, 'click', function () {
-                if(selectedMarker == null) {
-                    marker.setImage(clickImage);
-                    changeImage = normalImage;
-                }else if(selectedMarker !== marker) {
-                    marker.setImage(clickImage);
-                    !!selectedMarker && selectedMarker.setImage(changeImage);
-                    changeImage = normalImage;
-                }
-
-                // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
-                selectedMarker = marker;
-                var headers = {};
-                headers["user_id"] = $("#userId").val();
-
-                //shop data
-                var dataString = {'current_lat': position.lat, 'current_lng': position.lng};
-                $.ajax({
-                    url: $("#url").val() + '/map/v1.0/shopData',
-                    type: 'GET',
-                    headers : headers,
-                    dataType: 'json',
-                    data: dataString,
-                    success: function (data) {
-                        var shopData = data.shopData;
-                        var userId = data.userId;
-                        var clickShopData = document.getElementById('map_list_wrap');
-                        clickShopData.innerHTML = '';
-
-                        clickShopData.innerHTML += '<div class="address-row">' +
-                            '<div class="col-xs-2 address-left">' +
-                            '<a href="/shop/v1.0/shopInfo/'+ shopData.SHOP_ID +'/'+userId+'"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>' +
-                            '</div>' +
-                            '<div class="col-xs-10 address-right">' +
-                            '<a href="javascript:"><span class="icon" style="width:55px;height:55px;" onclick="guideLoad('+ position.lat + ',' + position.lng + ')"><img src="/images/shop-map/map_load_pin.png" style="width:50px;">3</span></a>' +
-                            '<h5 id="select_shop_name">' + shopData.SHOP_NAME + '</h5>' +
-                            '   <span class="phone">TEL : ' + shopData.SHOP_PHONE + '</span>' +
-                            '<p>' + shopData.SHOP_ADDR + '</p>' +
-                            '</div>' +
-                            '<div class="clearfix"> </div>' +
-                            '</div>';
-                    },
-                    error: function (request, status, error) {
-                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                        console.log('Error occured');
-                    }
-                });
-            });
-
-            if(i == 0) {
-                daum.maps.event.trigger(marker, 'click', '');
-            }
-
-            return marker;
-        });
-
-        // 클러스터러에 마커들을 추가합니다
-        clusterer.addMarkers(markers);
-    }
-
-    function guideLoad(lat, lng) {
-        var shopLat = lat;
-        var shopLng = lng;
-
-        // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성합니다
-        var bounds = new daum.maps.LatLngBounds();
-
-        var mouseEvent = {
-            latLng: new daum.maps.LatLng(shopLat, shopLng)
-        };
-
-        daum.maps.event.trigger(map, 'click', mouseEvent);
-
-        // LatLngBounds 객체에 좌표를 추가합니다
-        bounds.extend(new daum.maps.LatLng(shopLat, shopLng));
-
-        // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
-        // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
-        map.setBounds(bounds);
-    }
-
-    // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-    function zoomIn() {
-        map.setLevel(map.getLevel() - 1);
-    }
-
-    // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-    function zoomOut() {
-        map.setLevel(map.getLevel() + 1);
-    }
 </script>

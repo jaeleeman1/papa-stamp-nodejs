@@ -1,5 +1,3 @@
-<div class="hero-setting"></div>
-
 <ul class="my-card-list">
     <li class="card-setting">
         <div class="my-container">
@@ -7,15 +5,15 @@
                 <figure class="front">
                     <img class="base-img" src="http://www.jboeijenga.nl/img/back.jpg" alt="back">
                     <div class="caption">
-                        <span>로그인 정보</span>
+                        <div class="icon-wrapper"><i class="fa fa-th-list custom-icon" style="font-size:40px"></i><span>로그인 정보</span></div>
                         <h2>E-MAIL : <span>fromjaelee@naver.com</span></h2>
                         <p>비밀번호 변경</p>
-                        <a href="#">View more</a>
                     </div>
                 </figure>
             </div>
         </div>
     </li>
+
 
     <li class="card-setting">
         <div class="my-container">
@@ -23,12 +21,23 @@
                 <figure class="front">
                     <img class="base-img" src="http://www.jboeijenga.nl/img/back.jpg" alt="back">
                     <div class="caption">
-                        <h5>사용하기</h5>
-                        <h4>아메리카노<span>4000원</span></h4>
-                        <h6>✿ 유효 기간 : 영업점별 상이합니다.</h6>
+                        <div class="icon-wrapper" onclick="openLayer('layerCardPopup');"><i class="fa fa-th-list custom-icon" style="font-size:40px"></i><span>공지사항</span></div>
+                        <div class="icon-wrapper" onclick="openLayer('layerCardPopup');"><i class="fa fa-th-list custom-icon" style="font-size:40px"></i><span>이용약관</span></div>
+                        <div class="icon-wrapper" onclick="openLayer('layerCardPopup');"><i class="fa fa-th-list custom-icon" style="font-size:40px"></i><span>튜토리얼</span></div>
+                        <div class="icon-wrapper" onclick="openLayer('layerCardPopup');"><i class="fa fa-th-list custom-icon" style="font-size:40px"></i><span>개발정보</span></div>
+                        <div class="icon-wrapper" onclick="openLayer('layerCardPopup');"><i class="fa fa-th-list custom-icon" style="font-size:40px"></i><span>FAQ</span></div>
                     </div>
                 </figure>
             </div>
         </div>
     </li>
 </ul>
+
+
+<div id="layerCardPopup">
+    <div class="pop_up_body">
+        <p class="btn_txt_nor mt20"><span class="close-card" onclick="closeLayer('layerCardPopup')">닫기</span></p>
+
+        <p class="ti">공지사항</p>
+    </div>
+</div>
