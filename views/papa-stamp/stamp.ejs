@@ -1,14 +1,14 @@
 <ul class="my-card-list">
     <% var shopListCnt = shopListData.length %>
     <% for (var i=0; i<shopListCnt; i++) {%>
-    <li class="my-card-shop">
+    <li class="my-card-shop" id="<%= shopListData[i].SHOP_ID %>">
         <div class="my-container">
             <% var shopFrontImg = shopListData[i].SHOP_FRONT_IMG
                 var shopBackImg = shopListData[i].SHOP_BACK_IMG
                 var shopStampImg = shopListData[i].SHOP_STAMP_IMG
                 var userStampCnt = shopListData[i].USER_STAMP %>
             <div class="my-card" onclick="focusOpenLayer('layerCardPopup', '<%= shopFrontImg %>', '<%= shopBackImg %>', '<%=shopStampImg %>', '<%=userStampCnt %>');">
-            <!--<div class="my-card" onclick="focusLayer('layerCardPopup');">-->
+                <!--<div class="my-card" onclick="focusLayer('layerCardPopup');">-->
                 <figure class="front">
                     <img class="base-img" src="/images/shop-card/<%= shopBackImg %>" alt="back">
                     <div class="img-repeat">
@@ -36,7 +36,7 @@
                     </figure>
                     <figure class="back">
                         <img class="base-img" src="/images/shop-card/cafe-jass-back.png" alt="back">
-                        &lt;!&ndash;<img class="stamp-action" src="/images/shop-stamp/cafe-jass-stamp.png"></img>&ndash;&gt;
+                        <img class="stamp-action" src="/images/shop-stamp/cafe-jass-stamp.png"/>
                         <div class="img-repeat">
                             <% for (var i=1; i<=2; i++) {%>
                             <div id="papa_stamp_icon_<%=i%>" style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
@@ -54,11 +54,11 @@
 
 
 <script type="text/javascript">
-    /*function focusLayer(showDivId) {
+    function focusLayer(showDivId) {
         var browserHeight = $(document).height();
         var scrollPosition = $(document).scrollTop();
         openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
-    }*/
+    }
 
     function focusOpenLayer(showDivId, frontImg, backImg, stampImg, stampCnt) {
         var browserHeight = $(document).height();
@@ -83,7 +83,9 @@
         openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
     }
 
-    function stampActionOpenLayer(showDivId, frontImg, backImg, stampImg, stampCnt) {
+    function stampActionOpenLayer(showDivId, shopId, frontImg, backImg, stampImg, stampCnt) {
+        document.getElementById(shopId).scrollIntoView();
+
         var browserHeight = $(document).height();
         var scrollPosition = $(document).scrollTop();
 
@@ -93,6 +95,7 @@
             '</figure>' +
             '<figure class="back">' +
             '<img class="base-img" src="/images/shop-card/'+ backImg +'" alt="back">' +
+            '<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/'+ stampImg +'"/>' +
             '<div class="img-repeat">';
         for(var i=0; i<stampCnt; i++) {
             appendData += '<div id="papa_stamp_icon_>" style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">' +
@@ -108,12 +111,16 @@
 </script>
 
 
-<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>
-<!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
+<!--<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>-->
+<script src="http://localhost:8060/socket.io/socket.io.js"></script>
 <script type="text/javascript">
-    var socket = io.connect('https://whereareevent.com:8060');
-    /*var socket = io.connect('http://localhost:8060');*/
-    socket.on('aa', function(data){
-        stampActionOpenLayer('layerCardPopup');
+    var pushUserId = $("#userId").val();
+    /*var socket = io.connect('https://whereareevent.com:8060');*/
+    var socket = io.connect('http://localhost:8060');
+    socket.on(pushUserId, function(data){
+        stampActionOpenLayer('layerCardPopup', data.sendId, data.stampData.SHOP_FRONT_IMG, data.stampData.SHOP_BACK_IMG, data.stampData.SHOP_STAMP_IMG, data.stampCnt);
+        setTimeout(function() {
+            $('#stamp-action').remove();
+        }, 3000);
     });
 </script>

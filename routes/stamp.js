@@ -50,7 +50,7 @@ router.get('/main', function(req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectShopList = 'select SUPI.USER_STAMP, SSI.SHOP_STAMP_IMG, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, ( 3959 * acos( cos( radians('+currentLat+') ) * cos( radians(SHOP_LAT) ) ' +
+        var selectShopList = 'select SUPI.USER_STAMP, SSI.SHOP_ID, SSI.SHOP_STAMP_IMG, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, ( 3959 * acos( cos( radians('+currentLat+') ) * cos( radians(SHOP_LAT) ) ' +
             '* cos( radians(SHOP_LNG) - radians('+currentLng+') ) + sin( radians('+currentLat+') ) ' +
             '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
             'from SB_SHOP_INFO as SSI ' +
@@ -74,10 +74,90 @@ router.get('/main', function(req, res, next) {
     // res.render('common/papa-stamp', {view: 'stamp', url:config.url, userId:'7c28d1c5088f01cda7e4ca654ec88ef8', shopID:'0001', cardCnt:8, stampCnt:2});
 });
 
+router.put('/insertStampHistory', function (req, res, next) {
+    logger.info(TAG, 'Insert user stamp history');
+    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
+    var shopId = 'SB-SHOP-00001';//req.body.shop_id;
 
-router.get('/stampList/:user_id', function (req, res, next) {
-    io.sockets.emit('aa', {sendData: "API papa stamp success!"});
-    res.send({ shopID:'0001', stampCnt:2});
+    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'Shop ID : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid parameter');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    getConnection(function (err, connection){
+        var selectStampHistoryCount = 'select count(*) as CNT from SB_USER_PUSH_HIS where USED_YN = "N" and SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+        connection.query(selectStampHistoryCount, function (err, stampHistoryCount) {
+            if (err) {
+                logger.error(TAG, "DB selectStampHistoryCount error : " + err);
+                res.status(400);
+                res.send('select user push history count error');
+            }else{
+                if(stampHistoryCount[0].CNT < 10) {
+                    var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
+                    connection.query(insertStampHistory, function (err, row) {
+                        if (err) {
+                            logger.error(TAG, "DB insertStampHistory error : " + err);
+                            res.status(400);
+                            res.send('Insert user push history error');
+                        } else {
+                            var selectShopData = 'select SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
+                                'from SB_SHOP_INFO as SSI ' +
+                                'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
+                                'limit 1';
+                            connection.query(selectShopData, function (err, shopData) {
+                                if (err) {
+                                    logger.error(TAG, "DB select shop data error : " + err);
+                                    res.status(400);
+                                    res.send('Select shop data error');
+                                } else {
+                                    logger.debug(TAG, 'Insert user push history success');
+
+                                    io.sockets.emit(userId, {sendId: shopId, stampCnt:(stampHistoryCount[0].CNT+1), stampData:shopData[0]});
+                                    logger.debug(TAG, 'API papa stamp success!');
+
+                                    res.status(200);
+                                    res.send({resultData: 'Insert user push history success'});
+                                }
+                            });
+                        }
+                    });
+                }
+                if (stampHistoryCount[0].CNT == 9) {
+                    var updatePushHistory = 'update SB_USER_PUSH_HIS set USED_YN = "Y" where  SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and USED_YN = "N" order by REG_DT ASC limit 10';
+                    connection.query(updatePushHistory, function (err, UpdateCouphoneData) {
+                        if (err) {
+                            logger.error(TAG, "DB updatePushHistory error : " + err);
+                            res.status(400);
+                            res.send('Update push history error');
+                        }else{
+                            logger.debug(TAG, 'Update push history success');
+
+                            var updateCouphoneMapping = 'update SB_USER_COUPHONE SET USER_ID = '+mysql.escape(userId)+', MAPPING_YN = "Y"' +
+                                'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = '+mysql.escape(shopId)+' order by REG_DT ASC limit 1';
+                            connection.query(updateCouphoneMapping, function (err, UpdateCouphoneData) {
+                                if (err) {
+                                    logger.error(TAG, "DB updateCouphoneMapping error : " + err);
+                                    res.status(400);
+                                    res.send('Update couphone mapping error');
+                                }else{
+                                    logger.debug(TAG, 'Update couphone mapping success');
+
+                                    res.status(200);
+                                    res.send({resultData:'Update couphone mapping success'});
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+            connection.release();
+        });
+    });
 });
 
 module.exports = router;
