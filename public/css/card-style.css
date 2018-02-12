@@ -127,6 +127,9 @@ figure .caption h4 span{
 figure .caption span{
     font-size: 4em;
     color: #999;
+}
+
+figure .caption .title-setting{
     margin-left: -150px;
 }
 
@@ -278,6 +281,16 @@ figure a{
 
 
 /* stamp image */
+/*.papa-stamp-icon {
+    border: 1px solid gold;
+    float: left;
+    width: 20%;
+    margin-bottom:5px;
+    margin-top:-350px;
+    position:relative;
+}*/
+
+/* stamp image */
 .stamp-img{
     top:-350px;
     width:80px;
@@ -286,14 +299,6 @@ figure a{
     background-color:#ef8080;
     margin-left:30px;
 }
-
-
-
-
-
-
-
-
 
 /* stamp action */
 .stamp-action{

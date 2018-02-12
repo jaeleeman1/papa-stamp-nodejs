@@ -1,3 +1,8 @@
+<form name="commonAction" style="display:none">
+    <input type="hidden" name="current_lat" id="current_lat" value="<%= currentLocationData.CURRENT_LAT %>"/>
+    <input type="hidden" name="current_lng" id="current_lng" value="<%= currentLocationData.CURRENT_LNG %>"/>
+</form>
+
 <div class="cards" id="card-list">
     <% var shopListCnt = shopListData.length %>
     <% for (var i=0; i<shopListCnt; i++) {%>
@@ -30,8 +35,8 @@
         var currentLng = $("#current_lng").val();
 
         var currentMarkerSrc = '/images/shop-map/current_point.png', // 현재 위치 마커이미지
-            currentMarkerSize = new daum.maps.Size(35, 49), // 현재 위치 마커이미지의 크기
-            currentMarkerOption = {offset: new daum.maps.Point(19, 58)}; // 현재 위치 마커이미지의 옵션
+            currentMarkerSize = new daum.maps.Size(55, 80), // 현재 위치 마커이미지의 크기
+            currentMarkerOption = {offset: new daum.maps.Point(27, 69)}; // 현재 위치 마커이미지의 옵션
 
         var currentMarkerImage = new daum.maps.MarkerImage(currentMarkerSrc, currentMarkerSize, currentMarkerOption);
         var currentMarkerPosition = new daum.maps.LatLng(currentLat, currentLng); // 마커가 표시될 위치
@@ -59,12 +64,12 @@
             var clickImageSrc = '/images/shop-map/select_point.png';
 
             // 표시될 shop data
-            var imageSize = new daum.maps.Size(35, 49), // 마커이미지의 크기입니다
+            var imageSize = new daum.maps.Size(55, 80), // 마커이미지의 크기입니다
                 imageOprion = {offset: new daum.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
             var normalImage = new daum.maps.MarkerImage(imageSrc, imageSize, imageOprion);
 
             // 클릭된 shop data
-            var clickImageSize = new daum.maps.Size(35, 49), // 마커이미지의 크기입니다
+            var clickImageSize = new daum.maps.Size(55, 80), // 마커이미지의 크기입니다
                 clickImageOprion = {offset: new daum.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
             var clickImage = new daum.maps.MarkerImage(clickImageSrc, clickImageSize, clickImageOprion);
 
@@ -102,8 +107,8 @@
                                 '<div class="col-xs-10 address-right">' +
                                 '<a href="javascript:"><div class="icon" onclick="guidePapaShopLoad('+ shopData.SHOP_LAT+','+ shopData.SHOP_LNG+')"><img class="guide" src="/images/shop-map/map_load_pin.png"></div></a>' +
                                 '<div class="select-shop-name">'+ shopData.SHOP_NAME +
-                                '<span class="select-shop-phone"><i class="fa fa-map-marker" style="font-size: 30px;margin-right:10px;"></i>TEL : '+ shopData.SHOP_PHONE +'</span>' +
-                                '<p class="select-shop-addr"><i class="fa fa-map-marker" style="font-size: 30px;margin-right:10px;"></i>'+ shopData.SHOP_ADDR +'</p>' +
+                                '<span class="select-shop-phone"><i class="fa fa-phone" style="font-size: 30px;margin-right:10px;"></i> : '+ shopData.SHOP_PHONE +'</span>' +
+                                '<p class="select-shop-addr"><i class="fa fa-home" style="font-size: 30px;margin-right:10px;"></i> : '+ shopData.SHOP_ADDR +'</p>' +
                                 '</div>' +
                                 '</div>' +
                                 '</div>';

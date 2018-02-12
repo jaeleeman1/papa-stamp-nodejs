@@ -1,26 +1,20 @@
-<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>
-<!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
-<script type="text/javascript">
-    var socket = io.connect('https://whereareevent.com:8060');
-    /*var socket = io.connect('http://localhost:8060');*/
-    socket.on('aa', function(data){
-        focusOpenLayer('layerCardPopup');
-    });
-</script>
 <ul class="my-card-list">
-
-
-
-    <% for (var i=1; i<=cardCnt; i++) {%>
+    <% var shopListCnt = shopListData.length %>
+    <% for (var i=0; i<shopListCnt; i++) {%>
     <li class="my-card-shop">
         <div class="my-container">
-            <div class="my-card" onclick="focusOpenLayer('layerCardPopup');">
+            <% var shopFrontImg = shopListData[i].SHOP_FRONT_IMG
+                var shopBackImg = shopListData[i].SHOP_BACK_IMG
+                var shopStampImg = shopListData[i].SHOP_STAMP_IMG
+                var userStampCnt = shopListData[i].USER_STAMP %>
+            <div class="my-card" onclick="focusOpenLayer('layerCardPopup', '<%= shopFrontImg %>', '<%= shopBackImg %>', '<%=shopStampImg %>', '<%=userStampCnt %>');">
+            <!--<div class="my-card" onclick="focusLayer('layerCardPopup');">-->
                 <figure class="front">
-                    <img class="base-img" src="/images/shop-card/cafe-jass-back.png" alt="back">
+                    <img class="base-img" src="/images/shop-card/<%= shopBackImg %>" alt="back">
                     <div class="img-repeat">
-                        <% for (var j=1; j<=stampCnt; j++) {%>
+                        <% for (var j=1; j<=userStampCnt; j++) {%>
                         <div id="papa_stamp_icon_<%=j%>" style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
-                            <img class="stamp-img" src="/images/shop-stamp/cafe-jass-stamp.png"  style="display:block;"></img>
+                            <img class="stamp-img" src="/images/shop-stamp/<%= shopStampImg %>" style="display:block;"></img>
                         </div>
                         <%}%>
                     </div>
@@ -36,13 +30,13 @@
         <p class="btn_txt_nor mt20"><span class="delete-card" id="carda_deletef">카드 삭제</span><span onclick="closeLayer('layerCardPopup')">닫기</span></p>
         <div class="card-img">
             <div class="container">
-                <div class="card flipped">
-                    <figure class="front">
+                <div class="card flipped" id="popup-card">
+                    <!--<figure class="front">
                         <img class="base-img" src="/images/shop-card/cafe-jass-front.png" alt="front">
                     </figure>
                     <figure class="back">
                         <img class="base-img" src="/images/shop-card/cafe-jass-back.png" alt="back">
-                        <img class="stamp-action" src="/images/shop-stamp/cafe-jass-stamp.png"></img>
+                        &lt;!&ndash;<img class="stamp-action" src="/images/shop-stamp/cafe-jass-stamp.png"></img>&ndash;&gt;
                         <div class="img-repeat">
                             <% for (var i=1; i<=2; i++) {%>
                             <div id="papa_stamp_icon_<%=i%>" style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">
@@ -50,7 +44,7 @@
                             </div>
                             <%}%>
                         </div>
-                    </figure>
+                    </figure>-->
                 </div>
             </div>
         </div>
@@ -60,9 +54,66 @@
 
 
 <script type="text/javascript">
-    function focusOpenLayer(showDivId) {
+    /*function focusLayer(showDivId) {
         var browserHeight = $(document).height();
         var scrollPosition = $(document).scrollTop();
         openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
+    }*/
+
+    function focusOpenLayer(showDivId, frontImg, backImg, stampImg, stampCnt) {
+        var browserHeight = $(document).height();
+        var scrollPosition = $(document).scrollTop();
+
+        var popupCardData = document.getElementById('popup-card');
+        var appendData = '<figure class="front">' +
+            '<img class="base-img" src="/images/shop-card/'+ frontImg +'" alt="front">' +
+            '</figure>' +
+            '<figure class="back">' +
+            '<img class="base-img" src="/images/shop-card/'+ backImg +'" alt="back">' +
+            '<div class="img-repeat">';
+            for(var i=0; i<stampCnt; i++) {
+                appendData += '<div id="papa_stamp_icon_>" style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">' +
+                    '<img class="stamp-img" src="/images/shop-stamp/'+ stampImg +'" style="display:block;"></img>' +
+                    '</div>';
+             }
+            appendData += '</div>' +
+                '</figure>';
+        popupCardData.innerHTML += appendData;
+
+        openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
     }
+
+    function stampActionOpenLayer(showDivId, frontImg, backImg, stampImg, stampCnt) {
+        var browserHeight = $(document).height();
+        var scrollPosition = $(document).scrollTop();
+
+        var popupCardData = document.getElementById('popup-card');
+        var appendData = '<figure class="front">' +
+            '<img class="base-img" src="/images/shop-card/'+ frontImg +'" alt="front">' +
+            '</figure>' +
+            '<figure class="back">' +
+            '<img class="base-img" src="/images/shop-card/'+ backImg +'" alt="back">' +
+            '<div class="img-repeat">';
+        for(var i=0; i<stampCnt; i++) {
+            appendData += '<div id="papa_stamp_icon_>" style="border: 1px solid gold; float: left; width: 20%; margin-bottom:5px;">' +
+                '<img class="stamp-img" src="/images/shop-stamp/'+ stampImg +'" style="display:block;"></img>' +
+                '</div>';
+        }
+        appendData += '</div>' +
+            '</figure>';
+        popupCardData.innerHTML += appendData;
+
+        openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
+    }
+</script>
+
+
+<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>
+<!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
+<script type="text/javascript">
+    var socket = io.connect('https://whereareevent.com:8060');
+    /*var socket = io.connect('http://localhost:8060');*/
+    socket.on('aa', function(data){
+        stampActionOpenLayer('layerCardPopup');
+    });
 </script>

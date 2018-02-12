@@ -16,15 +16,13 @@
     <script src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
 </head>
 
-<form name="papa" id="papa">
+<form name="footerAction" method="get" style="display:none">
     <input type="hidden" name="view" id="view" value="<%= view %>"/>
     <input type="hidden" name="url" id="url" value="<%= url %>"/>
     <input type="hidden" name="userId" id="userId" value="<%= userId %>"/>
-    <input type="hidden" name="current_lat" id="current_lat" value="<%= currentLocationData.CURRENT_LAT %>"/>
-    <input type="hidden" name="current_lng" id="current_lng" value="<%= currentLocationData.CURRENT_LNG %>"/>
 </form>
 
-<form action="/v1/shop/main" method="get" style="display:none" name="papa_shop" id="papa_shop">
+<!--<form action="/v1/shop/main" method="get" style="display:none" name="papa_shop" id="papa_shop">
 </form>
 <form action="/v1/stamp/main" method="get" style="display:none" name="papa_stamp" id="papa_stamp">
 </form>
@@ -33,7 +31,7 @@
 <form action="/v1/event/main" method="get" style="display:none" name="papa_event" id="papa_event">
 </form>
 <form action="/v1/setting/main" method="get" style="display:none" name="papa_setting" id="papa_setting">
-</form>
+</form>-->
 
 <body>
 <div class="frame">
@@ -154,16 +152,17 @@
             var index = footermenu.index(this);
 
             if(index == 0) {
-                $("#papa_shop").submit();
+                document.footerAction.action = '/v1/shop/main';
             }else if(index == 1) {
-                $("#papa_stamp").submit();
+                document.footerAction.action = '/v1/stamp/main';
             }else if(index == 2) {
-                $("#papa_coupon").submit();
+                document.footerAction.action = '/v1/coupon/main';
             }else if(index == 3) {
-                $("#papa_event").submit();
+                document.footerAction.action = '/v1/event/main';
             }else {
-                $("#papa_setting").submit();
+                document.footerAction.action = '/v1/setting/main';
             }
+            document.footerAction.submit();
         });
 
         var mapIcon = document.getElementById('map-icon');
