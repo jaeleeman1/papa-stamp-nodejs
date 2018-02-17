@@ -20,6 +20,9 @@
     <input type="hidden" name="view" id="view" value="<%= view %>"/>
     <input type="hidden" name="url" id="url" value="<%= url %>"/>
     <input type="hidden" name="userId" id="userId" value="<%= userId %>"/>
+    <input type="hidden" name="current_lat" id="current_lat" value=""/>
+    <input type="hidden" name="current_lng" id="current_lng" value=""/>
+
 </form>
 
 <!--<form action="/v1/shop/main" method="get" style="display:none" name="papa_shop" id="papa_shop">
@@ -123,8 +126,36 @@
 </body>
 </html>
 
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=1a30d2b7d0dec9ecdbd9665afa6ea7b1&libraries=clusterer,services"></script>
+
 <script type="text/javascript">
     $(function () {
+        daum.maps.load(function() {
+            var currentLat = '';//37.4979887529;
+            var currentLng = '';//127.0296421998;
+
+            var headers = {};
+            headers["user_id"] = $("#userId").val();
+
+            $.ajax({
+                url: $("#url").val() + '/v1/shop/currentLocation',
+                type: 'GET',
+                headers : headers,
+                dataType: 'json',
+                success: function(data) {
+                    var currentLocationData = data.currentLocationData;
+                    currentLat = currentLocationData.CURRENT_LAT;
+                    currentLng = currentLocationData.CURRENT_LNG;
+
+                    $("#current_lat").val(currentLat);
+                    $("#current_lng").val(currentLng);
+                },
+                error: function(request, status, error) {
+                    console.error("currentLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
+        });
+
         $(document).on('click', '.card', function(){
             $(this).toggleClass('flipped');
         });
@@ -176,7 +207,7 @@
                         if($("#mapPop").css("display") == "none") {
                             $("#card-list").css("display", "none");
                             openMapLayer("mapPop");
-                            changeShop();
+                            mapPapaShop();
                             mapIcon.innerHTML = '<i class="fa fa-map-marker" style="font-size: 70px;color: red"></i>';
                         }else {
                             $("#select-card").remove();

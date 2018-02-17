@@ -17,15 +17,10 @@
     <%}%>
 </div>
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1a30d2b7d0dec9ecdbd9665afa6ea7b1&autoload=false&libraries=clusterer,services"></script>
-
 <script type="text/javascript">
     var map='';
-    daum.maps.load(function() {
 
-    });
-
-    function changeShop() {
+    function mapPapaShop() {
         var currentLat = $("#current_lat").val();
         var currentLng = $("#current_lng").val();
 
@@ -85,7 +80,6 @@
                     }
                     // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
                     selectedMarker = marker;
-
                     //shop data
                     var dataString = {'current_lat': position.lat, 'current_lng': position.lng};
                     $.ajax({

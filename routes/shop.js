@@ -87,4 +87,34 @@ router.get('/shopData', function(req, res, next) {
     });
 });
 
+//Get User Location
+router.get('/currentLocation', function (req, res, next) {
+    logger.info(TAG, 'Get user current location');
+
+    var userId = req.headers.user_id;
+    logger.debug(TAG, 'User ID : ' + userId);
+
+    if(userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid headers value');
+        res.status(400);
+        res.send('Invalid headers error');
+    }
+
+    getConnection(function (err, connection){
+        var selectUserLocationQuery = 'select CURRENT_LAT,CURRENT_LNG from SB_USER_INFO where USER_ID ='+mysql.escape(userId);
+        connection.query(selectUserLocationQuery, function (err, currentLocationData) {
+            if (err) {
+                logger.error(TAG, "DB selectUserLocationQuery error : " + err);
+                res.status(400);
+                res.send('Select user current location error');
+            }else{
+                logger.debug(TAG, 'Select user current location success : ' + JSON.stringify(currentLocationData));
+                res.status(200);
+                res.send({currentLocationData:currentLocationData[0]});
+            }
+            connection.release();
+        });
+    });
+});
+
 module.exports = router;

@@ -281,23 +281,32 @@ figure a{
 
 
 /* stamp image */
-/*.papa-stamp-icon {
-    border: 1px solid gold;
-    float: left;
-    width: 20%;
-    margin-bottom:5px;
-    margin-top:-350px;
+.papa_stamp_icon{
+    top:-440px;
+    width:145px;
+    border-radius:5px;
     position:relative;
-}*/
+    margin-left:30px;
+    margin-bottom:25px;
+    float:left;
+}
 
-/* stamp image */
 .stamp-img{
     top:-350px;
+    border-radius:50px;
+/*    top:-350px;
     width:80px;
     border-radius:5px;
     position:relative;
     background-color:#ef8080;
-    margin-left:30px;
+    margin-left:30px;*/
+}
+
+.stamp-date{
+    font-size: 25px;
+    vertical-align: bottom;
+    padding: 3px 5px 3px 5px;
+    background-color:darkgoldenrod;
 }
 
 /* stamp action */
