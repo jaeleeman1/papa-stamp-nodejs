@@ -8,10 +8,10 @@ var mysql = require('mysql');
 const TAG = "[SHOP INFO] ";
 
 /* GET Shop Main Page. */
-router.get('/main/:userId', function(req, res, next) {
+router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get shop information');
 
-    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8'; //req.params.userId;
+    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
     logger.debug(TAG, 'User ID : ' + userId);
 
     if(userId == null || userId == undefined) {
