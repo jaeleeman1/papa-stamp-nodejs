@@ -24,7 +24,7 @@ router.get('/main', function(req, res, next) {
     getConnection(function (err, connection){
         var selectCouponList = 'select SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, SUC.EXPIRATION_DT from SB_USER_COUPON as SUC ' +
                 'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
-                'where SUC.MAPPING_YN = "N" and SUC.USER_ID ='+mysql.escape(userId);
+                'where SUC.MAPPING_YN = "Y" and SUC.USED_YN = "N" and SUC.USER_ID ='+mysql.escape(userId);
         connection.query(selectCouponList, function (err, couponListData) {
             if (err) {
                 logger.error(TAG, "DB select coupon shop main error : " + err);
@@ -120,6 +120,51 @@ router.get('/shopData', function(req, res, next) {
                 logger.debug(TAG, 'Select coupon shop data success : ' + JSON.stringify(shopData));
                 res.status(200);
                 res.send({shopData: shopData[0], userId: userId});
+            }
+        });
+    });
+});
+
+//Put Coupon Data
+router.put('/couponData', function(req, res, next) {
+    logger.info(TAG, 'Get coupon shop data');
+
+    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
+    var shopId = 'SB-SHOP-00001';//req.body.shop_id;
+
+    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'Shop ID : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid parameter');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    //Coupon Data API
+    getConnection(function (err, connection) {
+        var updatePushHistory = 'update SB_USER_PUSH_HIS set USED_YN = "Y" where  SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and USED_YN = "N" order by REG_DT ASC limit 10';
+        connection.query(updatePushHistory, function (err, UpdateHistoryData) {
+            if (err) {
+                logger.error(TAG, "DB updatePushHistory error : " + err);
+                res.status(400);
+                res.send('Update push history error');
+            }else{
+                logger.debug(TAG, 'Update push history success');
+
+                var updateCouponMapping = 'update SB_USER_COUPON SET USER_ID = '+mysql.escape(userId)+', MAPPING_YN = "Y"' +
+                    'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = '+mysql.escape(shopId)+' order by REG_DT ASC limit 1';
+                connection.query(updateCouponMapping, function (err, UpdateCouponData) {
+                    if (err) {
+                        logger.error(TAG, "DB updateCouponMapping error : " + err);
+                        res.status(400);
+                        res.send('Update coupon mapping error');
+                    }else{
+                        logger.debug(TAG, 'Update coupon mapping success',  UpdateCouponData);
+                        res.send({result: 'success'});
+                    }
+                });
             }
         });
     });

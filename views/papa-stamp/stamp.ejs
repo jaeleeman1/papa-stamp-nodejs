@@ -11,7 +11,8 @@
                 <figure class="front">
                     <img class="base-img" src="/images/shop-card/<%= shopBackImg %>" alt="back">
                     <div class="img-repeat">
-                        <% for (var j=1; j<=shopListData[i].USER_STAMP; j++) {%>
+                        <% var userStamp = (shopListData[i].USER_STAMP % 10)  %>
+                        <% for (var j=1; j<=userStamp; j++) {%>
                         <div class="papa_stamp_icon" id="papa_stamp_icon_<%=j%>">
                             <img class="stamp-img" src="/images/shop-stamp/<%= shopStampImg %>"></img>
                         </div>
@@ -135,15 +136,41 @@
     /*var socket = io.connect('https://whereareevent.com:8060');*/
     var socket = io.connect('http://localhost:8060');
     socket.on(pushUserId, function(data){
-        stampActionOpenLayer('layerCardPopup', data.sendId, data.stampData.SHOP_FRONT_IMG, data.stampData.SHOP_BACK_IMG, data.stampData.SHOP_STAMP_IMG, data.stampCnt);
+        var visitRateCnt = data.stampCnt % 10;
+        var shopId = data.sendId;
+
+        stampActionOpenLayer('layerCardPopup', shopId, data.stampData.SHOP_FRONT_IMG, data.stampData.SHOP_BACK_IMG, data.stampData.SHOP_STAMP_IMG);
+
         setTimeout(function() {
             $('#stamp-action').remove();
+            if (data.stampCnt>0 && visitRateCnt==0) {
+                var headers = {};
+                headers["user_id"] = pushUserId;
+                var dataString = {'shop_id': shopId};
+                $.ajax({
+                    url: $("#url").val() + '/v1/coupon/couponData',
+                    type: 'PUT',
+                    headers : headers,
+                    dataType: 'json',
+                    data : dataString,
+                    success: function(data) {
+                        $("#"+shopId).find($(".img-repeat")).remove();
+                        //Toast Success Message
+                        $.toast.config.align = 'right';
+                        $.toast.config.width = 500;
+                        $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', { type: 'info', duration: 5000 } );
+                    },
+                    error: function(request, status, error) {
+                        console.error("selectStampDate : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }else {
+                var appendStamp = '<div class="papa_stamp_icon" id="papa_stamp_icon">' +
+                    '<img class="stamp-img" src="/images/shop-stamp/'+ data.stampData.SHOP_STAMP_IMG +'"></img>'+
+                    '</div>';
+                $("#"+shopId).find($(".img-repeat")).append(appendStamp);
+            }
         }, 3000);
-
-        var appendStamp = '<div class="papa_stamp_icon" id="papa_stamp_icon">' +
-            '<img class="stamp-img" src="/images/shop-stamp/'+ data.stampData.SHOP_STAMP_IMG +'"></img>'+
-            '</div>';
-        $("#"+data.sendId).find($(".img-repeat")).append(appendStamp);
     });
 </script>
 

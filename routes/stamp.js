@@ -221,6 +221,7 @@ router.post('/update-stamp', function (req, res, next) {
                         res.status(400);
                         res.send('select user push history count error');
                     }else{
+                        console.log('#####################'+stampHistoryCount[0].CNT);
                         if(stampHistoryCount[0].CNT < 10) {
                             var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
                             connection.query(insertStampHistory, function (err, row) {
@@ -246,33 +247,6 @@ router.post('/update-stamp', function (req, res, next) {
 
                                             res.status(200);
                                             res.send({resultData: 'Insert user push history success'});
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                        if (stampHistoryCount[0].CNT == 9) {
-                            var updatePushHistory = 'update SB_USER_PUSH_HIS set USED_YN = "Y" where  SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and USED_YN = "N" order by REG_DT ASC limit 10';
-                            connection.query(updatePushHistory, function (err, UpdateCouphoneData) {
-                                if (err) {
-                                    logger.error(TAG, "DB updatePushHistory error : " + err);
-                                    res.status(400);
-                                    res.send('Update push history error');
-                                }else{
-                                    logger.debug(TAG, 'Update push history success');
-
-                                    var updateCouphoneMapping = 'update SB_USER_COUPHONE SET USER_ID = '+mysql.escape(userId)+', MAPPING_YN = "Y"' +
-                                        'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = '+mysql.escape(shopId)+' order by REG_DT ASC limit 1';
-                                    connection.query(updateCouphoneMapping, function (err, UpdateCouphoneData) {
-                                        if (err) {
-                                            logger.error(TAG, "DB updateCouphoneMapping error : " + err);
-                                            res.status(400);
-                                            res.send('Update couphone mapping error');
-                                        }else{
-                                            logger.debug(TAG, 'Update couphone mapping success');
-
-                                            res.status(200);
-                                            res.send({resultData:'Update couphone mapping success'});
                                         }
                                     });
                                 }
