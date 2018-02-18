@@ -266,6 +266,10 @@ figure a{
     height: 100%;
 }
 
+figure .icon-wrapper {
+    margin-bottom:10px;
+}
+
 @media (min-width: 450px) {
     .container{
         left: 50%;
