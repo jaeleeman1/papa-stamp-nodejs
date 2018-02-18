@@ -27,7 +27,7 @@ io.sockets.on('connection',function(socket){
 
 /* GET stamp page. */
 router.get('/main', function(req, res, next) {
-    logger.info(TAG, 'Get my shop information');
+    logger.info(TAG, 'Get stamp shop information');
 
     var userId = req.query.userId;
     var currentLat = '37.650804099999995';//req.body.latitude;
@@ -143,7 +143,6 @@ router.get('/shopData', function(req, res, next) {
         var selectShopDataQuery = 'select SSI.*, SUPI.USER_STAMP from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_PUSH_INFO as SUPI on SUPI.SHOP_ID = SSI.SHOP_ID ' +
             'where SHOP_LAT =' + mysql.escape(currentLat)+ ' and SHOP_LNG =' + mysql.escape(currentLng)  +' and SUPI.USER_ID =' +mysql.escape(userId) ;
-        console.log(selectShopDataQuery);
         connection.query(selectShopDataQuery, function (err, shopData) {
             if (err) {
                 console.error("Select shop data Error : ", err);

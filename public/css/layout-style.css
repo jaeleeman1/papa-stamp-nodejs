@@ -329,6 +329,13 @@ img {
   font-family: 'Berkshire Swash', cursive;
 }
 
+.select-shop-sub-name {
+  padding: 5px 0 0 10px;
+  color: #e94739;
+  font-size: 1em;
+  font-family: 'Berkshire Swash', cursive;
+}
+
 .select-shop-phone {
   color: blue;
   letter-spacing: 0.8px;

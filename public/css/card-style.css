@@ -85,12 +85,11 @@ figure .caption {
 }
 
 figure .caption h5 {
-    float: left;
+    width: 30%;
     font-size: 1.8em;
     border: 3px solid #74DF00;
     padding: 10px;
     margin-top: 1em;
-    margin-left: -11.2em;
 }
 
 figure .caption h4 {
@@ -109,7 +108,7 @@ figure .caption h3{
     float: left;
     font-size: 2.5em;
     padding: 10px;
-    margin-top: 5em;
+    margin-top: 1.5em;
 }
 
 figure .caption h3 span{
@@ -134,14 +133,14 @@ figure .caption .title-setting{
 }
 
 figure .caption h6{
+    margin-left: 100px;
     float: right;
     font-size: 1.5em;
     color: #fff;
     padding: 10px;
-    margin-top: 1em;
+    margin-top: 7em;
     letter-spacing: 2px;
     font-weight: 500;
-    line-height: 20em;
     font-family: 'Yantramanav', sans-serif;
 }
 
