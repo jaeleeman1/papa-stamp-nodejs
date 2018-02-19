@@ -56,7 +56,7 @@ router.get('/main', function(req, res, next) {
             '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
             'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_PUSH_INFO as SUPI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
-            'where SUPI.USER_ID = "'+ userId + '"' +
+            'where SUPI.USER_ID = "'+ userId + '" and SUPI.DEL_YN= "N" ' +
             'having distance < 25 ' +
             'order by distance limit 0, 10';
         connection.query(selectShopList, function (err, shopListData) {
@@ -174,7 +174,7 @@ router.get('/selectStampDate', function(req, res) {
     }
 
     getConnection(function (err, connection){
-        var selectStampPushCount = 'select date_format(REG_DT, "%Y-%m-%d") as REG_DT from SB_USER_PUSH_HIS where USED_YN = "N" and SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+        var selectStampPushCount = 'select date_format(REG_DT, "%Y-%m-%d") as REG_DT from SB_USER_PUSH_HIS where USED_YN = "N" and DEL_YN = "N" and SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
         connection.query(selectStampPushCount, function (err, stampDate) {
             if (err) {
                 logger.error(TAG, "DB selectStampDate error : " + err);
@@ -186,6 +186,95 @@ router.get('/selectStampDate', function(req, res) {
                 res.send({stampDate:stampDate});
             }
             connection.release();
+        });
+    });
+});
+
+//Insert Card Data
+router.put('/insertCard', function(req, res, next) {
+    logger.info(TAG, 'Insert card data');
+
+    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
+    var shopId = 'SB-SHOP-00001';//req.body.shop_id;
+
+    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'Shop ID : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid parameter');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    //Card Data API
+    getConnection(function (err, connection) {
+        var insertPushInfo = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) value ' +
+            '('+mysql.escape(userId)+','+mysql.escape(shopId)+', 1) on duplicate key update SHOP_CURRENT_NUM = SHOP_CURRENT_NUM +1';
+        connection.query(deletePushInfo, function (err, DeletePushInfoData) {
+            if (err) {
+                logger.error(TAG, "DB deletePushInfo error : " + err);
+                res.status(400);
+                res.send('Delete push info error');
+            }else{
+                logger.debug(TAG, 'Delete push info success');
+
+                var deletePushHistory = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+                connection.query(deletePushHistory, function (err, DeletePushHisData) {
+                    if (err) {
+                        logger.error(TAG, "DB deletePushHis error : " + err);
+                        res.status(400);
+                        res.send('Delete push history error');
+                    }else{
+                        logger.debug(TAG, 'Delete push history success');
+                        res.send({result: 'success'});
+                    }
+                });
+            }
+        });
+    });
+});
+
+//Put Card Data
+router.put('/deleteCard', function(req, res, next) {
+    logger.info(TAG, 'Delete card data');
+
+    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
+    var shopId = 'SB-SHOP-00001';//req.body.shop_id;
+
+    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'Shop ID : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid parameter');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    //Card Data API
+    getConnection(function (err, connection) {
+        var deletePushInfo = 'update SB_USER_PUSH_INFO set USER_STAMP = 0, DEL_YN = "Y" where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+        connection.query(deletePushInfo, function (err, DeletePushInfoData) {
+            if (err) {
+                logger.error(TAG, "DB deletePushInfo error : " + err);
+                res.status(400);
+                res.send('Delete push info error');
+            }else{
+                logger.debug(TAG, 'Delete push info success');
+
+                var deletePushHistory = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+                connection.query(deletePushHistory, function (err, DeletePushHisData) {
+                    if (err) {
+                        logger.error(TAG, "DB deletePushHis error : " + err);
+                        res.status(400);
+                        res.send('Delete push history error');
+                    }else{
+                        logger.debug(TAG, 'Delete push history success');
+                        res.send({result: 'success'});
+                    }
+                });
+            }
         });
     });
 });
@@ -207,7 +296,7 @@ router.post('/update-stamp', function (req, res, next) {
 
     getConnection(function (err, connection){
         var insertUserPushQuery = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) value (' + mysql.escape(shopId) + ',' + mysql.escape(userId) +
-            ', 1) on duplicate key update USER_STAMP = USER_STAMP +1';
+            ', 1) on duplicate key update USER_STAMP = USER_STAMP +1, DEL_YN = "N"';
         connection.query(insertUserPushQuery, function (err, userPushData) {
             if (err) {
                 logger.error(TAG, "DB insertUserPushQuery error : " + err);
@@ -221,7 +310,6 @@ router.post('/update-stamp', function (req, res, next) {
                         res.status(400);
                         res.send('select user push history count error');
                     }else{
-                        console.log('#####################'+stampHistoryCount[0].CNT);
                         if(stampHistoryCount[0].CNT < 10) {
                             var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
                             connection.query(insertStampHistory, function (err, row) {

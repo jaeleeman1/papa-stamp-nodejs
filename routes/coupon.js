@@ -144,7 +144,7 @@ router.put('/couponData', function(req, res, next) {
 
     //Coupon Data API
     getConnection(function (err, connection) {
-        var updatePushHistory = 'update SB_USER_PUSH_HIS set USED_YN = "Y" where  SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and USED_YN = "N" order by REG_DT ASC limit 10';
+        var updatePushHistory = 'update SB_USER_PUSH_HIS set USED_YN = "Y" where  SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and USED_YN = "N" and DEL_YN = "N" order by REG_DT ASC limit 10';
         connection.query(updatePushHistory, function (err, UpdateHistoryData) {
             if (err) {
                 logger.error(TAG, "DB updatePushHistory error : " + err);
