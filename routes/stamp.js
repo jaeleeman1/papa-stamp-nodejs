@@ -25,49 +25,49 @@ io.sockets.on('connection',function(socket){
     })
 });
 
-/* GET stamp page. */
+//Get Stamp Shop Page
 router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get stamp shop information');
 
     var userId = req.query.userId;
-    var currentLat = '37.650804099999995';//req.body.latitude;
-    var currentLng = '126.88645269999999';//req.body.longitude;
-    logger.debug(TAG, 'User ID : ' + userId);
-    logger.debug(TAG, 'Current Latitude : ' + currentLat);
-    logger.debug(TAG, 'Current Longitude : ' + currentLng);
+    var currentLat = req.query.current_lat;
+    var currentLng = req.query.current_lng;
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
 
     if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid user id error');
+        logger.debug(TAG, 'Invalid user id parameter error');
         res.status(400);
-        res.send('Invalid user id error');
+        res.send('Invalid user id parameter error');
     }
 
     if(currentLat == null || currentLat == undefined ||
         currentLng == null || currentLng == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid location parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid location parameter error');
     }
 
     getConnection(function (err, connection){
-        var selectShopList = 'select SUPI.USER_STAMP, SSI.SHOP_ID, SSI.SHOP_STAMP_IMG, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, ' +
-            '( 3959 * acos( cos( radians('+currentLat+') ) * cos( radians(SHOP_LAT) ) ' +
-            '* cos( radians(SHOP_LNG) - radians('+currentLng+') ) + sin( radians('+currentLat+') ) ' +
+        var selectStampShopList = 'select SUPI.USER_STAMP, SSI.SHOP_ID, SSI.SHOP_STAMP_IMG, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, ' +
+            '( 3959 * acos( cos( radians(' + mysql.escape(currentLat) + ') ) * cos( radians(SHOP_LAT) ) ' +
+            '* cos( radians(SHOP_LNG) - radians(' + mysql.escape(currentLng) + ') ) + sin( radians(' + mysql.escape(currentLat) + ') ) ' +
             '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
             'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_PUSH_INFO as SUPI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
-            'where SUPI.USER_ID = "'+ userId + '" and SUPI.DEL_YN= "N" ' +
+            'where SUPI.USER_ID = ' + mysql.escape(userId) + ' and SUPI.DEL_YN = "N" ' +
             'having distance < 25 ' +
             'order by distance limit 0, 10';
-        connection.query(selectShopList, function (err, shopListData) {
+        connection.query(selectStampShopList, function (err, stampShopListData) {
             if (err) {
-                logger.error(TAG, "DB select shop list error : " + err);
+                logger.error(TAG, "Select stamp shop list error : " + err);
                 res.status(400);
-                res.send('Select shop list error');
+                res.send('Select stamp shop list error');
             }else{
-                logger.debug(TAG, 'Select shop list success : ' + JSON.stringify(shopListData));
+                logger.debug(TAG, 'Select stamp shop list success : ' + JSON.stringify(stampShopListData));
                 res.status(200);
-                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopListData:shopListData});
+                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, stampShopListData:stampShopListData});
             }
             connection.release();
         });
@@ -82,28 +82,34 @@ router.get('/shopList', function (req, res, next) {
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
 
-    logger.debug(TAG, 'User ID : ' + userId);
-    logger.debug(TAG, 'Current Latitude : ' + currentLat);
-    logger.debug(TAG, 'Current Longitude : ' + currentLng);
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
 
     if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid headers value');
+        logger.debug(TAG, 'Invalid user id error');
         res.status(400);
-        res.send('Invalid headers error');
+        res.send('Invalid user id error');
     }
 
     if(currentLat == null || currentLat == undefined ||
         currentLng == null || currentLng == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid location parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid location parameter error');
     }
 
     //Shop List API
     getConnection(function (err, connection){
-        var selectShopListQuery = 'select SUPI.USER_ID, SSI.SHOP_LAT, SSI.SHOP_LNG, SUPI.USER_STAMP from SB_SHOP_INFO as SSI ' +
+        var selectShopListQuery = 'select SUPI.USER_ID, SSI.SHOP_LAT, SSI.SHOP_LNG, SUPI.USER_STAMP, ' +
+            '( 3959 * acos( cos( radians(' + mysql.escape(currentLat) + ') ) * cos( radians(SHOP_LAT) ) ' +
+            '* cos( radians(SHOP_LNG) - radians(' + mysql.escape(currentLng) + ') ) + sin( radians(' + mysql.escape(currentLat) + ') ) ' +
+            '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
+            'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_PUSH_INFO as SUPI on SUPI.SHOP_ID = SSI.SHOP_ID ' +
-            'where SSI.DEL_YN = "N" and SUPI.USER_ID =' +mysql.escape(userId);
+            'where SSI.DEL_YN = "N" and SUPI.USER_ID =' + mysql.escape(userId) + ' ' +
+            'having distance < 25 ' +
+            'order by distance limit 0, 10';
         connection.query(selectShopListQuery, function (err, shopListData) {
             if (err) {
                 console.error("Select shop lIst Error : ", err);
@@ -123,26 +129,34 @@ router.get('/shopData', function(req, res, next) {
     logger.info(TAG, 'Get shop data');
 
     var userId = req.headers.user_id;
-    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'User id : ' + userId);
 
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
 
-    logger.debug(TAG, 'Current Latitude : ' + currentLat);
-    logger.debug(TAG, 'Current Longitude : ' + currentLng);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
+
+    if(userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid user id error');
+        res.status(400);
+        res.send('Invalid user id error');
+    }
 
     if(currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid location parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid location parameter error');
     }
 
     //Shop Data API
     getConnection(function (err, connection) {
-        var selectShopDataQuery = 'select SSI.*, SUPI.USER_STAMP from SB_SHOP_INFO as SSI ' +
+        var selectShopDataQuery = 'select SSI.SHOP_ID, SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG, ' +
+            'SSI.SHOP_LAT, SSI.SHOP_LNG, SSI.SHOP_PHONE, SSI.SHOP_ADDR, SUPI.USER_STAMP ' +
+            'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_PUSH_INFO as SUPI on SUPI.SHOP_ID = SSI.SHOP_ID ' +
-            'where SHOP_LAT =' + mysql.escape(currentLat)+ ' and SHOP_LNG =' + mysql.escape(currentLng)  +' and SUPI.USER_ID =' +mysql.escape(userId) ;
+            'where SSI.SHOP_LAT =' + mysql.escape(currentLat)+ ' and SSI.SHOP_LNG =' + mysql.escape(currentLng)  +' and SUPI.USER_ID =' +mysql.escape(userId) ;
         connection.query(selectShopDataQuery, function (err, shopData) {
             if (err) {
                 console.error("Select shop data Error : ", err);
@@ -159,7 +173,7 @@ router.get('/shopData', function(req, res, next) {
 
 //Get Select Stamp Date
 router.get('/selectStampDate', function(req, res) {
-    logger.info(TAG, 'Select user stamp date');
+    logger.info(TAG, 'Select stamp date');
     var userId = req.headers.user_id;
     var shopId = req.query.shop_id;
 
@@ -168,13 +182,15 @@ router.get('/selectStampDate', function(req, res) {
 
     if(shopId == null || shopId == undefined &&
         userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid id parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid id parameter error');
     }
 
     getConnection(function (err, connection){
-        var selectStampPushCount = 'select date_format(REG_DT, "%Y-%m-%d") as REG_DT from SB_USER_PUSH_HIS where USED_YN = "N" and DEL_YN = "N" and SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+        var selectStampPushCount = 'select date_format(SUPH.REG_DT, "%Y-%m-%d") as REG_DT ' +
+            'from SB_USER_PUSH_HIS as SUPH ' +
+            'where SUPH.USED_YN = "N" and SUPH.DEL_YN = "N" and SUPH.SHOP_ID = '+mysql.escape(shopId)+' and SUPH.USER_ID = '+mysql.escape(userId);
         connection.query(selectStampPushCount, function (err, stampDate) {
             if (err) {
                 logger.error(TAG, "DB selectStampDate error : " + err);
@@ -190,51 +206,6 @@ router.get('/selectStampDate', function(req, res) {
     });
 });
 
-//Insert Card Data
-router.put('/insertCard', function(req, res, next) {
-    logger.info(TAG, 'Insert card data');
-
-    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
-    var shopId = 'SB-SHOP-00001';//req.body.shop_id;
-
-    logger.debug(TAG, 'User ID : ' + userId);
-    logger.debug(TAG, 'Shop ID : ' + shopId);
-
-    if(shopId == null || shopId == undefined &&
-        userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
-        res.status(400);
-        res.send('Invalid parameter error');
-    }
-
-    //Card Data API
-    getConnection(function (err, connection) {
-        var insertPushInfo = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) value ' +
-            '('+mysql.escape(userId)+','+mysql.escape(shopId)+', 1) on duplicate key update SHOP_CURRENT_NUM = SHOP_CURRENT_NUM +1';
-        connection.query(deletePushInfo, function (err, DeletePushInfoData) {
-            if (err) {
-                logger.error(TAG, "DB deletePushInfo error : " + err);
-                res.status(400);
-                res.send('Delete push info error');
-            }else{
-                logger.debug(TAG, 'Delete push info success');
-
-                var deletePushHistory = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
-                connection.query(deletePushHistory, function (err, DeletePushHisData) {
-                    if (err) {
-                        logger.error(TAG, "DB deletePushHis error : " + err);
-                        res.status(400);
-                        res.send('Delete push history error');
-                    }else{
-                        logger.debug(TAG, 'Delete push history success');
-                        res.send({result: 'success'});
-                    }
-                });
-            }
-        });
-    });
-});
-
 //Put Card Data
 router.put('/deleteCard', function(req, res, next) {
     logger.info(TAG, 'Delete card data');
@@ -242,19 +213,20 @@ router.put('/deleteCard', function(req, res, next) {
     var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
     var shopId = 'SB-SHOP-00001';//req.body.shop_id;
 
-    logger.debug(TAG, 'User ID : ' + userId);
-    logger.debug(TAG, 'Shop ID : ' + shopId);
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
 
     if(shopId == null || shopId == undefined &&
         userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid id parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid id parameter error');
     }
 
     //Card Data API
     getConnection(function (err, connection) {
-        var deletePushInfo = 'update SB_USER_PUSH_INFO set USER_STAMP = 0, DEL_YN = "Y" where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+        var deletePushInfo = 'update SB_USER_PUSH_INFO set USER_STAMP = 0, DEL_YN = "Y" ' +
+            'where SHOP_ID = ' + mysql.escape(shopId)+' and USER_ID = ' +mysql.escape(userId);
         connection.query(deletePushInfo, function (err, DeletePushInfoData) {
             if (err) {
                 logger.error(TAG, "DB deletePushInfo error : " + err);
@@ -263,7 +235,8 @@ router.put('/deleteCard', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Delete push info success');
 
-                var deletePushHistory = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+                var deletePushHistory = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" ' +
+                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
                 connection.query(deletePushHistory, function (err, DeletePushHisData) {
                     if (err) {
                         logger.error(TAG, "DB deletePushHis error : " + err);
@@ -284,26 +257,29 @@ router.post('/update-stamp', function (req, res, next) {
     var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
     var shopId = 'SB-SHOP-00001';//req.body.shop_id;
 
-    logger.debug(TAG, 'User ID : ' + userId);
-    logger.debug(TAG, 'Shop ID : ' + shopId);
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
 
     if(shopId == null || shopId == undefined &&
         userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid id parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid id parameter error');
     }
 
     getConnection(function (err, connection){
-        var insertUserPushQuery = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) value (' + mysql.escape(shopId) + ',' + mysql.escape(userId) +
-            ', 1) on duplicate key update USER_STAMP = USER_STAMP +1, DEL_YN = "N"';
+        var insertUserPushQuery = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) ' +
+            'value (' + mysql.escape(shopId) + ',' + mysql.escape(userId) + ', 1) ' +
+            'on duplicate key update USER_STAMP = USER_STAMP +1, DEL_YN = "N"';
         connection.query(insertUserPushQuery, function (err, userPushData) {
             if (err) {
                 logger.error(TAG, "DB insertUserPushQuery error : " + err);
                 res.status(400);
                 res.send('Insert user push info error');
             } else {
-                var selectStampHistoryCount = 'select count(*) as CNT from SB_USER_PUSH_HIS where USED_YN = "N" and SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+                var selectStampHistoryCount = 'select count(*) as CNT ' +
+                    'from SB_USER_PUSH_HIS ' +
+                    'where USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
                 connection.query(selectStampHistoryCount, function (err, stampHistoryCount) {
                     if (err) {
                         logger.error(TAG, "DB selectStampHistoryCount error : " + err);
@@ -311,7 +287,8 @@ router.post('/update-stamp', function (req, res, next) {
                         res.send('select user push history count error');
                     }else{
                         if(stampHistoryCount[0].CNT < 10) {
-                            var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
+                            var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' +
+                                'value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
                             connection.query(insertStampHistory, function (err, row) {
                                 if (err) {
                                     logger.error(TAG, "DB insertStampHistory error : " + err);

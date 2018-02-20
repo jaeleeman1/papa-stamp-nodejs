@@ -1,17 +1,17 @@
 <ul class="my-card-list" id="card-list">
-    <% var shopListCnt = shopListData.length %>
-    <% for (var i=0; i<shopListCnt; i++) {%>
-    <li class="my-card-shop" id="<%= shopListData[i].SHOP_ID %>">
+    <% var stampShopListCnt = stampShopListData.length %>
+    <% for (var i=0; i<stampShopListCnt; i++) {%>
+    <li class="my-card-shop" id="<%= stampShopListData[i].SHOP_ID %>">
         <div class="my-container">
-            <% var shopId = shopListData[i].SHOP_ID
-                var shopFrontImg = shopListData[i].SHOP_FRONT_IMG
-                var shopBackImg = shopListData[i].SHOP_BACK_IMG
-                var shopStampImg = shopListData[i].SHOP_STAMP_IMG %>
+            <% var shopId = stampShopListData[i].SHOP_ID
+                var shopFrontImg = stampShopListData[i].SHOP_FRONT_IMG
+                var shopBackImg = stampShopListData[i].SHOP_BACK_IMG
+                var shopStampImg = stampShopListData[i].SHOP_STAMP_IMG %>
             <div class="my-card" onclick="focusOpenLayer('layerCardPopup', '<%= shopId %>', '<%= shopFrontImg %>', '<%= shopBackImg %>', '<%=shopStampImg %>');">
                 <figure class="front">
                     <img class="base-img" src="/images/shop-card/<%= shopBackImg %>" alt="back">
                     <div class="img-repeat">
-                        <% var userStamp = (shopListData[i].USER_STAMP % 10)  %>
+                        <% var userStamp = (stampShopListData[i].USER_STAMP % 10)  %>
                         <% for (var j=1; j<=userStamp; j++) {%>
                         <div class="papa_stamp_icon" id="papa_stamp_icon_<%=j%>">
                             <img class="stamp-img" src="/images/shop-stamp/<%= shopStampImg %>"></img>
@@ -38,9 +38,12 @@
     </div>
 </div>
 
+<div id="delete-card-confirm" class="dialog-confirm">
+    해당 카드를 정말로 삭제하시겠습니까?
+</div>
 
 <script type="text/javascript">
-    function deleteCard(shopId) {
+    function callback(shopId) {
         var userId = $("#userId").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
@@ -63,6 +66,30 @@
                 console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
+    }
+
+    function deleteCard(shopId) {
+        $("#delete-card-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "카드 삭제",
+            height: 350,
+            width: 800,
+            resizable:false,
+            buttons: {
+                "예": function () {
+                    $(this).dialog('close');
+                    callback(shopId);
+                },
+                "아니오": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
+
+    function deleteCard(shopId) {
+
     }
 
     function focusOpenLayer(showDivId, shopId, frontImg, backImg, stampImg) {
@@ -162,20 +189,20 @@
         if(data.stampCnt == 1) {
             var appendId = $('#common-template');
             var appendData = '<ul class="my-card-list" id="card-list">' +
-                '<li class="my-card-shop" id="'+ shopId +'">'+
-                '<div class="my-container">' +
-                '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopId +'\', \''+ data.stampData.SHOP_FRONT_IMG +'\', \''+ data.stampData.SHOP_BACK_IMG +'\', \''+ data.stampData.SHOP_STAMP_IMG +'\')">' +
-                '<figure class="front">' +
-                '<img class="base-img" src="/images/shop-card/'+ data.stampData.SHOP_BACK_IMG +'" alt="back">' +
-                '<div class="img-repeat">';
-                '<div class="papa_stamp_icon" id="papa_stamp_icon_1>">' +
-                '<img class="stamp-img" src="/images/shop-stamp/'+ data.stampData.SHOP_STAMP_IMG +'"/>' +
-                '</div>' +
-                '</div>' +
-                '</figure>' +
-                '</div>' +
-                '</div>' +
-                '</li>' +
+                    '<li class="my-card-shop" id="'+ shopId +'">'+
+                        '<div class="my-container">' +
+                            '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopId +'\', \''+ data.stampData.SHOP_FRONT_IMG +'\', \''+ data.stampData.SHOP_BACK_IMG +'\', \''+ data.stampData.SHOP_STAMP_IMG +'\')">' +
+                                '<figure class="front">' +
+                                    '<img class="base-img" src="/images/shop-card/'+ data.stampData.SHOP_BACK_IMG +'" alt="back">' +
+                                    '<div class="img-repeat">';
+                                        '<div class="papa_stamp_icon" id="papa_stamp_icon_1>">' +
+                                            '<img class="stamp-img" src="/images/shop-stamp/'+ data.stampData.SHOP_STAMP_IMG +'"/>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</figure>' +
+                            '</div>' +
+                        '</div>' +
+                    '</li>' +
                 '</ul>';
             appendId.append(appendData);
         }
@@ -347,34 +374,34 @@
                         clickMapData.innerHTML = '';
 
                         clickMapData.innerHTML += '<div class="address-row">' +
-                            '<div class="col-xs-10 address-right">' +
-                            '<a href="javascript:"><div class="icon" onclick="guidePapaShopLoad('+ shopData.SHOP_LAT+','+ shopData.SHOP_LNG+')"><img class="guide" src="/images/shop-map/map_load_pin.png"></div></a>' +
-                            '<div class="select-shop-name">'+ shopData.SHOP_NAME +
-                            '<span class="select-shop-sub-name">(' + shopData.SHOP_SUB_NAME + ')</span>' +
-                            '<span class="select-shop-phone"><i class="fa fa-phone" style="font-size: 30px;margin-right:10px;"></i> : '+ shopData.SHOP_PHONE +'</span>' +
-                            '<p class="select-shop-addr"><i class="fa fa-home" style="font-size: 30px;margin-right:10px;"></i> : '+ shopData.SHOP_ADDR +'</p>' +
-                            '</div>' +
-                            '</div>' +
+                                '<div class="col-xs-10 address-right">' +
+                                    '<a href="javascript:"><div class="icon" onclick="guidePapaShopLoad('+ shopData.SHOP_LAT+','+ shopData.SHOP_LNG+')"><img class="guide" src="/images/shop-map/map_load_pin.png"></div></a>' +
+                                    '<div class="select-shop-name">'+ shopData.SHOP_NAME +
+                                        '<span class="select-shop-sub-name">(' + shopData.SHOP_SUB_NAME + ')</span>' +
+                                        '<span class="select-shop-phone"><i class="fa fa-phone" style="font-size: 30px;margin-right:10px;"></i> : '+ shopData.SHOP_PHONE +'</span>' +
+                                        '<p class="select-shop-addr"><i class="fa fa-home" style="font-size: 30px;margin-right:10px;"></i> : '+ shopData.SHOP_ADDR +'</p>' +
+                                    '</div>' +
+                                '</div>' +
                             '</div>';
 
                         var appendId = $('#common-template');
                         var appendData = '<ul class="my-card-list" id="select-card">' +
-                            '<li class="my-card-shop" id="'+ shopData.SHOP_ID +'">'+
-                            '<div class="my-container">' +
-                            '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopData.SHOP_ID +'\', \''+ shopData.SHOP_FRONT_IMG +'\', \''+ shopData.SHOP_BACK_IMG +'\', \''+ shopData.SHOP_STAMP_IMG +'\')">' +
-                            '<figure class="front">' +
-                            '<img class="base-img" src="/images/shop-card/'+ shopData.SHOP_BACK_IMG +'" alt="back">' +
-                            '<div class="img-repeat">';
-                            for(var i=0; i<shopData.USER_STAMP; i++) {
-                                appendData += '<div class="papa_stamp_icon" id="papa_stamp_icon_'+i+'>">' +
-                                '<img class="stamp-img" src="/images/shop-stamp/'+ shopData.SHOP_STAMP_IMG +'"/>' +
-                                '</div>';
-                            }
-                            appendData += '</div>' +
-                            '</figure>' +
-                            '</div>' +
-                            '</div>' +
-                            '</li>' +
+                                '<li class="my-card-shop" id="'+ shopData.SHOP_ID +'">'+
+                                    '<div class="my-container">' +
+                                        '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopData.SHOP_ID +'\', \''+ shopData.SHOP_FRONT_IMG +'\', \''+ shopData.SHOP_BACK_IMG +'\', \''+ shopData.SHOP_STAMP_IMG +'\')">' +
+                                            '<figure class="front">' +
+                                                '<img class="base-img" src="/images/shop-card/'+ shopData.SHOP_BACK_IMG +'" alt="back">' +
+                                                '<div class="img-repeat">';
+                                                for(var i=0; i<shopData.USER_STAMP; i++) {
+                                                    appendData += '<div class="papa_stamp_icon" id="papa_stamp_icon_'+i+'>">' +
+                                                    '<img class="stamp-img" src="/images/shop-stamp/'+ shopData.SHOP_STAMP_IMG +'"/>' +
+                                                    '</div>';
+                                                }
+                                                appendData += '</div>' +
+                                            '</figure>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</li>' +
                             '</ul>';
                         if($('#select-card').length) {
                             $('#select-card').remove();

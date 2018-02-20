@@ -7,45 +7,48 @@ var mysql = require('mysql');
 
 const TAG = "[SHOP INFO] ";
 
-/* GET Shop Main Page. */
+//Get Shop Main Page
 router.get('/main', function(req, res, next) {
-    logger.info(TAG, 'Get shop information');
+    logger.info(TAG, 'Get shop main information');
 
     var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
-    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'User id : ' + userId);
 
     if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid user id error');
+        logger.debug(TAG, 'Invalid user id parameter error');
         res.status(400);
-        res.send('Invalid user id error');
+        res.send('Invalid user id parameter error');
     }
 
     getConnection(function (err, connection){
-        var selectUserLocationQuery = 'select CURRENT_LAT,CURRENT_LNG from SB_USER_INFO where USER_ID ='+mysql.escape(userId);
-        connection.query(selectUserLocationQuery, function (err, currentLocationData) {
+        var selectUserLocationQuery = 'select SUI.CURRENT_LAT, SUI.CURRENT_LNG ' +
+            'from SB_USER_INFO as SUI ' +
+            'where SUI.USER_ID = ' + mysql.escape(userId);
+        connection.query(selectUserLocationQuery, function (err, userLocationData) {
             if (err) {
-                logger.error(TAG, "DB selectUserLocationQuery error : " + err);
+                logger.error(TAG, "Select user location error : " + err);
                 res.status(400);
-                res.send('Select user current location error');
+                res.send('Select user location error');
             }else{
-                logger.debug(TAG, 'Select user current location success : ' + JSON.stringify(currentLocationData));
-                var currentLat = currentLocationData[0].CURRENT_LAT;
-                var currentLng = currentLocationData[0].CURRENT_LNG;
-                var selectShopList = 'select SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, ( 3959 * acos( cos( radians('+currentLat+') ) * cos( radians(SHOP_LAT) ) ' +
-                    '* cos( radians(SHOP_LNG) - radians('+currentLng+') ) + sin( radians('+currentLat+') ) ' +
+                logger.debug(TAG, 'Select user location success : ' + JSON.stringify(userLocationData));
+                var currentLat = userLocationData[0].CURRENT_LAT;
+                var currentLng = userLocationData[0].CURRENT_LNG;
+                var selectShopListMainQuery = 'select SSI.SHOP_ID, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, ' +
+                    '( 3959 * acos( cos( radians(' + mysql.escape(currentLat) + ') ) * cos( radians(SHOP_LAT) ) ' +
+                    '* cos( radians(SHOP_LNG) - radians(' + mysql.escape(currentLng) + ') ) + sin( radians(' + mysql.escape(currentLat) + ') ) ' +
                     '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
                     'from SB_SHOP_INFO as SSI ' +
                     'having distance < 25 ' +
                     'order by distance limit 0, 10';
-                connection.query(selectShopList, function (err, shopListData) {
+                connection.query(selectShopListMainQuery, function (err, shopListMainData) {
                     if (err) {
-                        logger.error(TAG, "DB select shop list error : " + err);
+                        logger.error(TAG, "Select shop list main error : " + err);
                         res.status(400);
-                        res.send('Select shop list error');
+                        res.send('Select shop list main error');
                     }else{
-                        logger.debug(TAG, 'Select shop list success : ' + JSON.stringify(shopListData));
+                        logger.debug(TAG, 'Select shop list main success : ' + JSON.stringify(shopListMainData));
                         res.status(200);
-                        res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopListData:shopListData, currentLocationData:currentLocationData[0]});
+                        res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopListMainData:shopListMainData});
                     }
                 });
             }
@@ -56,26 +59,28 @@ router.get('/main', function(req, res, next) {
 
 //Get select shop data
 router.get('/shopData', function(req, res, next) {
-    // logger.info(TAG, 'Get shop data');
+    logger.info(TAG, 'Get shop data');
+
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
 
-    logger.debug(TAG, 'Current Latitude : ' + currentLat);
-    logger.debug(TAG, 'Current Longitude : ' + currentLng);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
 
     if(currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
-        // logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid loaction parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid loaction parameter error');
     }
 
     //Shop Data API
     getConnection(function (err, connection) {
-        var selectShopDataQuery = 'select * from SB_SHOP_INFO where SHOP_LAT =' + mysql.escape(currentLat)+ ' and SHOP_LNG =' + mysql.escape(currentLng);
+        var selectShopDataQuery = 'select * from SB_SHOP_INFO as SSI ' +
+            'where SSI.SHOP_LAT =' + mysql.escape(currentLat)+ ' and SSI.SHOP_LNG =' + mysql.escape(currentLng);
         connection.query(selectShopDataQuery, function (err, shopData) {
             if (err) {
-                console.error("Select shop data Error : ", err);
+                console.error("Select shop data error : ", err);
                 res.status(400);
                 res.send('Select shop data error');
             } else {
@@ -88,29 +93,30 @@ router.get('/shopData', function(req, res, next) {
 });
 
 //Get User Location
-router.get('/currentLocation', function (req, res, next) {
-    logger.info(TAG, 'Get user current location');
+router.get('/userLocation', function (req, res, next) {
+    logger.info(TAG, 'Get user location');
 
     var userId = req.headers.user_id;
-    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'User id : ' + userId);
 
     if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid headers value');
+        logger.debug(TAG, 'Invalid user id parameter error');
         res.status(400);
-        res.send('Invalid headers error');
+        res.send('Invalid user id parameter error');
     }
 
     getConnection(function (err, connection){
-        var selectUserLocationQuery = 'select CURRENT_LAT,CURRENT_LNG from SB_USER_INFO where USER_ID ='+mysql.escape(userId);
-        connection.query(selectUserLocationQuery, function (err, currentLocationData) {
+        var selectUserLocationQuery = 'select SUI.CURRENT_LAT, SUI.CURRENT_LNG from SB_USER_INFO as SUI ' +
+            'where SUI.USER_ID =' + mysql.escape(userId);
+        connection.query(selectUserLocationQuery, function (err, userLocationData) {
             if (err) {
-                logger.error(TAG, "DB selectUserLocationQuery error : " + err);
+                logger.error(TAG, "Select user location error : " + err);
                 res.status(400);
-                res.send('Select user current location error');
+                res.send('Select user location error');
             }else{
-                logger.debug(TAG, 'Select user current location success : ' + JSON.stringify(currentLocationData));
+                logger.debug(TAG, 'Select user location success : ' + JSON.stringify(userLocationData));
                 res.status(200);
-                res.send({currentLocationData:currentLocationData[0]});
+                res.send({userLocationData:userLocationData[0]});
             }
             connection.release();
         });

@@ -12,19 +12,36 @@ router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get coupon shop main information');
 
     var userId = req.query.userId;
+    var currentLat = req.query.current_lat;
+    var currentLng = req.query.current_lng;
 
-    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
 
     if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid user id parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid user id parameter error');
+    }
+
+    if(currentLat == null || currentLat == undefined ||
+        currentLng == null || currentLng == undefined) {
+        logger.debug(TAG, 'Invalid location parameter error');
+        res.status(400);
+        res.send('Invalid location parameter error');
     }
 
     getConnection(function (err, connection){
-        var selectCouponList = 'select SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, SUC.EXPIRATION_DT from SB_USER_COUPON as SUC ' +
-                'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
-                'where SUC.MAPPING_YN = "Y" and SUC.USED_YN = "N" and SUC.USER_ID ='+mysql.escape(userId);
+        var selectCouponList = 'select SSI.SHOP_ID, SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, SUC.EXPIRATION_DT, SUC.COUPON_NUMBER, SUC.USED_YN, ' +
+            '( 3959 * acos( cos( radians(' + mysql.escape(currentLat) + ') ) * cos( radians(SHOP_LAT) ) ' +
+            '* cos( radians(SHOP_LNG) - radians(' + mysql.escape(currentLng) + ') ) + sin( radians(' + mysql.escape(currentLat) + ') ) ' +
+            '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
+            ' from SB_USER_COUPON as SUC ' +
+            'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
+            'where SUC.MAPPING_YN = "Y" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
+            'having distance < 25 ' +
+            'order by distance limit 0, 10';
         connection.query(selectCouponList, function (err, couponListData) {
             if (err) {
                 logger.error(TAG, "DB select coupon shop main error : " + err);
@@ -48,28 +65,34 @@ router.get('/shopList', function (req, res, next) {
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
 
-    logger.debug(TAG, 'User ID : ' + userId);
-    logger.debug(TAG, 'Current Latitude : ' + currentLat);
-    logger.debug(TAG, 'Current Longitude : ' + currentLng);
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
 
     if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid headers value');
+        logger.debug(TAG, 'Invalid user id parameter error');
         res.status(400);
-        res.send('Invalid headers error');
+        res.send('Invalid user id parameter error');
     }
 
     if(currentLat == null || currentLat == undefined ||
         currentLng == null || currentLng == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid location parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid location parameter error');
     }
 
     //Shop List API
     getConnection(function (err, connection){
-        var selectShopListQuery = 'select SSI.SHOP_LAT, SSI.SHOP_LNG from SB_SHOP_INFO as SSI ' +
+        var selectShopListQuery = 'select SSI.SHOP_LAT, SSI.SHOP_LNG ,' +
+            '( 3959 * acos( cos( radians(' + mysql.escape(currentLat) + ') ) * cos( radians(SHOP_LAT) ) ' +
+            '* cos( radians(SHOP_LNG) - radians(' + mysql.escape(currentLng) + ') ) + sin( radians(' + mysql.escape(currentLat) + ') ) ' +
+            '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
+            'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_COUPON as SUC on SUC.SHOP_ID = SSI.SHOP_ID ' +
-            'where SSI.DEL_YN = "N" and SUC.USER_ID =' +mysql.escape(userId);
+            'where SSI.DEL_YN = "N" and SUC.USER_ID =' + mysql.escape(userId) + ' ' +
+            'having distance < 25 ' +
+            'order by distance limit 0, 10';
         connection.query(selectShopListQuery, function (err, shopListData) {
             if (err) {
                 console.error("Select coupon shop list Error : ", err);
@@ -89,27 +112,34 @@ router.get('/shopData', function(req, res, next) {
     logger.info(TAG, 'Get coupon shop data');
 
     var userId = req.headers.user_id;
-    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'User id : ' + userId);
 
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
 
-    logger.debug(TAG, 'Current Latitude : ' + currentLat);
-    logger.debug(TAG, 'Current Longitude : ' + currentLng);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
 
-    if(currentLat == null || currentLat == undefined &&
-        currentLng == null || currentLng == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+    if(userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid user id parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid user id parameter error');
     }
+
+    if(currentLat == null || currentLat == undefined ||
+        currentLng == null || currentLng == undefined) {
+        logger.debug(TAG, 'Invalid location parameter error');
+        res.status(400);
+        res.send('Invalid location parameter error');
+    }
+
 
     //Shop Data API
     getConnection(function (err, connection) {
         var selectShopDataQuery = 'select SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SSI.SHOP_LAT, SSI.SHOP_LNG, SSI.SHOP_PHONE, SSI.SHOP_ADDR,' +
             'SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, SUC.EXPIRATION_DT from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_COUPON as SUC on SUC.SHOP_ID = SSI.SHOP_ID ' +
-            'where SSI.SHOP_LAT =' + mysql.escape(currentLat)+ ' and SSI.SHOP_LNG =' + mysql.escape(currentLng)  +' and SUC.USER_ID =' +mysql.escape(userId) ;
+            'where SSI.SHOP_LAT =' + mysql.escape(currentLat)+ ' and SSI.SHOP_LNG =' + mysql.escape(currentLng)  +' and SUC.USER_ID =' + mysql.escape(userId) ;
         console.log(selectShopDataQuery);
         connection.query(selectShopDataQuery, function (err, shopData) {
             if (err) {
@@ -132,19 +162,21 @@ router.put('/couponData', function(req, res, next) {
     var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
     var shopId = 'SB-SHOP-00001';//req.body.shop_id;
 
-    logger.debug(TAG, 'User ID : ' + userId);
-    logger.debug(TAG, 'Shop ID : ' + shopId);
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
 
     if(shopId == null || shopId == undefined &&
         userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid parameter');
+        logger.debug(TAG, 'Invalid id parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid id parameter error');
     }
 
     //Coupon Data API
     getConnection(function (err, connection) {
-        var updatePushHistory = 'update SB_USER_PUSH_HIS set USED_YN = "Y" where  SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and USED_YN = "N" and DEL_YN = "N" order by REG_DT ASC limit 10';
+        var updatePushHistory = 'update SB_USER_PUSH_HIS set USED_YN = "Y" ' +
+            'where  SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId) + ' and USED_YN = "N" and DEL_YN = "N" ' +
+            'order by REG_DT ASC limit 10';
         connection.query(updatePushHistory, function (err, UpdateHistoryData) {
             if (err) {
                 logger.error(TAG, "DB updatePushHistory error : " + err);
@@ -153,8 +185,9 @@ router.put('/couponData', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Update push history success');
 
-                var updateCouponMapping = 'update SB_USER_COUPON SET USER_ID = '+mysql.escape(userId)+', MAPPING_YN = "Y"' +
-                    'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = '+mysql.escape(shopId)+' order by REG_DT ASC limit 1';
+                var updateCouponMapping = 'update SB_USER_COUPON SET USER_ID = ' + mysql.escape(userId) + ', MAPPING_YN = "Y"' +
+                    'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' ' +
+                    'order by REG_DT ASC limit 1';
                 connection.query(updateCouponMapping, function (err, UpdateCouponData) {
                     if (err) {
                         logger.error(TAG, "DB updateCouponMapping error : " + err);
@@ -165,6 +198,90 @@ router.put('/couponData', function(req, res, next) {
                         res.send({result: 'success'});
                     }
                 });
+            }
+        });
+    });
+});
+
+//Put Use Card Data
+router.put('/useCoupon', function(req, res, next) {
+    logger.info(TAG, 'Update use coupon data');
+
+    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
+    var shopId = 'SB-SHOP-00002';//req.body.shop_id;
+    var couponNumber = req.body.coupon_number;
+
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'Coupon number : ' + couponNumber);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid id parameter error');
+        res.status(400);
+        res.send('Invalid id parameter error');
+    }
+
+    if(couponNumber == null || couponNumber == undefined) {
+        logger.debug(TAG, 'Invalid coupon number parameter error');
+        res.status(400);
+        res.send('Invalid coupon number parameter error');
+    }
+
+    //Use Coupon Data API
+    getConnection(function (err, connection) {
+        var useCouponNumber = 'update SB_USER_COUPON set USED_YN = "Y" ' +
+            'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and MAPPING_YN = "Y" and COUPON_NUMBER = '+mysql.escape(couponNumber);
+        connection.query(useCouponNumber, function (err, useCouponData) {
+            if (err) {
+                logger.error(TAG, "DB useCoupon error : " + err);
+                res.status(400);
+                res.send('Update use coupon error');
+            }else{
+                logger.debug(TAG, 'Update use coupon success');
+                res.send({result: 'success'});
+            }
+        });
+    });
+});
+
+//Put Delete Card Data
+router.put('/deleteCoupon', function(req, res, next) {
+    logger.info(TAG, 'Update delete coupon data');
+
+    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
+    var shopId = 'SB-SHOP-00002';//req.body.shop_id;
+    var couponNumber = req.body.coupon_number;
+
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'Coupon number : ' + couponNumber);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid id parameter error');
+        res.status(400);
+        res.send('Invalid id parameter error');
+    }
+
+    if(couponNumber == null || couponNumber == undefined) {
+        logger.debug(TAG, 'Invalid coupon number parameter error');
+        res.status(400);
+        res.send('Invalid coupon number parameter error');
+    }
+
+    //Delete Coupon Data API
+    getConnection(function (err, connection) {
+        var useCouponNumber = 'update SB_USER_COUPON set DEL_YN = "Y" ' +
+            'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and COUPON_NUMBER = '+mysql.escape(couponNumber);
+        connection.query(useCouponNumber, function (err, DeleteCouponData) {
+            if (err) {
+                logger.error(TAG, "DB deleteCoupon error : " + err);
+                res.status(400);
+                res.send('Update delete coupon error');
+            }else{
+                logger.debug(TAG, 'Update delete coupon success');
+                res.send({result: 'success'});
             }
         });
     });

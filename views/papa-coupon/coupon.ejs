@@ -1,19 +1,31 @@
 <ul class="my-card-list" id="card-list">
     <% var couponListCnt = couponListData.length %>
     <% for (var i=0; i<couponListCnt; i++) {%>
-    <li class="my-card-coupon">
+    <% var shopID = couponListData[i].SHOP_ID
+        var shopName = couponListData[i].SHOP_NAME
+        var shopSubName = couponListData[i].SHOP_SUB_NAME
+        var couponImg = couponListData[i].COUPON_IMG
+        var couponName = couponListData[i].COUPON_NAME
+        var couponPrice = couponListData[i].COUPON_PRICE
+        var expirationDate = couponListData[i].EXPIRATION_DT
+        var couponNumber = couponListData[i].COUPON_NUMBER
+        var usedYn = couponListData[i].USED_YN %>
+    <%if(usedYn == 'Y') {%>
+    <li class="my-card-coupon used-deemed" id="<%= shopID %>-<%= couponNumber %>">
+        <%}else {%>
+    <li class="my-card-coupon" id="<%= shopID %>-<%= couponNumber %>">
+        <%}%>
         <div class="my-container">
-            <% var shopName = couponListData[i].SHOP_NAME
-                var shopSubName = couponListData[i].SHOP_SUB_NAME
-                var couponImg = couponListData[i].COUPON_IMG
-                var couponName = couponListData[i].COUPON_NAME
-                var couponPrice = couponListData[i].COUPON_PRICE
-                var expirationDate = couponListData[i].EXPIRATION_DT %>
             <div class="my-card">
                 <figure class="front">
                     <img class="base-img" src="/images/shop-coupon/<%= couponImg %>" alt="back">
                     <div class="caption">
-                        <h5 calss="coupon-use">사용하기</h5>
+                        <span style="float:right;font-size:2.5em;color:darkorange">쿠폰 번호 : <%= couponNumber %></span>
+                        <%if(usedYn == 'Y') {%>
+                        <h5 class="delete-coupon" onclick="deleteCoupon();">삭제하기</h5>
+                        <%}else {%>
+                        <h5 onclick="useCoupon('<%= shopID %>','<%= couponNumber %>')">사용하기</h5>
+                        <%}%>
                         <h3><%= shopName %><span>(<%= shopSubName %>)</span></h3>
                         <h4><%= couponName %><span><%= couponPrice %>원</span></h4>
                         <h6>✿ 유효 기간 : <%= expirationDate %></h6>
@@ -24,6 +36,100 @@
     </li>
     <%}%>
 </ul>
+
+<div id="use-coupon-confirm" style="display: none; font-size:40px;">
+    <h5 class="use-coupon" id="coupon-number"></h5>
+    해당 쿠폰을 사용하시겠습니까?
+</div>
+
+<div id="delete-coupon-confirm" style="display: none; font-size:40px;">
+    사용하신 쿠폰을 삭제하시겠습니까?
+</div>
+
+<script type="text/javascript">
+    function useCouponCallback(shopId, couponNumber) {
+        var userId = $("#userId").val();
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/v1/coupon/useCoupon',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
+    function deleteCouponCallback(shopId, couponNumber) {
+        var userId = $("#userId").val();
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/v1/coupon/useCoupon',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                location.reload();
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
+    function useCoupon(shopId, couponNum) {
+        document.getElementById("coupon-number").innerHTML= couponNum;
+        $("#use-coupon-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "쿠폰 사용",
+            height: 500,
+            width: 800,
+            resizable:false,
+            buttons: {
+                "예": function () {
+                    $(this).dialog('close');
+                    useCouponCallback(shopId, couponNum);
+                },
+                "아니오": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
+
+    function deleteCoupon(shopId, couponNum) {
+        $("#delete-coupon-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "쿠폰 삭제",
+            height: 350,
+            width: 800,
+            resizable:false,
+            buttons: {
+                "예": function () {
+                    $(this).dialog('close');
+                    deleteCouponCallback(shopId, couponNum);
+                },
+                "아니오": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
+</script>
 
 <script type="text/javascript">
     var map='';

@@ -352,6 +352,22 @@ img {
   box-sizing: border-box;
 }
 
+.dialog-confirm {
+  display: none;
+  font-size: 40px;
+}
+
+.ui-dialog .ui-dialog-title {
+  font-size: 40px;
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  font-size: 2em;
+}
+
+.ui-dialog-titlebar-close {
+  visibility: hidden;
+}
 
 
 

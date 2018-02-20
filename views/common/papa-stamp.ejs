@@ -17,16 +17,15 @@
 </head>
 
 <form name="footerAction" method="get" style="display:none">
-    <input type="hidden" name="view" id="view" value="<%= view %>"/>
     <input type="hidden" name="userId" id="userId" value="<%= userId %>"/>
-</form>
-
-<form name="papa_config" id="papa_config" style="display:none">
-    <input type="hidden" name="url" id="url" value="<%= url %>"/>
     <input type="hidden" name="current_lat" id="current_lat" value=""/>
     <input type="hidden" name="current_lng" id="current_lng" value=""/>
 </form>
 
+<form name="papa_config" id="papa_config" style="display:none">
+    <input type="hidden" name="view" id="view" value="<%= view %>"/>
+    <input type="hidden" name="url" id="url" value="<%= url %>"/>
+</form>
 
 <body>
 <div class="frame">
@@ -130,20 +129,20 @@
             headers["user_id"] = $("#userId").val();
 
             $.ajax({
-                url: $("#url").val() + '/v1/shop/currentLocation',
+                url: $("#url").val() + '/v1/shop/userLocation',
                 type: 'GET',
                 headers : headers,
                 dataType: 'json',
                 success: function(data) {
-                    var currentLocationData = data.currentLocationData;
-                    currentLat = currentLocationData.CURRENT_LAT;
-                    currentLng = currentLocationData.CURRENT_LNG;
+                    var userLocationData = data.userLocationData;
+                    currentLat = userLocationData.CURRENT_LAT;
+                    currentLng = userLocationData.CURRENT_LNG;
 
                     $("#current_lat").val(currentLat);
                     $("#current_lng").val(currentLng);
                 },
                 error: function(request, status, error) {
-                    console.error("currentLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    console.error("userLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                 }
             });
         });
@@ -215,5 +214,9 @@
         }
     });
 </script>
+
 <script src='/js/jquery.toast.min.js' type='text/javascript'></script>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 <link rel="stylesheet" href="/css/jquery.toast.min.css" type="text/css"/>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
