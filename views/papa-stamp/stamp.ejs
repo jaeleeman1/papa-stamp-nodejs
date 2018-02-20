@@ -43,7 +43,7 @@
 </div>
 
 <script type="text/javascript">
-    function callback(shopId) {
+    function deleteCardcallback(shopId) {
         var userId = $("#userId").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
@@ -79,17 +79,13 @@
             buttons: {
                 "예": function () {
                     $(this).dialog('close');
-                    callback(shopId);
+                    deleteCardcallback(shopId);
                 },
                 "아니오": function () {
                     $(this).dialog('close');
                 }
             }
         });
-    }
-
-    function deleteCard(shopId) {
-
     }
 
     function focusOpenLayer(showDivId, shopId, frontImg, backImg, stampImg) {
