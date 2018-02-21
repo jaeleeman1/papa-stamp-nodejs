@@ -10,6 +10,7 @@ var stamp = require('./routes/stamp');
 var coupon = require('./routes/coupon');
 var event = require('./routes/event');
 var setting = require('./routes/setting');
+var download = require('./routes/download');
 
 var app = express();
 
@@ -30,12 +31,14 @@ const stampUrl = '/v1/stamp';
 const couponUrl = '/v1/coupon';
 const eventUrl = '/v1/event';
 const settingUrl = '/v1/setting';
+const downloadURL = 'v1/download';
 
 app.use(shopUrl, shop);
 app.use(stampUrl, stamp);
 app.use(couponUrl, coupon);
 app.use(eventUrl, event);
 app.use(settingUrl, setting);
+app.use(downloadURL, download);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
