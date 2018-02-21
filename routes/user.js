@@ -38,6 +38,49 @@ router.get('/userLocation', function (req, res, next) {
     });
 });
 
+//Put User Location
+router.put('/updateLocation', function (req, res, next) {
+    logger.info(TAG, 'Update user location');
+
+    var userId = req.headers.user_id;
+    var currentLat = req.body.latitude;
+    var currentLng = req.body.longitude;
+
+    logger.debug(TAG, 'User iD : ' + userId);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
+
+    if(userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid user id value');
+        res.status(400);
+        res.send('Invalid user id error');
+    }
+
+    if(currentLat == null || currentLat == undefined ||
+        currentLng == null || currentLng == undefined) {
+        logger.debug(TAG, 'Invalid location parameter error');
+        res.status(400);
+        res.send('Invalid location parameter error');
+    }
+
+    getConnection(function (err, connection){
+        var updateUserLocationQuery = 'insert into SB_USER_INFO (USER_ID, CURRENT_LAT, CURRENT_LNG) value ("'+ userId +'", "'+ currentLat +'", "' + currentLng +'") ' +
+            'on duplicate key update CURRENT_LAT = "'+ currentLat +'", CURRENT_LNG = "'+ currentLng +'"';
+        connection.query(updateUserLocationQuery, function (err, userLocationData) {
+            if (err) {
+                logger.error(TAG, "DB updateUserLocationQuery error : " + err);
+                res.status(400);
+                res.send('Update user location error');
+            }else{
+                logger.debug(TAG, 'Update user location success');
+                res.status(200);
+                res.send();
+            }
+            connection.release();
+        });
+    });
+});
+
 //Get Shop Beacon
 router.get('/beaconToShopId', function (req, res, next) {
     logger.info(TAG, 'Get shop beacon');
