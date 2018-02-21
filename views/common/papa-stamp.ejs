@@ -129,7 +129,7 @@
             headers["user_id"] = $("#userId").val();
 
             $.ajax({
-                url: $("#url").val() + '/v1/shop/userLocation',
+                url: $("#url").val() + '/v1/user/userLocation',
                 type: 'GET',
                 headers : headers,
                 dataType: 'json',
