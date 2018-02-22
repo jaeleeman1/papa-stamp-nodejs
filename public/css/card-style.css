@@ -102,12 +102,12 @@ figure .caption h4 {
     letter-spacing: 2px;
     font-weight: 500;
     line-height: 1.7em;
+    text-align: right;
 }
 
 figure .caption h3{
     float: left;
     font-size: 2.5em;
-    padding: 10px;
     margin-top: 1.5em;
 }
 
@@ -132,13 +132,22 @@ figure .caption .title-setting{
     margin-left: -150px;
 }
 
+.coupon-name {
+    width: 100%;
+    float: left;
+    font-size: 2em;
+    margin-top: 100px;
+    color: darkorange;
+    text-align: right;
+}
+
 figure .caption h6{
-    margin-left: 100px;
-    float: right;
+    width: 100%;
+    margin-left: 160px;
     font-size: 1.5em;
     color: #fff;
     padding: 10px;
-    margin-top: 7em;
+    margin-top: 13em;
     letter-spacing: 2px;
     font-weight: 500;
     font-family: 'Yantramanav', sans-serif;
@@ -275,56 +284,6 @@ figure .icon-wrapper {
         left: 50%;
         margin-left:-458px;
     }
-}
-
-
-
-
-
-
-
-/* stamp image */
-.papa_stamp_icon{
-    top:-440px;
-    width:145px;
-    border-radius:5px;
-    position:relative;
-    margin-left:30px;
-    margin-bottom:25px;
-    float:left;
-}
-
-.stamp-img{
-    top:-350px;
-    border-radius:50px;
-/*    top:-350px;
-    width:80px;
-    border-radius:5px;
-    position:relative;
-    background-color:#ef8080;
-    margin-left:30px;*/
-}
-
-.stamp-date{
-    font-size: 25px;
-    vertical-align: bottom;
-    padding: 3px 5px 3px 5px;
-    background-color:darkgoldenrod;
-}
-
-/* stamp action */
-.stamp-action{
-    z-index: 100;
-    width:300px;
-    top:120px;
-    right:300px;
-    border-radius:5px;
-    position:absolute;
-    background-color:#ef8080;
-    animation-name: pulse;
-    animation-duration: 0.5s;
-    opacity: 0;
-    animation-fill-mode:forwards;
 }
 
 @-webkit-keyframes pulse{
@@ -660,4 +619,78 @@ figure .icon-wrapper {
     margin-right: 550px;
     border: 5px solid;
     padding: 15px;
+}
+
+.custom-icon {
+    background: #666;
+    border-radius: 100%;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.46);
+    color: #fff;
+    height: 60px;
+    padding: 8px;
+    text-align: center;
+    transition: .5s;
+    width: 60px;
+    float: left;
+    margin: 28px 0 0 150px;
+}
+
+.confirm-coupon-number {
+    width: 88%;
+    font-size: 1.8em;
+    border: 12px solid darkorange;
+    margin-bottom: 0.5em;
+}
+
+.confirm-shop-name {
+    float: left;
+    font-size: 1em;
+    color: #fff;
+    margin-left: 50px;
+}
+
+.confirm-sub-name {
+    font-size: 0.9em;
+    padding: 5px;
+    color: #e94739;
+}
+
+.confirm-coupon-name {
+    font-size: 1em;
+    color: #e8ff00;
+    letter-spacing: 2px;
+    font-weight: 500;
+    line-height: 1.7em;
+    margin-top: -12px;
+    margin-bottom: 36px;
+}
+
+.used-deemed {
+    opacity:0.5;
+    z-index:25;
+}
+
+.delete-coupon {
+    background: #ffffff;
+    color: #FF0000 !important;
+    margin-right: 550px;
+    border: 5px solid;
+    padding: 15px;
+}
+
+.pw-change-title {
+    font-size: 60px;
+    text-align: center;
+    margin-bottom: 1em;
+    margin-left: 120px;
+}
+
+.text-input {
+    border: 5px solid #74DF00;
+    font-weight: 500;
+    width: 450px;
+    height: 80px;
+    font-size: 40px;
+    margin: 20px 10px 10px 30px;
 }

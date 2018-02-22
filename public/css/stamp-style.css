@@ -1,0 +1,168 @@
+/* stamp image */
+.papa_stamp_icon{
+    top:-440px;
+    width:145px;
+    border-radius:5px;
+    position:relative;
+    margin-left:30px;
+    margin-bottom:25px;
+    float:left;
+}
+
+.stamp-img{
+    top:-350px;
+    margin-left: 20px;
+    border-radius:50px;
+}
+
+.stamp-date{
+    position: relative;
+    font-size: 25px;
+    vertical-align: bottom;
+    padding: 3px 5px 3px 5px;
+    color: darkblue;
+}
+
+/* stamp action */
+.stamp-action{
+    z-index: 100;
+    width:300px;
+    top:120px;
+    right:300px;
+    border-radius:5px;
+    position:absolute;
+    background-color:#ef8080;
+    animation-name: pulse;
+    animation-duration: 0.5s;
+    opacity: 0;
+    animation-fill-mode:forwards;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* SB-SHOP-00001 stamp image */
+.img-repeat-SB-SHOP-00001 {
+    margin-left: 20px;
+}
+
+.stamp-icon-SB-SHOP-00001 {
+    top: -482px;
+    width: 121px;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 17px;
+    margin-bottom: 70px;
+    float: left;
+}
+
+.stamp-popup-icon-SB-SHOP-00001 {
+    top: -493px;
+    width: 112px;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 25px;
+    margin-bottom: 28px;
+    float: left;
+}
+
+.stamp-date-SB-SHOP-00001 {
+    display: inline-block;
+    width: 130px;
+    position: relative;
+    font-size: 25px;
+    vertical-align: bottom;
+    padding: 3px 5px 3px 5px;
+    color: darkblue;
+}
+/* SB-SHOP-00001 stamp image */
+
+
+/* SB-SHOP-00002 stamp image */
+.img-repeat-SB-SHOP-00002 {
+    margin-left: 298px;
+}
+
+.stamp-icon-SB-SHOP-00002 {
+    top: -458px;
+    width: 107px;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 24px;
+    margin-bottom: 67px;
+    float: left;
+}
+
+.stamp-popup-icon-SB-SHOP-00002 {
+    top: -458px;
+    width: 102px;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 26px;
+    margin-bottom: 67px;
+    float: left;
+}
+
+.stamp-date-SB-SHOP-00002 {
+    display: inline-block;
+    width: 130px;
+    position: relative;
+    font-size: 25px;
+    vertical-align: bottom;
+    padding: 3px 5px 3px 5px;
+    color: darkmagenta;
+}
+/* SB-SHOP-00002 stamp image */
+
+
+/* SB-SHOP-00003 stamp image */
+.img-repeat-SB-SHOP-00003 {
+    margin-left: 298px;
+}
+
+.stamp-icon-SB-SHOP-00003 {
+    top: -458px;
+    width: 107px;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 24px;
+    margin-bottom: 67px;
+    float: left;
+}
+
+.stamp-popup-icon-SB-SHOP-00003 {
+    top: -458px;
+    width: 102px;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 26px;
+    margin-bottom: 67px;
+    float: left;
+}
+
+.stamp-date-SB-SHOP-00003 {
+    display: inline-block;
+    width: 130px;
+    position: relative;
+    font-size: 25px;
+    vertical-align: bottom;
+    padding: 3px 5px 3px 5px;
+    color: darkmagenta;
+}
+/* SB-SHOP-00003 stamp image */

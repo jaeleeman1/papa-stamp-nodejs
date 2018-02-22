@@ -188,7 +188,7 @@ router.get('/selectStampDate', function(req, res) {
     }
 
     getConnection(function (err, connection){
-        var selectStampPushCount = 'select date_format(SUPH.REG_DT, "%Y-%m-%d") as REG_DT ' +
+        var selectStampPushCount = 'select date_format(SUPH.REG_DT, "%y-%m-%d") as REG_DT ' +
             'from SB_USER_PUSH_HIS as SUPH ' +
             'where SUPH.USED_YN = "N" and SUPH.DEL_YN = "N" and SUPH.SHOP_ID = '+mysql.escape(shopId)+' and SUPH.USER_ID = '+mysql.escape(userId);
         connection.query(selectStampPushCount, function (err, stampDate) {

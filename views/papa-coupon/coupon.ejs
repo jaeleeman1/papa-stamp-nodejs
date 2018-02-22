@@ -1,5 +1,6 @@
 <ul class="my-card-list" id="card-list">
     <% var couponListCnt = couponListData.length %>
+    <% if(couponListCnt > 0) { %>
     <% for (var i=0; i<couponListCnt; i++) {%>
     <% var shopID = couponListData[i].SHOP_ID
         var shopName = couponListData[i].SHOP_NAME
@@ -20,15 +21,29 @@
                 <figure class="front">
                     <img class="base-img" src="/images/shop-coupon/<%= couponImg %>" alt="back">
                     <div class="caption">
-                        <span style="float:right;font-size:2.5em;color:darkorange">쿠폰 번호 : <%= couponNumber %></span>
                         <%if(usedYn == 'Y') {%>
                         <h5 class="delete-coupon" onclick="deleteCoupon();">삭제하기</h5>
                         <%}else {%>
-                        <h5 onclick="useCoupon('<%= shopID %>','<%= couponNumber %>')">사용하기</h5>
+                        <h5 onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>')">사용하기</h5>
                         <%}%>
                         <h3><%= shopName %><span>(<%= shopSubName %>)</span></h3>
                         <h4><%= couponName %><span><%= couponPrice %>원</span></h4>
+                        <div class="coupon-name">쿠폰 번호 : <span style="font-size:1em;color:white"><%= couponNumber %></span></div>
                         <h6>✿ 유효 기간 : <%= expirationDate %></h6>
+                    </div>
+                </figure>
+            </div>
+        </div>
+    </li>
+    <%}%>
+    <%} else {%>
+    <li class="card-event blank-card">
+        <div class="my-container">
+            <div class="my-card">
+                <figure class="front">
+                    <img class="base-img" src="http://www.jboeijenga.nl/img/back.jpg" alt="back">
+                    <div class="caption">
+                        <h6>적립한 쿠폰이 없습니다.</h6>
                     </div>
                 </figure>
             </div>
@@ -38,12 +53,18 @@
 </ul>
 
 <div id="use-coupon-confirm" style="display: none; font-size:40px;">
-    <h5 class="use-coupon" id="coupon-number"></h5>
-    해당 쿠폰을 사용하시겠습니까?
+    <figure>
+        <h5 class="confirm-coupon-number" id="confirm-coupon-number"></h5>
+        <h3 class="confirm-shop-name" id="confirm-shop-name"></h3>
+        <h4 class="confirm-coupon-name" id="confirm-coupon-name"></h4>
+        해당 쿠폰을 사용하시겠습니까?
+    </figure>
 </div>
 
 <div id="delete-coupon-confirm" style="display: none; font-size:40px;">
-    사용하신 쿠폰을 삭제하시겠습니까?
+    <figure>
+        <div style="margin-top: 30px; margin-left: -100px;">사용하신 쿠폰을 삭제하시겠습니까?</div>
+    </figure>
 </div>
 
 <script type="text/javascript">
@@ -89,13 +110,15 @@
         });
     }
 
-    function useCoupon(shopId, couponNum) {
-        document.getElementById("coupon-number").innerHTML= couponNum;
+    function useCoupon(shopId, shopName, shopSubName, couponName, couponNum) {
+        document.getElementById("confirm-coupon-number").innerHTML= couponNum;
+        document.getElementById("confirm-shop-name").innerHTML= shopName+'<span class="confirm-sub-name">('+ shopSubName +')</span>';
+        document.getElementById("confirm-coupon-name").innerHTML= couponName;
         $("#use-coupon-confirm").dialog({
             resizable: false,
             modal: true,
             title: "쿠폰 사용",
-            height: 500,
+            height: 550,
             width: 800,
             resizable:false,
             buttons: {
