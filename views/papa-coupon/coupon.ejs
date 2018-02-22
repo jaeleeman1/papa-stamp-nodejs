@@ -24,7 +24,7 @@
                         <%if(usedYn == 'Y') {%>
                         <h5 class="delete-coupon" onclick="deleteCoupon();">삭제하기</h5>
                         <%}else {%>
-                        <h5 onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>')">사용하기</h5>
+                        <h5 id="use-coupon-btn" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>')">사용하기</h5>
                         <%}%>
                         <h3><%= shopName %><span>(<%= shopSubName %>)</span></h3>
                         <h4><%= couponName %><span><%= couponPrice %>원</span></h4>
@@ -81,6 +81,10 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
+                document.getElementById("use-coupon-btn").className = 'delete-coupon';
+                document.getElementById("use-coupon-btn").onclick = function(){deleteCoupon();};
+                document.getElementById("use-coupon-btn").innerHTML = '삭제하기';
+                /*<h5 class="delete-coupon" onclick="">*/
                 $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
             },
             error: function(request, status, error) {
