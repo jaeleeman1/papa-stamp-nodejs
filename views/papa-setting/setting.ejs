@@ -33,7 +33,7 @@
                             <i class="fa fa-bookmark-o custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
                             <span class="title-setting">튜토리얼</span>
                         </div>
-                        <div class="icon-wrapper" onclick="openLayer('layerCardPopup');">
+                        <div class="icon-wrapper" onclick="openLayer('layerDevelopmentPopup');">
                             <i class="fa fa-info custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
                             <span class="title-setting">개발정보</span>
                         </div>
@@ -48,19 +48,7 @@
     </li>
 </ul>
 
-<div id="layerCardPopup">
-    <div class="pop_up_body">
-        <p class="btn_txt_nor mt20"><span class="close-card" onclick="closeLayer('layerCardPopup')">닫기</span></p>
-        <h4 class="pw-change-title">비밀번호 변경</h4>
-
-        <span style="font-size:40px;">
-                공지, 국외취득 학력사항 수정 희망자 신청 안내, 2017-12-05, 3781. 공지, 1993년생 국외여행허가 신청 안내, 첨부파일, 2017-11-16, 5891. 공지, 2018년도 사회복무요원 소집일자 및 복무기관 본인 ... 첨부파일, 2017-11-15, 185459. 공지, 질병 치유 후 병역이행 희망자 무료 치료지원 신청서 ... 첨부파일, 2016-05-20, 6100.
-            </span>
-        <p class="ti">공지사항</p>
-    </div>
-</div>
-
-<div id="layerChangePasswordPopup">
+<<div class="layerPopup" id="layerChangePasswordPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20"><span class="close-card" onclick="closeLayer('layerChangePasswordPopup')">닫기</span></p>
         <h4 class="pw-change-title">비밀번호 변경</h4>
@@ -79,6 +67,42 @@
             </div>
         </div>
         <p class="ti" onclick="changePassowrd();">비밀번호 변경</p>
+    </div>
+</div>
+
+<div class="layerPopup" id="layerDevelopmentPopup">
+    <div class="pop_up_body">
+        <p class="btn_txt_nor mt20"><span class="close-card" onclick="closeLayer('layerDevelopmentPopup')">닫기</span></p>
+        <h4 class="pw-change-title">개발정보</h4>
+
+        <div style="text-align:center;">
+            <img class="" src="/images/papastamp_icon.png"></img>
+            <span style="font-size:70px;font-weight: bold;">파파 스탬프</span>
+            <div>
+                <span style="font-size:40px;">현재 버전 : 1.0</span>
+            </div>
+            <div>
+                <span style="font-size:40px;">최종 업데이트 : 2018.02.28</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="layerPopup" id="layerCardPopup">
+    <div class="pop_up_body">
+        <p class="btn_txt_nor mt20"><span class="close-card" onclick="closeLayer('layerCardPopup')">닫기</span></p>
+        <h4 class="pw-change-title">비밀번호 변경</h4>
+
+
+    </div>
+</div>-->
+
+<div class="layerPopup layer-card-popup" id="layerCardPopup">
+    <div class="pop_up_body">
+        <p class="btn_txt_nor mt20"><span class="setting-popup-title">비밀번호 변경</span><span onclick="closeLayer('layerCardPopup')">닫기</span></p>
+        <span style="font-size:40px;">
+            공지, 국외취득 학력사항 수정 희망자 신청 안내, 2017-12-05, 3781. 공지, 1993년생 국외여행허가 신청 안내, 첨부파일, 2017-11-16, 5891. 공지, 2018년도 사회복무요원 소집일자 및 복무기관 본인 ... 첨부파일, 2017-11-15, 185459. 공지, 질병 치유 후 병역이행 희망자 무료 치료지원 신청서 ... 첨부파일, 2016-05-20, 6100.
+        </span>
     </div>
 </div>
 

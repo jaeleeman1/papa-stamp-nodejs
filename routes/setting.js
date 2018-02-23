@@ -7,7 +7,7 @@ var mysql = require('mysql');
 
 const TAG = "[SETTING INFO] ";
 
-/* GET home page. */
+//Get Setting Page
 router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get setting main information');
 
@@ -73,7 +73,7 @@ router.get('/checkPassword', function(req, res, next) {
 router.put('/changePassword', function(req, res, next) {
     logger.info(TAG, 'Update user password data');
 
-    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
+    var userId = req.headers.user_id;
 
     logger.debug(TAG, 'User id : ' + userId);
 
@@ -95,6 +95,7 @@ router.put('/changePassword', function(req, res, next) {
                 logger.debug(TAG, 'Select user password success');
                 res.send({result: 'success'});
             }
+            connection.release();
         });
     });
 });

@@ -5,46 +5,34 @@ var getConnection = require('../config/db_connection');
 var logger = require('../config/logger');
 var mysql = require('mysql');
 
-/* GET home page. */
+const TAG = "[EVENT INFO] ";
+
+//Get Event Shop Page
 router.get('/main', function(req, res, next) {
-    res.render('common/papa-stamp', { view: 'event', url:config.url, userId:'7c28d1c5088f01cda7e4ca654ec88ef8' });
-});
+    logger.info(TAG, 'Get event main information');
 
-//Get Shop Data
-router.get('/shopData', function(req, res, next) {
-    // logger.info(TAG, 'Get shop data');
+    var userId = req.query.userId;
+    logger.debug(TAG, 'User id : ' + userId);
 
-    var userId = req.headers.user_id;
-    // logger.debug(TAG, 'User ID : ' + userId);
+    var currentLat = req.query.current_lat;
+    var currentLng = req.query.current_lng;
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
 
-    var currentLat = '37.4892105052';//req.query.current_lat;
-    var currentLng = '127.0679616043';//req.query.current_lng;
-
-    // logger.debug(TAG, 'Current Latitude : ' + currentLat);
-    // logger.debug(TAG, 'Current Longitude : ' + currentLng);
-
-    if(currentLat == null || currentLat == undefined &&
-        currentLng == null || currentLng == undefined) {
-        // logger.debug(TAG, 'Invalid parameter');
+    if(userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid user id parameter error');
         res.status(400);
-        res.send('Invalid parameter error');
+        res.send('Invalid user id parameter error');
     }
 
-    //Shop Data API
-    getConnection(function (err, connection) {
-        var selectShopDataQuery = 'select * from SB_SHOP_INFO where SHOP_LAT =' + mysql.escape(currentLat)+ ' and SHOP_LNG =' + mysql.escape(currentLng);
-        connection.query(selectShopDataQuery, function (err, shopData) {
-            if (err) {
-                console.error("Select shop data Error : ", err);
-                res.status(400);
-                res.send('Select shop data error');
-            } else {
-                // logger.debug(TAG, 'Select shop data success : ' + JSON.stringify(shopData));
-                res.status(200);
-                res.send({shopData: shopData[0], userId: userId});
-            }
-        });
-    });
+    if(currentLat == null || currentLat == undefined ||
+        currentLng == null || currentLng == undefined) {
+        logger.debug(TAG, 'Invalid location parameter error');
+        res.status(400);
+        res.send('Invalid location parameter error');
+    }
+
+    res.render('common/papa-stamp', { view: 'event', url:config.url, userId: userId});
 });
 
 module.exports = router;

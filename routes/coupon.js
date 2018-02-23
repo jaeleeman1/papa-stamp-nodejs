@@ -7,15 +7,15 @@ var mysql = require('mysql');
 
 const TAG = "[COUPON INFO] ";
 
-/* GET home page. */
+//Get Coupon Shop Page
 router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get coupon shop main information');
 
     var userId = req.query.userId;
+    logger.debug(TAG, 'User id : ' + userId);
+
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
-
-    logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
 
@@ -33,7 +33,8 @@ router.get('/main', function(req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectCouponList = 'select SSI.SHOP_ID, SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, SUC.EXPIRATION_DT, SUC.COUPON_NUMBER, SUC.USED_YN, ' +
+        var selectCouponList = 'select SSI.SHOP_ID, SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, ' +
+            'SUC.EXPIRATION_DT, date_format(SUC.USED_DT, "%Y-%m-%d, %h:%i") as USED_DT, SUC.COUPON_NUMBER, SUC.USED_YN, ' +
             '( 3959 * acos( cos( radians(' + mysql.escape(currentLat) + ') ) * cos( radians(SHOP_LAT) ) ' +
             '* cos( radians(SHOP_LNG) - radians(' + mysql.escape(currentLng) + ') ) + sin( radians(' + mysql.escape(currentLat) + ') ) ' +
             '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
@@ -62,10 +63,10 @@ router.get('/shopList', function (req, res, next) {
     logger.info(TAG, 'Get coupon shop list');
 
     var userId = req.headers.user_id;
+    logger.debug(TAG, 'User id : ' + userId);
+
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
-
-    logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
 
@@ -103,6 +104,7 @@ router.get('/shopList', function (req, res, next) {
                 res.status(200);
                 res.send({shopListData:shopListData});
             }
+            connection.release();
         });
     });
 });
@@ -116,7 +118,6 @@ router.get('/shopData', function(req, res, next) {
 
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
-
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
 
@@ -137,10 +138,12 @@ router.get('/shopData', function(req, res, next) {
     //Shop Data API
     getConnection(function (err, connection) {
         var selectShopDataQuery = 'select SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SSI.SHOP_LAT, SSI.SHOP_LNG, SSI.SHOP_PHONE, SSI.SHOP_ADDR,' +
-            'SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, SUC.EXPIRATION_DT from SB_SHOP_INFO as SSI ' +
+            'SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, SUC.EXPIRATION_DT, ' +
+            'SUC.COUPON_NUMBER, SUC.USED_YN, date_format(SUC.USED_DT, "%Y-%m-%d, %h:%i") as USED_DT ' +
+            'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_COUPON as SUC on SUC.SHOP_ID = SSI.SHOP_ID ' +
-            'where SSI.SHOP_LAT =' + mysql.escape(currentLat)+ ' and SSI.SHOP_LNG =' + mysql.escape(currentLng)  +' and SUC.USER_ID =' + mysql.escape(userId) ;
-        console.log(selectShopDataQuery);
+            'where SSI.SHOP_LAT =' + mysql.escape(currentLat)+ ' and SSI.SHOP_LNG =' + mysql.escape(currentLng)  +' and SUC.USER_ID =' + mysql.escape(userId) + ' ' +
+            'and SUC.DEL_YN = "N"';
         connection.query(selectShopDataQuery, function (err, shopData) {
             if (err) {
                 console.error("Select coupon shop data Error : ", err);
@@ -151,6 +154,7 @@ router.get('/shopData', function(req, res, next) {
                 res.status(200);
                 res.send({shopData: shopData[0], userId: userId});
             }
+            connection.release();
         });
     });
 });
@@ -159,8 +163,8 @@ router.get('/shopData', function(req, res, next) {
 router.put('/couponData', function(req, res, next) {
     logger.info(TAG, 'Get coupon shop data');
 
-    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
-    var shopId = 'SB-SHOP-00001';//req.body.shop_id;
+    var userId = req.headers.user_id;
+    var shopId = req.body.shop_id;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
@@ -199,6 +203,7 @@ router.put('/couponData', function(req, res, next) {
                     }
                 });
             }
+            connection.release();
         });
     });
 });
@@ -207,8 +212,8 @@ router.put('/couponData', function(req, res, next) {
 router.put('/useCoupon', function(req, res, next) {
     logger.info(TAG, 'Update use coupon data');
 
-    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
-    var shopId = 'SB-SHOP-00002';//req.body.shop_id;
+    var userId = req.headers.user_id;
+    var shopId = req.body.shop_id;
     var couponNumber = req.body.coupon_number;
 
     logger.debug(TAG, 'User id : ' + userId);
@@ -239,8 +244,10 @@ router.put('/useCoupon', function(req, res, next) {
                 res.send('Update use coupon error');
             }else{
                 logger.debug(TAG, 'Update use coupon success');
-                res.send({result: 'success'});
+                var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
+                res.send({result: 'success', usedDate: usedDate});
             }
+            connection.release();
         });
     });
 });
@@ -249,8 +256,8 @@ router.put('/useCoupon', function(req, res, next) {
 router.put('/deleteCoupon', function(req, res, next) {
     logger.info(TAG, 'Update delete coupon data');
 
-    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
-    var shopId = 'SB-SHOP-00002';//req.body.shop_id;
+    var userId = req.headers.user_id;
+    var shopId = req.body.shop_id;
     var couponNumber = req.body.coupon_number;
 
     logger.debug(TAG, 'User id : ' + userId);
@@ -283,6 +290,7 @@ router.put('/deleteCoupon', function(req, res, next) {
                 logger.debug(TAG, 'Update delete coupon success');
                 res.send({result: 'success'});
             }
+            connection.release();
         });
     });
 });

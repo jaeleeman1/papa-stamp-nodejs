@@ -30,9 +30,10 @@ router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get stamp shop information');
 
     var userId = req.query.userId;
-    var currentLat = req.query.current_lat;
-    var currentLng = req.query.current_lng;
     logger.debug(TAG, 'User id : ' + userId);
+
+    var currentLat = '37.651909355423484'//req.query.current_lat;
+    var currentLng = '126.88647957057518';//req.query.current_lng;
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
 
@@ -79,10 +80,10 @@ router.get('/shopList', function (req, res, next) {
     logger.info(TAG, 'Get shop list');
 
     var userId = req.headers.user_id;
+    logger.debug(TAG, 'User id : ' + userId);
+
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
-
-    logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
 
@@ -107,7 +108,7 @@ router.get('/shopList', function (req, res, next) {
             '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
             'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_PUSH_INFO as SUPI on SUPI.SHOP_ID = SSI.SHOP_ID ' +
-            'where SSI.DEL_YN = "N" and SUPI.USER_ID =' + mysql.escape(userId) + ' ' +
+            'where SUPI.DEL_YN = "N" and SUPI.USER_ID =' + mysql.escape(userId) + ' ' +
             'having distance < 25 ' +
             'order by distance limit 0, 10';
         connection.query(selectShopListQuery, function (err, shopListData) {
@@ -120,6 +121,7 @@ router.get('/shopList', function (req, res, next) {
                 res.status(200);
                 res.send({shopListData:shopListData});
             }
+            connection.release();
         });
     });
 });
@@ -133,7 +135,6 @@ router.get('/shopData', function(req, res, next) {
 
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
-
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
 
@@ -167,6 +168,7 @@ router.get('/shopData', function(req, res, next) {
                 res.status(200);
                 res.send({shopData: shopData[0], userId: userId});
             }
+            connection.release();
         });
     });
 });
@@ -174,6 +176,7 @@ router.get('/shopData', function(req, res, next) {
 //Get Select Stamp Date
 router.get('/selectStampDate', function(req, res) {
     logger.info(TAG, 'Select stamp date');
+
     var userId = req.headers.user_id;
     var shopId = req.query.shop_id;
 
@@ -191,15 +194,25 @@ router.get('/selectStampDate', function(req, res) {
         var selectStampPushCount = 'select date_format(SUPH.REG_DT, "%y-%m-%d") as REG_DT ' +
             'from SB_USER_PUSH_HIS as SUPH ' +
             'where SUPH.USED_YN = "N" and SUPH.DEL_YN = "N" and SUPH.SHOP_ID = '+mysql.escape(shopId)+' and SUPH.USER_ID = '+mysql.escape(userId);
-        connection.query(selectStampPushCount, function (err, stampDate) {
+        connection.query(selectStampPushCount, function (err, stampDateList) {
             if (err) {
                 logger.error(TAG, "DB selectStampDate error : " + err);
                 res.status(400);
                 res.send('Select stamp date error');
-            }else{
-                logger.debug(TAG, 'Select stamp date success : ' + JSON.stringify(stampDate));
-                res.status(200);
-                res.send({stampDate:stampDate});
+            }else {
+                var selectAvailableCoupon = 'select count(*) as COUPON_CNT from SB_USER_COUPON ' +
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
+                connection.query(selectAvailableCoupon, function (err, availableCoupon) {
+                    if (err) {
+                        logger.error(TAG, "Select available coupon error : " + err);
+                        res.status(400);
+                        res.send('Select available coupon error');
+                    } else {
+                        logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(availableCoupon));
+                        res.status(200);
+                        res.send({stampDateList: stampDateList, availableCoupon: availableCoupon[0]});
+                    }
+                });
             }
             connection.release();
         });
@@ -210,8 +223,8 @@ router.get('/selectStampDate', function(req, res) {
 router.put('/deleteCard', function(req, res, next) {
     logger.info(TAG, 'Delete card data');
 
-    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
-    var shopId = 'SB-SHOP-00001';//req.body.shop_id;
+    var userId = req.headers.user_id;
+    var shopId = req.body.shop_id;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
@@ -248,14 +261,16 @@ router.put('/deleteCard', function(req, res, next) {
                     }
                 });
             }
+            connection.release();
         });
     });
 });
 
 router.post('/update-stamp', function (req, res, next) {
     logger.info(TAG, 'Insert user stamp history');
-    var userId = '7c28d1c5088f01cda7e4ca654ec88ef8';//req.headers.user_id;
-    var shopId = 'SB-SHOP-00001';//req.body.shop_id;
+
+    var userId = req.headers.user_id;
+    var shopId = req.body.shop_id;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
