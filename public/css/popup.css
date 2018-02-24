@@ -63,6 +63,15 @@
 
 .layer-password-popup {
     height: 685px;
+    margin-top: -90px;
+}
+
+.layer-developer-popup {
+    margin-top: 50px;
+}
+
+.layer-faq-popup {
+    margin-top: 50px;
 }
 
 .layerPopup .setting-popup-title {
@@ -113,13 +122,9 @@
 
 
 
-.faq_container {
-    font-size:40px;
-}
-
-
 
 .faq_question {
+    font-size:40px;
     margin: 10px 10px 15px 20px;
     padding: 0px 0px 5px 0px;
     display: inline-block;
@@ -128,8 +133,43 @@
 }
 
 .faq_answer_container {
-    margin-bottom: 25px;
+    font-size:30px;
+    margin: 10px 30px 25px 30px;
     height: 0px;
     overflow: hidden;
     padding: 0px;
+    background-color: whitesmoke;
 }
+
+.setting-line {
+    width: 100%;
+    margin: 20px auto;
+}
+
+.faq_question_mark {
+    font-size: 50px;
+    font-weight: 900;
+    color: #bfbfbf;
+    margin-left: 30px;
+}
+
+.triangle {
+    float: right;
+    display:inline-block;
+    width:0;
+    height:0;
+    border-style:solid;
+    border-width:30px;
+}
+
+.pre-click {
+    margin-top: 25px;
+    margin-right: 25px;
+    border-color: #B5B5B5 transparent transparent transparent;
+}
+
+.after-click {
+    margin-right:25px;
+    border-color:transparent transparent #B5B5B5 transparent;
+}
+

@@ -78,7 +78,7 @@
 
 
 
-<div class="layerPopup" id="layerDevelopmentPopup">
+<div class="layerPopup layer-developer-popup" id="layerDevelopmentPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
             <span class="setting-popup-title">개발정보</span>
@@ -97,7 +97,7 @@
     </div>
 </div>
 
-<div class="layerPopup " id="layerFaqPopup">
+<div class="layerPopup layer-faq-popup" id="layerFaqPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
             <span class="setting-popup-title">FAQ</span>
@@ -105,23 +105,29 @@
         </p>
         <div class="faq_container">
             <div class="faq">
-                <div class="faq_question">Question goes here1</div>
+                <span class="faq_question_mark">Q.</span>
+                <div class="faq_question">파파 스탬프란?</div>
+                <span class="triangle pre-click"></span>
                 <div class="faq_answer_container">
-                    <div class="faq_answer">Answer goes here1</div>
+                    <div class="faq_answer">기존의 종이 쿠폰을 대체하는 온라인 쿠폰 관리 시스템입니다.
+                        <br> 쿠폰에 스탬프를 편리하게 적립할 수 있으며 단골 고객들에게 유용한 서비스를 제공할 수 있습니다. </br>
+                    </div>
                 </div>
+                <hr class="setting-line">
             </div>
+
             <div class="faq">
-                <div class="faq_question">Question goes here2</div>
+                <span class="faq_question_mark">Q.</span>
+                <div class="faq_question">제휴 방법은 어떻게 되나요?</div>
+                <span class="triangle pre-click"></span>
                 <div class="faq_answer_container">
-                    <div class="faq_answer">Answer goes here2</div>
+                    <div class="faq_answer">가맹점 제휴는 카카오톡 플러스 친구 (파파스탬프) 또는
+                        <br>  E-MAIL (papastamp@naver.com) 으로 문의 바랍니다. </br>
+                    </div>
                 </div>
+                <hr class="setting-line">
             </div>
-            <div class="faq">
-                <div class="faq_question">Question goes here3</div>
-                <div class="faq_answer_container">
-                    <div class="faq_answer">Answer goes here3</div>
-                </div>
-            </div>
+
         </div>
         <!--<span style="font-size:40px;">
             공지, 국외취득 학력사항 수정 희망자 신청 안내, 2017-12-05, 3781. 공지, 1993년생 국외여행허가 신청 안내, 첨부파일, 2017-11-16, 5891. 공지, 2018년도 사회복무요원 소집일자 및 복무기관 본인 ... 첨부파일, 2017-11-15, 185459. 공지, 질병 치유 후 병역이행 희망자 무료 치료지원 신청서 ... 첨부파일, 2016-05-20, 6100.
@@ -154,18 +160,19 @@
 
 <script type="text/javascript">
     $(function () {
-        $('.faq_question').click(function() {
-
+        $('.triangle').click(function() {
             if ($(this).parent().is('.open')){
                 $(this).closest('.faq').find('.faq_answer_container').animate({'height':'0'},500);
                 $(this).closest('.faq').removeClass('open');
-
+                $(this).removeClass('after-click');
+                $(this).addClass('pre-click');
             }else{
                 var newHeight =$(this).closest('.faq').find('.faq_answer').height() +'px';
                 $(this).closest('.faq').find('.faq_answer_container').animate({'height':newHeight},500);
                 $(this).closest('.faq').addClass('open');
+                $(this).removeClass('pre-click');
+                $(this).addClass('after-click');
             }
-
         });
     });
 
