@@ -57,23 +57,6 @@
     font-weight: bold;
 }
 
-.layer-stamp-popup {
-    height: 875px;
-}
-
-.layer-password-popup {
-    height: 685px;
-    margin-top: -90px;
-}
-
-.layer-developer-popup {
-    margin-top: 50px;
-}
-
-.layer-faq-popup {
-    margin-top: 50px;
-}
-
 .layerPopup .setting-popup-title {
     font-size: 60px;
     text-align: center;
@@ -120,39 +103,6 @@
 }
 
 
-
-
-
-.faq_question {
-    font-size:40px;
-    margin: 10px 10px 15px 20px;
-    padding: 0px 0px 5px 0px;
-    display: inline-block;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.faq_answer_container {
-    font-size:30px;
-    margin: 10px 30px 25px 30px;
-    height: 0px;
-    overflow: hidden;
-    padding: 0px;
-    background-color: whitesmoke;
-}
-
-.setting-line {
-    width: 100%;
-    margin: 20px auto;
-}
-
-.faq_question_mark {
-    font-size: 50px;
-    font-weight: 900;
-    color: #bfbfbf;
-    margin-left: 30px;
-}
-
 .triangle {
     float: right;
     display:inline-block;
@@ -172,4 +122,78 @@
     margin-right:25px;
     border-color:transparent transparent #B5B5B5 transparent;
 }
+
+.layer-stamp-popup {
+    height: 875px;
+    overflow:auto;
+}
+
+.layer-password-popup {
+    height: 685px;
+    margin-top: -90px;
+    overflow:auto;
+}
+
+.layer-notice-popup {
+    height: 800px;
+    margin-top: 50px;
+}
+
+.layer-terms-popup {
+    height: 1100px;
+    margin-top: 0px;
+    overflow:auto;
+}
+
+.layer-developer-popup {
+    margin-top: 50px;
+}
+
+.layer-faq-popup {
+    margin-top: 50px;
+}
+
+.faq_answer_container {
+    font-size:30px;
+    margin: 10px 30px 25px 30px;
+    height: 0px;
+    overflow: hidden;
+    padding: 0px;
+    background-color: whitesmoke;
+}
+
+.setting-line {
+    width: 100%;
+    margin: 20px auto;
+}
+
+.notice_date {
+    font-size:28px;
+    margin: 10px 10px 15px 23px;
+    padding: 0px 0px 5px 0px;
+    cursor: pointer;
+}
+
+.terms_text {
+    font-size:28px;
+    margin: 10px 10px 15px 23px;
+}
+
+.setting-list-title {
+    font-size:40px;
+    margin: 10px 10px 15px 20px;
+    padding: 0px 0px 5px 0px;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.faq_question_mark {
+    font-size: 50px;
+    font-weight: 900;
+    color: #bfbfbf;
+    margin-left: 30px;
+}
+
+
 
