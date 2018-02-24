@@ -3,7 +3,7 @@
         <div class="my-container">
             <div class="my-card">
                 <figure class="front">
-                    <img class="base-img" src="http://www.jboeijenga.nl/img/back.jpg" alt="back">
+                    <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
                     <div class="caption">
                         <div class="icon-wrapper"><i class="fa fa-user custom-icon" style="font-size: 40px;margin-top: 20px;"></i><span class="title-setting">로그인 정보</span></div>
                         <h2>E-MAIL : <span><%= userInfoData.USER_EMAIL %></span></h2>
@@ -19,7 +19,7 @@
         <div class="my-container">
             <div class="my-card">
                 <figure class="front">
-                    <img class="base-img" src="http://www.jboeijenga.nl/img/back.jpg" alt="back">
+                    <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
                     <div class="caption">
                         <div class="icon-wrapper" onclick="openLayer('layerCardPopup');">
                             <i class="fa fa-bullhorn custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
@@ -37,7 +37,7 @@
                             <i class="fa fa-info custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
                             <span class="title-setting">개발정보</span>
                         </div>
-                        <div class="icon-wrapper" onclick="openLayer('layerCardPopup');">
+                        <div class="icon-wrapper" onclick="openLayer('layerFaqPopup');">
                             <i class="fa fa-comments-o custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
                             <span class="title-setting">FAQ</span>
                         </div>
@@ -48,10 +48,12 @@
     </li>
 </ul>
 
-<<div class="layerPopup" id="layerChangePasswordPopup">
+<<div class="layerPopup layer-password-popup" id="layerChangePasswordPopup">
     <div class="pop_up_body">
-        <p class="btn_txt_nor mt20"><span class="close-card" onclick="closeLayer('layerChangePasswordPopup')">닫기</span></p>
-        <h4 class="pw-change-title">비밀번호 변경</h4>
+        <p class="btn_txt_nor mt20">
+            <span class="setting-popup-title">비밀번호 변경</span>
+            <span class="close-card" onclick="closeLayer('layerChangePasswordPopup')">닫기</span>
+        </p>
         <div style="font-size:40px; margin-left:60px;">
             <div>
                 <label for="uname">기존 비밀번호 : </label>
@@ -66,28 +68,66 @@
                 <input class="text-input" type="password" id="cc-password" name="name">
             </div>
         </div>
-        <p class="ti" onclick="changePassowrd();">비밀번호 변경</p>
+        <p class="change-ti" onclick="changePassowrd();">비밀번호 변경</p>
     </div>
 </div>
 
+
+
+
+
+
+
 <div class="layerPopup" id="layerDevelopmentPopup">
     <div class="pop_up_body">
-        <p class="btn_txt_nor mt20"><span class="close-card" onclick="closeLayer('layerDevelopmentPopup')">닫기</span></p>
-        <h4 class="pw-change-title">개발정보</h4>
-
-        <div style="text-align:center;">
+        <p class="btn_txt_nor mt20">
+            <span class="setting-popup-title">개발정보</span>
+            <span class="close-card" onclick="closeLayer('layerDevelopmentPopup')">닫기</span>
+        </p>
+        <div style="text-align:center;margin-top:50px;">
             <img class="" src="/images/papastamp_icon.png"></img>
             <span style="font-size:70px;font-weight: bold;">파파 스탬프</span>
-            <div>
-                <span style="font-size:40px;">현재 버전 : 1.0</span>
+            <div style="font-size:40px;margin-top:50px;">
+                <span>현재 버전 : 1.0</span>
             </div>
-            <div>
-                <span style="font-size:40px;">최종 업데이트 : 2018.02.28</span>
+            <div style="font-size:40px;margin-top:50px;">
+                <span>최종 업데이트 : 2018.02.28</span>
             </div>
         </div>
     </div>
 </div>
 
+<div class="layerPopup " id="layerFaqPopup">
+    <div class="pop_up_body">
+        <p class="btn_txt_nor mt20">
+            <span class="setting-popup-title">FAQ</span>
+            <span class="close-card" onclick="closeLayer('layerFaqPopup')">닫기</span>
+        </p>
+        <div class="faq_container">
+            <div class="faq">
+                <div class="faq_question">Question goes here1</div>
+                <div class="faq_answer_container">
+                    <div class="faq_answer">Answer goes here1</div>
+                </div>
+            </div>
+            <div class="faq">
+                <div class="faq_question">Question goes here2</div>
+                <div class="faq_answer_container">
+                    <div class="faq_answer">Answer goes here2</div>
+                </div>
+            </div>
+            <div class="faq">
+                <div class="faq_question">Question goes here3</div>
+                <div class="faq_answer_container">
+                    <div class="faq_answer">Answer goes here3</div>
+                </div>
+            </div>
+        </div>
+        <!--<span style="font-size:40px;">
+            공지, 국외취득 학력사항 수정 희망자 신청 안내, 2017-12-05, 3781. 공지, 1993년생 국외여행허가 신청 안내, 첨부파일, 2017-11-16, 5891. 공지, 2018년도 사회복무요원 소집일자 및 복무기관 본인 ... 첨부파일, 2017-11-15, 185459. 공지, 질병 치유 후 병역이행 희망자 무료 치료지원 신청서 ... 첨부파일, 2016-05-20, 6100.
+        </span>-->
+    </div>
+</div>
 <!--<div class="layerPopup" id="layerCardPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20"><span class="close-card" onclick="closeLayer('layerCardPopup')">닫기</span></p>
@@ -95,7 +135,7 @@
 
 
     </div>
-</div>-->
+</div>
 
 <div class="layerPopup layer-card-popup" id="layerCardPopup">
     <div class="pop_up_body">
@@ -104,7 +144,7 @@
             공지, 국외취득 학력사항 수정 희망자 신청 안내, 2017-12-05, 3781. 공지, 1993년생 국외여행허가 신청 안내, 첨부파일, 2017-11-16, 5891. 공지, 2018년도 사회복무요원 소집일자 및 복무기관 본인 ... 첨부파일, 2017-11-15, 185459. 공지, 질병 치유 후 병역이행 희망자 무료 치료지원 신청서 ... 첨부파일, 2016-05-20, 6100.
         </span>
     </div>
-</div>
+</div>-->
 
 <div id="change-password-confirm" style="display: none; font-size:40px;">
     <figure>
@@ -113,6 +153,22 @@
 </div>
 
 <script type="text/javascript">
+    $(function () {
+        $('.faq_question').click(function() {
+
+            if ($(this).parent().is('.open')){
+                $(this).closest('.faq').find('.faq_answer_container').animate({'height':'0'},500);
+                $(this).closest('.faq').removeClass('open');
+
+            }else{
+                var newHeight =$(this).closest('.faq').find('.faq_answer').height() +'px';
+                $(this).closest('.faq').find('.faq_answer_container').animate({'height':newHeight},500);
+                $(this).closest('.faq').addClass('open');
+            }
+
+        });
+    });
+
     function changePasswordLayer(showDivId) {
         var browserHeight = $(document).height();
         var scrollPosition = $(document).scrollTop();

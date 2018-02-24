@@ -201,7 +201,7 @@ router.get('/selectStampDate', function(req, res) {
                 res.send('Select stamp date error');
             }else {
                 var selectAvailableCoupon = 'select count(*) as COUPON_CNT from SB_USER_COUPON ' +
-                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId) +' and USED_YN = "N"';
                 connection.query(selectAvailableCoupon, function (err, availableCoupon) {
                     if (err) {
                         logger.error(TAG, "Select available coupon error : " + err);

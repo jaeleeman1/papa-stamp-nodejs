@@ -11,16 +11,6 @@
     z-index:100;
 }
 
-.layerPopup .close {
-    position:absolute;
-    bottom:5px;right:5px;
-}
-
-.layerPopup .close-card {
-    float: right;
-    margin: 12px 12px;
-}
-
 .layerPopup .pop_up_body {
     padding:10.5px 1.7% 10.5px;
 }
@@ -29,16 +19,7 @@
     margin-top:10px;
     margin-bottom: 20px;
     background-color: darkseagreen;
-}
-
-.layerPopup .pop_up_body .btn_txt_nor span {
-    font-size: 46px; color: rgba(0,0,0,0.54);
-    line-height:29px;
-    display:inline-block;
-    margin-bottom:15px;
-    margin-top:15px;
-    border: 3px solid;
-    padding: 18px;
+    height: 100px;
 }
 
 .layerPopup .delete-card {
@@ -46,13 +27,6 @@
     margin-right: 500px;
     border: 3px solid;
     padding: 18px;
-}
-
-
-
-
-.layer-card-popup {
-    height: 875px;
 }
 
 .layerPopup .pop_up_body .stamp-ti {
@@ -69,22 +43,60 @@
     font-weight: bold;
 }
 
+.layerPopup .pop_up_body .change-ti {
+    width: 50%;
+    opacity: 0.87;
+    background-color: #777;
+    color: #fff;
+    font-size: 40px;
+    text-align: center;
+    line-height:29px;
+    margin: 85px 230px;
+    border-radius: 10px;
+    padding: 25px 7px;
+    font-weight: bold;
+}
 
-.setting-popup-title {
+.layer-stamp-popup {
+    height: 875px;
+}
+
+.layer-password-popup {
+    height: 685px;
+}
+
+.layerPopup .setting-popup-title {
     font-size: 60px;
     text-align: center;
-    margin-bottom: 1em;
-    margin-left: 120px;
-
-
     color: rgba(0,0,0,0.54);
     line-height: 29px;
     display: inline-block;
-    margin-top: 15px;
+    margin:15px 0 15px 0;
+    padding: 18px;
+    font-weight: bold;
+}
+
+.layerPopup .delete-card {
+    float: left;
+    font-size: 46px;
+    color: rgba(0,0,0,0.54);
+    line-height:29px;
+    display:inline-block;
+    margin:15px 0 15px 10px;
     border: 3px solid;
     padding: 18px;
 }
 
+.layerPopup .close-card {
+    float: right;
+    font-size: 46px;
+    color: rgba(0,0,0,0.54);
+    line-height:29px;
+    display:inline-block;
+    margin:15px 10px 15px 0;
+    border: 3px solid;
+    padding: 18px;
+}
 
 #deemed {
     width:100%;
@@ -96,4 +108,28 @@
     opacity:0.5;
     background:#000;
     z-index:25;
+}
+
+
+
+
+.faq_container {
+    font-size:40px;
+}
+
+
+
+.faq_question {
+    margin: 10px 10px 15px 20px;
+    padding: 0px 0px 5px 0px;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.faq_answer_container {
+    margin-bottom: 25px;
+    height: 0px;
+    overflow: hidden;
+    padding: 0px;
 }

@@ -40,9 +40,12 @@
     <%}%>
 </ul>
 
-<div class="layerPopup layer-card-popup" id="layerCardPopup">
+<div class="layerPopup layer-stamp-popup" id="layerCardPopup">
     <div class="pop_up_body">
-        <p class="btn_txt_nor mt20"><span class="delete-card" id="delete_card">카드 삭제</span><span onclick="closeLayer('layerCardPopup')">닫기</span></p>
+        <p class="btn_txt_nor mt20">
+            <span class="delete-card" id="delete_card">카드 삭제</span>
+            <span class="close-card" onclick="closeLayer('layerCardPopup')">닫기</span>
+        </p>
         <div class="card-img">
             <div class="container">
                 <div class="card flipped" id="popup-card">
