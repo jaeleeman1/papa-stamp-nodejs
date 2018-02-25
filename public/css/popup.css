@@ -102,7 +102,6 @@
     z-index:25;
 }
 
-
 .triangle {
     float: right;
     display:inline-block;
@@ -125,13 +124,11 @@
 
 .layer-stamp-popup {
     height: 875px;
-    overflow:auto;
 }
 
 .layer-password-popup {
     height: 685px;
     margin-top: -90px;
-    overflow:auto;
 }
 
 .layer-notice-popup {
@@ -140,9 +137,15 @@
 }
 
 .layer-terms-popup {
-    height: 1100px;
+     height: 1100px;
     margin-top: 0px;
     overflow:auto;
+
+ }
+
+.layer-tutorial-popup {
+    height: 1500px;
+    margin-top: -250px;
 }
 
 .layer-developer-popup {
@@ -195,5 +198,41 @@
     margin-left: 30px;
 }
 
+#prev_btn {
+    position:absolute;
+    top:0;left:0
+}
 
+#next_btn {
+    position:absolute;
+    top:0;right:0}
+
+.btn {
+    margin: 650px 10px 0 10px;
+    border:0;
+    background:#ffffff;
+    display:none;
+}
+
+#slider {
+    position:relative;
+    margin:0 auto;
+    padding:0;
+    list-style:none;
+    width:920px;
+    height:1330px;
+    overflow-x:hidden
+}
+
+#slider li {
+    display:none;
+    position:absolute;
+    left:0;
+    top:0
+}
+
+#slider img {
+    max-width: 100%;
+    height: auto;
+}
 
