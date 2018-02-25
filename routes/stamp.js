@@ -32,8 +32,8 @@ router.get('/main', function(req, res, next) {
     var userId = req.query.userId;
     logger.debug(TAG, 'User id : ' + userId);
 
-    var currentLat = '37.651909355423484'//req.query.current_lat;
-    var currentLng = '126.88647957057518';//req.query.current_lng;
+    var currentLat = req.query.current_lat;
+    var currentLng = req.query.current_lng;
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
 
