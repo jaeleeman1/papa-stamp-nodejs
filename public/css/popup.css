@@ -16,10 +16,22 @@
 }
 
 .layerPopup .pop_up_body .btn_txt_nor {
-    margin-top:10px;
+    margin-top: -115px;
     margin-bottom: 20px;
     background-color: darkseagreen;
     height: 100px;
+    position: fixed;
+    right: 10px;
+    width: 98%;
+}
+
+.layerPopup .pop_up_body .btn_txt_stamp_nor {
+    margin-top: -115px;
+    margin-bottom: 20px;
+    background-color: darkseagreen;
+    height: 100px;
+    margin-left: -20px;
+    width: 104%;
 }
 
 .layerPopup .delete-card {
@@ -37,7 +49,7 @@
     font-size: 40px;
     text-align: center;
     line-height:29px;
-    margin: 635px 230px;
+    margin: 665px 230px;
     border-radius: 10px;
     padding: 25px 7px;
     font-weight: bold;
@@ -123,12 +135,12 @@
 }
 
 .layer-stamp-popup {
-    height: 875px;
+    height: 800px;
 }
 
 .layer-password-popup {
-    height: 685px;
-    margin-top: -90px;
+    height: 620px;
+    margin-top: -10px;
 }
 
 .layer-notice-popup {
@@ -137,15 +149,14 @@
 }
 
 .layer-terms-popup {
-     height: 1100px;
-    margin-top: 0px;
+    height: 1100px;
+    margin-top: -1px;
     overflow:auto;
-
- }
+}
 
 .layer-tutorial-popup {
-    height: 1500px;
-    margin-top: -250px;
+    height: 1350px;
+    margin-top: -100px;
 }
 
 .layer-developer-popup {
@@ -154,6 +165,7 @@
 
 .layer-faq-popup {
     margin-top: 50px;
+    overflow: auto;
 }
 
 .faq_answer_container {
@@ -208,10 +220,11 @@
     top:0;right:0}
 
 .btn {
-    margin: 650px 10px 0 10px;
+    margin: 650px 35px 0 35px;
     border:0;
     background:#ffffff;
     display:none;
+    z-index: 500;
 }
 
 #slider {
@@ -235,4 +248,11 @@
     max-width: 100%;
     height: auto;
 }
+
+.password-label {
+    margin-top: 30px;
+    font-size:40px;
+    margin-left:60px;
+}
+
 

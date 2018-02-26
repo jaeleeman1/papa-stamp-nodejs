@@ -31,7 +31,10 @@
                 <figure class="front">
                     <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
                     <div class="caption">
-                        <h6>적립한 스탬프가 없습니다.</h6>
+                        <h6>적립한 스탬프가 없습니다.
+                            <br></br>
+                            설정-튜토리얼에서 스탬프 적립 방법을 확인해 보세요.
+                        </h6>
                     </div>
                 </figure>
             </div>
@@ -42,7 +45,7 @@
 
 <div class="layerPopup layer-stamp-popup" id="layerCardPopup">
     <div class="pop_up_body">
-        <p class="btn_txt_nor mt20">
+        <p class="btn_txt_stamp_nor mt20">
             <span class="delete-card" id="delete_card">카드 삭제</span>
             <span class="close-card" onclick="closeLayer('layerCardPopup')">닫기</span>
         </p>
@@ -64,9 +67,10 @@
 
 <script type="text/javascript">
     function moveCoupon() {
-
-        document.footerAction.action = '/v1/coupon/main';
-        document.footerAction.submit();
+        if($("#available-coupon").hasClass("exist-coupon")){
+            document.footerAction.action = '/v1/coupon/main';
+            document.footerAction.submit();
+        }
     }
 
     function deleteCardcallback(shopId) {
@@ -147,7 +151,10 @@
                     '</figure>';
                 popupCardData.innerHTML = appendData;
 
-                document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ data.availableCoupon.COUPON_CNT +' ]';
+                if(data.availableCoupon.COUPON_CNT > 0) {
+                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ data.availableCoupon.COUPON_CNT +' ]';
+                    $("#available-coupon").addClass("exist-coupon")
+                }
 
                 openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
             },
