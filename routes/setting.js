@@ -22,7 +22,7 @@ router.get('/main', function(req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectUserInfo = 'select USER_EMAIL from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
+        var selectUserInfo = 'select USER_ID, USER_EMAIL from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
         connection.query(selectUserInfo, function (err, userInfoData) {
             if (err) {
                 logger.error(TAG, "Select user info error : " + err);

@@ -63,7 +63,7 @@
     font-size: 40px;
     text-align: center;
     line-height:29px;
-    margin: 85px 230px;
+    margin: 65px 230px;
     border-radius: 10px;
     padding: 25px 7px;
     font-weight: bold;
@@ -138,9 +138,9 @@
     height: 800px;
 }
 
-.layer-password-popup {
-    height: 620px;
-    margin-top: -10px;
+.layer-userInfo-popup {
+    height: 1250px;
+    margin-top: -60px;
 }
 
 .layer-notice-popup {

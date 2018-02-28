@@ -23,7 +23,7 @@
                     <img class="base-img" src="/images/shop-coupon/<%= couponImg %>" alt="back">
                     <div class="caption">
                         <%if(usedYn == 'Y') {%>
-                        <h5 class="delete-coupon" onclick="deleteCoupon();">삭제하기</h5>
+                        <h5 class="delete-coupon" onclick="deleteCoupon('<%= shopID %>', '<%= couponNumber %>');">삭제하기</h5>
                         <h3><%= shopName %><span>(<%= shopSubName %>)</span></h3>
                         <h4><%= couponName %><span><%= couponPrice %>원</span></h4>
                         <div class="coupon-name" id="use-coupon-date-btn">사용날짜 : <span style="font-size:1em;color:white"><%= usedDate %></span></div>
@@ -110,7 +110,7 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/coupon/useCoupon',
+            url: $("#url").val() + '/v1/coupon/deleteCoupon',
             type: 'PUT',
             headers : headers,
             dataType: 'json',
@@ -321,7 +321,7 @@
                             '<img class="base-img" src="/images/shop-coupon/'+ shopData.COUPON_IMG +'" alt="back">' +
                             '<div class="caption">';
                         if(usedYn == "Y") {
-                            appendData += '<h5 class="delete-coupon" onclick="deleteCoupon();">삭제하기</h5>' +
+                            appendData += '<h5 class="delete-coupon" onclick="deleteCoupon('+ shopData.SHOP_ID +',' + shopData.COUPON_NUMBER +');">삭제하기</h5>' +
                                 '<h3>' + shopData.SHOP_NAME + '<span>(' + shopData.SHOP_SUB_NAME + ')</span></h3>' +
                                 '<h4>' + shopData.COUPON_NAME + '<span>' + shopData.COUPON_PRICE + '원</span></h4>' +
                                 '<div class="coupon-name" id="use-coupon-date-btn">사용날짜 : <span style="font-size:1em;color:white">'+ shopData.USED_DT +'</span></div>' +

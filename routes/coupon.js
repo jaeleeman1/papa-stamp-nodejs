@@ -137,7 +137,7 @@ router.get('/shopData', function(req, res, next) {
 
     //Shop Data API
     getConnection(function (err, connection) {
-        var selectShopDataQuery = 'select SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SSI.SHOP_LAT, SSI.SHOP_LNG, SSI.SHOP_PHONE, SSI.SHOP_ADDR,' +
+        var selectShopDataQuery = 'select SSI.SHOP_ID, SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SSI.SHOP_LAT, SSI.SHOP_LNG, SSI.SHOP_PHONE, SSI.SHOP_ADDR,' +
             'SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, SUC.EXPIRATION_DT, ' +
             'SUC.COUPON_NUMBER, SUC.USED_YN, date_format(SUC.USED_DT, "%Y-%m-%d, %h:%i") as USED_DT ' +
             'from SB_SHOP_INFO as SSI ' +

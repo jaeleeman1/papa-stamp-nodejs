@@ -25,7 +25,7 @@
     </li>
     <%}%>
     <%} else {%>
-    <li class="card-event blank-card">
+    <li class="card-stamp blank-card">
         <div class="my-container">
             <div class="my-card">
                 <figure class="front">
@@ -189,10 +189,10 @@
                     '<img class="base-img" src="/images/shop-card/'+ backImg +'" alt="back">' +
                     '<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/'+ stampImg +'"/>' +
                     '<div class="img-repeat-'+ shopId +'">';
-                for(var i=0; i<data.stampDate.length; i++) {
+                for(var i=0; i<data.stampDateList.length; i++) {
                     appendData += '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon_'+i+'>">'+
                         '<img class="stamp-img" src="/images/shop-stamp/'+ stampImg +'"/>' +
-                        '<span class="stamp-date-'+ shopId +'">['+data.stampDate[i].REG_DT+']</span>' +
+                        '<span class="stamp-date-'+ shopId +'">['+data.stampDateList[i].REG_DT+']</span>' +
                         '</div>';
                 }
                 appendData += '</div>' +
@@ -227,7 +227,7 @@
                 '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopId +'\', \''+ data.stampData.SHOP_FRONT_IMG +'\', \''+ data.stampData.SHOP_BACK_IMG +'\', \''+ data.stampData.SHOP_STAMP_IMG +'\')">' +
                 '<figure class="front">' +
                 '<img class="base-img" src="/images/shop-card/'+ data.stampData.SHOP_BACK_IMG +'" alt="back">' +
-                '<div class="img-repeat-'+ shopId +'">';
+                '<div class="img-repeat-'+ shopId +'">' +
             '<div class="stamp-icon-'+ shopId +'" id="stamp_icon>">' +
             '<img class="stamp-img" src="/images/shop-stamp/'+ data.stampData.SHOP_STAMP_IMG +'"/>' +
             '</div>' +
@@ -237,6 +237,11 @@
             '</div>' +
             '</li>' +
             '</ul>';
+
+            if($("#card-list").find("li").hasClass("blank-card")) {
+                $('.blank-card').remove();
+            }
+
             appendId.append(appendData);
         }
 

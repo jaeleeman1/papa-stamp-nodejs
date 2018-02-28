@@ -474,6 +474,17 @@ figure .icon-wrapper {
     float: right;
 }
 
+.card-stamp {
+    width: 95%;
+    background: #000000;
+    border-radius: 3px;
+    height: 552px;
+    margin-left: 25px;
+    margin-bottom: 5vh;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
+}
+
 .my-card-coupon {
     width: 95%;
     background: #ffffff;
@@ -682,10 +693,12 @@ figure .icon-wrapper {
 }
 
 .text-input {
-    border: 5px solid #74DF00;
+    border: 5px solid #bfbfbf;
     font-weight: 500;
-    width: 450px;
+    width: 575px;
     height: 80px;
     font-size: 40px;
     margin: 20px 10px 10px 30px;
+    color: black;
+    padding-left: 10px;
 }
