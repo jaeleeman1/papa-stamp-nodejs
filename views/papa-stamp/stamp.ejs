@@ -201,14 +201,15 @@
 
                 var couponCnt = data.availableCoupon.COUPON_CNT;
 
+                document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
+                $("#available-coupon").addClass("exist-coupon");
+
                 setTimeout(function() {
                     if(checkCoupon) {
-                        couponCnt++;
                         $("#popup-card").find($(".img-repeat-"+shopId)).remove();
+                        couponCnt++;
+                        document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
                     }
-                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
-                    $("#available-coupon").addClass("exist-coupon");
-
                 }, 2200);
 
                 /*
