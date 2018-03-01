@@ -78,7 +78,7 @@ router.get('/main', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select stamp shop list success : ' + JSON.stringify(stampShopListData));
                 res.status(200);
-                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, stampShopId:shopId, stampShopListData:stampShopListData});
+                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopId:shopId, stampShopListData:stampShopListData});
             }
             connection.release();
         });

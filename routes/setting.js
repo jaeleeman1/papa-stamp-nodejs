@@ -31,7 +31,7 @@ router.get('/main', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
                 res.status(200);
-                res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, userInfoData:userInfoData[0]});
+                res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0]});
             }
             connection.release();
         });

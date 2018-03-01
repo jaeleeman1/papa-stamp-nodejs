@@ -14,16 +14,16 @@ router.get('/main', function(req, res, next) {
     var userId = req.query.user_id;
     logger.debug(TAG, 'User id : ' + userId);
 
-    var currentLat = req.query.current_lat;
-    var currentLng = req.query.current_lng;
-    logger.debug(TAG, 'Current latitude : ' + currentLat);
-    logger.debug(TAG, 'Current longitude : ' + currentLng);
-
     if(userId == null || userId == undefined) {
         logger.debug(TAG, 'Invalid user id parameter error');
         res.status(400);
         res.send('Invalid user id parameter error');
     }
+
+    var currentLat = req.query.current_lat;
+    var currentLng = req.query.current_lng;
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
 
     if(currentLat == null || currentLat == undefined ||
         currentLng == null || currentLng == undefined) {
@@ -51,7 +51,7 @@ router.get('/main', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select coupon shop main success : ' + JSON.stringify(couponListData));
                 res.status(200);
-                res.render('common/papa-stamp', {view:'coupon', url:config.url, userId:userId, couponListData:couponListData});
+                res.render('common/papa-stamp', {view:'coupon', url:config.url, userId:userId, shopId:'', couponNum:'', couponListData:couponListData});
             }
             connection.release();
         });
