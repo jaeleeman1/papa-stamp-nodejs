@@ -164,7 +164,7 @@
         });
     }
 
-    function stampActionOpenLayer(showDivId, shopId, frontImg, backImg, stampImg) {
+    function stampActionOpenLayer(showDivId, shopId, frontImg, backImg, stampImg, checkCoupon) {
         document.getElementById(shopId).scrollIntoView();
 
         var userId = $("#userId").val();
@@ -199,6 +199,27 @@
                     '</figure>';
                 popupCardData.innerHTML = appendData;
 
+                var couponCnt = data.availableCoupon.COUPON_CNT;
+
+                setTimeout(function() {
+                    if(checkCoupon) {
+                        couponCnt++;
+                        $("#popup-card").find($(".img-repeat-"+shopId)).remove();
+                    }
+                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
+                    $("#available-coupon").addClass("exist-coupon");
+
+                }, 2200);
+
+                /*
+                if(data.availableCoupon.COUPON_CNT > 0) {
+                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ data.availableCoupon.COUPON_CNT +' ]';
+                    $("#available-coupon").addClass("exist-coupon");
+                } else {
+                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ 1 ]';
+                    $("#available-coupon").addClass("exist-coupon");
+                }*/
+
                 openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
             },
             error: function(request, status, error) {
@@ -209,17 +230,17 @@
 </script>
 
 
-<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>
-<!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
+<!--<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>-->
+<script src="http://localhost:8060/socket.io/socket.io.js"></script>
 <script type="text/javascript">
     var pushUserId = $("#userId").val();
-    var socket = io.connect('https://whereareevent.com:8060');
-    /*var socket = io.connect('http://localhost:8060');*/
+    /*var socket = io.connect('https://whereareevent.com:8060');*/
+    var socket = io.connect('http://localhost:8060');
     socket.on(pushUserId, function(data){
         var visitRateCnt = data.stampCnt % 10;
         var shopId = data.sendId;
-        console.log(data.stampCnt);
-        if(data.stampCnt == 1) {
+        console.log(data.userCheck.USER_CHECK);
+        if(data.userCheck.USER_CHECK == 0) {
             var appendId = $('#common-template');
             var appendData = '<ul class="my-card-list" id="card-list">' +
                 '<li class="my-card-shop" id="'+ shopId +'">'+
@@ -243,9 +264,18 @@
             }
 
             appendId.append(appendData);
+        }else {
+            var appendStamp = '<div class="stamp-icon-'+ shopId +'" id="stamp_icon">' +
+                '<img class="stamp-img" src="/images/shop-stamp/'+ data.stampData.SHOP_STAMP_IMG +'"/>'+
+                '</div>';
+            $("#"+shopId).find($(".img-repeat-"+shopId)).append(appendStamp);
         }
 
-        stampActionOpenLayer('layerCardPopup', shopId, data.stampData.SHOP_FRONT_IMG, data.stampData.SHOP_BACK_IMG, data.stampData.SHOP_STAMP_IMG);
+        if (data.stampCnt>0 && visitRateCnt==0) {
+            stampActionOpenLayer('layerCardPopup', shopId, data.stampData.SHOP_FRONT_IMG, data.stampData.SHOP_BACK_IMG, data.stampData.SHOP_STAMP_IMG, true);
+        }else {
+            stampActionOpenLayer('layerCardPopup', shopId, data.stampData.SHOP_FRONT_IMG, data.stampData.SHOP_BACK_IMG, data.stampData.SHOP_STAMP_IMG, false);
+        }
 
         setTimeout(function() {
             $('#stamp-action').remove();
@@ -260,23 +290,16 @@
                     dataType: 'json',
                     data : dataString,
                     success: function(data) {
-                        $("#"+shopId).find($(".img-repeat")).remove();
+                        $("#"+shopId).find($(".img-repeat-"+shopId)).remove();
                         //Toast Success Message
-                        $.toast.config.align = 'right';
-                        $.toast.config.width = 500;
-                        $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', { type: 'info', duration: 5000 } );
+                        $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', { type: 'danger', sticky : true, duration: 5000 } );
                     },
                     error: function(request, status, error) {
                         console.error("selectStampDate : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     }
                 });
-            }else {
-                var appendStamp = '<div class="stamp-icon-'+ shopId +'" id="stamp_icon">' +
-                    '<img class="stamp-img" src="/images/shop-stamp/'+ data.stampData.SHOP_STAMP_IMG +'"/>'+
-                    '</div>';
-                $("#"+shopId).find($(".img-repeat")).append(appendStamp);
             }
-        }, 5000);
+        }, 2500);
     });
 </script>
 

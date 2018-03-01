@@ -283,55 +283,67 @@ router.post('/update-stamp', function (req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var insertUserPushQuery = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) ' +
-            'value (' + mysql.escape(shopId) + ',' + mysql.escape(userId) + ', 1) ' +
-            'on duplicate key update USER_STAMP = USER_STAMP +1, DEL_YN = "N"';
-        connection.query(insertUserPushQuery, function (err, userPushData) {
+        var selectExistQuery  = 'select exists (select * from SB_USER_PUSH_INFO ' +
+            'where SHOP_ID =' + mysql.escape(shopId) + 'and USER_ID = ' + mysql.escape(userId) + ') as USER_CHECK';
+        connection.query(selectExistQuery, function (err, userCheckData) {
             if (err) {
-                logger.error(TAG, "DB insertUserPushQuery error : " + err);
+                logger.error(TAG, "Select user exist error : " + err);
                 res.status(400);
-                res.send('Insert user push info error');
+                res.send('Select user exist error');
             } else {
-                var selectStampHistoryCount = 'select count(*) as CNT ' +
-                    'from SB_USER_PUSH_HIS ' +
-                    'where USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
-                connection.query(selectStampHistoryCount, function (err, stampHistoryCount) {
+                logger.debug(TAG, 'Select user exist success', userCheckData);
+                var insertUserPushQuery = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) ' +
+                    'value (' + mysql.escape(shopId) + ',' + mysql.escape(userId) + ', 1) ' +
+                    'on duplicate key update USER_STAMP = USER_STAMP +1';
+                connection.query(insertUserPushQuery, function (err, userPushData) {
                     if (err) {
-                        logger.error(TAG, "DB selectStampHistoryCount error : " + err);
+                        logger.error(TAG, "Insert user push info error : " + err);
                         res.status(400);
-                        res.send('select user push history count error');
-                    }else{
-                        if(stampHistoryCount[0].CNT < 10) {
-                            var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' +
-                                'value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
-                            connection.query(insertStampHistory, function (err, row) {
-                                if (err) {
-                                    logger.error(TAG, "DB insertStampHistory error : " + err);
-                                    res.status(400);
-                                    res.send('Insert user push history error');
-                                } else {
-                                    var selectShopData = 'select SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
-                                        'from SB_SHOP_INFO as SSI ' +
-                                        'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
-                                        'limit 1';
-                                    connection.query(selectShopData, function (err, shopData) {
+                        res.send('Insert user push info error');
+                    } else {
+                        logger.debug(TAG, 'Insert user push history success');
+                        var selectStampHistoryCount = 'select count(*) as CNT ' +
+                            'from SB_USER_PUSH_HIS ' +
+                            'where USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
+                        connection.query(selectStampHistoryCount, function (err, stampHistoryCount) {
+                            if (err) {
+                                logger.error(TAG, "DB selectStampHistoryCount error : " + err);
+                                res.status(400);
+                                res.send('select user push history count error');
+                            }else{
+                                if(stampHistoryCount[0].CNT < 10) {
+                                    var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' +
+                                        'value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
+                                    connection.query(insertStampHistory, function (err, row) {
                                         if (err) {
-                                            logger.error(TAG, "DB select shop data error : " + err);
+                                            logger.error(TAG, "DB insertStampHistory error : " + err);
                                             res.status(400);
-                                            res.send('Select shop data error');
+                                            res.send('Insert user push history error');
                                         } else {
-                                            logger.debug(TAG, 'Insert user push history success');
+                                            var selectShopData = 'select SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
+                                                'from SB_SHOP_INFO as SSI ' +
+                                                'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
+                                                'limit 1';
+                                            connection.query(selectShopData, function (err, shopData) {
+                                                if (err) {
+                                                    logger.error(TAG, "DB select shop data error : " + err);
+                                                    res.status(400);
+                                                    res.send('Select shop data error');
+                                                } else {
+                                                    logger.debug(TAG, 'Insert user push history success');
 
-                                            io.sockets.emit(userId, {sendId: shopId, stampCnt:(stampHistoryCount[0].CNT+1), stampData:shopData[0]});
-                                            logger.debug(TAG, 'API papa stamp success!');
+                                                    io.sockets.emit(userId, {sendId: shopId, stampCnt:(stampHistoryCount[0].CNT+1), stampData:shopData[0], userCheck:userCheckData[0]});
+                                                    logger.debug(TAG, 'API papa stamp success!');
 
-                                            res.status(200);
-                                            res.send({resultData: 'Insert user push history success'});
+                                                    res.status(200);
+                                                    res.send({resultData: 'Insert user push history success'});
+                                                }
+                                            });
                                         }
                                     });
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
                 });
             }
