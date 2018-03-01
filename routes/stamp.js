@@ -29,8 +29,18 @@ io.sockets.on('connection',function(socket){
 router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get stamp shop information');
 
-    var userId = req.query.userId;
+    var userId = req.query.user_id;
+    var shopId = req.query.shop_id;
+
     logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
+
+    if(userId == null || userId == undefined &&
+        shopId == null || shopId == undefined) {
+        logger.debug(TAG, 'Invalid id parameter error');
+        res.status(400);
+        res.send('Invalid id parameter error');
+    }
 
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
@@ -68,7 +78,7 @@ router.get('/main', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select stamp shop list success : ' + JSON.stringify(stampShopListData));
                 res.status(200);
-                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, stampShopListData:stampShopListData});
+                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, stampShopId:shopId, stampShopListData:stampShopListData});
             }
             connection.release();
         });
@@ -196,12 +206,60 @@ router.get('/selectStampDate', function(req, res) {
             'where SUPH.USED_YN = "N" and SUPH.DEL_YN = "N" and SUPH.SHOP_ID = '+mysql.escape(shopId)+' and SUPH.USER_ID = '+mysql.escape(userId);
         connection.query(selectStampPushCount, function (err, stampDateList) {
             if (err) {
-                logger.error(TAG, "DB selectStampDate error : " + err);
+                logger.error(TAG, "Select stamp date error : " + err);
                 res.status(400);
                 res.send('Select stamp date error');
             }else {
-                var selectAvailableCoupon = 'select count(*) as COUPON_CNT from SB_USER_COUPON ' +
+                var selectAvailableCoupon = 'select count(COUPON_NUMBER) as COUPON_CNT from SB_USER_COUPON ' +
                     'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId) +' and USED_YN = "N"';
+                connection.query(selectAvailableCoupon, function (err, availableCoupon) {
+                    if (err) {
+                        logger.error(TAG, "Select available coupon error : " + err);
+                        res.status(400);
+                        res.send('Select available coupon error');
+                    } else {
+                        logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(availableCoupon));
+                        res.status(200);
+                        res.send({stampDateList: stampDateList, availableCoupon: availableCoupon[0]});
+                    }
+                });
+            }
+            connection.release();
+        });
+    });
+});
+
+//Get Select Popup Stamp Date
+router.get('/selectPopupStampDate', function(req, res) {
+    logger.info(TAG, 'Select popup stamp date');
+
+    var userId = req.headers.user_id;
+    var shopId = req.query.shop_id;
+
+    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'Shop ID : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid id parameter error');
+        res.status(400);
+        res.send('Invalid id parameter error');
+    }
+
+    getConnection(function (err, connection){
+        var selectStampPushCount = 'select date_format(SUPH.REG_DT, "%y-%m-%d") as REG_DT ' +
+            'from SB_USER_PUSH_HIS as SUPH ' +
+            'where SUPH.USED_YN = "N" and SUPH.DEL_YN = "N" and SUPH.SHOP_ID = '+mysql.escape(shopId)+' and SUPH.USER_ID = '+mysql.escape(userId);
+        connection.query(selectStampPushCount, function (err, stampDateList) {
+            if (err) {
+                logger.error(TAG, "Select stamp date error : " + err);
+                res.status(400);
+                res.send('Select stamp date error');
+            }else {
+                var selectAvailableCoupon = 'select count(SUC.COUPON_NUMBER) as COUPON_CNT, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
+                    'from SB_USER_COUPON as SUC ' +
+                    'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SUC.SHOP_ID ' +
+                    'where SUC.SHOP_ID = ' + mysql.escape(shopId) + ' and SUC.USER_ID = ' + mysql.escape(userId) +' and SUC.USED_YN = "N"';
                 connection.query(selectAvailableCoupon, function (err, availableCoupon) {
                     if (err) {
                         logger.error(TAG, "Select available coupon error : " + err);
@@ -311,6 +369,7 @@ router.post('/update-stamp', function (req, res, next) {
                                 res.status(400);
                                 res.send('select user push history count error');
                             }else{
+                                logger.debug(TAG, 'Insert user push history success : ', stampHistoryCount);
                                 if(stampHistoryCount[0].CNT < 10) {
                                     var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' +
                                         'value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
@@ -320,7 +379,7 @@ router.post('/update-stamp', function (req, res, next) {
                                             res.status(400);
                                             res.send('Insert user push history error');
                                         } else {
-                                            var selectShopData = 'select SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
+                                            var selectShopData = 'select (select date_format(NOW(), "%y-%m-%d")) as TODAY_DT, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
                                                 'from SB_SHOP_INFO as SSI ' +
                                                 'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
                                                 'limit 1';
@@ -332,7 +391,7 @@ router.post('/update-stamp', function (req, res, next) {
                                                 } else {
                                                     logger.debug(TAG, 'Insert user push history success');
 
-                                                    io.sockets.emit(userId, {sendId: shopId, stampCnt:(stampHistoryCount[0].CNT+1), stampData:shopData[0], userCheck:userCheckData[0]});
+                                                    io.sockets.emit(userId, {sendId: shopId, stampCnt:(stampHistoryCount[0].CNT+1), shopData:shopData[0], userCheck:userCheckData[0]});
                                                     logger.debug(TAG, 'API papa stamp success!');
 
                                                     res.status(200);

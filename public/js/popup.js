@@ -13,9 +13,9 @@ function openLayer(IdName, tpos, lpos, height){
     var reservation = document.createElement("div");
     reservation.setAttribute("id", "deemed");
     wrap.appendChild(reservation);
-    $('#wrapper').on('scroll touchmove mousewheel', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    $('#wrapper').on('scroll touchmove mousewheel', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         return false;
     });
     $('#deemed').css('height', height+'px');
@@ -29,6 +29,10 @@ function closeLayer( IdName ){
     var momEl = parent.dEI("wrapper");
     momEl.removeChild(clearEl);
     $('#wrapper').off('scroll touchmove mousewheel');
+    var shopId = $("#shop_id").val();
+    if(document.getElementById(shopId)){
+        document.getElementById(shopId).scrollIntoView();
+    }
 }
 
 function openMapLayer( IdName ){

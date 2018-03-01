@@ -1,3 +1,7 @@
+<form name="stampAction" method="get" style="display:none">
+    <input type="hidden" name="shop_id" id="shop_id" value="<%= stampShopId %>"/>
+</form>
+
 <ul class="my-card-list" id="card-list">
     <% var stampShopListCnt = stampShopListData.length %>
     <% if(stampShopListCnt > 0) { %>
@@ -55,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <p class="stamp-ti" id="available-coupon" onclick="moveCoupon();">사용 가능 쿠폰 [ 0 ]</p>
+        <p class="stamp-ti" id="available-coupon" onclick="moveCoupon();"></p>
     </div>
 </div>
 
@@ -66,15 +70,24 @@
 </div>
 
 <script type="text/javascript">
+    $(function() {
+        var shopId = $("#shop_id").val();
+        if(shopId.length) {
+            stampActionOpenLayer('layerCardPopup', shopId);
+        }
+    });
+
     function moveCoupon() {
         if($("#available-coupon").hasClass("exist-coupon")){
             document.footerAction.action = '/v1/coupon/main';
             document.footerAction.submit();
+        }else {
+            $.toast('매장에서 <h4>스탬프</h4>를 모아보세요.', { type: 'info', duration: 3000 } );
         }
     }
 
     function deleteCardcallback(shopId) {
-        var userId = $("#userId").val();
+        var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
         headers["user_id"] = userId;
@@ -119,10 +132,11 @@
     }
 
     function focusOpenLayer(showDivId, shopId, frontImg, backImg, stampImg) {
-        var userId = $("#userId").val();
+        var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
         headers["user_id"] = userId;
+        $("#shop_id").val(shopId);
 
         $.ajax({
             url: $("#url").val() + '/v1/stamp/selectStampDate',
@@ -152,8 +166,11 @@
                 popupCardData.innerHTML = appendData;
 
                 if(data.availableCoupon.COUPON_CNT > 0) {
+                    $("#available-coupon").addClass("exist-coupon");
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ data.availableCoupon.COUPON_CNT +' ]';
-                    $("#available-coupon").addClass("exist-coupon")
+                }else {
+                    $("#available-coupon").removeClass("exist-coupon");
+                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ 0 ]';
                 }
 
                 openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
@@ -164,16 +181,14 @@
         });
     }
 
-    function stampActionOpenLayer(showDivId, shopId, frontImg, backImg, stampImg, checkCoupon) {
-        document.getElementById(shopId).scrollIntoView();
-
-        var userId = $("#userId").val();
+    function stampActionOpenLayer(showDivId, shopId) {
+        var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/stamp/selectStampDate',
+            url: $("#url").val() + '/v1/stamp/selectPopupStampDate',
             type: 'GET',
             headers : headers,
             dataType: 'json',
@@ -183,15 +198,14 @@
                 var scrollPosition = $(document).scrollTop();
                 var popupCardData = document.getElementById('popup-card');
                 var appendData = '<figure class="front">' +
-                    '<img class="base-img" src="/images/shop-card/'+ frontImg +'" alt="front">' +
+                    '<img class="base-img" src="/images/shop-card/'+ data.availableCoupon.SHOP_FRONT_IMG +'" alt="front">' +
                     '</figure>' +
                     '<figure class="back">' +
-                    '<img class="base-img" src="/images/shop-card/'+ backImg +'" alt="back">' +
-                    '<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/'+ stampImg +'"/>' +
+                    '<img class="base-img" src="/images/shop-card/'+ data.availableCoupon.SHOP_BACK_IMG +'" alt="back">' +
                     '<div class="img-repeat-'+ shopId +'">';
                 for(var i=0; i<data.stampDateList.length; i++) {
                     appendData += '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon_'+i+'>">'+
-                        '<img class="stamp-img" src="/images/shop-stamp/'+ stampImg +'"/>' +
+                        '<img class="stamp-img" src="/images/shop-stamp/'+ data.availableCoupon.SHOP_STAMP_IMG +'"/>' +
                         '<span class="stamp-date-'+ shopId +'">['+data.stampDateList[i].REG_DT+']</span>' +
                         '</div>';
                 }
@@ -199,28 +213,13 @@
                     '</figure>';
                 popupCardData.innerHTML = appendData;
 
-                var couponCnt = data.availableCoupon.COUPON_CNT;
-
-                document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
-                $("#available-coupon").addClass("exist-coupon");
-
-                setTimeout(function() {
-                    if(checkCoupon) {
-                        $("#popup-card").find($(".img-repeat-"+shopId)).remove();
-                        couponCnt++;
-                        document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
-                    }
-                }, 2200);
-
-                /*
                 if(data.availableCoupon.COUPON_CNT > 0) {
+                    $("#available-coupon").addClass("exist-coupon");
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ data.availableCoupon.COUPON_CNT +' ]';
-                    $("#available-coupon").addClass("exist-coupon");
-                } else {
-                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ 1 ]';
-                    $("#available-coupon").addClass("exist-coupon");
-                }*/
-
+                }else {
+                    $("#available-coupon").removeClass("exist-coupon");
+                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ 0 ]';
+                }
                 openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
             },
             error: function(request, status, error) {
@@ -234,24 +233,24 @@
 <script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>
 <!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
 <script type="text/javascript">
-    var pushUserId = $("#userId").val();
+    var pushUserId = $("#user_id").val();
     var socket = io.connect('https://whereareevent.com:8060');
     /*var socket = io.connect('http://localhost:8060');*/
     socket.on(pushUserId, function(data){
         var visitRateCnt = data.stampCnt % 10;
         var shopId = data.sendId;
-        console.log(data.userCheck.USER_CHECK);
+
         if(data.userCheck.USER_CHECK == 0) {
             var appendId = $('#common-template');
             var appendData = '<ul class="my-card-list" id="card-list">' +
                 '<li class="my-card-shop" id="'+ shopId +'">'+
                 '<div class="my-container">' +
-                '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopId +'\', \''+ data.stampData.SHOP_FRONT_IMG +'\', \''+ data.stampData.SHOP_BACK_IMG +'\', \''+ data.stampData.SHOP_STAMP_IMG +'\')">' +
+                '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopId +'\', \''+ data.shopData.SHOP_FRONT_IMG +'\', \''+ data.shopData.SHOP_BACK_IMG +'\', \''+ data.shopData.SHOP_STAMP_IMG +'\')">' +
                 '<figure class="front">' +
-                '<img class="base-img" src="/images/shop-card/'+ data.stampData.SHOP_BACK_IMG +'" alt="back">' +
+                '<img class="base-img" src="/images/shop-card/'+ data.shopData.SHOP_BACK_IMG +'" alt="back">' +
                 '<div class="img-repeat-'+ shopId +'">' +
             '<div class="stamp-icon-'+ shopId +'" id="stamp_icon>">' +
-            '<img class="stamp-img" src="/images/shop-stamp/'+ data.stampData.SHOP_STAMP_IMG +'"/>' +
+            '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
             '</div>' +
             '</div>' +
             '</figure>' +
@@ -267,15 +266,78 @@
             appendId.append(appendData);
         }else {
             var appendStamp = '<div class="stamp-icon-'+ shopId +'" id="stamp_icon">' +
-                '<img class="stamp-img" src="/images/shop-stamp/'+ data.stampData.SHOP_STAMP_IMG +'"/>'+
+                '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>'+
                 '</div>';
             $("#"+shopId).find($(".img-repeat-"+shopId)).append(appendStamp);
         }
 
+        $("#layerCardPopup").find($(".img-repeat-"+shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
+            '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon>">' +
+            '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
+            '<span class="stamp-date-'+ shopId +'">['+ data.shopData.TODAY_DT +']</span>' +
+            '</div>');
+
+        setTimeout(function() {
+            $('#stamp-action').remove();
+            if (data.stampCnt>0 && visitRateCnt==0) {
+                var headers = {};
+                headers["user_id"] = pushUserId;
+                var dataString = {'shop_id': shopId};
+                $.ajax({
+                    url: $("#url").val() + '/v1/coupon/couponData',
+                    type: 'PUT',
+                    headers : headers,
+                    dataType: 'json',
+                    data : dataString,
+                    success: function(data) {
+                        $("#"+shopId).find($(".img-repeat-"+shopId)).remove();
+                        //Toast Success Message
+                        $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', { type: 'danger', sticky : true, duration: 5000 } );
+                        var couponText = $("#available-coupon").text().split(" ");
+                        var couponCnt = Number(couponText[4]);
+                        if(couponCnt < 1) {
+                            $("#available-coupon").addClass("exist-coupon");
+                        }
+
+                        couponCnt++;
+                        document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
+                    },
+                    error: function(request, status, error) {
+                        console.error("selectStampDate : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }
+        }, 2500);
+
+
         if (data.stampCnt>0 && visitRateCnt==0) {
-            stampActionOpenLayer('layerCardPopup', shopId, data.stampData.SHOP_FRONT_IMG, data.stampData.SHOP_BACK_IMG, data.stampData.SHOP_STAMP_IMG, true);
+
         }else {
-            stampActionOpenLayer('layerCardPopup', shopId, data.stampData.SHOP_FRONT_IMG, data.stampData.SHOP_BACK_IMG, data.stampData.SHOP_STAMP_IMG, false);
+
+
+        }
+
+        /*var couponCnt = data.availableCoupon.COUPON_CNT;
+        document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
+        $("#available-coupon").addClass("exist-coupon");
+
+        setTimeout(function() {
+            if(checkCoupon) {
+                $("#popup-card").find($(".img-repeat-"+shopId)).remove();
+                couponCnt++;
+                document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
+            }
+        }, 2500);*/
+
+
+
+
+
+
+        /*if (data.stampCnt>0 && visitRateCnt==0) {
+            stampActionOpenLayer('layerCardPopup', shopId, true);
+        }else {
+            stampActionOpenLayer('layerCardPopup', shopId, false);
         }
 
         setTimeout(function() {
@@ -300,7 +362,7 @@
                     }
                 });
             }
-        }, 2500);
+        }, 2500);*/
     });
 </script>
 
@@ -342,7 +404,7 @@
     //Shop List
     function userShopList(currentLat, currentLng) {
         var headers = {};
-        headers["user_id"] = $("#userId").val();
+        headers["user_id"] = $("#user_id").val();
 
         //var initShopId = $("#initShopId").val();
 
@@ -419,7 +481,7 @@
                 // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
                 selectedMarker = marker;
                 var headers = {};
-                headers["user_id"] = $("#userId").val();
+                headers["user_id"] = $("#user_id").val();
 
                 //shop data
                 var dataString = {'current_lat': position.lat, 'current_lng': position.lng};

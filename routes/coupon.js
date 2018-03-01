@@ -11,7 +11,7 @@ const TAG = "[COUPON INFO] ";
 router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get coupon shop main information');
 
-    var userId = req.query.userId;
+    var userId = req.query.user_id;
     logger.debug(TAG, 'User id : ' + userId);
 
     var currentLat = req.query.current_lat;

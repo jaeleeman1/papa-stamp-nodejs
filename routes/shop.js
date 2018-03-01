@@ -11,7 +11,7 @@ const TAG = "[SHOP INFO] ";
 router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get shop main information');
 
-    var userId = req.query.userId;
+    var userId = req.query.user_id;
     logger.debug(TAG, 'User id : ' + userId);
 
     if(userId == null || userId == undefined) {
