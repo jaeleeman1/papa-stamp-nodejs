@@ -47,7 +47,7 @@
     <div class="pop_up_body">
         <p class="btn_txt_stamp_nor mt20">
             <span class="delete-card" id="delete_card">카드 삭제</span>
-            <span class="close-card" onclick="closeLayer('layerCardPopup')">닫기</span>
+            <span class="close-card" id="close_card">닫기</span>
         </p>
         <div class="card-img">
             <div class="container">
@@ -107,6 +107,15 @@
         });
     }
 
+    function closeCard(checkToast) {
+        if(checkToast) {
+            closeLayer('layerCardPopup');
+        }else {
+            $.toast.config.width = 900;
+            $.toast('<h4>스탬프</h4>가 찍혀야 닫을 수 있습니다.', { type: 'danger', duration: 5000 } );
+        }
+    }
+
     function deleteCard(shopId) {
         $("#delete-card-confirm").dialog({
             resizable: false,
@@ -144,6 +153,7 @@
                 var browserHeight = $(document).height();
                 var scrollPosition = $(document).scrollTop();
                 $('#delete_card').click(function() { deleteCard(shopId) });
+                $('#close_card').click(function() { closeCard(true) });
                 var popupCardData = document.getElementById('popup-card');
                 var appendData = '<figure class="front">' +
                     '<img class="base-img" src="/images/shop-card/'+ frontImg +'" alt="front">' +
@@ -192,6 +202,7 @@
             success: function(data) {
                 var browserHeight = $(document).height();
                 var scrollPosition = $(document).scrollTop();
+                $('#close_card').click(function() { closeCard(false) });
                 var popupCardData = document.getElementById('popup-card');
                 var appendData = '<figure class="front">' +
                     '<img class="base-img" src="/images/shop-card/'+ data.availableCoupon.SHOP_FRONT_IMG +'" alt="front">' +
@@ -273,6 +284,9 @@
             '<span class="stamp-date-'+ shopId +'">['+ data.shopData.TODAY_DT +']</span>' +
             '</div>');
 
+        $('#delete_card').click(function() { deleteCard(shopId) });
+        $('#close_card').click(function() { closeCard(true) });
+
         setTimeout(function() {
             $('#stamp-action').remove();
             if (data.stampCnt>0 && visitRateCnt==0) {
@@ -304,61 +318,6 @@
                 });
             }
         }, 2500);
-
-
-        if (data.stampCnt>0 && visitRateCnt==0) {
-
-        }else {
-
-
-        }
-
-        /*var couponCnt = data.availableCoupon.COUPON_CNT;
-        document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
-        $("#available-coupon").addClass("exist-coupon");
-
-        setTimeout(function() {
-            if(checkCoupon) {
-                $("#popup-card").find($(".img-repeat-"+shopId)).remove();
-                couponCnt++;
-                document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
-            }
-        }, 2500);*/
-
-
-
-
-
-
-        /*if (data.stampCnt>0 && visitRateCnt==0) {
-            stampActionOpenLayer('layerCardPopup', shopId, true);
-        }else {
-            stampActionOpenLayer('layerCardPopup', shopId, false);
-        }
-
-        setTimeout(function() {
-            $('#stamp-action').remove();
-            if (data.stampCnt>0 && visitRateCnt==0) {
-                var headers = {};
-                headers["user_id"] = pushUserId;
-                var dataString = {'shop_id': shopId};
-                $.ajax({
-                    url: $("#url").val() + '/v1/coupon/couponData',
-                    type: 'PUT',
-                    headers : headers,
-                    dataType: 'json',
-                    data : dataString,
-                    success: function(data) {
-                        $("#"+shopId).find($(".img-repeat-"+shopId)).remove();
-                        //Toast Success Message
-                        $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', { type: 'danger', sticky : true, duration: 5000 } );
-                    },
-                    error: function(request, status, error) {
-                        console.error("selectStampDate : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                    }
-                });
-            }
-        }, 2500);*/
     });
 </script>
 
