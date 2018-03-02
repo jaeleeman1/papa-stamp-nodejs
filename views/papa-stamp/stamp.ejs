@@ -117,6 +117,7 @@
     }
 
     function deleteCard(shopId) {
+        $('#delete_card').unbind('click');
         $("#delete-card-confirm").dialog({
             resizable: false,
             modal: true,
@@ -152,8 +153,13 @@
             success: function(data) {
                 var browserHeight = $(document).height();
                 var scrollPosition = $(document).scrollTop();
-                $('#delete_card').click(function() { deleteCard(shopId) });
-                $('#close_card').click(function() { closeCard(true) });
+                $('#delete_card').click(function() {
+                    deleteCard(shopId);
+                });
+                $('#close_card').unbind('click');
+                $('#close_card').click(function() {
+                    closeCard(true);
+                });
                 var popupCardData = document.getElementById('popup-card');
                 var appendData = '<figure class="front">' +
                     '<img class="base-img" src="/images/shop-card/'+ frontImg +'" alt="front">' +
@@ -202,7 +208,10 @@
             success: function(data) {
                 var browserHeight = $(document).height();
                 var scrollPosition = $(document).scrollTop();
-                $('#close_card').click(function() { closeCard(false) });
+                $('#close_card').unbind('click');
+                $('#close_card').click(function() {
+                    closeCard(false);
+                });
                 var popupCardData = document.getElementById('popup-card');
                 var appendData = '<figure class="front">' +
                     '<img class="base-img" src="/images/shop-card/'+ data.availableCoupon.SHOP_FRONT_IMG +'" alt="front">' +
@@ -237,12 +246,12 @@
 </script>
 
 
-<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>
-<!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
+<!--<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>-->
+<script src="http://localhost:8060/socket.io/socket.io.js"></script>
 <script type="text/javascript">
     var pushUserId = $("#user_id").val();
-    var socket = io.connect('https://whereareevent.com:8060');
-    /*var socket = io.connect('http://localhost:8060');*/
+    /*var socket = io.connect('https://whereareevent.com:8060');*/
+    var socket = io.connect('http://localhost:8060');
     socket.on(pushUserId, function(data){
         var visitRateCnt = data.stampCnt % 10;
         var shopId = data.sendId;
@@ -284,8 +293,13 @@
             '<span class="stamp-date-'+ shopId +'">['+ data.shopData.TODAY_DT +']</span>' +
             '</div>');
 
-        $('#delete_card').click(function() { deleteCard(shopId) });
-        $('#close_card').click(function() { closeCard(true) });
+        $('#delete_card').click(function() {
+            deleteCard(shopId);
+        });
+        $('#close_card').unbind('click');
+        $('#close_card').click(function() {
+            closeCard(true);
+        });
 
         setTimeout(function() {
             $('#stamp-action').remove();
@@ -301,8 +315,9 @@
                     data : dataString,
                     success: function(data) {
                         $("#"+shopId).find($(".img-repeat-"+shopId)).remove();
+                        $("#popup-card").find($(".img-repeat-"+shopId)).remove();
                         //Toast Success Message
-                        $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', { type: 'danger', sticky : true, duration: 5000 } );
+                        $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', { type: 'success', sticky : true } );
                         var couponText = $("#available-coupon").text().split(" ");
                         var couponCnt = Number(couponText[4]);
                         if(couponCnt < 1) {
