@@ -246,12 +246,12 @@
 </script>
 
 
-<!--<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>-->
-<script src="http://localhost:8060/socket.io/socket.io.js"></script>
+<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>
+<!----><script src="http://localhost:8060/socket.io/socket.io.js"></script>
 <script type="text/javascript">
     var pushUserId = $("#user_id").val();
-    /*var socket = io.connect('https://whereareevent.com:8060');*/
-    var socket = io.connect('http://localhost:8060');
+    var socket = io.connect('https://whereareevent.com:8060');
+    /*var socket = io.connect('http://localhost:8060');*/
     socket.on(pushUserId, function(data){
         var visitRateCnt = data.stampCnt % 10;
         var shopId = data.sendId;
@@ -536,6 +536,15 @@
             image: currentMarkerImage // 마커이미지 설정
         });
         marker.setMap(map);
+
+        var currentIwContent = '<div style="padding:5px;font-size:32px;">현재 위치</div>'; // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+
+        var currentInfowindow = new daum.maps.InfoWindow({
+            position : currentMarkerPosition,
+            content : currentIwContent
+        });
+
+        currentInfowindow.open(map, marker);
     }
 
     function guidePapaShopLoad(shopLat, shopLng) {

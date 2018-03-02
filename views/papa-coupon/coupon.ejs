@@ -378,6 +378,15 @@
             image: currentMarkerImage // 마커이미지 설정
         });
         marker.setMap(map);
+
+        var currentIwContent = '<div style="padding:5px;font-size:32px;">현재 위치</div>'; // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+
+        var currentInfowindow = new daum.maps.InfoWindow({
+            position : currentMarkerPosition,
+            content : currentIwContent
+        });
+
+        currentInfowindow.open(map, marker);
     }
 
     function guidePapaShopLoad(shopLat, shopLng) {
