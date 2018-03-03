@@ -91,7 +91,7 @@ router.post('/userLogin', function(req, res, next) {
                     if(userLogin[0].USER_PASSWORD == userPassword) {
                         userPwCheck = '1';
                     }
-                    req.session.userInfo = userInfo;
+                    // req.session.userInfo = userInfo;
                     res.send({userId: userLogin[0].USER_ID, userEmailCheck: userEmailCheck, userPwCheck: userPwCheck});
                 }
             }
