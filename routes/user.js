@@ -15,31 +15,6 @@ admin.initializeApp({
     databaseURL: "https://papastamp-a72f6.firebaseio.com"
 });
 
-// Get Firebase User Create
-router.get('/userCreate', function(req, res, next) {
-    logger.info(TAG, 'Get user auth');
-
-    var userId = req.headers.user_id;
-    logger.debug(TAG, 'User ID : ' + userId);
-
-    if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid headers value');
-        res.status(400);
-        res.send('Invalid headers error');
-    }
-
-    admin.auth().createCustomToken(userId)
-        .then(function(customToken) {
-            // Send token back to client
-            logger.debug(TAG, 'Custom token : ', customToken);
-            res.send({customToken:customToken});
-        })
-        .catch(function(error) {
-            logger.error(TAG, 'Error creating custom token : ', error);
-            console.log("Error creating custom token:", error);
-        });
-});
-
 //Get User Location
 router.get('/userLocation', function (req, res, next) {
     logger.info(TAG, 'Get user location');
@@ -69,6 +44,85 @@ router.get('/userLocation', function (req, res, next) {
             connection.release();
         });
     });
+});
+
+// Get User Login
+router.post('/userLogin', function(req, res, next) {
+    logger.info(TAG, 'Get user login');
+
+    var userId = req.headers.user_id;
+    logger.debug(TAG, 'User ID : ' + userId);
+
+    var userEmail = req.body.user_email;
+    var userPassword = req.body.user_password;
+
+    logger.debug(TAG, 'Login EMAIL : ' + userEmail);
+    logger.debug(TAG, 'Login PW : ' + userPassword);
+
+    if(userEmail == null || userEmail == undefined &&
+        userPassword == null || userPassword == undefined) {
+        logger.debug(TAG, 'Invalid parameter');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    getConnection(function (err, connection){
+        var userEmailCheck = '0';
+        var userPwCheck = '0';
+        var selectLoginQuery = "select USER_EMAIL, USER_PASSWORD, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ")) as EMAIL_CHECK" +
+            " from SB_USER_INFO where USER_TYPE = 02 and USER_EMAIL = "+ mysql.escape(userEmail) + " and USER_PASSWORD = "+mysql.escape(userPassword);
+        connection.query(selectLoginQuery, function (err, userLogin) {
+            if (err) {
+                logger.error(TAG, "DB selectLoginQuery error : " + err);
+                res.status(400);
+                res.send('User sign in error');
+            }else{
+                logger.debug(TAG, 'Select user login success : ' + JSON.stringify(userLogin));
+                if(userLogin.length < 1) {
+                    res.status(500);
+                    res.send('No user info');
+                }else {
+                    var userInfo = {
+                        user_id : userId
+                    }
+                    if(userLogin[0].EMAIL_CHECK == userEmail) {
+                        userEmailCheck = '1';
+                    }
+                    if(userLogin[0].USER_PASSWORD == userPassword) {
+                        userPwCheck = '1';
+                    }
+                    req.session.userInfo = userInfo;
+                    res.send({userEmailCheck: userEmailCheck, userPwCheck: userPwCheck});
+                }
+            }
+            connection.release();
+        });
+    });
+});
+
+// Get Firebase User Create
+router.get('/userCreate', function(req, res, next) {
+    logger.info(TAG, 'Get user auth');
+
+    var userId = req.headers.user_id;
+    logger.debug(TAG, 'User ID : ' + userId);
+
+    if(userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid headers value');
+        res.status(400);
+        res.send('Invalid headers error');
+    }
+
+    admin.auth().createCustomToken(userId)
+        .then(function(customToken) {
+            // Send token back to client
+            logger.debug(TAG, 'Custom token : ', customToken);
+            res.send({customToken:customToken});
+        })
+        .catch(function(error) {
+            logger.error(TAG, 'Error creating custom token : ', error);
+            console.log("Error creating custom token:", error);
+        });
 });
 
 //Put User Location
