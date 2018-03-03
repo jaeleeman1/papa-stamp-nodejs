@@ -69,8 +69,8 @@ router.post('/userLogin', function(req, res, next) {
     getConnection(function (err, connection){
         var userEmailCheck = '0';
         var userPwCheck = '0';
-        var selectLoginQuery = "select USER_EMAIL, USER_PASSWORD, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ")) as EMAIL_CHECK" +
-            " from SB_USER_INFO where USER_TYPE = 02 and USER_EMAIL = "+ mysql.escape(userEmail) + " and USER_PASSWORD = "+mysql.escape(userPassword);
+        var selectLoginQuery = "select USER_PASSWORD, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ")) as EMAIL_CHECK" +
+            " from SB_USER_INFO where USER_TYPE = 002 and USER_EMAIL = "+ mysql.escape(userEmail);
         connection.query(selectLoginQuery, function (err, userLogin) {
             if (err) {
                 logger.error(TAG, "DB selectLoginQuery error : " + err);
@@ -85,14 +85,14 @@ router.post('/userLogin', function(req, res, next) {
                     var userInfo = {
                         user_id : userId
                     }
-                    if(userLogin[0].EMAIL_CHECK == userEmail) {
-                        userEmailCheck = '1';
-                    }
+
+                    userEmailCheck = userLogin[0].EMAIL_CHECK
+
                     if(userLogin[0].USER_PASSWORD == userPassword) {
                         userPwCheck = '1';
                     }
                     req.session.userInfo = userInfo;
-                    res.send({userEmailCheck: userEmailCheck, userPwCheck: userPwCheck});
+                    res.send({userId: userLogin[0].USER_ID, userEmailCheck: userEmailCheck, userPwCheck: userPwCheck});
                 }
             }
             connection.release();
