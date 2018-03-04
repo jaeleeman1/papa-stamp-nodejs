@@ -70,7 +70,7 @@ router.post('/userLogin', function(req, res, next) {
         var userEmailCheck = '0';
         var userPwCheck = '0';
         var selectLoginQuery = "select USER_PASSWORD, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ")) as EMAIL_CHECK" +
-            " from SB_USER_INFO where USER_TYPE = 002 and USER_EMAIL = "+ mysql.escape(userEmail);
+            " from SB_USER_INFO where USER_TYPE = 001 and USER_EMAIL = "+ mysql.escape(userEmail);
         connection.query(selectLoginQuery, function (err, userLogin) {
             if (err) {
                 logger.error(TAG, "DB selectLoginQuery error : " + err);
