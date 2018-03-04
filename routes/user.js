@@ -70,7 +70,7 @@ router.post('/userLogin', function(req, res, next) {
         var userEmailCheck = '0';
         var userPwCheck = '0';
         var selectLoginQuery = "select USER_PASSWORD, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ")) as EMAIL_CHECK" +
-            " from SB_USER_INFO where USER_TYPE = 001 and USER_EMAIL = "+ mysql.escape(userEmail);
+            " from SB_USER_INFO where USER_TYPE = 100 and USER_EMAIL = "+ mysql.escape(userEmail);
         connection.query(selectLoginQuery, function (err, userLogin) {
             if (err) {
                 logger.error(TAG, "DB selectLoginQuery error : " + err);
@@ -144,7 +144,7 @@ router.post('/userInfo', function(req, res, next) {
                 // Insert User Infomation
                 if(userLoginCheck[0].EMAIL_CHECK ==  '0') {
                     var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, USER_PASSWORD, USER_TYPE) " +
-                        "values(" + mysql.escape(userId) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + ",password(" + mysql.escape(userPassword) + "), '001') " +
+                        "values(" + mysql.escape(userId) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + ",password(" + mysql.escape(userPassword) + "), '100') " +
                         "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=001";
                     connection.query(insertUserInfo, function (err, userInfoData) {
                         if (err) {
