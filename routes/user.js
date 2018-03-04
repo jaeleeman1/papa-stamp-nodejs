@@ -133,32 +133,35 @@ router.post('/userInfo', function(req, res, next) {
     var userPassword = req.body.user_password;
 
     getConnection(function (err, connection){
-        // Insert User Infomation
-        var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, USER_PASSWORD, USER_TYPE) " +
-            "values("+ mysql.escape(userId) + ","+ mysql.escape(accessToken) + ","+ mysql.escape(userEmail) + ",password("+mysql.escape(userPassword) + "), '11') " +
-            "on duplicate key update ACCESS_TOKEN="+ mysql.escape(accessToken) + ", USER_EMAIL="+ mysql.escape(userEmail) +", USER_PASSWORD="+mysql.escape(userPassword) +", USER_TYPE=11";
-        connection.query(insertUserInfo, function (err, userInfoData) {
+        var selectLoginCheckQuery = "select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ") as EMAIL_CHECK";
+        connection.query(selectLoginCheckQuery, function (err, userLoginCheck) {
             if (err) {
-                logger.error(TAG, "Insert User Info Error : " + err);
-                res.status(500);
-                throw err;
+                logger.error(TAG, "DB selectLoginQuery error : " + err);
+                res.status(400);
+                res.send('User sign in error');
             }else{
-                logger.debug(TAG, "Insert User Info Success ### " + JSON.stringify(userInfoData));
-                res.status(200);
-                res.send();
-                /* var insertUserPushInfo = "INSERT INTO SB_USER_PUSH_INFO (SHOP_ID, USER_ID) VALUES ('SB-SHOP-00001',"+ mysql.escape(userId) + "), ('SB-SHOP-00002',"+ mysql.escape(userId) + ")," +
-                 "('SB-SHOP-00003',"+ mysql.escape(userId) + "), ('SB-SHOP-00004',"+ mysql.escape(userId) + "), ('SB-SHOP-00005',"+ mysql.escape(userId) +")";
-                 connection.query(insertUserPushInfo, function (err, userPushData) {
-                 if (err) {
-                 logger.error(TAG, "DB selectShopPushQuery error : " + err);
-                 res.status(400);
-                 res.send('Select shop push info error');
-                 } else {
-                 console.log("[User Info] Insert User Info Success ### " + JSON.stringify(userPushData));
-                 res.status(200);
-                 res.send();
-                 }
-                 });*/
+                logger.debug(TAG, 'Select user login success : ' + JSON.stringify(userLoginCheck));
+                // Insert User Infomation
+                if(userLoginCheck[0] !=  1) {
+                    var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, USER_PASSWORD, USER_TYPE) " +
+                        "values(" + mysql.escape(userId) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + ",password(" + mysql.escape(userPassword) + "), '11') " +
+                        "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=001";
+                    connection.query(insertUserInfo, function (err, userInfoData) {
+                        if (err) {
+                            logger.error(TAG, "Insert User Info Error : " + err);
+                            res.status(500);
+                            throw err;
+                        } else {
+                            logger.debug(TAG, "Insert User Info Success ### " + JSON.stringify(userInfoData));
+                            res.status(200);
+                            res.send();
+                        }
+                    });
+                }else {
+                    logger.debug(TAG, "Exist User Info " + JSON.stringify(userInfoData));
+                    res.status(400);
+                    res.send();
+                }
             }
             connection.release();
         });
