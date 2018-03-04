@@ -142,7 +142,7 @@ router.post('/userInfo', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select user login success : ' + JSON.stringify(userLoginCheck));
                 // Insert User Infomation
-                if(userLoginCheck[0] ==  '0') {
+                if(userLoginCheck[0].EMAIL_CHECK ==  '0') {
                     var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, USER_PASSWORD, USER_TYPE) " +
                         "values(" + mysql.escape(userId) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + ",password(" + mysql.escape(userPassword) + "), '001') " +
                         "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=001";
@@ -158,7 +158,6 @@ router.post('/userInfo', function(req, res, next) {
                         }
                     });
                 }else {
-                    logger.debug(TAG, "Exist User Info " + JSON.stringify(userInfoData));
                     res.status(400);
                     res.send();
                 }
