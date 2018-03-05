@@ -18,7 +18,7 @@
 .layerPopup .pop_up_body .btn_txt_nor {
     margin-top: -115px;
     margin-bottom: 20px;
-    background-color: darkseagreen;
+    background-color: #fab904;
     height: 100px;
     position: fixed;
     right: 10px;
@@ -67,6 +67,19 @@
     border-radius: 10px;
     padding: 25px 7px;
     font-weight: bold;
+}
+
+.layerPopup .pop_up_body .change-ti-custom {
+    width: 16%;
+    opacity: 0.87;
+    background-color: #E6E6E6;
+    font-size: 30px;
+    text-align: center;
+    line-height: 29px;
+    margin: 20px 30px;
+    border-radius: 10px;
+    padding: 25px 7px;
+    float: right;
 }
 
 .layerPopup .setting-popup-title {

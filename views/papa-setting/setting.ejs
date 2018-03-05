@@ -62,7 +62,7 @@
                 <hr class="setting-line">
                 <div class="setting-list-title" style="color: #999;margin-right:2px;">비밀번호 확인</div><input class="text-input" type="password" id="c-password" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:42px;">휴대폰 번호</div><input class="text-input" type="text" id="phone-number" name="name">
+                <div class="setting-list-title" style="color: #999;margin-right:42px;">휴대폰 번호</div><p class="change-ti-custom" onclick="changePassowrd();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name">
                 <hr class="setting-line">
                 <div class="setting-list-title" style="color: #999;margin-right:81px;">인증 번호</div><input class="text-input" type="text" id="confirm-number" name="name">
                 <hr class="setting-line">
@@ -361,8 +361,37 @@
     </figure>
 </div>
 
+<div id="recaptcha-container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyC48ikI4m5MOoqY5TWz0OL-IIKW6G1qWVA",
+        authDomain: "papastamp-a72f6.firebaseapp.com",
+        databaseURL: "https://papastamp-a72f6.firebaseio.com",
+        projectId: "papastamp-a72f6",
+        storageBucket: "papastamp-a72f6.appspot.com",
+        messagingSenderId: "122496208377"
+    };
+    // Initialize the default app
+    firebase.initializeApp(config);
+</script>
+
 <script type="text/javascript">
     $(function() {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': function(response) {
+                // reCAPTCHA solved, allow signInWithPhoneNumber.
+                console.log("reCAPTCHA solved, allow signInWithPhoneNumber.");
+                authPhoneNumber();
+            }
+        });
+
+
         var time = 500;
         var idx = idx2 = 0;
         var slide_width = $("#slider").width();
@@ -412,6 +441,21 @@
             }
         });
     });
+
+    function authPhoneNumber() {
+        var phoneNumber = $("#phone-number").val();
+        console.log("reCAPTCHA solved, allow signInWithPhoneNumber."+ phoneNumber);
+        var appVerifier = window.recaptchaVerifier;
+        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then(function (confirmationResult) {
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+                window.confirmationResult = confirmationResult;
+            }).catch(function (error) {
+            // Error; SMS not sent
+            // ...
+        });
+    }
 
     function changeUserInfoLayer(showDivId, userEmail) {
         $("#e-mail").val(userEmail);

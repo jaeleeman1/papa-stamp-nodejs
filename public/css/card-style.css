@@ -702,3 +702,14 @@ figure .icon-wrapper {
     color: black;
     padding-left: 10px;
 }
+
+.text-input-custom {
+    border: 5px solid #bfbfbf;
+    font-weight: 500;
+    width: 400px;
+    height: 80px;
+    font-size: 40px;
+    margin: 20px 10px 10px 30px;
+    color: black;
+    padding-left: 10px;
+}
