@@ -64,7 +64,7 @@
                 <hr class="setting-line">
                 <div class="setting-list-title" style="color: #999;margin-right:42px;">휴대폰 번호</div><p class="change-ti-custom" onclick="authPhoneNumber();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:81px;">인증 번호</div><input class="text-input" type="text" id="confirm-number" name="name">
+                <div class="setting-list-title" style="color: #999;margin-right:81px;">인증 번호</div><p class="change-ti-custom" onclick="authPhoneNumberConfirm();">확인</p><input class="text-input-custom" type="text" id="confirm-number" name="name">
                 <hr class="setting-line">
             </div>
         </div>
@@ -386,6 +386,7 @@
             'size': 'invisible',
             'callback': function (response) {
                 // reCAPTCHA solved, allow signInWithPhoneNumber.
+                $.toast('<h4>인증 번호</h4>를 입력하세요.', { type: 'info', duration: 3000 } );
             }
         });
 
@@ -440,8 +441,7 @@
     });
 
     function authPhoneNumber() {
-        var phoneNumber = "+82"+$("#phone-number").val();
-        console.log("reCAPTCHA solved, allow signInWithPhoneNumber."+ phoneNumber);
+        var phoneNumber = "+82"+$("#phone-number").val().toString();
         var appVerifier = window.recaptchaVerifier;
         firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
             .then(function (confirmationResult) {
@@ -456,6 +456,18 @@
                     grecaptcha.reset(widgetId);
                 });
             // Error; SMS not sent
+            // ...
+        });
+    }
+
+    function authPhoneNumberConfirm() {
+        var code = $("#confirm-number").val().toString();
+        confirmationResult.confirm(code).then(function (result) {
+            // User signed in successfully.
+         $.toast('<h4>사용자 인증</h4>이 완료되었습니다.', { type: 'info', duration: 3000 } );
+            // ...
+        }).catch(function (error) {
+            // User couldn't sign in (bad verification code?)
             // ...
         });
     }
