@@ -48,7 +48,7 @@
     </li>
 </ul>
 
-<<div class="layerPopup layer-userInfo-popup" id="layerUserInfoPopup">
+<div class="layerPopup layer-userInfo-popup" id="layerUserInfoPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
             <span class="setting-popup-title">내 정보 수정</span>
@@ -62,7 +62,7 @@
                 <hr class="setting-line">
                 <div class="setting-list-title" style="color: #999;margin-right:2px;">비밀번호 확인</div><input class="text-input" type="password" id="c-password" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:42px;">휴대폰 번호</div><p class="change-ti-custom" onclick="changePassowrd();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name">
+                <div class="setting-list-title" style="color: #999;margin-right:42px;">휴대폰 번호</div><p class="change-ti-custom" onclick="authPhoneNumber();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name">
                 <hr class="setting-line">
                 <div class="setting-list-title" style="color: #999;margin-right:81px;">인증 번호</div><input class="text-input" type="text" id="confirm-number" name="name">
                 <hr class="setting-line">
@@ -361,8 +361,6 @@
     </figure>
 </div>
 
-<div id="recaptcha-container"></div>
-
 <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
@@ -384,13 +382,10 @@
     $(function() {
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
             'size': 'invisible',
-            'callback': function(response) {
+            'callback': function (response) {
                 // reCAPTCHA solved, allow signInWithPhoneNumber.
-                console.log("reCAPTCHA solved, allow signInWithPhoneNumber.");
-                authPhoneNumber();
             }
         });
-
 
         var time = 500;
         var idx = idx2 = 0;
@@ -443,7 +438,7 @@
     });
 
     function authPhoneNumber() {
-        var phoneNumber = $("#phone-number").val();
+        var phoneNumber = "+82"+$("#phone-number").val();
         console.log("reCAPTCHA solved, allow signInWithPhoneNumber."+ phoneNumber);
         var appVerifier = window.recaptchaVerifier;
         firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
@@ -452,6 +447,12 @@
                 // user in with confirmationResult.confirm(code).
                 window.confirmationResult = confirmationResult;
             }).catch(function (error) {
+                grecaptcha.reset(window.recaptchaWidgetId);
+
+                // Or, if you haven't stored the widget ID:
+                window.recaptchaVerifier.render().then(function(widgetId) {
+                    grecaptcha.reset(widgetId);
+                });
             // Error; SMS not sent
             // ...
         });
