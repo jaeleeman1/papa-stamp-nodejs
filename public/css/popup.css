@@ -1,37 +1,35 @@
 .layerPopup {
     position: absolute;
     top: 20%;
-    margin-top: -100px;
-    margin-left: 1px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: auto;
     background: #FFF;
-    height: 765px;
-    width: 100%;
-    border:4px solid #eee;
-    display:none;
-    z-index:100;
+    height: 465px;
+    width: 95%;
+    border: 4px solid #eee;
+    display: none;
+    z-index: 100;
 }
 
 .layerPopup .pop_up_body {
-    padding:10.5px 1.7% 10.5px;
+    padding: 10.5px 0 10.5px;
 }
 
 .layerPopup .pop_up_body .btn_txt_nor {
-    margin-top: -115px;
-    margin-bottom: 20px;
     background-color: #fab904;
-    height: 100px;
+    width: 89%;
     position: fixed;
-    right: 10px;
-    width: 98%;
+    margin-left: -4px;
+    margin-top: -77px;
 }
 
 .layerPopup .pop_up_body .btn_txt_stamp_nor {
-    margin-top: -115px;
-    margin-bottom: 20px;
     background-color: darkseagreen;
-    height: 100px;
-    margin-left: -20px;
-    width: 104%;
+    width: 95%;
+    position: fixed;
+    margin-left: -4px;
+    margin-top: -77px;
 }
 
 .layerPopup .delete-card {
@@ -46,79 +44,161 @@
     opacity: 0.87;
     background-color: #777;
     color: #fff;
-    font-size: 40px;
+    font-size: 16px;
     text-align: center;
     line-height:29px;
-    margin: 665px 230px;
+    margin: 25px 90px;
     border-radius: 10px;
-    padding: 25px 7px;
+    padding: 12px 7px;
     font-weight: bold;
 }
 
 .layerPopup .pop_up_body .change-ti {
-    width: 50%;
     opacity: 0.87;
     background-color: #777;
     color: #fff;
-    font-size: 40px;
+    font-size: 16px;
     text-align: center;
-    line-height:29px;
-    margin: 65px 230px;
+    line-height:32px;
+    margin: 8px 65px 15px;
     border-radius: 10px;
-    padding: 25px 7px;
+    padding: 2px;
     font-weight: bold;
+    letter-spacing: 6px;
 }
 
 .layerPopup .pop_up_body .change-ti-custom {
-    width: 16%;
+    width: 20%;
     opacity: 0.87;
     background-color: #E6E6E6;
-    font-size: 30px;
+    font-size: 12px;
     text-align: center;
     line-height: 29px;
-    margin: 20px 30px;
+    margin: 8px 8px;
     border-radius: 10px;
-    padding: 25px 7px;
+    padding: 2px 7px;
     float: right;
 }
 
 .layerPopup .setting-popup-title {
-    font-size: 60px;
+    font-size: 25px;
     text-align: center;
     color: rgba(0,0,0,0.54);
     line-height: 29px;
     display: inline-block;
-    margin:15px 0 15px 0;
+    margin: -2px 0 0 0;
     padding: 18px;
     font-weight: bold;
 }
 
 .layerPopup .delete-card {
     float: left;
-    font-size: 46px;
+    font-size: 18px;
     color: rgba(0,0,0,0.54);
-    line-height:29px;
+    line-height:20px;
     display:inline-block;
-    margin:15px 0 15px 10px;
-    border: 3px solid;
-    padding: 18px;
+    margin:14px 0 15px 18px;
+    border: 2px solid;
+    padding: 5px;
 }
 
 .layerPopup .close-card {
     float: right;
-    font-size: 46px;
+    font-size: 18px;
     color: rgba(0,0,0,0.54);
-    line-height:29px;
+    line-height:20px;
     display:inline-block;
-    margin:15px 10px 15px 0;
+    margin:14px 18px 15px 0;
+    border: 2px solid;
+    padding: 5px;
+}
+
+.layerSettingPopup {
+    position: absolute;
+    top: 20%;
+    margin-top: 10px;
+    margin-left: 22px;
+    margin-right: auto;
+    background: #FFF;
+    height: 465px;
+    width: 88%;
+    border: 4px solid #eee;
+    display: none;
+    z-index: 100;
+}
+
+.layerSettingPopup .pop_up_body {
+    padding: 10.5px 0 10.5px;
+}
+
+.layerSettingPopup .pop_up_body .btn_txt_nor {
+    background-color: #fab904;
+    width: 88%;
+    position: fixed;
+    margin-left: -4px;
+    margin-top: -77px;
+}
+
+.layerSettingPopup .delete-card {
+    margin-left: 25px;
+    margin-right: 500px;
     border: 3px solid;
     padding: 18px;
+}
+
+.layerSettingPopup .pop_up_body .change-ti {
+    opacity: 0.87;
+    background-color: #777;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    line-height:32px;
+    margin: 8px 65px 15px;
+    border-radius: 10px;
+    padding: 2px;
+    font-weight: bold;
+    letter-spacing: 6px;
+}
+
+.layerSettingPopup .pop_up_body .change-ti-custom {
+    width: 21%;
+    opacity: 0.87;
+    background-color: #E6E6E6;
+    font-size: 12px;
+    text-align: center;
+    line-height: 29px;
+    margin: 8px 8px;
+    border-radius: 10px;
+    padding: 2px 7px;
+    float: right;
+}
+
+.layerSettingPopup .setting-popup-title {
+    font-size: 25px;
+    text-align: center;
+    color: rgba(0,0,0,0.54);
+    line-height: 29px;
+    display: inline-block;
+    margin: -2px 0 0 0;
+    padding: 18px;
+    font-weight: bold;
+}
+
+.layerSettingPopup .close-card {
+    float: right;
+    font-size: 18px;
+    color: rgba(0,0,0,0.54);
+    line-height:20px;
+    display:inline-block;
+    margin:14px 18px 15px 0;
+    border: 2px solid;
+    padding: 5px;
 }
 
 #deemed {
     width:100%;
     height:100%;
-    position:absolute;
+    position: fixed;
     top:0;
     left:0;
     filter:Alpha(opacity=50);
@@ -127,119 +207,117 @@
     z-index:25;
 }
 
-.triangle {
-    float: right;
-    display:inline-block;
-    width:0;
-    height:0;
-    border-style:solid;
-    border-width:30px;
-}
-
-.pre-click {
-    margin-top: 25px;
-    margin-right: 25px;
-    border-color: #B5B5B5 transparent transparent transparent;
-}
-
-.after-click {
-    margin-right:25px;
-    border-color:transparent transparent #B5B5B5 transparent;
-}
-
 .layer-stamp-popup {
-    height: 800px;
+    height: 338px;
+    position: fixed;
 }
 
+/* Setting */
 .layer-userInfo-popup {
-    height: 1250px;
-    margin-top: -60px;
+    height: 466px;
+    margin-top: -15px;
+    position: fixed;
 }
 
 .layer-notice-popup {
-    height: 800px;
-    margin-top: 50px;
+    height: 380px;
+    margin-top: -8px;
+    position: fixed;
 }
 
 .layer-terms-popup {
-    height: 1100px;
-    margin-top: -1px;
+    height: 443px;
+    margin-top: -46px;
     overflow:auto;
+    position: fixed;
 }
 
 .layer-tutorial-popup {
-    height: 1350px;
-    margin-top: -100px;
+    height: 486px;
+    margin-top: -46px;
+    position: fixed;
 }
 
 .layer-developer-popup {
-    margin-top: 50px;
+    height: 362px;
+    margin-top: -2px;
+    position: fixed;
 }
 
 .layer-faq-popup {
-    margin-top: 50px;
+    height: 433px;
+    margin-top: -38px;
     overflow: auto;
-}
-
-.faq_answer_container {
-    font-size:30px;
-    margin: 10px 30px 25px 30px;
-    height: 0px;
-    overflow: hidden;
-    padding: 0px;
-    background-color: whitesmoke;
-}
-
-.setting-line {
-    width: 100%;
-    margin: 20px auto;
-}
-
-.notice_date {
-    font-size:28px;
-    margin: 10px 10px 15px 23px;
-    padding: 0px 0px 5px 0px;
-    cursor: pointer;
-}
-
-.terms_text {
-    font-size:28px;
-    margin: 10px 10px 15px 23px;
+    position: fixed;
 }
 
 .setting-list-title {
-    font-size:40px;
-    margin: 10px 10px 15px 20px;
+    font-size:15px;
+    margin: 0 10px 0 10px;
     padding: 0px 0px 5px 0px;
     display: inline-block;
     cursor: pointer;
     font-weight: bold;
 }
 
-.faq_question_mark {
-    font-size: 50px;
-    font-weight: 900;
-    color: #bfbfbf;
-    margin-left: 30px;
+.setting-line {
+    width: 100%;
+    margin: 5px auto;
 }
 
-#prev_btn {
-    position:absolute;
-    top:0;left:0
+.triangle {
+    float: right;
+    border-style:solid;
+    border-width:13px;
 }
 
-#next_btn {
-    position:absolute;
-    top:0;right:0}
-
-.btn {
-    margin: 650px 35px 0 35px;
-    border:0;
-    background:#ffffff;
-    display:none;
-    z-index: 500;
+.pre-click {
+    margin-top: 10px;
+    margin-right: 16px;
+    border-color: #B5B5B5 transparent transparent transparent;
 }
 
+.after-click {
+    margin-right: 16px;
+    border-color: transparent transparent #B5B5B5 transparent;
+}
+
+/* Setting UserInfo */
+.password-label {
+    margin-top: 30px;
+    font-size: 40px;
+    margin-left: 60px;
+}
+
+.text-input {
+    border: 2px solid #bfbfbf;
+    width: 188px;
+    height: 40px;
+    font-size: 15px;
+    margin: 1px 5px 5px 10px;
+    color: black;
+    padding-left: 7px;
+}
+
+.text-input-custom {
+    border: 2px solid #bfbfbf;
+    width: 106px;
+    height: 40px;
+    font-size: 15px;
+    margin: 3px 5px 7px 10px;
+    color: black;
+    padding-left: 7px;
+}
+
+/* Setting Notice */
+.notice_date {
+    font-size:14px;
+    margin: 5px 10px 15px 18px;
+    padding: 0px 0px 5px 0px;
+    cursor: pointer;
+}
+
+/* Setting Tutorial */
 #slider {
     position:relative;
     margin:0 auto;
@@ -258,19 +336,103 @@
 }
 
 .tutorial-back {
-    width:100%;
-    height:100%;
+    width: 34%;
+    height: 35%;
 }
 
 #slider img {
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
 }
 
-.password-label {
-    margin-top: 30px;
-    font-size:40px;
-    margin-left:60px;
+#layerTutorialPopup .fa {
+    font-size: 40px;
+    color: #B5B5B5;
 }
+
+.btn {
+    margin: 170px 3px 0 3px;
+    border: 0;
+    background: #ffffff;
+    display: none;
+    z-index: 500;
+}
+
+#prev_btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#next_btn {
+    position: absolute;
+    top: 0;
+    right: 0
+}
+
+/* Setting Terms */
+.terms_text {
+    font-size:12px;
+    margin: 15px 10px 15px 10px;
+}
+
+/* Setting FAQ */
+.faq_answer {
+    padding: 10px 5px 10px 5px;
+}
+
+.faq_answer_container {
+    font-size:15px;
+    margin: 3px 10px;
+    height: 0px;
+    overflow: hidden;
+    padding: 0 15px 0 15px;
+    background-color: whitesmoke;
+}
+
+.faq_question_mark {
+    font-size: 18px;
+    font-weight: 900;
+    color: #bfbfbf;
+    margin-left: 15px;
+}
+
+#layerFaqPopup .setting-list-title {
+    margin-bottom: 15px;
+}
+
+/* Setting Development */
+#layerDevelopmentPopup .development-info {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#layerDevelopmentPopup .development-icon {
+    width: 40%;
+    margin-top: 5px;
+}
+
+#layerDevelopmentPopup .development-title {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#layerDevelopmentPopup .development-version {
+    font-size: 16px;
+    margin-top: 50px;
+    letter-spacing: 2px;
+}
+
+#layerDevelopmentPopup .development-update {
+    font-size: 16px;
+    margin-top: 30px;
+    letter-spacing: 1px;
+}
+
+
+
+
+
+
 
 

@@ -1,31 +1,13 @@
-
-/**{
-  box-sizing:border-box;
-}
-html, body{
-  width:100%;
-  height:100%;
-}
-body{
-  background: whitesmoke;
-  font-weight: 400;
-  font-size: 2.5em;
-  font-family: 'Raleway', Arial, sans-serif;
-}*/
-
-.my-container{
-    margin-left: 6px;
-}
-
 .container, figure{
-    width: 900px;
-    height: 540px;
+    width: 319px;
+    height: 208px;
 }
 
 .container{
     position:absolute;
     perspective:1000px;
-    margin-top:-200px;
+    margin-top: -80px;
+    margin-left: 7px;
     top:36%;
 }
 
@@ -44,13 +26,13 @@ figure{
     box-shadow: 0 1px 5px rgba(0,0,0,0.9);
 }
 
-figure.front{
+figure.front {
     transform: rotateY(0deg);
     z-index: 2;
 }
 
 figure.back,
-.card.flipped{
+.card.flipped {
     transform: rotateY(180deg);
 }
 
@@ -79,26 +61,26 @@ figure .caption {
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 2em;
+    padding: 0.5em;
     backface-visibility: hidden;
     background: rgba(0, 0, 0, 0.5);
 }
 
 figure .caption h5 {
     width: 30%;
-    font-size: 1.8em;
-    border: 3px solid #74DF00;
-    padding: 10px;
-    margin-top: 1em;
+    font-size: 0.8em;
+    border: 2px solid #74DF00;
+    padding: 6px;
+    margin-top: 5px;
 }
 
 figure .caption h4 {
     float: right;
-    width: 230px;
-    font-size: 2.5em;
+    width: 125px;
+    font-size: 1.2em;
     color: #e8ff00;
-    padding: 10px;
-    margin-top: 0.1em;
+    padding: 10px 0 5px 10px;
+    margin-top: -40px;
     letter-spacing: 2px;
     font-weight: 500;
     line-height: 1.7em;
@@ -107,8 +89,8 @@ figure .caption h4 {
 
 figure .caption h3{
     float: left;
-    font-size: 2.5em;
-    margin-top: 1.5em;
+    font-size: 1em;
+    margin-top: 0.5em;
 }
 
 figure .caption h3 span{
@@ -121,22 +103,24 @@ figure .caption h4 span{
     float: right;
     font-size: 0.9em;
     color: #999;
+    letter-spacing: 1px;
 }
 
 figure .caption span{
-    font-size: 4em;
+    font-size: 1.5em;
     color: #999;
 }
 
 figure .caption .title-setting{
-    margin-left: -150px;
+    margin-left: -50px;
 }
 
 .coupon-name {
     width: 100%;
     float: left;
-    font-size: 2em;
-    margin-top: 100px;
+    font-size: 1em;
+    margin-top: 50px;
+    margin-bottom: 15px;
     color: darkorange;
     text-align: right;
 }
@@ -145,34 +129,32 @@ figure .caption h6{
     width: 100%;
     margin-left: 10px;
     text-align: right;
-    font-size: 1.8em;
+    font-size: 11px;
     color: #fff;
     padding: 10px;
-    margin-top: 8em;
-    letter-spacing: 2px;
+    margin-top: 9em;
+    letter-spacing: 1px;
     font-weight: 500;
     font-family: 'Yantramanav', sans-serif;
 }
 
 .front h2{
-    word-spacing: -0.15em;
+    word-spacing: 0.2em;
     font-weight: 300;
-    font-size: 2.3em;
+    font-size: 1em;
     text-align: left;
-    margin-left: 50px;
+    margin-left: 40px;
     position: absolute;
-    top: 50%;
+    top: 65%;
     left: 0;
     width: 100%;
-    color: #272833;
     transition: transform 0.35s, color 0.35s;
-    transform: translate3d(0,-50%,0);
 }
 
 .front h2 span {
-     font-weight: bold;
-     font-size: 1em;
-     color: #272833;
+    font-weight: bold;
+    font-size: 1em;
+    color: #272833;
 }
 
 .front:hover h2 span {
@@ -185,7 +167,7 @@ figure .caption h6{
 .front h2:after{
     position: absolute;
     bottom: -10px;
-    left: 5px;
+    left: 0px;
     right: 100px;
     height: 2px;
     background: #fff;
@@ -206,11 +188,11 @@ figure .caption h6{
 
 .front p {
     letter-spacing: 1px;
-    font-size: 168.5%;
+    font-size: 100%;
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     left: 0;
-    padding: 2em;
+    padding: 0.3em;
     width: 100%;
     opacity: 0;
     transform: translate3d(0,10px,0);
@@ -277,13 +259,19 @@ figure a{
 }
 
 figure .icon-wrapper {
-    margin-bottom:10px;
+    margin-bottom:6px;
 }
 
 @media (min-width: 450px) {
     .container{
         left: 50%;
-        margin-left:-458px;
+        margin-left:-30%;
+    }
+}
+@media (min-width: 450px) {
+    .my-container{
+        left: 50%;
+        margin-left: 30%;
     }
 }
 
@@ -392,14 +380,16 @@ figure .icon-wrapper {
 }
 
 .cards {
-    margin-top: 110px;
+    margin-top: 50px;
+    margin-left: 12px;
 }
 
 .card-img {
+    width: 97.8%;
     position: relative;
-    height: 560px;
-    width: 98%;
-    float: right;
+    height: 221px;
+    margin-left: 1px;
+    margin-bottom: 5vh;
 }
 
 .card-img.open {
@@ -440,8 +430,16 @@ figure .icon-wrapper {
 
 
 
+
+
+
+
+.my-container{
+    margin-left: 6px;
+}
+
 .my-card-list {
-    margin: 110px auto;
+    margin: 50px auto;
     width: 100%;
     perspective: 1200px;
 }
@@ -450,16 +448,7 @@ figure .icon-wrapper {
     margin-bottom: 0;
 }
 
-.my-card-shop {
-    width: 95%;
-    background: #000000;
-    border-radius: 3px;
-    height: 552px;
-    margin-left: 25px;
-    margin-bottom: 5vh;
-    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
-    transform-origin: bottom center;
-}
+
 
 .my-card {
     margin-top: 6px;
@@ -484,95 +473,6 @@ figure .icon-wrapper {
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
 }
-
-.my-card-coupon {
-    width: 95%;
-    background: #ffffff;
-    border-radius: 3px;
-    height: 552px;
-    margin-left: 25px;
-    margin-bottom: 5vh;
-    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
-    transform-origin: bottom center;
-}
-
-.card-event {
-    width: 95%;
-    background: #407ded;
-    border-radius: 3px;
-    height: 552px;
-    margin-left: 25px;
-    margin-bottom: 5vh;
-    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
-    transform-origin: bottom center;
-}
-
-.card-setting {
-    width: 95%;
-    background: #848484;
-    border-radius: 3px;
-    height: 552px;
-    margin-left: 25px;
-    margin-bottom: 5vh;
-    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
-    transform-origin: bottom center;
-}
-
-.hero-shop {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 30vh;
-    background: #b651d8;
-    border-bottom: 1rem solid rgba(0,0,0,0.5);
-    z-index: -10;
-}
-
-.hero-stamp {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 30vh;
-    background: #71c55e;
-    border-bottom: 1rem solid rgba(0,0,0,0.5);
-    z-index: -10;
-}
-
-.hero-coupon {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 30vh;
-    background: #fab904;
-    border-bottom: 1rem solid rgba(0,0,0,0.5);
-    z-index: -10;
-}
-
-.hero-event {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 30vh;
-    background: #e94739;
-    border-bottom: 1rem solid rgba(0,0,0,0.5);
-    z-index: -10;
-}
-
-.hero-setting {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 30vh;
-    background: #407ded;
-    border-bottom: 1rem solid rgba(0,0,0,0.5);
-    z-index: -10;
-}
-
 
 
 
@@ -599,21 +499,6 @@ figure .icon-wrapper {
     margin-top: 1em;
 }
 
-.custom-icon {
-    background: #666;
-    border-radius: 100%;
-    border: 3px solid #fff;
-    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.46);
-    color: #fff;
-    height: 60px;
-    padding: 8px;
-    text-align: center;
-    transition: .5s;
-    width: 60px;
-    float: left;
-    margin: 28px 0 0 150px;
-}
-
 .use-coupon {
     width: 90%;
     font-size: 1.8em;
@@ -635,18 +520,19 @@ figure .icon-wrapper {
 }
 
 .custom-icon {
+    font-size: 20px;
     background: #666;
     border-radius: 100%;
     border: 3px solid #fff;
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.46);
     color: #fff;
-    height: 60px;
-    padding: 8px;
+    width: 35px;
+    height: 35px;
+    padding: 4px;
     text-align: center;
     transition: .5s;
-    width: 60px;
     float: left;
-    margin: 28px 0 0 150px;
+    margin: 3px 0 0 50px;
 }
 
 .confirm-coupon-number {
@@ -692,24 +578,51 @@ figure .icon-wrapper {
     padding: 15px;
 }
 
-.text-input {
-    border: 5px solid #bfbfbf;
-    font-weight: 500;
-    width: 575px;
-    height: 80px;
-    font-size: 40px;
-    margin: 20px 10px 10px 30px;
-    color: black;
-    padding-left: 10px;
+/* Shop */
+/* Stamp */
+.my-card-shop {
+    width: 92%;
+    background: #000000;
+    border-radius: 3px;
+    height: 221px;
+    margin-left: 15px;
+    margin-bottom: 5vh;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
 }
 
-.text-input-custom {
-    border: 5px solid #bfbfbf;
-    font-weight: 500;
-    width: 400px;
-    height: 80px;
-    font-size: 40px;
-    margin: 20px 10px 10px 30px;
-    color: black;
-    padding-left: 10px;
+/* Coupon */
+.my-card-coupon {
+    width: 92%;
+    background: #ffffff;
+    border-radius: 3px;
+    height: 221px;
+    margin-left: 15px;
+    margin-bottom: 5vh;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
+}
+
+/* Event */
+.card-event {
+    width: 92%;
+    background: #407ded;
+    border-radius: 3px;
+    height: 221px;
+    margin-left: 15px;
+    margin-bottom: 5vh;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
+}
+
+/* Setting */
+.card-setting {
+    width: 92%;
+    background: #848484;
+    border-radius: 3px;
+    height: 221px;
+    margin-left: 15px;
+    margin-bottom: 5vh;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
 }

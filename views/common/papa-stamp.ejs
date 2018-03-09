@@ -35,7 +35,7 @@
 
     <div class="header">
         <div class="top-status-bar">
-            <div class="header-title" id="map-icon"><i class="fa fa-map-marker" style="font-size: 70px;color: whitesmoke"></i></div>
+            <div class="header-title" id="map-icon"><i class="fa fa-map-marker" style="color: whitesmoke"></i></div>
             <img class="top-icon" src="/images/papastamp_icon.png"></img>
             <div class="top-title">파파스탬프</div>
             <div class="top-description">스탬프<br>관리 시스템</div>
@@ -200,7 +200,7 @@
 
         if(initView != 'setting') {
             if($('.my-card-list li').hasClass('blank-card')) {
-                mapIcon.innerHTML = '<i class="fa fa-map-marker" style="font-size: 70px;color: black"></i>';
+                mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: black"></i>';
             }else {
                 $("#map-icon").click(
                     function() {
@@ -208,18 +208,18 @@
                             $("#card-list").css("display", "none");
                             openMapLayer("mapPop");
                             mapPapaShop();
-                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="font-size: 70px;color: red"></i>';
+                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: red"></i>';
                         }else {
                             $("#select-card").remove();
                             $("#card-list").css("display", "block");
                             closeMapLayer("mapPop");
-                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="font-size: 70px;color: whitesmoke"></i>';
+                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: whitesmoke"></i>';
                         }
                     }
                 );
             }
         }else {
-            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="font-size: 70px;color: black"></i>';
+            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: black"></i>';
         }
     });
 </script>

@@ -1,18 +1,18 @@
 /* stamp image */
 .papa_stamp_icon{
-    top:-440px;
-    width:145px;
+    top: -240px;
+    width: 65px;
     border-radius:5px;
-    position:relative;
-    margin-left:30px;
-    margin-bottom:25px;
+    position: relative;
+    margin-left: 10px;
+    margin-bottom: 15px;
     float:left;
 }
 
 .stamp-img{
-    top:-350px;
-    margin-left: 20px;
-    border-radius:50px;
+    width: 36px;
+    margin-left: 10px;
+    border-radius: 20px;
 }
 
 .stamp-date{
@@ -133,34 +133,34 @@
 
 /* SB-SHOP-00003 stamp image */
 .img-repeat-SB-SHOP-00003 {
-    margin-left: 298px;
+    margin-left: 106px;
 }
 
 .stamp-icon-SB-SHOP-00003 {
-    top: -458px;
-    width: 107px;
+    top: -180px;
+    width: 44px;
     border-radius: 5px;
     position: relative;
-    margin-left: 24px;
-    margin-bottom: 67px;
+    margin-left: 2px;
+    margin-bottom: 7px;
     float: left;
 }
 
 .stamp-popup-icon-SB-SHOP-00003 {
-    top: -458px;
-    width: 102px;
+    top: -180px;
+    width: 44px;
     border-radius: 5px;
     position: relative;
-    margin-left: 26px;
-    margin-bottom: 67px;
+    margin-left: 2px;
+    margin-bottom: 7px;
     float: left;
 }
 
 .stamp-date-SB-SHOP-00003 {
     display: inline-block;
-    width: 130px;
+    width: 60px;
     position: relative;
-    font-size: 25px;
+    font-size: 10px;
     vertical-align: bottom;
     padding: 3px 5px 3px 5px;
     color: darkmagenta;

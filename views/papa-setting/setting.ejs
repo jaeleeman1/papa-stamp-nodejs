@@ -5,7 +5,7 @@
                 <figure class="front">
                     <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
                     <div class="caption">
-                        <div class="icon-wrapper"><i class="fa fa-user custom-icon" style="font-size: 40px;margin-top: 20px;"></i><span class="title-setting">로그인 정보</span></div>
+                        <div class="icon-wrapper"><i class="fa fa-user custom-icon"></i><span class="title-setting">로그인 정보</span></div>
                         <h2>E-MAIL : <span><%= userInfoData.USER_EMAIL %></span></h2>
                         <p onclick="changeUserInfoLayer('layerUserInfoPopup', '<%= userInfoData.USER_EMAIL %>')">내 정보 수정</p>
                     </div>
@@ -22,23 +22,23 @@
                     <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
                     <div class="caption">
                         <div class="icon-wrapper" onclick="openLayer('layerNoticePopup');">
-                            <i class="fa fa-bullhorn custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
+                            <i class="fa fa-bullhorn custom-icon"></i>
                             <span class="title-setting">공지사항</span>
                         </div>
                         <div class="icon-wrapper" onclick="openLayer('layerTutorialPopup');">
-                            <i class="fa fa-bookmark-o custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
+                            <i class="fa fa-bookmark-o custom-icon"></i>
                             <span class="title-setting">튜토리얼</span>
                         </div>
                         <div class="icon-wrapper" onclick="openLayer('layerTermsPopup');">
-                            <i class="fa fa-book custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
+                            <i class="fa fa-book custom-icon"></i>
                             <span class="title-setting">이용약관</span>
                         </div>
                         <div class="icon-wrapper" onclick="openLayer('layerFaqPopup');">
-                            <i class="fa fa-comments-o custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
+                            <i class="fa fa-comments-o custom-icon"></i>
                             <span class="title-setting">FAQ</span>
                         </div>
                         <div class="icon-wrapper" onclick="openLayer('layerDevelopmentPopup');">
-                            <i class="fa fa-info custom-icon" style="font-size: 40px;margin-top: 20px;"></i>
+                            <i class="fa fa-info custom-icon"></i>
                             <span class="title-setting">개발정보</span>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
     </li>
 </ul>
 
-<div class="layerPopup layer-userInfo-popup" id="layerUserInfoPopup">
+<div class="layerSettingPopup layer-userInfo-popup" id="layerUserInfoPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
             <span class="setting-popup-title">내 정보 수정</span>
@@ -56,15 +56,15 @@
         </p>
         <div class="faq_container">
             <div class="faq">
-                <div class="setting-list-title" style="color: #999;margin-right:136px;">E-Mail</div><input class="text-input" type="text" id="e-mail" name="name">
+                <div class="setting-list-title">E-Mail</div><input class="text-input" type="text" id="e-mail" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:92px;">비밀번호</div><input class="text-input" type="password" id="e-password" name="name">
+                <div class="setting-list-title">비밀번호</div><input class="text-input" type="password" id="e-password" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:2px;">비밀번호 확인</div><input class="text-input" type="password" id="c-password" name="name">
+                <div class="setting-list-title">비밀번호 확인</div><input class="text-input" type="password" id="c-password" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:42px;">휴대폰 번호</div><p class="change-ti-custom" onclick="authPhoneNumber();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name">
+                <div class="setting-list-title">휴대폰 번호</div><p class="change-ti-custom" onclick="authPhoneNumber();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:81px;">인증 번호</div><p class="change-ti-custom" onclick="authPhoneNumberConfirm();">확인</p><input class="text-input-custom" type="text" id="confirm-number" name="name">
+                <div class="setting-list-title">인증 번호</div><p class="change-ti-custom" onclick="authPhoneNumberConfirm();">확인</p><input class="text-input-custom" type="text" id="confirm-number" name="name">
                 <hr class="setting-line">
             </div>
         </div>
@@ -74,7 +74,7 @@
     </div>
 </div>
 
-<div class="layerPopup layer-notice-popup" id="layerNoticePopup">
+<div class="layerSettingPopup layer-notice-popup" id="layerNoticePopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
             <span class="setting-popup-title">공지사항</span>
@@ -101,7 +101,7 @@
     </div>
 </div>
 
-<div class="layerPopup layer-tutorial-popup" id="layerTutorialPopup">
+<div class="layerSettingPopup layer-tutorial-popup" id="layerTutorialPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
             <span class="setting-popup-title">튜토리얼</span>
@@ -122,7 +122,7 @@
     </div>
 </div>
 
-<div class="layerPopup layer-terms-popup" id="layerTermsPopup">
+<div class="layerSettingPopup layer-terms-popup" id="layerTermsPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
             <span class="setting-popup-title">이용약관</span>
@@ -300,7 +300,7 @@
     </div>
 </div>
 
-<div class="layerPopup layer-faq-popup" id="layerFaqPopup">
+<div class="layerSettingPopup layer-faq-popup" id="layerFaqPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
             <span class="setting-popup-title">FAQ</span>
@@ -336,19 +336,19 @@
     </div>
 </div>
 
-<div class="layerPopup layer-developer-popup" id="layerDevelopmentPopup">
+<div class="layerSettingPopup layer-developer-popup" id="layerDevelopmentPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
             <span class="setting-popup-title">개발정보</span>
             <span class="close-card" onclick="closeLayer('layerDevelopmentPopup')">닫기</span>
         </p>
-        <div style="text-align:center;margin-top:50px;">
-            <img class="" src="/images/papastamp_icon.png"></img>
-            <span style="font-size:70px;font-weight: bold;">파파 스탬프</span>
-            <div style="font-size:40px;margin-top:50px;">
+        <div class="development-info">
+            <img class="development-icon" src="/images/papastamp_icon.png"></img>
+            <span class="development-title">파파 스탬프</span>
+            <div class="development-version">
                 <span>현재 버전 : v1.0</span>
             </div>
-            <div style="font-size:40px;margin-top:50px;">
+            <div class="development-update">
                 <span>최종 업데이트 : 2018.02.28</span>
             </div>
         </div>
@@ -462,9 +462,10 @@
 
     function authPhoneNumberConfirm() {
         var code = $("#confirm-number").val().toString();
+        var confirmationResult = window.confirmationResult;
         confirmationResult.confirm(code).then(function (result) {
             // User signed in successfully.
-         $.toast('<h4>사용자 인증</h4>이 완료되었습니다.', { type: 'info', duration: 3000 } );
+            $.toast('<h4>사용자 인증</h4>이 완료되었습니다.', { type: 'info', duration: 3000 } );
             // ...
         }).catch(function (error) {
             // User couldn't sign in (bad verification code?)

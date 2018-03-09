@@ -14,17 +14,12 @@ body {
   background-color: #B5B5B5;
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
   position: relative;
-  /*background: url(https://images.unsplash.com/photo-1459445364195-16475050193c?dpr=1&auto=format&crop=entropy&fit=crop&w=1500&h=1163&q=80&cs=tinysrgb);*/
-  /*background-size: cover;
-  display: flex;*/
   justify-content: center;
-  /*align-items: center;
-  overflow: hidden;*/
 }
 
 .frame {
   margin: 0 auto;
-  min-width: 400px;
+  min-width: 360px;
   max-width: 960px;
   position: relative;
 
@@ -35,8 +30,12 @@ body {
   background: #eee;
 }
 
+.header .fa-map-marker {
+  font-size: 30px;
+}
+
 .top-status-bar {
-  padding: 13px 35px;
+  padding: 10px 15px;
   position: fixed;
   top: 0;
   left: 0;
@@ -54,20 +53,21 @@ body {
 }
 
 .top-icon {
-  width: 70px;
-  height: 70px;
-  margin-left: 150px;
+  width: 37px;
+  height: 37px;
+  margin-left: 25px;
   margin-top: 5px;
 }
 
 .top-title {
-  font-size: 40pt;
+  font-size: 18pt;
   float: none;
-  margin-right: 180px;
+  margin-top: 5px;
+  margin-right: 27px;
 }
 
 .top-description {
-  font-size: 18pt;
+  font-size: 8pt;
   text-align: center;
   padding-top: 5px;
 }
@@ -84,7 +84,6 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
   justify-content: space-around;
   align-items: center;
   background-color: #ffffff;
@@ -127,7 +126,8 @@ li {
   background-color: #585858;
   list-style-type: none;
   float : left;
-  margin-right : 1px;
+  margin-left : 1px;
+  width: 19.7%;
 }
 
 li a {
@@ -135,15 +135,14 @@ li a {
   display : block;
   text-align : center;
   text-decoration: none;
-  width  : 195px;
-  height : 160px;
+  height : 70px;
 }
 
 a span {
   width: 100%;
   text-align : center;
   display : block;
-  font-size : 60px;
+  font-size : 30px;
   padding : 2px 5px;
   color   : #222;
   position: absolute;
@@ -154,7 +153,7 @@ a span {
 }
 
 .menu-text {
-  font-size : 35px;
+  font-size : 12px;
 }
 
 a:before {
@@ -200,8 +199,7 @@ hr {
   margin : 50px auto;
 }
 
-/* bottom
-********************/
+/* bottom */
 nav.bottom
 a:before {
   bottom : 0;
@@ -234,7 +232,6 @@ a.show:before {
   margin-top: -34px;
 }
 
-
 /* map */
 .custom_zoomcontrol {
   width: 58px;
@@ -246,7 +243,6 @@ a.show:before {
   z-index: 2;
   background-color: #f5f5f5;
 }
-
 
 .radius_border {
   border: 1px solid #919191;
@@ -271,24 +267,14 @@ a.show:before {
   border: none;
 }
 
-
 img {
   vertical-align: middle;
 }
 
 .header-title {
   margin: 6px;
-  width: 100px;
+  width: 30px;
 }
-
-
-
-
-
-
-
-
-
 
 .contact-row.agileits-w3layouts {
   width: 96%;
@@ -371,3 +357,60 @@ img {
 
 
 
+
+
+
+.hero-shop {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30vh;
+  background: #b651d8;
+  border-bottom: 1rem solid rgba(0,0,0,0.5);
+  z-index: -10;
+}
+
+.hero-stamp {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30vh;
+  background: #71c55e;
+  border-bottom: 1rem solid rgba(0,0,0,0.5);
+  z-index: -10;
+}
+
+.hero-coupon {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30vh;
+  background: #fab904;
+  border-bottom: 1rem solid rgba(0,0,0,0.5);
+  z-index: -10;
+}
+
+.hero-event {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30vh;
+  background: #e94739;
+  border-bottom: 1rem solid rgba(0,0,0,0.5);
+  z-index: -10;
+}
+
+.hero-setting {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30vh;
+  background: #407ded;
+  border-bottom: 1rem solid rgba(0,0,0,0.5);
+  z-index: -10;
+}

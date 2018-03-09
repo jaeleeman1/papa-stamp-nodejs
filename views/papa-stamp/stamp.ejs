@@ -122,8 +122,8 @@
             resizable: false,
             modal: true,
             title: "카드 삭제",
-            height: 350,
-            width: 800,
+            height: 250,
+            width: 400,
             resizable:false,
             buttons: {
                 "예": function () {
@@ -185,7 +185,12 @@
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ 0 ]';
                 }
 
-                openLayer(showDivId, scrollPosition + 450, 0, browserHeight);
+                if(scrollPosition == 0) {
+                    scrollPosition += 140;
+                }else {
+                    scrollPosition += 60;
+                }
+                openLayer(showDivId, scrollPosition, 0, browserHeight);
             },
             error: function(request, status, error) {
                 console.error("used stamp date : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -246,12 +251,12 @@
 </script>
 
 
-<!--<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>-->
-<script src="http://localhost:8060/socket.io/socket.io.js"></script>
+<script src="https://whereareevent.com:8060/socket.io/socket.io.js"></script>
+<!----><script src="http://localhost:8060/socket.io/socket.io.js"></script>
 <script type="text/javascript">
     var pushUserId = $("#user_id").val();
-    /*var socket = io.connect('https://whereareevent.com:8060');*/
-    var socket = io.connect('http://localhost:8060');
+    var socket = io.connect('https://whereareevent.com:8060');
+    /*var socket = io.connect('http://localhost:8060');*/
     socket.on(pushUserId, function(data){
         var visitRateCnt = data.stampCnt % 10;
         var shopId = data.sendId;
