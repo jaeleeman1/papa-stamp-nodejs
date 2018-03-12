@@ -75,7 +75,7 @@ body {
 .content {
   margin-top: 30px;
   overflow: hidden;
-  padding-bottom: 140px;
+  padding-bottom: 60px;
 }
 
 .footer-menu {
@@ -219,7 +219,7 @@ a.show:before {
 
 .map_wrap{
   width: 100%;
-  min-height: 650px;
+  min-height: 350px;
   border: none;
 }
 
@@ -229,13 +229,13 @@ a.show:before {
 
 .layerMapPopup {
   display: none;
-  margin-top: -34px;
+  margin-top: -90px;
 }
 
 /* map */
 .custom_zoomcontrol {
-  width: 58px;
-  right: 30px;
+  width: 40px;
+  right: 10px;
   position: relative;
   top: 150px;
   float: right;
@@ -255,14 +255,14 @@ a.show:before {
 
 .custom_zoomcontrol span {
   display: block;
-  width: 56px;
-  height: 60px;
+  width: 40px;
+  height: 45px;
   text-align: center;
   cursor: pointer;
 }
 
 .custom_zoomcontrol span img {
-  width: 40px;
+  width: 25px;
   padding: 10px 0;
   border: none;
 }

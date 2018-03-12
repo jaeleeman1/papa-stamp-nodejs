@@ -215,38 +215,38 @@
 /* Setting */
 .layer-userInfo-popup {
     height: 466px;
-    margin-top: -15px;
+    margin-top: -3px;
     position: fixed;
 }
 
 .layer-notice-popup {
     height: 380px;
-    margin-top: -8px;
+    margin-top: 35px;
     position: fixed;
 }
 
 .layer-terms-popup {
     height: 443px;
-    margin-top: -46px;
+    margin-top: 20px;
     overflow:auto;
     position: fixed;
 }
 
 .layer-tutorial-popup {
     height: 486px;
-    margin-top: -46px;
+    margin-top: -8px;
     position: fixed;
 }
 
 .layer-developer-popup {
     height: 362px;
-    margin-top: -2px;
+    margin-top: 50px;
     position: fixed;
 }
 
 .layer-faq-popup {
     height: 433px;
-    margin-top: -38px;
+    margin-top: 30px;
     overflow: auto;
     position: fixed;
 }
@@ -291,7 +291,7 @@
 
 .text-input {
     border: 2px solid #bfbfbf;
-    width: 188px;
+    width: 60%;
     height: 40px;
     font-size: 15px;
     margin: 1px 5px 5px 10px;
@@ -301,7 +301,7 @@
 
 .text-input-custom {
     border: 2px solid #bfbfbf;
-    width: 106px;
+    width: 34%;
     height: 40px;
     font-size: 15px;
     margin: 3px 5px 7px 10px;

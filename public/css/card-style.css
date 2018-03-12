@@ -1,14 +1,18 @@
-.container, figure{
-    width: 319px;
+/* Shop */
+.cards {
+    margin-top: 50px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.container, figure {
+    width: 332px;
     height: 208px;
 }
 
-.container{
-    position:absolute;
-    perspective:1000px;
-    margin-top: -80px;
-    margin-left: 7px;
-    top:36%;
+.container {
+    margin-left:auto;
+    margin-right:auto;
 }
 
 figure{
@@ -24,6 +28,7 @@ figure{
     transition: 0.6s;
     transform-style: preserve-3d;
     box-shadow: 0 1px 5px rgba(0,0,0,0.9);
+    margin-top: 10px;
 }
 
 figure.front {
@@ -36,11 +41,16 @@ figure.back,
     transform: rotateY(180deg);
 }
 
-figure .base-img{
+.card-img {
     width: 100%;
     position: relative;
-    display: block;
-    min-height: 100%;
+    height: 228px;
+    margin-bottom: 5vh;
+}
+
+.card {
+    transition: 0.4s all;
+    transform-style: preserve-3d;
 }
 
 figure .papa-base-img{
@@ -51,22 +61,149 @@ figure .papa-base-img{
     opacity: 0.7;
 }
 
-figure .w3ls-add-grids{
-
+.shadow:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: inherit;
+    height: inherit;
+    z-index: -2;
+    box-sizing: border-box;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.13);
+    margin-bottom: 5vh;
 }
 
-figure .caption {
+.shadow:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: inherit;
+    height: inherit;
+    z-index: -2;
+    box-sizing: border-box;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.08);
+}
+
+.shadow-rel:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: inherit;
+    height: inherit;
+    z-index: -2;
+    box-sizing: border-box;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.13);
+    margin-bottom: 5vh;
+}
+
+.shadow-rel:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: inherit;
+    height: inherit;
+    z-index: -2;
+    box-sizing: border-box;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 1);
+}
+
+/* Stamp */
+.my-card-list {
+    margin-top: 50px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.my-card-shop {
+    width: 100%;
+    background: #000000;
+    position: relative;
+    height: 228px;
+    margin-bottom: 5vh;
+    border-radius: 10px;
+    box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
+}
+
+.my-container{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.my-container, figure {
+    width: 332px;
+    height: 208px;
+}
+
+.my-card {
+    transition: 0.4s all;
+    transform-style: preserve-3d;
+}
+
+.my-card:last-child {
+    margin-bottom: 0;
+}
+
+.my-card-img {
+    position: relative;
+    height: 450px;
+    width: 90%;
+    float: right;
+}
+
+figure .base-img{
+    width: 100%;
+    position: relative;
+    display: block;
+    min-height: 100%;
+}
+
+.card-stamp {
+    width: 95%;
+    background: #000000;
+    border-radius: 3px;
+    height: 228px;
+    border-radius: 10px;
+    box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
+}
+
+/* Coupon */
+.my-card-coupon {
+    width: 100%;
+    background: #ffffff;
+    position: relative;
+    height: 228px;
+    margin-bottom: 5vh;
+    border-radius: 10px;
+    box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
+}
+
+.my-card-list figure .caption {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 0.5em;
+    padding: 1em;
     backface-visibility: hidden;
     background: rgba(0, 0, 0, 0.5);
 }
 
-figure .caption h5 {
+.my-card-list figure .caption h5 {
     width: 30%;
     font-size: 0.8em;
     border: 2px solid #74DF00;
@@ -74,7 +211,7 @@ figure .caption h5 {
     margin-top: 5px;
 }
 
-figure .caption h4 {
+.my-card-list figure .caption h4 {
     float: right;
     width: 125px;
     font-size: 1.2em;
@@ -87,31 +224,34 @@ figure .caption h4 {
     text-align: right;
 }
 
-figure .caption h3{
+.my-card-list figure .caption h3{
     float: left;
     font-size: 1em;
     margin-top: 0.5em;
 }
 
-figure .caption h3 span{
+.my-card-list figure .caption h3 span{
     font-size: 0.9em;
     padding: 5px;
     color: #e94739;
 }
 
-figure .caption h4 span{
+.my-card-list figure .caption h4 span{
     float: right;
     font-size: 0.9em;
     color: #999;
     letter-spacing: 1px;
 }
 
-figure .caption span{
-    font-size: 1.5em;
-    color: #999;
+.my-card-list figure .caption span{
+    font-weight: bold;
+    font-size: 1em;
+    color: #272833;
 }
 
-figure .caption .title-setting{
+.my-card-list figure .caption .title-setting {
+    font-size: 1.5em;
+    color: #999;
     margin-left: -50px;
 }
 
@@ -123,6 +263,38 @@ figure .caption .title-setting{
     margin-bottom: 15px;
     color: darkorange;
     text-align: right;
+}
+
+.delete-coupon {
+    background: #ffffff;
+    color: #FF0000 !important;
+    margin-right: 550px;
+    border: 5px solid;
+    padding: 15px;
+}
+
+/* Event */
+.card-event {
+    width: 100%;
+    background: #407ded;
+    position: relative;
+    height: 228px;
+    margin-bottom: 5vh;
+    border-radius: 10px;
+    box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
+}
+
+/* Setting */
+.card-setting {
+    width: 100%;
+    background: #848484;
+    position: relative;
+    height: 228px;
+    margin-bottom: 5vh;
+    border-radius: 10px;
+    box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
+    transform-origin: bottom center;
 }
 
 figure .caption h6{
@@ -262,19 +434,6 @@ figure .icon-wrapper {
     margin-bottom:6px;
 }
 
-@media (min-width: 450px) {
-    .container{
-        left: 50%;
-        margin-left:-30%;
-    }
-}
-@media (min-width: 450px) {
-    .my-container{
-        left: 50%;
-        margin-left: 30%;
-    }
-}
-
 @-webkit-keyframes pulse{
     0%{
         opacity: 0;
@@ -290,201 +449,6 @@ figure .icon-wrapper {
         transform: rotate(-15deg) scale(1);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.shadow:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: inherit;
-    height: inherit;
-    z-index: -2;
-    box-sizing: border-box;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.13);
-    margin-bottom: 5vh;
-}
-
-.shadow:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: inherit;
-    height: inherit;
-    z-index: -2;
-    box-sizing: border-box;
-    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.08);
-}
-
-.shadow-rel:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: inherit;
-    height: inherit;
-    z-index: -2;
-    box-sizing: border-box;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.13);
-    margin-bottom: 5vh;
-}
-
-.shadow-rel:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: inherit;
-    height: inherit;
-    z-index: -2;
-    box-sizing: border-box;
-    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 1);
-}
-
-.card {
-    margin-top: 6px;
-    transition: 0.4s all;
-    transform-style: preserve-3d;
-}
-
-.cards {
-    margin-top: 50px;
-    margin-left: 12px;
-}
-
-.card-img {
-    width: 97.8%;
-    position: relative;
-    height: 221px;
-    margin-left: 1px;
-    margin-bottom: 5vh;
-}
-
-.card-img.open {
-    height: 200px;
-    background: #ffffff;
-}
-
-@media only screen and (min-width: 600px) {
-    .card-img {
-        margin-top: 30px;
-        margin-bottom: 80px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.my-container{
-    margin-left: 6px;
-}
-
-.my-card-list {
-    margin: 50px auto;
-    width: 100%;
-    perspective: 1200px;
-}
-
-.my-card:last-child {
-    margin-bottom: 0;
-}
-
-
-
-.my-card {
-    margin-top: 6px;
-    transition: 0.4s all;
-    transform-style: preserve-3d;
-}
-
-.my-card-img {
-    position: relative;
-    height: 450px;
-    width: 90%;
-    float: right;
-}
-
-.card-stamp {
-    width: 95%;
-    background: #000000;
-    border-radius: 3px;
-    height: 552px;
-    margin-left: 25px;
-    margin-bottom: 5vh;
-    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
-    transform-origin: bottom center;
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .offers-wthreerow2 {
@@ -563,66 +527,4 @@ figure .icon-wrapper {
     line-height: 1.7em;
     margin-top: -12px;
     margin-bottom: 36px;
-}
-
-.used-deemed {
-    opacity:0.5;
-    z-index:25;
-}
-
-.delete-coupon {
-    background: #ffffff;
-    color: #FF0000 !important;
-    margin-right: 550px;
-    border: 5px solid;
-    padding: 15px;
-}
-
-/* Shop */
-/* Stamp */
-.my-card-shop {
-    width: 92%;
-    background: #000000;
-    border-radius: 3px;
-    height: 221px;
-    margin-left: 15px;
-    margin-bottom: 5vh;
-    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
-    transform-origin: bottom center;
-}
-
-/* Coupon */
-.my-card-coupon {
-    width: 92%;
-    background: #ffffff;
-    border-radius: 3px;
-    height: 221px;
-    margin-left: 15px;
-    margin-bottom: 5vh;
-    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
-    transform-origin: bottom center;
-}
-
-/* Event */
-.card-event {
-    width: 92%;
-    background: #407ded;
-    border-radius: 3px;
-    height: 221px;
-    margin-left: 15px;
-    margin-bottom: 5vh;
-    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
-    transform-origin: bottom center;
-}
-
-/* Setting */
-.card-setting {
-    width: 92%;
-    background: #848484;
-    border-radius: 3px;
-    height: 221px;
-    margin-left: 15px;
-    margin-bottom: 5vh;
-    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.5);
-    transform-origin: bottom center;
 }

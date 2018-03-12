@@ -5,7 +5,7 @@
                 <figure class="front">
                     <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
                     <div class="caption">
-                        <div class="icon-wrapper"><i class="fa fa-user custom-icon"></i><span class="title-setting">로그인 정보</span></div>
+                        <div class="icon-wrapper"><i class="fa fa-user custom-icon" style="font-size: 20px;"></i><span class="title-setting">로그인 정보</span></div>
                         <h2>E-MAIL : <span><%= userInfoData.USER_EMAIL %></span></h2>
                         <p onclick="changeUserInfoLayer('layerUserInfoPopup', '<%= userInfoData.USER_EMAIL %>')">내 정보 수정</p>
                     </div>
@@ -14,31 +14,30 @@
         </div>
     </li>
 
-
     <li class="card-setting">
         <div class="my-container">
             <div class="my-card">
                 <figure class="front">
                     <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
-                    <div class="caption">
+                    <div class="caption" style="padding:0.5em;">
                         <div class="icon-wrapper" onclick="openLayer('layerNoticePopup');">
-                            <i class="fa fa-bullhorn custom-icon"></i>
+                            <i class="fa fa-bullhorn custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">공지사항</span>
                         </div>
                         <div class="icon-wrapper" onclick="openLayer('layerTutorialPopup');">
-                            <i class="fa fa-bookmark-o custom-icon"></i>
+                            <i class="fa fa-bookmark-o custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">튜토리얼</span>
                         </div>
                         <div class="icon-wrapper" onclick="openLayer('layerTermsPopup');">
-                            <i class="fa fa-book custom-icon"></i>
+                            <i class="fa fa-book custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">이용약관</span>
                         </div>
                         <div class="icon-wrapper" onclick="openLayer('layerFaqPopup');">
-                            <i class="fa fa-comments-o custom-icon"></i>
+                            <i class="fa fa-comments-o custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">FAQ</span>
                         </div>
                         <div class="icon-wrapper" onclick="openLayer('layerDevelopmentPopup');">
-                            <i class="fa fa-info custom-icon"></i>
+                            <i class="fa fa-info custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">개발정보</span>
                         </div>
                     </div>
@@ -56,15 +55,15 @@
         </p>
         <div class="faq_container">
             <div class="faq">
-                <div class="setting-list-title">E-Mail</div><input class="text-input" type="text" id="e-mail" name="name">
+                <div class="setting-list-title" style="color: #999;margin-right:52px;">E-Mail</div><input class="text-input" type="text" id="e-mail" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title">비밀번호</div><input class="text-input" type="password" id="e-password" name="name">
+                <div class="setting-list-title" style="color: #999;margin-right:35px;">비밀번호</div><input class="text-input" type="password" id="e-password" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title">비밀번호 확인</div><input class="text-input" type="password" id="c-password" name="name">
+                <div class="setting-list-title" style="color: #999;margin-right:1px;">비밀번호 확인</div><input class="text-input" type="password" id="c-password" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title">휴대폰 번호</div><p class="change-ti-custom" onclick="authPhoneNumber();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name">
+                <div class="setting-list-title" style="color: #999;margin-right:15px;">휴대폰 번호</div><p class="change-ti-custom" onclick="authPhoneNumber();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title">인증 번호</div><p class="change-ti-custom" onclick="authPhoneNumberConfirm();">확인</p><input class="text-input-custom" type="text" id="confirm-number" name="name">
+                <div class="setting-list-title" style="color: #999;margin-right:30px;">인증 번호</div><p class="change-ti-custom" onclick="authPhoneNumberConfirm();">확인</p><input class="text-input-custom" type="text" id="confirm-number" name="name">
                 <hr class="setting-line">
             </div>
         </div>
@@ -108,8 +107,8 @@
             <span class="close-card" onclick="closeLayer('layerTutorialPopup')">닫기</span>
         </p>
 
-        <button type="button" id="prev_btn" class="btn"><i class="fa fa-angle-double-left" style="font-size: 70px;color: #B5B5B5"></i></button>
-        <button type="button" id="next_btn" class="btn"><i class="fa fa-angle-double-right" style="font-size: 70px;color: #B5B5B5"></i></button>
+        <button type="button" id="prev_btn" class="btn"><i class="fa fa-angle-double-left"></i></button>
+        <button type="button" id="next_btn" class="btn"><i class="fa fa-angle-double-right"></i></button>
         <ul id="slider">
             <li class="tutorial-back"><img src="/images/tutorial/papastamp-tutorial-01.png"></li>
             <li class="tutorial-back"><img src="/images/tutorial/papastamp-tutorial-02.png"></li>
@@ -326,6 +325,7 @@
                 <span class="triangle pre-click"></span>
                 <div class="faq_answer_container">
                     <div class="faq_answer">가맹점 제휴는 카카오톡 플러스 친구 (파파스탬프) 또는
+                        <br></br>
                         <br>  E-MAIL (papastamp@naver.com) 으로 문의 바랍니다. </br>
                     </div>
                 </div>
@@ -343,7 +343,7 @@
             <span class="close-card" onclick="closeLayer('layerDevelopmentPopup')">닫기</span>
         </p>
         <div class="development-info">
-            <img class="development-icon" src="/images/papastamp_icon.png"></img>
+            <img class="development-icon" src="/images/papastamp_icon.png"/>
             <span class="development-title">파파 스탬프</span>
             <div class="development-version">
                 <span>현재 버전 : v1.0</span>
@@ -431,7 +431,7 @@
                 $(this).removeClass('after-click');
                 $(this).addClass('pre-click');
             }else{
-                var newHeight =$(this).closest('.faq').find('.faq_answer').height() +'px';
+                var newHeight =$(this).closest('.faq').find('.faq_answer').height() +(20)+'px';
                 $(this).closest('.faq').find('.faq_answer_container').animate({'height':newHeight},500);
                 $(this).closest('.faq').addClass('open');
                 $(this).removeClass('pre-click');
@@ -449,12 +449,12 @@
                 // user in with confirmationResult.confirm(code).
                 window.confirmationResult = confirmationResult;
             }).catch(function (error) {
-                grecaptcha.reset(window.recaptchaWidgetId);
+            grecaptcha.reset(window.recaptchaWidgetId);
 
-                // Or, if you haven't stored the widget ID:
-                window.recaptchaVerifier.render().then(function(widgetId) {
-                    grecaptcha.reset(widgetId);
-                });
+            // Or, if you haven't stored the widget ID:
+            window.recaptchaVerifier.render().then(function(widgetId) {
+                grecaptcha.reset(widgetId);
+            });
             // Error; SMS not sent
             // ...
         });
@@ -462,7 +462,6 @@
 
     function authPhoneNumberConfirm() {
         var code = $("#confirm-number").val().toString();
-        var confirmationResult = window.confirmationResult;
         confirmationResult.confirm(code).then(function (result) {
             // User signed in successfully.
             $.toast('<h4>사용자 인증</h4>이 완료되었습니다.', { type: 'info', duration: 3000 } );
