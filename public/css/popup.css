@@ -152,7 +152,7 @@
     font-size: 16px;
     text-align: center;
     line-height:32px;
-    margin: 8px 65px 15px;
+    margin: 7px 65px 7px;
     border-radius: 10px;
     padding: 2px;
     font-weight: bold;
@@ -213,20 +213,20 @@
 
 /* Setting */
 .layer-userInfo-popup {
-    height: 466px;
-    margin-top: -3px;
+    height: 446px;
+    margin-top: -20px;
     position: fixed;
 }
 
 .layer-notice-popup {
     height: 380px;
-    margin-top: 35px;
+    margin-top: -20px;
     position: fixed;
 }
 
 .layer-terms-popup {
-    height: 443px;
-    margin-top: 20px;
+    height: 500px;
+    margin-top: -20px;
     overflow:auto;
     position: fixed;
 }
@@ -239,13 +239,13 @@
 
 .layer-developer-popup {
     height: 362px;
-    margin-top: 50px;
+    margin-top: -20px;
     position: fixed;
 }
 
 .layer-faq-popup {
     height: 433px;
-    margin-top: 30px;
+    margin-top: -20px;
     overflow: auto;
     position: fixed;
 }
@@ -318,25 +318,24 @@
 
 /* Setting Tutorial */
 #slider {
-    position:relative;
-    margin:0 auto;
-    padding:0;
-    list-style:none;
-    width:920px;
-    height:1330px;
-    overflow-x:hidden
+    position: relative;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    height: 568px;
+    overflow-x: hidden;
 }
 
 #slider li {
-    display:none;
-    position:absolute;
-    left:0;
-    top:0
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .tutorial-back {
-    width: 35%;
-    height: 42.5%;
+    width: 100%;
+    height: 100%;
     margin-left: 0px;
 }
 
