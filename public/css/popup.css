@@ -40,16 +40,15 @@
 }
 
 .layerPopup .pop_up_body .stamp-ti {
-    width: 50%;
     opacity: 0.87;
     background-color: #777;
     color: #fff;
     font-size: 16px;
     text-align: center;
     line-height:29px;
-    margin: 25px 90px;
+    margin: 0 100px 0 100px;
     border-radius: 10px;
-    padding: 12px 7px;
+    padding: 8px 8px;
     font-weight: bold;
 }
 

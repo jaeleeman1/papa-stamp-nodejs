@@ -38,47 +38,28 @@
     animation-fill-mode:forwards;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* SB-SHOP-00001 stamp image */
 .img-repeat-SB-SHOP-00001 {
-    margin-left: 9px;
+    margin-left: 8px;
 }
 
 .stamp-icon-SB-SHOP-00001 {
-    top: -188px;
-    width: 49px;
+    top: -180px;
+    width: 47px;
     border-radius: 5px;
     position: relative;
     margin-left: 2px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     float: left;
 }
 
 .stamp-popup-icon-SB-SHOP-00001 {
-    top: -196px;
-    width: 49px;
+    top: -187px;
+    width: 47px;
     border-radius: 5px;
     position: relative;
     margin-left: 2px;
-    margin-bottom: 18px;
+    margin-bottom: 0px;
     float: left;
 }
 
@@ -88,7 +69,7 @@
     position: relative;
     font-size: 10px;
     vertical-align: bottom;
-    padding: 3px 5px 3px 5px;
+    padding: 0 5px 8px 5px;
     color: darkblue;
 }
 /* SB-SHOP-00001 stamp image */
@@ -96,12 +77,12 @@
 
 /* SB-SHOP-00002 stamp image */
 .img-repeat-SB-SHOP-00002 {
-    margin-left: 111px;
+    margin-left: 106px;
 }
 
 .stamp-icon-SB-SHOP-00002 {
-    top: -180px;
-    width: 46px;
+    top: -172px;
+    width: 45px;
     border-radius: 5px;
     position: relative;
     margin-left: 2px;
@@ -110,8 +91,8 @@
 }
 
 .stamp-popup-icon-SB-SHOP-00002 {
-    top: -180px;
-    width: 46px;
+    top: -175px;
+    width: 45px;
     border-radius: 5px;
     position: relative;
     margin-left: 2px;
@@ -125,7 +106,7 @@
     position: relative;
     font-size: 10px;
     vertical-align: bottom;
-    padding: 3px 5px 3px 5px;
+    padding: 0 5px 8px 5px;
     color: darkmagenta;
 }
 /* SB-SHOP-00002 stamp image */
@@ -133,12 +114,12 @@
 
 /* SB-SHOP-00003 stamp image */
 .img-repeat-SB-SHOP-00003 {
-    margin-left: 111px;
+    margin-left: 106px;
 }
 
 .stamp-icon-SB-SHOP-00003 {
-    top: -180px;
-    width: 46px;
+    top: -172px;
+    width: 45px;
     border-radius: 5px;
     position: relative;
     margin-left: 2px;
@@ -147,8 +128,8 @@
 }
 
 .stamp-popup-icon-SB-SHOP-00003 {
-    top: -180px;
-    width: 46px;
+    top: -175px;
+    width: 45px;
     border-radius: 5px;
     position: relative;
     margin-left: 2px;
@@ -162,7 +143,7 @@
     position: relative;
     font-size: 10px;
     vertical-align: bottom;
-    padding: 3px 5px 3px 5px;
-    color: darkmagenta;
+    padding: 0 5px 8px 5px;
+    color: darkgreen;
 }
 /* SB-SHOP-00003 stamp image */
