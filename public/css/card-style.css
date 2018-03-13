@@ -341,6 +341,7 @@ figure .caption h6{
     bottom: -10px;
     left: 0px;
     right: 100px;
+    width: 76%;
     height: 2px;
     background: #fff;
     content: '';
@@ -500,17 +501,17 @@ figure .icon-wrapper {
 }
 
 .confirm-coupon-number {
-    width: 88%;
+    width: 90%;
     font-size: 1.8em;
     border: 12px solid darkorange;
-    margin-bottom: 0.5em;
+    margin: 0.5em;
 }
 
 .confirm-shop-name {
     float: left;
     font-size: 1em;
     color: #fff;
-    margin-left: 50px;
+    margin-left: 25px;
 }
 
 .confirm-sub-name {
@@ -525,6 +526,6 @@ figure .icon-wrapper {
     letter-spacing: 2px;
     font-weight: 500;
     line-height: 1.7em;
-    margin-top: -12px;
+    margin-top: -4px;
     margin-bottom: 36px;
 }

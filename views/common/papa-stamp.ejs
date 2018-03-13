@@ -28,6 +28,7 @@
 <form name="papa_config" id="papa_config" style="display:none">
     <input type="hidden" name="view" id="view" value="<%= view %>"/>
     <input type="hidden" name="url" id="url" value="<%= url %>"/>
+    <input type="hidden" name="authCheck" id="authCheck" value="false"/>
 </form>
 
 <body>
@@ -35,7 +36,7 @@
 
     <div class="header">
         <div class="top-status-bar">
-            <div class="header-title" id="map-icon"><i class="fa fa-map-marker" style="color: whitesmoke"></i></div>
+            <div class="header-title" id="map-icon"><i class="fa fa-map-marker" style="color: whitesmoke;"></i></div>
             <img class="top-icon" src="/images/papastamp_icon.png"></img>
             <div class="top-title">파파스탬프</div>
             <div class="top-description">스탬프<br>관리 시스템</div>
@@ -65,20 +66,20 @@
             </div>
 
             <% if(view == 'shop') { %>
-                <div class="hero-shop"></div>
-                <% include ../papa-shop/shop.ejs %>
+            <div class="hero-shop"></div>
+            <% include ../papa-shop/shop.ejs %>
             <% } else if(view == 'stamp') { %>
-                <div class="hero-stamp"></div>
-                <% include ../papa-stamp/stamp.ejs %>
+            <div class="hero-stamp"></div>
+            <% include ../papa-stamp/stamp.ejs %>
             <% } else if(view == 'coupon') { %>
-                <div class="hero-coupon"></div>
-                <% include ../papa-coupon/coupon.ejs %>
+            <div class="hero-coupon"></div>
+            <% include ../papa-coupon/coupon.ejs %>
             <% } else if(view == 'event') { %>
-                <div class="hero-event"></div>
-                <% include ../papa-event/event.ejs %>
+            <div class="hero-event"></div>
+            <% include ../papa-event/event.ejs %>
             <% } else { %>
-                <div class="hero-setting"></div>
-                <% include ../papa-setting/setting.ejs %>
+            <div class="hero-setting"></div>
+            <% include ../papa-setting/setting.ejs %>
             <% } %>
         </div>
     </div>
@@ -157,7 +158,7 @@
         });
 
         $.toast.config.align = 'center';
-        $.toast.config.width = 800;
+        $.toast.config.width = 250;
 
 
         var initView = $("#view").val();
@@ -200,7 +201,7 @@
 
         if(initView != 'setting') {
             if($('.my-card-list li').hasClass('blank-card')) {
-                mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: black"></i>';
+                mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: black;"></i>';
             }else {
                 $("#map-icon").click(
                     function() {
@@ -208,12 +209,12 @@
                             $("#card-list").css("display", "none");
                             openMapLayer("mapPop");
                             mapPapaShop();
-                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: red"></i>';
+                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: red;"></i>';
                         }else {
                             $("#select-card").remove();
                             $("#card-list").css("display", "block");
                             closeMapLayer("mapPop");
-                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: whitesmoke"></i>';
+                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: whitesmoke;"></i>';
                         }
                     }
                 );

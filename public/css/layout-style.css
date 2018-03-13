@@ -219,7 +219,7 @@ a.show:before {
 
 .map_wrap{
   width: 100%;
-  min-height: 350px;
+  min-height: 285px;
   border: none;
 }
 
@@ -229,15 +229,15 @@ a.show:before {
 
 .layerMapPopup {
   display: none;
-  margin-top: -90px;
+  margin-top: -40px;
 }
 
 /* map */
 .custom_zoomcontrol {
-  width: 40px;
+  width: 33px;
   right: 10px;
   position: relative;
-  top: 150px;
+  top: 85px;
   float: right;
   overflow: hidden;
   z-index: 2;
@@ -255,14 +255,14 @@ a.show:before {
 
 .custom_zoomcontrol span {
   display: block;
-  width: 40px;
-  height: 45px;
+  width: 30px;
+  height: 35px;
   text-align: center;
   cursor: pointer;
 }
 
 .custom_zoomcontrol span img {
-  width: 25px;
+  width: 20px;
   padding: 10px 0;
   border: none;
 }
@@ -282,22 +282,22 @@ img {
   background: #fff;
   position: absolute;
   z-index: 9;
-  padding: 0.5em 1em;
+  padding: 0.5em 0.5em;
   box-shadow: 0 0 14px 7px rgba(224, 224, 224, 0.5);
   box-sizing: border-box;
-  margin-top: -60px;
+  margin-top: -48px;
 }
 
 .contact-w3lsright {
   float: none;
   width: 100%;
-  padding: 0 1em;
+  padding: 0 0.4em;
   position: relative;
   min-height: 1px;
 }
 
 .address-row {
-  margin-top: 0.8em;
+  margin-top: 10px;
 }
 
 .icon {
@@ -305,11 +305,11 @@ img {
 }
 
 .guide {
-  width: 100px;
+  width: 48px;
 }
 
 .select-shop-name {
-  font-size: 2.2em;
+  font-size: 1em;
   color: #000;
   font-weight: 300;
   font-family: 'Berkshire Swash', cursive;
@@ -318,37 +318,54 @@ img {
 .select-shop-sub-name {
   padding: 5px 0 0 10px;
   color: #e94739;
-  font-size: 1em;
+  font-size: 0.8em;
   font-family: 'Berkshire Swash', cursive;
 }
 
 .select-shop-phone {
   color: blue;
   letter-spacing: 0.8px;
-  margin-left: 50px;
+  margin-left: 5px;
   font-size: 0.8em;
   line-height: 1.42857143;
   font-family: 'Yantramanav', sans-serif;
 }
 
 .select-shop-addr {
-  font-size: 1em;
+  font-size: 0.8em;
   color: #999;
-  line-height: 2em;
+  line-height: 3em;
   box-sizing: border-box;
 }
 
 .dialog-confirm {
   display: none;
-  font-size: 40px;
+  font-size: 16px;
+}
+
+.dialog-confirm figure {
+  background: #2e5d5a;
+  color: #fff;
+  backface-visibility: hidden;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-left: 9px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.9);
+  /*margin-top: 10px;*/
 }
 
 .ui-dialog .ui-dialog-title {
-  font-size: 40px;
+  font-size: 20px;
 }
 
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
-  font-size: 2em;
+  font-size: 1em;
 }
 
 .ui-dialog-titlebar-close {

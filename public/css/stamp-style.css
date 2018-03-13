@@ -1,7 +1,7 @@
 /* stamp image */
 .papa_stamp_icon{
-    top: -240px;
-    width: 65px;
+    top: -140px;
+    width: 35px;
     border-radius:5px;
     position: relative;
     margin-left: 10px;
@@ -26,9 +26,9 @@
 /* stamp action */
 .stamp-action{
     z-index: 100;
-    width:300px;
-    top:120px;
-    right:300px;
+    width: 150px;
+    top: 32px;
+    right: 92px;
     border-radius:5px;
     position:absolute;
     background-color:#ef8080;
@@ -59,34 +59,34 @@
 
 /* SB-SHOP-00001 stamp image */
 .img-repeat-SB-SHOP-00001 {
-    margin-left: 20px;
+    margin-left: 9px;
 }
 
 .stamp-icon-SB-SHOP-00001 {
-    top: -482px;
-    width: 121px;
+    top: -188px;
+    width: 49px;
     border-radius: 5px;
     position: relative;
-    margin-left: 17px;
-    margin-bottom: 70px;
+    margin-left: 2px;
+    margin-bottom: 18px;
     float: left;
 }
 
 .stamp-popup-icon-SB-SHOP-00001 {
-    top: -493px;
-    width: 112px;
+    top: -196px;
+    width: 49px;
     border-radius: 5px;
     position: relative;
-    margin-left: 25px;
-    margin-bottom: 28px;
+    margin-left: 2px;
+    margin-bottom: 18px;
     float: left;
 }
 
 .stamp-date-SB-SHOP-00001 {
     display: inline-block;
-    width: 130px;
+    width: 60px;
     position: relative;
-    font-size: 25px;
+    font-size: 10px;
     vertical-align: bottom;
     padding: 3px 5px 3px 5px;
     color: darkblue;
@@ -96,34 +96,34 @@
 
 /* SB-SHOP-00002 stamp image */
 .img-repeat-SB-SHOP-00002 {
-    margin-left: 298px;
+    margin-left: 111px;
 }
 
 .stamp-icon-SB-SHOP-00002 {
-    top: -458px;
-    width: 107px;
+    top: -180px;
+    width: 46px;
     border-radius: 5px;
     position: relative;
-    margin-left: 24px;
-    margin-bottom: 67px;
+    margin-left: 2px;
+    margin-bottom: 7px;
     float: left;
 }
 
 .stamp-popup-icon-SB-SHOP-00002 {
-    top: -458px;
-    width: 102px;
+    top: -180px;
+    width: 46px;
     border-radius: 5px;
     position: relative;
-    margin-left: 26px;
-    margin-bottom: 67px;
+    margin-left: 2px;
+    margin-bottom: 7px;
     float: left;
 }
 
 .stamp-date-SB-SHOP-00002 {
     display: inline-block;
-    width: 130px;
+    width: 60px;
     position: relative;
-    font-size: 25px;
+    font-size: 10px;
     vertical-align: bottom;
     padding: 3px 5px 3px 5px;
     color: darkmagenta;
@@ -148,7 +148,7 @@
 
 .stamp-popup-icon-SB-SHOP-00003 {
     top: -180px;
-    width: 44px;
+    width: 46px;
     border-radius: 5px;
     position: relative;
     margin-left: 2px;

@@ -208,7 +208,7 @@
 }
 
 .layer-stamp-popup {
-    height: 338px;
+    height: 350px;
     position: fixed;
 }
 
@@ -233,8 +233,8 @@
 }
 
 .layer-tutorial-popup {
-    height: 486px;
-    margin-top: -8px;
+    height: 586px;
+    margin-top: -60px;
     position: fixed;
 }
 
@@ -306,7 +306,7 @@
     font-size: 15px;
     margin: 3px 5px 7px 10px;
     color: black;
-    padding-left: 7px;
+    padding-left: 4px;
 }
 
 /* Setting Notice */
@@ -336,8 +336,9 @@
 }
 
 .tutorial-back {
-    width: 34%;
-    height: 35%;
+    width: 35%;
+    height: 42.5%;
+    margin-left: 0px;
 }
 
 #slider img {
@@ -351,7 +352,7 @@
 }
 
 .btn {
-    margin: 170px 3px 0 3px;
+    margin: 200px 3px 0 3px;
     border: 0;
     background: #ffffff;
     display: none;
@@ -359,15 +360,23 @@
 }
 
 #prev_btn {
+    width: 45px;
+    border-radius: 100%;
+    border: 6px solid #fff;
     position: absolute;
     top: 0;
-    left: 0;
+    left: -25px;
+    opacity: 0.8;
 }
 
 #next_btn {
+    width: 45px;
+    border-radius: 100%;
+    border: 6px solid #fff;
     position: absolute;
     top: 0;
-    right: 0
+    right: -25px;
+    opacity: 0.8;
 }
 
 /* Setting Terms */
