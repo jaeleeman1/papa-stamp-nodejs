@@ -186,7 +186,12 @@
         });
         marker.setMap(map);
 
-        var currentIwContent = '<div style="padding:2px 0 3px 15px;">현재 위치입니다.</div>'; // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        var userId = $("#user_id").val();
+        if(userId.length > 0) {
+            var currentIwContent = '<div style="padding:2px 0 3px 15px;">현재 위치입니다.</div>';
+        }else {
+            var currentIwContent = '<div style="padding:2px 0 3px 10px;">파파스탬프입니다.</div>';
+        }
 
         var currentInfowindow = new daum.maps.InfoWindow({
             position : currentMarkerPosition,

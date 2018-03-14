@@ -40,15 +40,16 @@
 }
 
 .layerPopup .pop_up_body .stamp-ti {
+    width: 60%;
     opacity: 0.87;
     background-color: #777;
     color: #fff;
     font-size: 16px;
     text-align: center;
-    line-height:29px;
-    margin: 0 100px 0 100px;
+    line-height: 29px;
+    margin: 25px 70px;
     border-radius: 10px;
-    padding: 8px 8px;
+    padding: 12px 7px;
     font-weight: bold;
 }
 
@@ -212,47 +213,59 @@
 }
 
 /* Setting */
+.layer-login-popup {
+    height: 190px;
+    position: fixed;
+}
+
 .layer-userInfo-popup {
-    height: 446px;
-    margin-top: -20px;
+    height: 466px;
     position: fixed;
 }
 
 .layer-notice-popup {
-    height: 380px;
-    margin-top: -20px;
+    height: 466px;
+    overflow:auto;
     position: fixed;
 }
 
 .layer-terms-popup {
-    height: 500px;
-    margin-top: -20px;
+    height: 466px;
     overflow:auto;
     position: fixed;
 }
 
 .layer-tutorial-popup {
     height: 586px;
-    margin-top: -60px;
     position: fixed;
 }
 
 .layer-developer-popup {
     height: 362px;
-    margin-top: -20px;
     position: fixed;
 }
 
 .layer-faq-popup {
-    height: 433px;
-    margin-top: -20px;
+    height: 466px;
     overflow: auto;
     position: fixed;
 }
 
+.user-info-title {
+    font-size:15px;
+    color: #999;
+    width: 95px;
+    margin: 0 7px 0 9px;
+    padding: 0px 0px 5px 0px;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 .setting-list-title {
     font-size:15px;
-    margin: 0 10px 0 10px;
+    color: #999;
+    margin: 0 7px 0 9px;
     padding: 0px 0px 5px 0px;
     display: inline-block;
     cursor: pointer;

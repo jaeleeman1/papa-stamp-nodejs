@@ -186,13 +186,8 @@
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ 0 ]';
                 }
 
-                /*if(scrollPosition == 0) {
-                 scrollPosition += 160;
-                 }else {
-                 scrollPosition += 30;
-                 }*/
-                /*scrollPosition += 30;*/
-                openLayer(showDivId, 170, 0, browserHeight);
+                var popupHeight = browserHeight * 0.2;
+                openLayer(showDivId, popupHeight, 0, browserHeight);
             },
             error: function(request, status, error) {
                 console.error("used stamp date : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

@@ -130,27 +130,32 @@
         daum.maps.load(function() {
             var currentLat = '';//37.4979887529;
             var currentLng = '';//127.0296421998;
+            var userId = $("#user_id").val();
 
-            var headers = {};
-            headers["user_id"] = $("#user_id").val();
+            if(userId.length > 0) {
+                var headers = {};
+                headers["user_id"] = userId;
+                $.ajax({
+                    url: $("#url").val() + '/v1/user/userLocation',
+                    type: 'GET',
+                    headers : headers,
+                    dataType: 'json',
+                    success: function(data) {
+                        var userLocationData = data.userLocationData;
+                        currentLat = userLocationData.CURRENT_LAT;
+                        currentLng = userLocationData.CURRENT_LNG;
 
-            $.ajax({
-                url: $("#url").val() + '/v1/user/userLocation',
-                type: 'GET',
-                headers : headers,
-                dataType: 'json',
-                success: function(data) {
-                    var userLocationData = data.userLocationData;
-                    currentLat = userLocationData.CURRENT_LAT;
-                    currentLng = userLocationData.CURRENT_LNG;
-
-                    $("#current_lat").val(currentLat);
-                    $("#current_lng").val(currentLng);
-                },
-                error: function(request, status, error) {
-                    console.error("userLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                }
-            });
+                        $("#current_lat").val(currentLat);
+                        $("#current_lng").val(currentLng);
+                    },
+                    error: function(request, status, error) {
+                        console.error("userLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }else {
+                $("#current_lat").val('37.65067382324312');
+                $("#current_lng").val('126.88702399396053');
+            }
         });
 
         $(document).on('click', '.card', function(){

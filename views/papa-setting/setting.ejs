@@ -6,8 +6,13 @@
                     <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
                     <div class="caption">
                         <div class="icon-wrapper"><i class="fa fa-user custom-icon" style="font-size: 20px;"></i><span class="title-setting">로그인 정보</span></div>
-                        <h2>E-MAIL : <span><%= userInfoData.USER_EMAIL %></span></h2>
-                        <p onclick="changeUserInfoLayer('layerUserInfoPopup', '<%= userInfoData.USER_EMAIL %>')">내 정보 수정</p>
+                        <% var userEmail = userInfoData.USER_EMAIL; %>
+                        <h2>E-MAIL : <span><%= userEmail %></span></h2>
+                        <% if(userEmail == 'papastamp@naver.com') { %>
+                            <p id="user-info-btn" onclick="loginLayer('layerLoginPopup')">로그인</p>
+                        <% }else { %>
+                            <p id="user-info-btn" onclick="changeUserInfoLayer('layerUserInfoPopup', '<%= userInfoData.USER_EMAIL %>')">정보 수정</p>
+                        <% } %>
                     </div>
                 </figure>
             </div>
@@ -20,23 +25,23 @@
                 <figure class="front">
                     <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
                     <div class="caption" style="padding:0.2em;">
-                        <div class="icon-wrapper" onclick="openLayer('layerNoticePopup');">
+                        <div class="icon-wrapper" onclick="focusOpenLayer('layerNoticePopup');">
                             <i class="fa fa-bullhorn custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">공지사항</span>
                         </div>
-                        <div class="icon-wrapper" onclick="openLayer('layerTutorialPopup');">
+                        <div class="icon-wrapper" onclick="focusOpenLayer('layerTutorialPopup');">
                             <i class="fa fa-bookmark-o custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">튜토리얼</span>
                         </div>
-                        <div class="icon-wrapper" onclick="openLayer('layerTermsPopup');">
+                        <div class="icon-wrapper" onclick="focusOpenLayer('layerTermsPopup');">
                             <i class="fa fa-book custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">이용약관</span>
                         </div>
-                        <div class="icon-wrapper" onclick="openLayer('layerFaqPopup');">
+                        <div class="icon-wrapper" onclick="focusOpenLayer('layerFaqPopup');">
                             <i class="fa fa-comments-o custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">FAQ</span>
                         </div>
-                        <div class="icon-wrapper" onclick="openLayer('layerDevelopmentPopup');">
+                        <div class="icon-wrapper" onclick="focusOpenLayer('layerDevelopmentPopup');">
                             <i class="fa fa-info custom-icon" style="font-size: 20px;"></i>
                             <span class="title-setting">개발정보</span>
                         </div>
@@ -47,23 +52,41 @@
     </li>
 </ul>
 
+<div class="layerSettingPopup layer-login-popup" id="layerLoginPopup">
+    <div class="pop_up_body">
+        <p class="btn_txt_nor mt20">
+            <span class="setting-popup-title">로그인</span>
+            <span class="close-card" onclick="closeLayer('layerLoginPopup')">닫기</span>
+        </p>
+        <div class="faq_container">
+            <div class="faq">
+                <div class="user-info-title">E-Mail</div><input class="text-input" type="text" id="login-email" name="name">
+                <hr class="setting-line">
+                <div class="user-info-title">비밀번호</div><input class="text-input" type="password" id="login-password" name="name">
+                <hr class="setting-line">
+            </div>
+        </div>
+        <p class="change-ti" onclick="loginUser();">로그인</p>
+    </div>
+</div>
+
 <div class="layerSettingPopup layer-userInfo-popup" id="layerUserInfoPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
-            <span class="setting-popup-title">내 정보 수정</span>
+            <span class="setting-popup-title">정보 수정</span>
             <span class="close-card" onclick="closeLayer('layerUserInfoPopup')">닫기</span>
         </p>
         <div class="faq_container">
             <div class="faq">
-                <div class="setting-list-title" style="color: #999;margin-right:48px;">E-Mail</div><input class="text-input" type="text" id="e-mail" name="name" readonly/>
+                <div class="user-info-title">E-Mail</div><input class="text-input" type="text" id="e-mail" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:35px;">비밀번호</div><input class="text-input" type="password" id="e-password" name="name"/>
+                <div class="user-info-title">비밀번호</div><input class="text-input" type="password" id="e-password" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:3px;">비밀번호 확인</div><input class="text-input" type="password" id="c-password" name="name"/>
+                <div class="user-info-title">비밀번호 확인</div><input class="text-input" type="password" id="c-password" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:16px;">휴대폰 번호</div><p class="change-ti-custom" onclick="authPhoneNumber();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name"/>
+                <div class="user-info-title">휴대폰 번호</div><p class="change-ti-custom" onclick="authPhoneNumber();">인증하기</p><input class="text-input-custom" type="text" id="phone-number" name="name">
                 <hr class="setting-line">
-                <div class="setting-list-title" style="color: #999;margin-right:30px;">인증 번호</div><p class="change-ti-custom" onclick="authPhoneNumberConfirm();">확인</p><input class="text-input-custom" type="text" id="confirm-number" name="name"/>
+                <div class="user-info-title">인증 번호</div><p class="change-ti-custom" onclick="authPhoneNumberConfirm();">확인</p><input class="text-input-custom" type="text" id="confirm-number" name="name">
                 <hr class="setting-line">
             </div>
         </div>
@@ -299,6 +322,7 @@
     </div>
 </div>
 
+
 <div class="layerSettingPopup layer-faq-popup" id="layerFaqPopup">
     <div class="pop_up_body">
         <p class="btn_txt_nor mt20">
@@ -452,6 +476,18 @@
         });
     });
 
+    function focusOpenLayer(showDivId) {
+        var browserHeight = $(document).height();
+        var popupHeight;
+        if(showDivId == 'layerTutorialPopup') {
+            popupHeight = browserHeight * 0.09;
+        }else {
+            popupHeight = browserHeight * 0.17;
+        }
+
+        openLayer(showDivId, popupHeight, 0, browserHeight);
+    }
+
     function authPhoneNumber() {
         var phoneNumber = $("#phone-number").val()
 
@@ -494,10 +530,19 @@
         });
     }
 
-    function changeUserInfoLayer(showDivId, userEmail) {
-        $("#e-mail").val(userEmail);
+    function loginLayer(showDivId) {
+        var browserHeight = $(document).height();
+        var popupHeight = browserHeight * 0.17;
 
-        openLayer(showDivId);
+        openLayer(showDivId, popupHeight, 0, browserHeight);
+    }
+
+    function changeUserInfoLayer(showDivId, userEmail) {
+        var browserHeight = $(document).height();
+        var popupHeight = browserHeight * 0.17;
+
+        $("#e-mail").val(userEmail);
+        openLayer(showDivId, popupHeight, 0, browserHeight);
     }
 
     function changePassowrdCallback(inputPassword) {
@@ -569,7 +614,46 @@
         }
     }
 
+    function loginUser() {
+        var userId = $("#user_id").val();
+        var loginEmail = $("#login-email").val();
+        var loginPassword = $("#login-password").val();
+
+        if(loginEmail.length > 0 && loginPassword.length > 0 ) {
+            var headers = {};
+            headers["user_id"] = userId;
+            var dataString = {'user_email': loginEmail, 'user_password': loginPassword};
+            $.ajax({
+                url: $("#url").val() + '/v1/user/userLogin',
+                type: 'POST',
+                headers : headers,
+                dataType: 'json',
+                data : dataString,
+                success: function(data) {
+                    if(data.userEmailCheck == '1') {
+                        if(data.userPwCheck == '1') {
+                            location.href='http://localhost:8080/v1/shop/main?user_id='+ data.userId +'&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                        }else {
+                            $.toast.config.width = 225;
+                            $.toast('<h4>비밀번호</h4>를 확인하세요.!!', {type: 'danger', duration: 3000});
+                        }
+                    }else {
+                        $.toast.config.width = 225;
+                        $.toast('<h4>E-Mail</h4> 정보를 확인하세요.!!', {type: 'danger', duration: 3000});
+                    }
+                },
+                error: function(request, status, error) {
+                    console.error("used login : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
+        }else {
+            $.toast.config.width = 225;
+            $.toast('<h4>로그인</h4> 정보를 입력하세요.!!', {type: 'danger', duration: 3000});
+        }
+    }
+
     function logoutUser() {
+        $("#user-info-btn").text("로그인");
         $("#logout-user-confirm").dialog({
             resizable: false,
             modal: true,
@@ -579,11 +663,34 @@
             resizable:false,
             buttons: {
                 "예": function () {
-                    $(this).dialog('close');
+                    location.href='http://localhost:8080/v1/shop/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
                 },
                 "아니오": function () {
                     $(this).dialog('close');
                 }
+            }
+        });
+    }
+
+    function userSignout() {
+        var userId = $("#user_id").val();
+        var headers = {};
+        headers["user_id"] = userId;
+        $.ajax({
+            url: $("#url").val() + '/v1/user/userSignout',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            success: function(data) {
+                if(data.success == 'success') {
+                    location.href='http://localhost:8080/v1/shop/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                }else {
+                    $.toast.config.width = 225;
+                    $.toast('<h4>회원 탈퇴</h4>를 다시 하세요.!!', {type: 'danger', duration: 3000});
+                }
+            },
+            error: function(request, status, error) {
+                console.error("user sign out : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
     }
@@ -598,7 +705,7 @@
             resizable:false,
             buttons: {
                 "예": function () {
-                    $(this).dialog('close');
+                    userSignout();
                 },
                 "아니오": function () {
                     $(this).dialog('close');

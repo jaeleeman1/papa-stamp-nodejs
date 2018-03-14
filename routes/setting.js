@@ -21,21 +21,28 @@ router.get('/main', function(req, res, next) {
         res.send('Invalid user id parameter error');
     }
 
-    getConnection(function (err, connection){
-        var selectUserInfo = 'select USER_ID, USER_EMAIL from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
-        connection.query(selectUserInfo, function (err, userInfoData) {
-            if (err) {
-                logger.error(TAG, "Select user info error : " + err);
-                res.status(400);
-                res.send('Select user info error');
-            }else{
-                logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
-                res.status(200);
-                res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0]});
-            }
-            connection.release();
+    if(userId.length > 0) {
+        getConnection(function (err, connection){
+            var selectUserInfo = 'select USER_ID, USER_EMAIL from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
+            connection.query(selectUserInfo, function (err, userInfoData) {
+                if (err) {
+                    logger.error(TAG, "Select user info error : " + err);
+                    res.status(400);
+                    res.send('Select user info error');
+                }else{
+                    logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
+                    res.status(200);
+                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0]});
+                }
+                connection.release();
+            });
         });
-    });
+    }else {
+        logger.debug(TAG, 'Blank user info success');
+        res.status(200);
+        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}});
+    }
+
 });
 
 //GET Password Data
