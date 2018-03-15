@@ -211,7 +211,7 @@ router.put('/updateLocation', function (req, res, next) {
 });
 
 //Update User Signout
-router.get('/userSignout', function (req, res, next) {
+router.put('/userSignout', function (req, res, next) {
     logger.info(TAG, 'Update user signout');
 
     var userId = req.headers.user_id;
@@ -226,32 +226,31 @@ router.get('/userSignout', function (req, res, next) {
     getConnection(function (err, connection){
         var deleteUserInfo = 'update SB_USER_INFO set DEL_YN = "Y" ' +
             'where USER_ID = ' +mysql.escape(userId);
-        connection.query(deleteUserInfo, function (err, beaconIdData) {
+        connection.query(deleteUserInfo, function (err, deleteUserInfoData) {
             if (err) {
                 logger.error(TAG, "Update user info error : " + err);
                 res.status(400);
                 res.send('Update user info error');
             }else{
-                logger.debug(TAG, 'Update user info success : ' + JSON.stringify(beaconIdData));
-
+                logger.debug(TAG, 'Update user info success : ' + JSON.stringify(deleteUserInfoData));
                 var deleteUserPushHis = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" ' +
                     'where USER_ID = ' +mysql.escape(userId);
-                connection.query(deleteUserPushInfo, function (err, beaconIdData) {
+                connection.query(deleteUserPushHis, function (err, deleteUserPushHisData) {
                     if (err) {
                         logger.error(TAG, "Update user push history error : " + err);
                         res.status(400);
                         res.send('Update user push history error');
                     }else {
-                        logger.debug(TAG, 'Update user push history success : ' + JSON.stringify(beaconIdData));
-                        var deleteUserPushInfo = 'update SB_USER_PUSHO_INFO set DEL_YN = "Y" ' +
+                        logger.debug(TAG, 'Update user push history success : ' + JSON.stringify(deleteUserPushHisData));
+                        var deleteUserPushInfo = 'update SB_USER_PUSH_INFO set DEL_YN = "Y" ' +
                             'where USER_ID = ' +mysql.escape(userId);
-                        connection.query(selectBeaconIdQuery, function (err, beaconIdData) {
+                        connection.query(deleteUserPushInfo, function (err, deleteUserPushInfoData) {
                             if (err) {
                                 logger.error(TAG, "Update user push info error : " + err);
                                 res.status(400);
                                 res.send('Update user push info error');
                             }else {
-                                logger.debug(TAG, 'Update user push info success : ' + JSON.stringify(beaconIdData));
+                                logger.debug(TAG, 'Update user push info success : ' + JSON.stringify(deleteUserPushInfoData));
                                 res.status(200);
                                 res.send({success: 'success'});
                             }

@@ -221,6 +221,7 @@
 }
 
 .layer-notice-popup {
+    height: 466px;
     overflow:auto;
     position: fixed;
 }
@@ -237,6 +238,7 @@
 }
 
 .layer-faq-popup {
+    height: 466px;
     overflow: auto;
     position: fixed;
 }

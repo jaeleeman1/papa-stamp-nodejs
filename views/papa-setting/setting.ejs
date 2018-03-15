@@ -632,7 +632,7 @@
                 success: function(data) {
                     if(data.userEmailCheck == '1') {
                         if(data.userPwCheck == '1') {
-                            location.href='http://localhost:8080/v1/shop/main?user_id='+ data.userId +'&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                            location.href = $("#url").val()+'/v1/shop/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
                         }else {
                             $.toast.config.width = 225;
                             $.toast('<h4>비밀번호</h4>를 확인하세요.!!', {type: 'danger', duration: 3000});
@@ -663,7 +663,7 @@
             resizable:false,
             buttons: {
                 "예": function () {
-                    location.href='http://localhost:8080/v1/shop/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                    location.href = $("#url").val()+'/v1/shop/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
                 },
                 "아니오": function () {
                     $(this).dialog('close');
