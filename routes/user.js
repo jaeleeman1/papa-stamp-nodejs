@@ -264,30 +264,30 @@ router.put('/userSignout', function (req, res, next) {
 });
 
 //Get Shop Beacon
-router.get('/beaconToShopId', function (req, res, next) {
+router.get('/shopCodeToShopId', function (req, res, next) {
     logger.info(TAG, 'Get shop beacon');
 
-    var beaconId = req.body.beacon_id;
-    logger.debug(TAG, 'Beacon id : ' + beaconId);
+    var shopCode = req.query.shop_code;
+    logger.debug(TAG, 'Shop Code : ' + shopCode);
 
-    if(beaconId == null || beaconId == undefined) {
-        logger.debug(TAG, 'Invalid beacon id parameter error');
+    if(shopCode == null || shopCode == undefined) {
+        logger.debug(TAG, 'Invalid shop code parameter error');
         res.status(400);
-        res.send('Invalid beacon id parameter error');
+        res.send('Invalid shop code parameter error');
     }
 
     getConnection(function (err, connection){
         var selectBeaconIdQuery = 'select SHOP_ID from SB_SHOP_INFO as SSI ' +
-            'where SSI.SHOP_BEACON =' + mysql.escape(beaconId);
-        connection.query(selectBeaconIdQuery, function (err, beaconIdData) {
+            'where SSI.SHOP_MAJOR_MINOR =' + mysql.escape(shopCode);
+        connection.query(selectBeaconIdQuery, function (err, shopIdData) {
             if (err) {
                 logger.error(TAG, "Select beacon id error : " + err);
                 res.status(400);
                 res.send('Select beacon id error');
             }else{
-                logger.debug(TAG, 'Select beacon id success : ' + JSON.stringify(beaconIdData));
+                logger.debug(TAG, 'Select beacon id success : ' + JSON.stringify(shopIdData));
                 res.status(200);
-                res.send({beaconIdData:beaconIdData[0]});
+                res.send({shopIdData:shopIdData[0]});
             }
             connection.release();
         });
