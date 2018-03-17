@@ -263,9 +263,40 @@ router.put('/userSignout', function (req, res, next) {
     });
 });
 
-//Get Shop Beacon
-router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
+//Get Beacon to shop id
+router.get('/beaconToShopId/:beacon_code', function (req, res, next) {
     logger.info(TAG, 'Get shop beacon');
+
+    var beaconCode = req.params.beacon_code;
+    logger.debug(TAG, 'shop beacon : ' + beaconCode);
+
+    if(beaconCode == null || beaconCode == undefined) {
+        logger.debug(TAG, 'Invalid shop beacon parameter error');
+        res.status(400);
+        res.send('Invalid shop beacon parameter error');
+    }
+
+    getConnection(function (err, connection){
+        var selectBeaconIdQuery = 'select SHOP_ID from SB_SHOP_INFO as SSI ' +
+            'where SSI.SHOP_BEACON =' + mysql.escape(beaconCode);
+        connection.query(selectBeaconIdQuery, function (err, shopIdData) {
+            if (err) {
+                logger.error(TAG, "Select shop id error : " + err);
+                res.status(400);
+                res.send('Select shop id error');
+            }else{
+                logger.debug(TAG, 'Select shop id success : ' + JSON.stringify(shopIdData));
+                res.status(200);
+                res.send({shopId:shopIdData[0].SHOP_ID});
+            }
+            connection.release();
+        });
+    });
+});
+
+//Get Shop code to shop id
+router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
+    logger.info(TAG, 'Get shop code');
 
     var shopCode = req.params.shop_code;
     logger.debug(TAG, 'Shop Code : ' + shopCode);
@@ -277,17 +308,17 @@ router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectBeaconIdQuery = 'select SHOP_MAJOR_MINOR, SHOP_ID from SB_SHOP_INFO as SSI ' +
+        var selectShopCodeQuery = 'select SHOP_MAJOR_MINOR, SHOP_ID from SB_SHOP_INFO as SSI ' +
             'where SSI.SHOP_MAJOR_MINOR =' + mysql.escape(shopCode);
-        connection.query(selectBeaconIdQuery, function (err, shopIdData) {
+        connection.query(selectShopCodeQuery, function (err, shopCodeIdData) {
             if (err) {
-                logger.error(TAG, "Select beacon id error : " + err);
+                logger.error(TAG, "Select shop code, id error : " + err);
                 res.status(400);
-                res.send('Select beacon id error');
+                res.send('Select shop code, id error');
             }else{
-                logger.debug(TAG, 'Select beacon id success : ' + JSON.stringify(shopIdData));
+                logger.debug(TAG, 'Select shop code, id success : ' + JSON.stringify(shopCodeIdData));
                 res.status(200);
-                res.send({shopCode:shopIdData[0].SHOP_MAJOR_MINOR, shopId:shopIdData[0].SHOP_ID});
+                res.send({shopCode:shopCodeIdData[0].SHOP_MAJOR_MINOR, shopId:shopCodeIdData[0].SHOP_ID});
             }
             connection.release();
         });
