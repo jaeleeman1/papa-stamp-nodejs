@@ -287,7 +287,7 @@ router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
             }else{
                 logger.debug(TAG, 'Select beacon id success : ' + JSON.stringify(shopIdData));
                 res.status(200);
-                res.send({shopIdData:shopIdData[0].SHOP_ID});
+                res.send({shopId:shopIdData[0].SHOP_ID});
             }
             connection.release();
         });
