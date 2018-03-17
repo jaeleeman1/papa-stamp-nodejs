@@ -277,7 +277,7 @@ router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectBeaconIdQuery = 'select SHOP_ID from SB_SHOP_INFO as SSI ' +
+        var selectBeaconIdQuery = 'select SHOP_MAJOR_MINOR, SHOP_ID from SB_SHOP_INFO as SSI ' +
             'where SSI.SHOP_MAJOR_MINOR =' + mysql.escape(shopCode);
         connection.query(selectBeaconIdQuery, function (err, shopIdData) {
             if (err) {
@@ -287,7 +287,7 @@ router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
             }else{
                 logger.debug(TAG, 'Select beacon id success : ' + JSON.stringify(shopIdData));
                 res.status(200);
-                res.send({shopId:shopIdData[0].SHOP_ID});
+                res.send({shopCode:shopIdData[0].SHOP_MAJOR_MINOR, shopId:shopIdData[0].SHOP_ID});
             }
             connection.release();
         });
