@@ -264,10 +264,10 @@ router.put('/userSignout', function (req, res, next) {
 });
 
 //Get Shop Beacon
-router.get('/shopCodeToShopId', function (req, res, next) {
+router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
     logger.info(TAG, 'Get shop beacon');
 
-    var shopCode = req.query.shop_code;
+    var shopCode = req.params.shop_code;
     logger.debug(TAG, 'Shop Code : ' + shopCode);
 
     if(shopCode == null || shopCode == undefined) {
