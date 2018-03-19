@@ -78,13 +78,14 @@
 </div>
 
 <script type="text/javascript">
-    function useCouponAndroid() {
+    function useCouponAndroid(shopId, couponNumber) {
         var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
         document.getElementById("use-coupon-btn").className = 'delete-coupon';
         document.getElementById("use-coupon-btn").onclick = function(){deleteCoupon();};
         document.getElementById("use-coupon-btn").innerHTML = '삭제하기';
         document.getElementById("use-coupon-date-btn").innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + usedDate +'</span>';
         $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
+
     }
 
     function useCouponCallback(shopId, couponNumber) {
