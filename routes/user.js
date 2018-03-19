@@ -277,9 +277,9 @@ router.get('/beaconToShopId/:beacon_code', function (req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectBeaconIdQuery = 'select SHOP_ID from SB_SHOP_INFO as SSI ' +
+        var selectShopIdQuery = 'select SHOP_ID from SB_SHOP_INFO as SSI ' +
             'where SSI.SHOP_BEACON =' + mysql.escape(beaconCode);
-        connection.query(selectBeaconIdQuery, function (err, shopIdData) {
+        connection.query(selectShopIdQuery, function (err, shopIdData) {
             if (err) {
                 logger.error(TAG, "Select shop id error : " + err);
                 res.status(400);
@@ -288,6 +288,37 @@ router.get('/beaconToShopId/:beacon_code', function (req, res, next) {
                 logger.debug(TAG, 'Select shop id success : ' + JSON.stringify(shopIdData));
                 res.status(200);
                 res.send({shopId:shopIdData[0].SHOP_ID});
+            }
+            connection.release();
+        });
+    });
+});
+
+//Get Beacon to shop id
+router.get('/shopIdToBeacon', function (req, res, next) {
+    logger.info(TAG, 'Get shop beacon');
+
+    var shopId = req.body.shop_id;
+    logger.debug(TAG, 'Shop iD : ' + shopId);
+
+    if(shopId == null || shopId == undefined) {
+        logger.debug(TAG, 'Invalid shop id value');
+        res.status(400);
+        res.send('Invalid shop id error');
+    }
+
+    getConnection(function (err, connection){
+        var selectBeaconIdQuery = 'select SHOP_BEACON from SB_SHOP_INFO as SSI ' +
+            'where SSI.SHOP_ID =' + mysql.escape(shopId);
+        connection.query(selectBeaconIdQuery, function (err, shopBeaconData) {
+            if (err) {
+                logger.error(TAG, "Select shop beacon error : " + err);
+                res.status(400);
+                res.send('Select shop beacon error');
+            }else{
+                logger.debug(TAG, 'Select shop beacon success : ' + JSON.stringify(shopBeaconData));
+                res.status(200);
+                res.send({shopBeacon:shopBeaconData[0].SHOP_BEACON});
             }
             connection.release();
         });
