@@ -244,8 +244,7 @@ router.put('/useCoupon', function(req, res, next) {
                 res.send('Update use coupon error');
             }else{
                 logger.debug(TAG, 'Update use coupon success');
-                var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
-                res.send({result: 'success', usedDate: usedDate});
+                res.send({result: 'success'});
             }
             connection.release();
         });

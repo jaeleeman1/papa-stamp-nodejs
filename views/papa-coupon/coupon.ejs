@@ -138,13 +138,19 @@
             buttons: {
                 "예": function () {
                     $('#delete_card').unbind('click');
+//                    useCouponCallback(shopId, couponNum);
+                    var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
+                    if(window.Bridge) {
+                        window.Bridge.callSettingsActivity(couponNum);
+                        document.getElementById("use-coupon-btn").className = 'delete-coupon';
+                        document.getElementById("use-coupon-btn").onclick = function(){deleteCoupon();};
+                        document.getElementById("use-coupon-btn").innerHTML = '삭제하기';
+                        document.getElementById("use-coupon-date-btn").innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + usedDate +'</span>';
+                        $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
+                    }
                     $(this).dialog('close');
-                    useCouponCallback(shopId, couponNum);
                 },
                 "아니오": function () {
-                    if(window.Bridge) {
-                        window.Bridge.callSettingsActivity('쿠폰 사용합니까?');
-                    }
                     $(this).dialog('close');
                 }
             }
