@@ -98,7 +98,7 @@
             success: function(data) {
                 var shopBeacon = data.shopBeacon;
                 if(window.Bridge) {
-                    window.Bridge.callSettingsActivity(shopBeacon, couponNumber);
+                    window.Bridge.callSettingsActivity(shopId, shopBeacon, couponNumber);
                 }
             },
             error: function(request, status, error) {
