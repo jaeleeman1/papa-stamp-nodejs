@@ -78,24 +78,28 @@
 </div>
 
 <script type="text/javascript">
+    function useCouponAndroid() {
+        var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
+        document.getElementById("use-coupon-btn").className = 'delete-coupon';
+        document.getElementById("use-coupon-btn").onclick = function(){deleteCoupon();};
+        document.getElementById("use-coupon-btn").innerHTML = '삭제하기';
+        document.getElementById("use-coupon-date-btn").innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + usedDate +'</span>';
+        $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
+    }
+
     function useCouponCallback(shopId, couponNumber) {
-        var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
-        var headers = {};
-        headers["user_id"] = userId;
+        var dataString = {'shop_id': shopId};
 
         $.ajax({
-            url: $("#url").val() + '/v1/coupon/useCoupon',
-            type: 'PUT',
-            headers : headers,
+            url: $("#url").val() + '/v1/user/shopIdToBeacon',
+            type: 'GET',
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                document.getElementById("use-coupon-btn").className = 'delete-coupon';
-                document.getElementById("use-coupon-btn").onclick = function(){deleteCoupon();};
-                document.getElementById("use-coupon-btn").innerHTML = '삭제하기';
-                document.getElementById("use-coupon-date-btn").innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + data.usedDate +'</span>';
-                $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
+                var shopBeacon = data.shopBeacon;
+                if(window.Bridge) {
+                    window.Bridge.callSettingsActivity(shopBeacon, couponNumber);
+                }
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -138,17 +142,7 @@
             buttons: {
                 "예": function () {
                     $('#delete_card').unbind('click');
-//                    useCouponCallback(shopId, couponNum);
-                    var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
-                    if(window.Bridge) {
-                        window.Bridge.callSettingsActivity(couponNum);
-                        document.getElementById("use-coupon-btn").className = 'delete-coupon';
-                        document.getElementById("use-coupon-btn").onclick = function(){deleteCoupon();};
-                        document.getElementById("use-coupon-btn").innerHTML = '삭제하기';
-                        document.getElementById("use-coupon-date-btn").innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + usedDate +'</span>';
-                        $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
-                    }
-                    $(this).dialog('close');
+                    useCouponCallback(shopId, couponNum);
                 },
                 "아니오": function () {
                     $(this).dialog('close');

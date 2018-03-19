@@ -298,7 +298,7 @@ router.get('/beaconToShopId/:beacon_code', function (req, res, next) {
 router.get('/shopIdToBeacon', function (req, res, next) {
     logger.info(TAG, 'Get shop beacon');
 
-    var shopId = req.body.shop_id;
+    var shopId = req.query.shop_id;
     logger.debug(TAG, 'Shop iD : ' + shopId);
 
     if(shopId == null || shopId == undefined) {
