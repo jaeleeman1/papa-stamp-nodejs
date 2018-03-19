@@ -244,7 +244,7 @@ router.put('/useCoupon', function(req, res, next) {
                 res.send('Update use coupon error');
             }else{
                 logger.debug(TAG, 'Update use coupon success');
-                res.send({result: 'success', usedDate: usedDate});
+                res.send({result: 'success'});
             }
             connection.release();
         });
