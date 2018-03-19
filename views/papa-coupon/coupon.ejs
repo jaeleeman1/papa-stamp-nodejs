@@ -143,6 +143,7 @@
                 "예": function () {
                     $('#delete_card').unbind('click');
                     useCouponCallback(shopId, couponNum);
+                    $(this).dialog('close');
                 },
                 "아니오": function () {
                     $(this).dialog('close');
