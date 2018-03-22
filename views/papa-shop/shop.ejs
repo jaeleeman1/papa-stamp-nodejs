@@ -194,20 +194,6 @@
         });
         marker.setMap(map);
 
-        var userId = $("#user_id").val();
-        if(userId.length > 0) {
-            var currentIwContent = '<div style="padding:2px 0 3px 15px;">현재 위치입니다.</div>';
-        }else {
-            var currentIwContent = '<div style="padding:2px 0 3px 10px;">파파스탬프입니다.</div>';
-        }
-
-        var currentInfowindow = new daum.maps.InfoWindow({
-            position : currentMarkerPosition,
-            content : currentIwContent
-        });
-
-        currentInfowindow.open(map, marker);
-
         initClick(currentMarkerPosition);
 
         // 지도에 클릭 이벤트를 등록합니다
@@ -259,8 +245,6 @@
                 // 상태를 false로, 그리지 않고 있는 상태로 변경합니다
                 drawingFlag = false;
             }else {
-                console.log('##########delete', currentLat);
-                console.log('##########delete', currentLng);
                 // 선을 구성하는 좌표의 개수가 1개 이하이면
                 // 지도에 표시되고 있는 선과 정보들을 지도에서 제거합니다.
                 deleteClickLine();
@@ -330,8 +314,14 @@
         moveLine.setPath(movepath);
         moveLine.setMap(map);
 
-        var distance = Math.round(clickLine.getLength() + moveLine.getLength()), // 선의 총 거리를 계산합니다
-            content = '<div class="dotOverlay distanceInfo">현재 위치 : <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
+        var userId = $("#user_id").val();
+        if(userId.length > 0) {
+            var distance = Math.round(clickLine.getLength() + moveLine.getLength()), // 선의 총 거리를 계산합니다
+                content = '<div class="dotOverlay distanceInfo">현재 위치 : <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
+        }else {
+            var distance = Math.round(clickLine.getLength() + moveLine.getLength()), // 선의 총 거리를 계산합니다
+                content = '<div class="dotOverlay distanceInfo">파파스탬프 : <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
+        }
 
         // 거리정보를 지도에 표시합니다
         showDistance(content, mousePosition);
@@ -351,13 +341,11 @@
     function showDistance(content, position) {
 
         if (distanceOverlay) { // 커스텀오버레이가 생성된 상태이면
-
             // 커스텀 오버레이의 위치와 표시할 내용을 설정합니다
             distanceOverlay.setPosition(position);
             distanceOverlay.setContent(content);
 
         } else { // 커스텀 오버레이가 생성되지 않은 상태이면
-
             // 커스텀 오버레이를 생성하고 지도에 표시합니다
             distanceOverlay = new daum.maps.CustomOverlay({
                 map: map, // 커스텀오버레이를 표시할 지도입니다
@@ -425,45 +413,4 @@
 
         dots = [];
     }
-
-    /*// 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여
-    // 그려진 선의 총거리 정보와 거리에 대한 도보, 자전거 시간을 계산하여
-    // HTML Content를 만들어 리턴하는 함수입니다
-    function getTimeHTML(distance) {
-
-        // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
-        var walkkTime = distance / 67 | 0;
-        var walkHour = '', walkMin = '';
-
-        // 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
-        if (walkkTime > 60) {
-            walkHour = '<span class="number">' + Math.floor(walkkTime / 60) + '</span>시간 '
-        }
-        walkMin = '<span class="number">' + walkkTime % 60 + '</span>분'
-
-        // 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
-        var bycicleTime = distance / 227 | 0;
-        var bycicleHour = '', bycicleMin = '';
-
-        // 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
-        if (bycicleTime > 60) {
-            bycicleHour = '<span class="number">' + Math.floor(bycicleTime / 60) + '</span>시간 '
-        }
-        bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
-
-        // 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴합니다
-        var content = '<ul class="dotOverlay distanceInfo">';
-        content += '    <li>';
-        content += '        <span class="label">총거리</span><span class="number">' + distance + '</span>m';
-        content += '    </li>';
-        content += '    <li>';
-        content += '        <span class="label">도보</span>' + walkHour + walkMin;
-        content += '    </li>';
-        content += '    <li>';
-        content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
-        content += '    </li>';
-        content += '</ul>'
-
-        return content;
-    }*/
 </script>
