@@ -1,8 +1,8 @@
 /* Shop */
 .cards {
     margin-top: 50px;
-    margin-left: 12px;
-    margin-right: 12px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .container, figure {
@@ -42,10 +42,12 @@ figure.back,
 }
 
 .card-img {
-    width: 100%;
+    width: 340px;
     position: relative;
     height: 222px;
     margin-bottom: 5vh;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .card {
@@ -124,16 +126,18 @@ figure .papa-base-img{
 /* Stamp */
 .my-card-list {
     margin-top: 50px;
-    margin-left: 12px;
-    margin-right: 12px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .my-card-shop {
-    width: 100%;
+    width: 340px;
     background: #000000;
     position: relative;
     height: 222px;
     margin-bottom: 5vh;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 10px;
     box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
@@ -184,11 +188,13 @@ figure .base-img{
 
 /* Coupon */
 .my-card-coupon {
-    width: 100%;
+    width: 340px;
     background: #ffffff;
     position: relative;
     height: 222px;
     margin-bottom: 5vh;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 10px;
     box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
@@ -282,6 +288,8 @@ figure .base-img{
     position: relative;
     height: 222px;
     margin-bottom: 5vh;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 10px;
     box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
@@ -289,11 +297,13 @@ figure .base-img{
 
 /* Setting */
 .card-setting {
-    width: 100%;
+    width: 340px;
     background: #848484;
     position: relative;
     height: 222px;
     margin-bottom: 5vh;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 10px;
     box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;

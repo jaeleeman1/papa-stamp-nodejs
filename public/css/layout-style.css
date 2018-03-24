@@ -126,10 +126,13 @@ menu:after {
   clear : both;
 }
 
+menu .footer-style {
+  float : left;
+}
+
 li {
   background-color: #585858;
   list-style-type: none;
-  float : left;
   margin-left : 0.5px;
   margin-right : 0.5px;
   width: 19.7%;
