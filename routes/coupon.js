@@ -214,7 +214,7 @@ router.put('/useCoupon', function(req, res, next) {
 
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
-    var couponNumber = req.body.coupon_number;
+    var couponNumber = req.body.param_number;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);

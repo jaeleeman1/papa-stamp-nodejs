@@ -329,7 +329,7 @@ router.post('/update-stamp', function (req, res, next) {
 
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
-    var stampNumber = req.body.stamp_number;
+    var stampNumber = req.body.param_number;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
