@@ -399,7 +399,7 @@ router.post('/update-stamp', function (req, res, next) {
                                                 res.status(400);
                                                 res.send('select user push history count error');
                                             }else{
-                                                io.sockets.emit(userId, {sendId: shopId, stampCnt:(stampHistoryCount[0].CNT), shopData:shopData[0], userCheck:userCheckData[0]});
+                                                io.sockets.emit(userId, {sendId: shopId, stampCnt:(stampHistoryCount[0].CNT), stampNumber:stampNumber, shopData:shopData[0], userCheck:userCheckData[0]});
                                                 logger.debug(TAG, 'API papa stamp success!');
 
                                                 res.status(200);

@@ -258,6 +258,7 @@
     socket.on(pushUserId, function(data){
         var visitRateCnt = data.stampCnt % 10;
         var shopId = data.sendId;
+        var stampNumber = data.stampNumber;
 
         if(data.userCheck.USER_CHECK == 0) {
             var appendId = $('#common-template');
@@ -284,17 +285,32 @@
 
             appendId.append(appendData);
         }else {
-            var appendStamp = '<div class="stamp-icon-'+ shopId +'" id="stamp_icon">' +
-                '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>'+
-                '</div>';
+            var appendStamp = '';
+            for(var i=0; i<stampNumber; i++) {
+                appendStamp += '<div class="stamp-icon-'+ shopId +'" id="stamp_icon">' +
+                    '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>'+
+                    '</div>';
+            }
             $("#"+shopId).find($(".img-repeat-"+shopId)).append(appendStamp);
         }
 
-        $("#layerCardPopup").find($(".img-repeat-"+shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
-            '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon>">' +
-            '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
-            '<span class="stamp-date-'+ shopId +'">['+ data.shopData.TODAY_DT +']</span>' +
-            '</div>');
+        if(stampNumber != '1') {
+            for(var i=0; i<stampNumber; i++) {
+                setTimeout(function () {
+                    $("#layerCardPopup").find($(".img-repeat-"+shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
+                        '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon>">' +
+                        '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
+                        '<span class="stamp-date-'+ shopId +'">['+ data.shopData.TODAY_DT +']</span>' +
+                        '</div>');
+                }, 1000);
+            }
+        }else {
+            $("#layerCardPopup").find($(".img-repeat-"+shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
+                '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon>">' +
+                '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
+                '<span class="stamp-date-'+ shopId +'">['+ data.shopData.TODAY_DT +']</span>' +
+                '</div>');
+        }
 
         $('#delete_card').click(function() {
             deleteCard(shopId);
