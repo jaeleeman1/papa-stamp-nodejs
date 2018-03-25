@@ -363,12 +363,12 @@ router.post('/update-stamp', function (req, res, next) {
                         res.send('Insert user push info error');
                     } else {
                         logger.debug(TAG, 'Insert user push info success');
-                        var arrayValue = '';
+                        var arrayValue = 'value ';
                         for(var i=0; i<stampNumber; i++) {
                             if(i != (stampNumber -1))
-                                arrayValue += 'value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + '),';
+                                arrayValue += '(' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + '),';
                             else
-                                arrayValue += 'value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
+                                arrayValue += '(' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
                         }
                         var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' + arrayValue;
                         connection.query(insertStampHistory, function (err, row) {
