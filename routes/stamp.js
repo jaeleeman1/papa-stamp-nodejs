@@ -329,12 +329,15 @@ router.post('/update-stamp', function (req, res, next) {
 
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
+    var stampNumber = req.body.stamp_number;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'Stamp Number : ' + stampNumber);
 
     if(shopId == null || shopId == undefined &&
-        userId == null || userId == undefined) {
+        userId == null || userId == undefined &&
+        stampNumber == null || stampNumber == undefined) {
         logger.debug(TAG, 'Invalid id parameter error');
         res.status(400);
         res.send('Invalid id parameter error');
@@ -352,55 +355,59 @@ router.post('/update-stamp', function (req, res, next) {
                 logger.debug(TAG, 'Select user exist success', userCheckData);
                 var insertUserPushQuery = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) ' +
                     'value (' + mysql.escape(shopId) + ',' + mysql.escape(userId) + ', 1) ' +
-                    'on duplicate key update USER_STAMP = USER_STAMP +1';
+                    'on duplicate key update USER_STAMP = USER_STAMP + ' + stampNumber;
                 connection.query(insertUserPushQuery, function (err, userPushData) {
                     if (err) {
                         logger.error(TAG, "Insert user push info error : " + err);
                         res.status(400);
                         res.send('Insert user push info error');
                     } else {
-                        logger.debug(TAG, 'Insert user push history success');
-                        var selectStampHistoryCount = 'select count(*) as CNT ' +
-                            'from SB_USER_PUSH_HIS ' +
-                            'where USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
-                        connection.query(selectStampHistoryCount, function (err, stampHistoryCount) {
+                        logger.debug(TAG, 'Insert user push info success');
+                        var arrayValue = '';
+                        for(var i=0; i<stampNumber; i++) {
+                            if(i != (stampNumber -1))
+                                arrayValue += 'value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + '),';
+                            else
+                                arrayValue += 'value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
+                        }
+                        var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' + arrayValue;
+                        connection.query(insertStampHistory, function (err, row) {
                             if (err) {
-                                logger.error(TAG, "DB selectStampHistoryCount error : " + err);
+                                logger.error(TAG, "DB insertStampHistory error : " + err);
                                 res.status(400);
-                                res.send('select user push history count error');
-                            }else{
-                                logger.debug(TAG, 'Insert user push history success : ', stampHistoryCount);
-                                if(stampHistoryCount[0].CNT < 10) {
-                                    var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' +
-                                        'value (' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
-                                    connection.query(insertStampHistory, function (err, row) {
-                                        if (err) {
-                                            logger.error(TAG, "DB insertStampHistory error : " + err);
-                                            res.status(400);
-                                            res.send('Insert user push history error');
-                                        } else {
-                                            var selectShopData = 'select (select date_format(NOW(), "%y-%m-%d")) as TODAY_DT, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
-                                                'from SB_SHOP_INFO as SSI ' +
-                                                'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
-                                                'limit 1';
-                                            connection.query(selectShopData, function (err, shopData) {
-                                                if (err) {
-                                                    logger.error(TAG, "DB select shop data error : " + err);
-                                                    res.status(400);
-                                                    res.send('Select shop data error');
-                                                } else {
-                                                    logger.debug(TAG, 'Insert user push history success');
+                                res.send('Insert user push history error');
+                            } else {
+                                logger.debug(TAG, 'Insert user push history success');
+                                var selectShopData = 'select (select date_format(NOW(), "%y-%m-%d")) as TODAY_DT, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
+                                    'from SB_SHOP_INFO as SSI ' +
+                                    'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
+                                    'limit 1';
+                                connection.query(selectShopData, function (err, shopData) {
+                                    if (err) {
+                                        logger.error(TAG, "DB select shop data error : " + err);
+                                        res.status(400);
+                                        res.send('Select shop data error');
+                                    } else {
+                                        logger.debug(TAG, 'Insert user push history success');
 
-                                                    io.sockets.emit(userId, {sendId: shopId, stampCnt:(stampHistoryCount[0].CNT+1), shopData:shopData[0], userCheck:userCheckData[0]});
-                                                    logger.debug(TAG, 'API papa stamp success!');
+                                        var selectStampHistoryCount = 'select count(*) as CNT ' +
+                                            'from SB_USER_PUSH_HIS ' +
+                                            'where USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
+                                        connection.query(selectStampHistoryCount, function (err, stampHistoryCount) {
+                                            if (err) {
+                                                logger.error(TAG, "DB selectStampHistoryCount error : " + err);
+                                                res.status(400);
+                                                res.send('select user push history count error');
+                                            }else{
+                                                io.sockets.emit(userId, {sendId: shopId, stampCnt:(stampHistoryCount[0].CNT), shopData:shopData[0], userCheck:userCheckData[0]});
+                                                logger.debug(TAG, 'API papa stamp success!');
 
-                                                    res.status(200);
-                                                    res.send({resultData: 'Insert user push history success'});
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
+                                                res.status(200);
+                                                res.send({resultData: 'Insert user push history success'});
+                                            }
+                                        });
+                                    }
+                                });
                             }
                         });
                     }
