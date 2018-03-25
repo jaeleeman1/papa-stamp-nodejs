@@ -339,7 +339,7 @@ router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectShopCodeQuery = 'select SHOP_MAJOR_MINOR, SHOP_ID, SHOP_BEACON from SB_SHOP_INFO as SSI ' +
+        var selectShopCodeQuery = 'select SHOP_MAJOR_MINOR, SHOP_ID, SHOP_BEACON, SHOP_COUNT from SB_SHOP_INFO as SSI ' +
             'where SSI.SHOP_MAJOR_MINOR =' + mysql.escape(shopCode);
         connection.query(selectShopCodeQuery, function (err, shopCodeIdData) {
             if (err) {
@@ -349,7 +349,7 @@ router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
             }else{
                 logger.debug(TAG, 'Select shop code, id success : ' + JSON.stringify(shopCodeIdData));
                 res.status(200);
-                res.send({shopCode:shopCodeIdData[0].SHOP_MAJOR_MINOR, shopId:shopCodeIdData[0].SHOP_ID, shopBeacon:shopCodeIdData[0].SHOP_BEACON});
+                res.send({shopCode:shopCodeIdData[0].SHOP_MAJOR_MINOR, shopId:shopCodeIdData[0].SHOP_ID, shopBeacon:shopCodeIdData[0].SHOP_BEACON, shopCount:shopCodeIdData[0].SHOP_COUNT});
             }
             connection.release();
         });
