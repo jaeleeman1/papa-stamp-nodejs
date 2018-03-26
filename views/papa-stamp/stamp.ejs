@@ -56,6 +56,7 @@
             </div>
         </div>
         <p class="stamp-ti" id="available-coupon" onclick="moveCoupon();"></p>
+        <p class="stamp-push" id="stamp-push" onclick="stampPush();">스탬프 요청</p>
     </div>
 </div>
 
@@ -72,6 +73,29 @@
             stampActionOpenLayer('layerCardPopup', shopId);
         }
     });
+
+    function stampPush() {
+        var userId = $("#user_id").val();
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/v1/stamp/test',
+            type: 'GET',
+            headers : headers,
+            dataType: 'json',
+            success: function(data) {
+                if(data.result = 'success') {
+//                    location.reload();
+                }else {
+                    console.error('error');
+                }
+            },
+            error: function(request, status, error) {
+                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
 
     function moveCoupon() {
         if($("#available-coupon").hasClass("exist-coupon")){

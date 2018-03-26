@@ -9,6 +9,13 @@ var path = require('path');
 
 const TAG = "[STAMP INFO] ";
 
+
+//Get Stamp Shop Page
+router.get('/test', function(req, res, next) {
+    logger.info(TAG, 'test');
+
+});
+
 //Setting Socket.io
 var app = express();
 app.use(express.static(path.join(__dirname, 'public')));

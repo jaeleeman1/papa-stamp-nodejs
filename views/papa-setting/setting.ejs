@@ -494,7 +494,7 @@
         if(phoneNumber.length > 0) {
             var inputPhoneNumber = "+82"+phoneNumber.toString();
             var appVerifier = window.recaptchaVerifier;
-            firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+            firebase.auth().signInWithPhoneNumber(inputPhoneNumber, appVerifier)
                 .then(function (confirmationResult) {
                     // SMS sent. Prompt user to type the code from the message, then sign the
                     // user in with confirmationResult.confirm(code).
@@ -502,7 +502,7 @@
                     $.toast.config.width = 230;
                     $.toast('<h4>인증번호</h4>를 확인하세요.!!', { type: 'danger', duration: 3000 } );
                 }).catch(function (error) {
-                $.toast.config.width = 230;
+                $.toast.config.width = 280;
                 $.toast('<h4>로봇인증</h4>을 정상적으로 진행하세요.!!', { type: 'danger', duration: 3000 } );
                 grecaptcha.reset(window.recaptchaWidgetId);
                 // Or, if you haven't stored the widget ID:
@@ -523,10 +523,10 @@
         confirmationResult.confirm(code).then(function (result) {
             // User signed in successfully.
             $.toast('<h4>사용자 인증</h4>이 완료되었습니다.', { type: 'info', duration: 3000 } );
-            // ...
+            authComplate = true;
         }).catch(function (error) {
-            // User couldn't sign in (bad verification code?)
-            // ...
+            $.toast.config.width = 280;
+            $.toast('<h4>사용자 인증</h4>을 정상적으로 진행하세요.!!', { type: 'danger', duration: 3000 } );
         });
     }
 
@@ -579,7 +579,7 @@
                 $.toast.config.width = 225;
                 $.toast('입력한 <h4>비밀번호</h4>를 확인하세요.!!', { type: 'danger', duration: 3000 } );
             }else {
-                if(confirmNumber.length > 0) {
+                if(confirmNumber.length > 0 && authComplate) {
                     var authCheck = $("#authCheck").val();
                     if(authCheck) {
                         $("#change-userinfo-confirm").dialog({
@@ -587,7 +587,7 @@
                             modal: true,
                             title: "내 정보 수정",
                             height: 200,
-                            width: '90%',
+                            width: 360,
                             resizable:false,
                             buttons: {
                                 "예": function () {
@@ -605,7 +605,7 @@
                     }
                 }else {
                     $.toast.config.width = 225;
-                    $.toast('휴대폰 <h4>인증번호</h4>를 입력하세요.!!', { type: 'danger', duration: 3000 } );
+                    $.toast('<h4>휴대폰 인증</h4>을 진행하세요.!!', { type: 'danger', duration: 3000 } );
                 }
             }
         }else {
@@ -632,7 +632,7 @@
                 success: function(data) {
                     if(data.userEmailCheck == '1') {
                         if(data.userPwCheck == '1') {
-                            location.href = $("#url").val()+'/v1/shop/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                            location.href = $("#url").val()+'/v1/shop/main?user_id='+ data.userId +'&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
                         }else {
                             $.toast.config.width = 225;
                             $.toast('<h4>비밀번호</h4>를 확인하세요.!!', {type: 'danger', duration: 3000});

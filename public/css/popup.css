@@ -40,14 +40,31 @@
 }
 
 .layerPopup .pop_up_body .stamp-ti {
-    width: 60%;
+    width: 230px;
     opacity: 0.87;
     background-color: #777;
     color: #fff;
     font-size: 16px;
     text-align: center;
     line-height: 29px;
-    margin: 25px 70px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    padding: 12px 7px;
+    font-weight: bold;
+}
+
+.layerPopup .pop_up_body .stamp-push {
+    width: 160px;
+    opacity: 0.87;
+    background-color: #e94739;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    line-height: 29px;
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 10px;
     padding: 12px 7px;
     font-weight: bold;
