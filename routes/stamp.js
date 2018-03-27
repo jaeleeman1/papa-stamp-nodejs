@@ -84,8 +84,10 @@ router.get('/main', function(req, res, next) {
                 res.send('Select stamp shop list error');
             }else{
                 logger.debug(TAG, 'Select stamp shop list success : ' + JSON.stringify(stampShopListData));
+
                 res.status(200);
                 res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopId:shopId, stampShopListData:stampShopListData});
+
             }
             connection.release();
         });
@@ -226,8 +228,19 @@ router.get('/selectStampDate', function(req, res) {
                         res.send('Select available coupon error');
                     } else {
                         logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(availableCoupon));
-                        res.status(200);
-                        res.send({stampDateList: stampDateList, availableCoupon: availableCoupon[0]});
+                        var selectCheckStamp = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
+                            'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId) +' and DEL_YN = "N"';
+                        connection.query(selectCheckStamp, function (err, stampCount) {
+                            if (err) {
+                                logger.error(TAG, "Select stamp count error : " + err);
+                                res.status(400);
+                                res.send('Select stamp count error');
+                            } else {
+                                logger.debug(TAG, 'Select stamp count success : ' + JSON.stringify(stampCount));
+                                res.status(200);
+                                res.send({stampDateList: stampDateList, availableCoupon: availableCoupon[0], stampCount:stampCount[0].USER_STAMP});
+                            }
+                        });
                     }
                 });
             }
