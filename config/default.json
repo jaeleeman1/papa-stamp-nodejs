@@ -2,7 +2,7 @@
   "prd" : {
     "auth" : false,
     "host" : "papastamp.cgbapsrwofhr.ap-northeast-1.rds.amazonaws.com",
-    "url" : "https://whereareevent.com"
+    "url" : "https://papastamp.com"
   },
   "local" : {
     "auth" : false,

@@ -167,7 +167,7 @@
                     deleteCouponCallback(shopId, couponNum);
                 },
                 "아니오": function () {
-                    $open = 'intent://whereareevent.com/#Intent;scheme=google_test;package=com.subin.papastamp;end;';
+                    $open = 'intent://'+$("#url").val()+'/#Intent;scheme=google_test;package=com.subin.papastamp;end;';
                     $(this).dialog('close');
                 }
             }
