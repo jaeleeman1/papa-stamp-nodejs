@@ -632,6 +632,9 @@
                 success: function(data) {
                     if(data.userEmailCheck == '1') {
                         if(data.userPwCheck == '1') {
+                            if(window.Bridge) {
+                                window.Bridge.loginActivity();
+                            }
                             location.href = $("#url").val()+'/v1/shop/main?user_id='+ data.userId +'&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
                         }else {
                             $.toast.config.width = 225;
@@ -686,6 +689,9 @@
             dataType: 'json',
             success: function(data) {
                 if(data.success == 'success') {
+                    if(window.Bridge) {
+                        window.Bridge.logoutActivity();
+                    }
                     location.href='http://localhost:8080/v1/shop/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
                 }else {
                     $.toast.config.width = 225;

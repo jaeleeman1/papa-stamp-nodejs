@@ -77,6 +77,12 @@
     </figure>
 </div>
 
+<div id="shop-manager-confirm" class="dialog-confirm">
+    <figure>
+        <div style="margin-top: 15px;">매니저가 확인 중입니다. 잠시만 기다려 주세요!</div>
+    </figure>
+</div>
+
 <script type="text/javascript">
     function useCouponAndroid(shopId, couponNumber) {
         var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
@@ -173,6 +179,37 @@
             }
         });
     }
+
+    function shopManagerConfirm() {
+        $("#shop-manager-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "쿠폰 발급",
+            height: 200,
+            width: '90%',
+            resizable:false,
+            buttons: {
+                "매니저에게 재요청": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
+</script>
+
+<!--<script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>-->
+<script src="http://localhost:8060/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+    var pushUserId = $("#user_id").val();
+    /*var socket = io.connect('https://papastamp.com:8060');*/
+    var socket = io.connect('http://localhost:8060');
+    socket.on(pushUserId, function(data) {
+        if (data.type == "request-coupon") {
+            shopManagerConfirm();
+        } else if (data.type == "issued") {
+
+        }
+    });
 </script>
 
 <script type="text/javascript">

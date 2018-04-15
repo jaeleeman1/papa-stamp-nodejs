@@ -11,6 +11,10 @@ var coupon = require('./routes/coupon');
 var event = require('./routes/event');
 var setting = require('./routes/setting');
 var user = require('./routes/user');
+var notification = require('./routes/notification');
+var admin = require('./routes/admin');
+var adminStamp = require('./routes/admin-stamp');
+var adminCoupon = require('./routes/admin-coupon');
 var download = require('./routes/download');
 
 var app = express();
@@ -33,6 +37,10 @@ const couponUrl = '/v1/coupon';
 const eventUrl = '/v1/event';
 const settingUrl = '/v1/setting';
 const userURL = '/v1/user';
+const notificationURL = '/v1/notification';
+const adminURL = '/v1/admin';
+const adminStampURL = '/v1/admin-stamp';
+const adminCouponURL = '/v1/admin-coupon';
 const downloadURL = '/v1/download';
 
 app.use(shopUrl, shop);
@@ -41,6 +49,10 @@ app.use(couponUrl, coupon);
 app.use(eventUrl, event);
 app.use(settingUrl, setting);
 app.use(userURL, user);
+app.use(notificationURL, notification);
+app.use(adminURL, admin);
+app.use(adminStampURL, adminStamp);
+app.use(adminCouponURL, adminCoupon);
 app.use(downloadURL, download);
 
 // catch 404 and forward to error handler

@@ -36,7 +36,6 @@
                             설정-튜토리얼에서 스탬프 적립 방법을 확인해 보세요.
                         </h6>
                     </div>
-                </figure>
             </div>
         </div>
     </li>
@@ -65,10 +64,16 @@
     </figure>
 </div>
 
+<div id="shop-manager-confirm" class="dialog-confirm">
+    <figure>
+        <div style="margin-top: 15px;">매니저가 확인 중입니다. 잠시만 기다려 주세요!</div>
+    </figure>
+</div>
+
 <script type="text/javascript">
     $(function() {
         var shopId = $("#shop_id").val();
-        if(shopId.length) {
+        if(shopId.length > 0) {
             stampActionOpenLayer('layerCardPopup', shopId);
         }
     });
@@ -138,12 +143,27 @@
         });
     }
 
+    function shopManagerConfirm() {
+        $("#shop-manager-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "스탬프 적립",
+            height: 200,
+            width: '90%',
+            resizable:false,
+            buttons: {
+                "매니저에게 재요청": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
+
     function focusOpenLayer(showDivId, shopId, frontImg, backImg, stampImg) {
         var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
         headers["user_id"] = userId;
-        $("#shop_id").val(shopId);
 
         $.ajax({
             url: $("#url").val() + '/v1/stamp/selectStampDate',
@@ -169,9 +189,10 @@
                     '<img class="base-img" src="/images/shop-card/'+ backImg +'" alt="back">' +
                     '<div class="img-repeat-'+ shopId +'">';
 
-                var stampCount = data.stampCount;
+                var stampCount = data.stampCount % 10;
                 var stampLength = data.stampDateList.length;
-
+                console.log(stampCount);
+                console.log(stampLength);
                 if(stampCount != stampLength) {
                     $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
                 }
@@ -257,114 +278,176 @@
     }
 </script>
 
-<script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>
-<!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
+<!--<script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>-->
+<script src="http://localhost:8060/socket.io/socket.io.js"></script>
 <script type="text/javascript">
     var pushUserId = $("#user_id").val();
-    var socket = io.connect('https://papastamp.com:8060');
-    /*var socket = io.connect('http://localhost:8060');*/
-    socket.on(pushUserId, function(data){
-        var visitRateCnt = data.stampCnt % 10;
-        var shopId = data.sendId;
-        var stampNumber = data.stampNumber;
-        var delayTime = 1500;
+    /*var socket = io.connect('https://papastamp.com:8060');*/
+    var socket = io.connect('http://localhost:8060');
+    socket.on(pushUserId, function(data) {
+        var shopId = $("#shop_id").val();
+        if(shopId.length > 0) {
+            if (data.type == "request-stamp") {
+                shopManagerConfirm();
+            } else if (data.type == "update") {
+                $("#shop-manager-confirm").dialog('close');
 
-        if(data.userCheck.USER_CHECK == 0) {
-            var appendId = $('#common-template');
-            var appendData = '<ul class="my-card-list" id="card-list">' +
-                '<li class="my-card-shop" id="'+ shopId +'">'+
-                '<div class="my-container">' +
-                '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopId +'\', \''+ data.shopData.SHOP_FRONT_IMG +'\', \''+ data.shopData.SHOP_BACK_IMG +'\', \''+ data.shopData.SHOP_STAMP_IMG +'\')">' +
-                '<figure class="front">' +
-                '<img class="base-img" src="/images/shop-card/'+ data.shopData.SHOP_BACK_IMG +'" alt="back">' +
-                '<div class="img-repeat-'+ shopId +'">' +
-                '<div class="stamp-icon-'+ shopId +'" id="stamp_icon>">' +
-                '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
-                '</div>' +
-                '</div>' +
-                '</figure>' +
-                '</div>' +
-                '</div>' +
-                '</li>' +
-                '</ul>';
+                var visitRateCnt = data.stampCnt % 10;
+                var shopId = data.sendId;
+                var stampNumber = data.stampNumber;
 
-            if($("#card-list").find("li").hasClass("blank-card")) {
-                $('.blank-card').remove();
-            }
+                if (data.userCheck.USER_CHECK == 0) {
+                    var appendId = $('#common-template');
+                    var appendData = '<ul class="my-card-list" id="card-list">' +
+                        '<li class="my-card-shop" id="' + shopId + '">' +
+                        '<div class="my-container">' +
+                        '<div class="my-card" onclick="focusOpenLayer(' + '\'layerCardPopup\'' + ', \'' + shopId + '\', \'' + data.shopData.SHOP_FRONT_IMG + '\', \'' + data.shopData.SHOP_BACK_IMG + '\', \'' + data.shopData.SHOP_STAMP_IMG + '\')">' +
+                        '<figure class="front">' +
+                        '<img class="base-img" src="/images/shop-card/' + data.shopData.SHOP_BACK_IMG + '" alt="back">' +
+                        '<div class="img-repeat-' + shopId + '">' +
+                        '</div>' +
+                        '</figure>' +
+                        '</div>' +
+                        '</div>' +
+                        '</li>' +
+                        '</ul>';
 
-            appendId.append(appendData);
-        }else {
-            var appendStamp = '';
-            for(var i=0; i<stampNumber; i++) {
-                appendStamp += '<div class="stamp-icon-'+ shopId +'" id="stamp_icon">' +
-                    '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>'+
-                    '</div>';
-            }
-            $("#"+shopId).find($(".img-repeat-"+shopId)).append(appendStamp);
-        }
+                    if ($("#card-list").find("li").hasClass("blank-card")) {
+                        $('.blank-card').remove();
+                    }
+                    appendId.append(appendData);
 
-        $("#layerCardPopup").find($(".img-repeat-"+shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
-            '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon>">' +
-            '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
-            '<span class="stamp-date-'+ shopId +'">['+ data.shopData.TODAY_DT +']</span>' +
-            '</div>');
-        delayTime += 1000;
+                    viewStamp(stampNumber);
+                }else {
+                    var sumStamp = Number(visitRateCnt) + Number(stampNumber);
+                    var viewtStampNumber = stampNumber;
 
-        if(stampNumber != '1') {
-            for(var i=1; i<stampNumber; i++) {
-                setTimeout(function () {
-                    $('#stamp-action').remove();
-                    $("#layerCardPopup").find($(".img-repeat-"+shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
-                        '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon>">' +
-                        '<img class="stamp-img" src="/images/shop-stamp/'+ data.shopData.SHOP_STAMP_IMG +'"/>' +
-                        '<span class="stamp-date-'+ shopId +'">['+ data.shopData.TODAY_DT +']</span>' +
-                        '</div>');
-                }, 1000);
-                delayTime += 1000;
-            }
-        }
+                    if (sumStamp > 9) {
+                        viewtStampNumber = (Number(visitRateCnt) + Number(stampNumber)) % 10;
+                        var remainStamp = Number(stampNumber) - Number(viewtStampNumber);
 
-        $('#delete_card').click(function() {
-            deleteCard(shopId);
-        });
+                        viewStamp(remainStamp);
 
-        $('#close_card').unbind('click');
-        $('#close_card').click(function() {
-            closeCard(true);
-        });
+                        setTimeout(function () {
+                            var headers = {};
+                            headers["user_id"] = pushUserId;
+                            var dataString = {'shop_id': shopId};
+                            $.ajax({
+                                url: $("#url").val() + '/v1/coupon/couponData',
+                                type: 'PUT',
+                                headers: headers,
+                                dataType: 'json',
+                                data: dataString,
+                                success: function (data) {
+                                    $("#" + shopId).find($(".img-repeat-" + shopId)).empty();
+                                    $("#popup-card").find($(".img-repeat-" + shopId)).empty();
+                                    //Toast Success Message
+                                    $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', {type: 'success', sticky: true});
+                                    var couponText = $("#available-coupon").text().split(" ");
+                                    var couponCnt = Number(couponText[4]);
+                                    if (couponCnt < 1) {
+                                        $("#available-coupon").addClass("exist-coupon");
+                                    }
 
-        setTimeout(function() {
-            $('#stamp-action').remove();
-            if (data.stampCnt>0 && visitRateCnt==0) {
+                                    couponCnt++;
+                                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ ' + couponCnt + ' ]';
+
+                                    setTimeout(function () {
+                                        var appendStamp = '';
+                                        for (var i = 1; i <= viewtStampNumber; i++) {
+                                            appendStamp += '<div class="stamp-icon-' + shopId + '">' +
+                                                '<img class="stamp-img" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                                                '</div>';
+                                        }
+                                        $("#" + shopId).find($(".img-repeat-" + shopId)).append(appendStamp);
+                                    }, i * 1000);
+
+                                    for (var j = 0; j < viewtStampNumber; j++) {
+                                        (function(delayTime) {
+                                            setTimeout(function () {
+                                                $("#layerCardPopup").find($(".img-repeat-" + shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                                                    '<div class="stamp-popup-icon-' + shopId + '">' +
+                                                    '<img class="stamp-img" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                                                    '<span class="stamp-date-' + shopId + '">[' + data.shopData.TODAY_DT + ']</span>' +
+                                                    '</div>');
+                                                delayTime += 1000;
+                                                (function(delayTimeRemove) {
+                                                    setTimeout(function () {
+                                                        $('#stamp-action').remove();
+                                                    }, delayTimeRemove);
+                                                })(delayTime);
+                                            }, delayTime);
+                                        })(j*1000);
+                                    }
+                                },
+                                error: function (request, status, error) {
+                                    console.error("selectStampDate : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                                }
+                            });
+                        }, (Number(remainStamp)+1) * 1000);
+                    }else {
+                        viewStamp(viewtStampNumber);
+                    }
+                }
+
                 var headers = {};
                 headers["user_id"] = pushUserId;
-                var dataString = {'shop_id': shopId};
-                $.ajax({
-                    url: $("#url").val() + '/v1/coupon/couponData',
-                    type: 'PUT',
-                    headers : headers,
-                    dataType: 'json',
-                    data : dataString,
-                    success: function(data) {
-                        $("#"+shopId).find($(".img-repeat-"+shopId)).remove();
-                        $("#popup-card").find($(".img-repeat-"+shopId)).remove();
-                        //Toast Success Message
-                        $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', { type: 'success', sticky : true } );
-                        var couponText = $("#available-coupon").text().split(" ");
-                        var couponCnt = Number(couponText[4]);
-                        if(couponCnt < 1) {
-                            $("#available-coupon").addClass("exist-coupon");
-                        }
+                var dataString = {'shop_id': shopId, 'param_number': stampNumber};
 
-                        couponCnt++;
-                        document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ couponCnt +' ]';
+                $.ajax({
+                    url: $("#url").val() + '/v1/stamp/historyData',
+                    type: 'PUT',
+                    headers: headers,
+                    dataType: 'json',
+                    data: dataString,
+                    success: function (data) {
+                        if (data.result == "success") {
+                            console.log("insert history success");
+                        }
                     },
-                    error: function(request, status, error) {
-                        console.error("selectStampDate : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    error: function (request, status, error) {
+                        console.error("selectStampDate : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                     }
                 });
+
+                $('#delete_card').click(function () {
+                    deleteCard(shopId);
+                });
+
+                $('#close_card').unbind('click');
+                $('#close_card').click(function () {
+                    closeCard(true);
+                });
             }
-        }, delayTime);
+        }
+
+        function viewStamp(viewtStampNumberr) {
+            var appendStamp = '';
+            for (var i = 0; i < viewtStampNumberr; i++) {
+                appendStamp += '<div class="stamp-icon-' + shopId + '">' +
+                    '<img class="stamp-img" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                    '</div>';
+            }
+            $("#" + shopId).find($(".img-repeat-" + shopId)).append(appendStamp);
+
+            for (var j = 0; j < viewtStampNumberr; j++) {
+                (function (delayTime) {
+                    setTimeout(function () {
+                        $("#layerCardPopup").find($(".img-repeat-" + shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                            '<div class="stamp-popup-icon-' + shopId + '">' +
+                            '<img class="stamp-img" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                            '<span class="stamp-date-' + shopId + '">[' + data.shopData.TODAY_DT + ']</span>' +
+                            '</div>');
+                        delayTime += 1000;
+                        (function (delayTimeRemove) {
+                            setTimeout(function () {
+                                $('#stamp-action').remove();
+                            }, delayTimeRemove);
+                        })(delayTime);
+                    }, delayTime);
+                })(j * 1000);
+            }
+        }
     });
 </script>
 

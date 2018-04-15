@@ -180,7 +180,7 @@ router.put('/couponData', function(req, res, next) {
     getConnection(function (err, connection) {
         var updatePushHistory = 'update SB_USER_PUSH_HIS set USED_YN = "Y" ' +
             'where  SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId) + ' and USED_YN = "N" and DEL_YN = "N" ' +
-            'order by REG_DT ASC limit 10';
+            'order by REG_DT DESC limit 10';
         connection.query(updatePushHistory, function (err, UpdateHistoryData) {
             if (err) {
                 logger.error(TAG, "DB updatePushHistory error : " + err);
@@ -199,7 +199,21 @@ router.put('/couponData', function(req, res, next) {
                         res.send('Update coupon mapping error');
                     }else{
                         logger.debug(TAG, 'Update coupon mapping success',  UpdateCouponData);
-                        res.send({result: 'success'});
+                        var selectShopData = 'select (select date_format(NOW(), "%y-%m-%d")) as TODAY_DT, (select date_format(NOW(), "%Y-%m-%d %h:%i:%s")) as VISIT_DATE, ' +
+                            'SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
+                            'from SB_SHOP_INFO as SSI ' +
+                            'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
+                            'limit 1';
+                        connection.query(selectShopData, function (err, shopData) {
+                            if (err) {
+                                logger.error(TAG, "DB select shop data error : " + err);
+                                res.status(400);
+                                res.send('Select shop data error');
+                            } else {
+                                logger.debug(TAG, 'Select shop info success',  shopData);
+                                res.send({shopData:shopData[0]});
+                            }
+                        });
                     }
                 });
             }
@@ -209,7 +223,7 @@ router.put('/couponData', function(req, res, next) {
 });
 
 //Put Use Card Data
-router.put('/useCoupon', function(req, res, next) {
+/*router.put('/useCoupon', function(req, res, next) {
     logger.info(TAG, 'Update use coupon data');
 
     var userId = req.headers.user_id;
@@ -249,7 +263,7 @@ router.put('/useCoupon', function(req, res, next) {
             connection.release();
         });
     });
-});
+});*/
 
 //Put Delete Card Data
 router.put('/deleteCoupon', function(req, res, next) {

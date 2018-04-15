@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/favicon.ico" type="image/ico" />
+
+  <title>Papa-stamp Admin! | </title>
+
+  <!-- Bootstrap -->
+  <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <!-- NProgress -->
+  <link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
+  <!-- bootstrap-daterangepicker -->
+  <link href="/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+  <!-- bootstrap-datetimepicker -->
+  <link href="/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+  <!-- Ion.RangeSlider -->
+  <link href="/vendors/normalize-css/normalize.css" rel="stylesheet">
+  <link href="/vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
+  <link href="/vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+  <!-- Bootstrap Colorpicker -->
+  <link href="/vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+
+  <link href="/vendors/cropper/dist/cropper.min.css" rel="stylesheet">
+
+  <!-- Custom Theme Style -->
+  <link href="/css/custom.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
+
+
+
+
+
+</head>
+
+<form name="menuAction" method="get" style="display:none">
+  <input type="hidden" name="url" id="url" value="<%= url %>"/>
+  <input type="hidden" name="user_id" id="user_id" value=""/>
+  <input type="hidden" name="shop_id" id="shop_id" value="<%= shopId %>"/>
+</form>
+
+<body class="nav-md">
+<div class="container body">
+  <div class="main_container">
+    <div class="col-md-3 left_col">
+      <div class="left_col scroll-view">
+        <div class="navbar nav_title" style="border: 0;">
+          <a onclick="mainView();" class="site_title"><i class="fa fa-paw"></i> <span>Papastamp!</span></a>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <!-- menu profile quick info -->
+        <div class="profile clearfix">
+          <div class="profile_pic">
+            <img src="/images/shop-stamp/cafe-jass-stamp.png" alt="..." class="img-circle profile_img">
+          </div>
+          <div class="profile_info">
+            <span>Welcome,</span>
+            <h2>John Doe</h2>
+          </div>
+        </div>
+        <!-- /menu profile quick info -->
+
+        <br />
+
+        <!-- sidebar menu -->
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+          <div class="menu_section">
+            <h3>General</h3>
+            <ul class="nav side-menu">
+              <li><a onclick="stampView();"><i class="fa fa-home"></i> 스탬프</a>
+              </li>
+              <li><a><i class="fa fa-edit"></i> 쿠폰 <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                  <li><a onclick="couponView();">General Form</a></li>
+                  <li><a onclick="couponManagement();">쿠폰 관리</a></li>
+                </ul>
+              </li>
+
+              <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i>신규 기능 <span class="label label-success pull-right">Coming Soon</span></a></li>
+            </ul>
+          </div>
+
+        </div>
+        <!-- /sidebar menu -->
+
+        <!-- /menu footer buttons -->
+        <div class="sidebar-footer hidden-small">
+          <a data-toggle="tooltip" data-placement="top" title="Settings">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+          </a>
+          <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+          </a>
+          <a data-toggle="tooltip" data-placement="top" title="Lock">
+            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+          </a>
+          <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+          </a>
+        </div>
+        <!-- /menu footer buttons -->
+      </div>
+    </div>
+
+    <!-- top navigation -->
+    <div class="top_nav">
+      <div class="nav_menu">
+        <nav>
+          <div class="nav toggle" style="width:210px;">
+            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+            <span style="font-size:25px;padding-left:10px;color: darkorange;"><%= today %></span>
+          </div>
+
+          <ul class="nav navbar-nav navbar-right">
+
+            <li class="">
+              <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <img src="images/img.jpg" alt="">John Doe
+                <span class=" fa fa-angle-down"></span>
+              </a>
+              <ul class="dropdown-menu dropdown-usermenu pull-right">
+                <li><a onclick="test();">Help</a></li>
+                <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+              </ul>
+            </li>
+
+            <li role="presentation" class="dropdown">
+              <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-envelope-o"></i>
+                <span id="push-count" class="badge bg-green"></span>
+              </a>
+              <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                <!--<li>
+                  <a>
+                    <span class="image"><img src="images/img.jpg" alt="stamp Image" /></span>
+                    <span>
+                          <span>010-2618-1715</span>
+                          <span class="time">1 mins ago</span>
+                        </span>
+                    <span class="message">
+                         스탬프 적립
+                        </span>
+                  </a>
+                </li>
+
+                <li>
+                  <a>
+                    <span class="image"><img src="images/img.jpg" alt="coupon Image" /></span>
+                    <span>
+                          <span>010-3729-1715</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                    <span class="message">
+                          쿠폰 사용
+                        </span>
+                  </a>
+                </li>-->
+
+                <!--<li>
+                  <div class="text-center">
+                    <a>
+                      <strong>See All Alerts</strong>
+                      <i class="fa fa-angle-right"></i>
+                    </a>
+                  </div>
+                </li>-->
+              </ul>
+            </li>
+          </ul>
+
+        </nav>
+      </div>
+    </div>
+    <!-- /top navigation -->
+
+    <% if(view == 'main') { %>
+      <% include ../papa-admin/admin-main.ejs %>
+    <% } else if(view == 'stamp') { %>
+      <% include ../papa-admin/admin-stamp.ejs %>
+    <% } else if(view == 'coupon') { %>
+      <% include ../papa-admin/admin-coupon.ejs %>
+    <% } else if(view == 'manager') { %>
+    <% include ../papa-admin/admin-coupon-manager.ejs %>
+    <% } %>
+
+    <!-- footer content -->
+    <footer>
+      <div class="pull-right">
+        Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+      </div>
+      <div class="clearfix"></div>
+    </footer>
+    <!-- /footer content -->
+  </div>
+</div>
+
+<div id="use-coupon-confirm" class="dialog-confirm">
+  <figure>
+    <h5 class="confirm-coupon-number" id="confirm-coupon-number"></h5>
+    <h4 class="confirm-coupon-name" id="confirm-coupon-name"></h4>
+    쿠폰 사용을 시키겠습니까?
+  </figure>
+</div>
+
+<div id="push-stamp-confirm" class="dialog-confirm">
+  <figure>
+    <h5 class="confirm-user-number" id="confirm-user-number"></h5>
+    <div style="margin-top: 15px;">010-2618-1715</div>
+    <div>
+      <label style="margin-bottom: 30px;" for="terms">스탬프 적립 하시겠습니까?</label><br/>
+      <input style="margin: 10px 10px 50px 20px;" type="radio" name="paramValue" value="1" checked="checked">1</input><br/>
+      <input style="margin: 10px 10px 30px 20px;" type="radio" name="paramValue" value="2">2</input>
+      <input style="margin: 10px 10px 30px 20px;" type="radio" name="paramValue" value="3">3</input>
+      <input style="margin: 10px 10px 30px 20px;" type="radio" name="paramValue" value="4">4</input>
+      <input style="margin: 10px 10px 30px 20px;" type="radio" name="paramValue" value="5">5</input>
+    </div>
+  </figure>
+</div>
+
+
+<!-- jQuery -->
+<script src="/vendors/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/vendors/nprogress/nprogress.js"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="/vendors/moment/min/moment.min.js"></script>
+<script src="/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap-datetimepicker -->
+<script src="/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<!-- Ion.RangeSlider -->
+<script src="/vendors/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
+<!-- Bootstrap Colorpicker -->
+<script src="/vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+<!-- jquery.inputmask -->
+<script src="/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+<!-- jQuery Knob -->
+<script src="/vendors/jquery-knob/dist/jquery.knob.min.js"></script>
+<!-- Cropper -->
+<script src="/vendors/cropper/dist/cropper.min.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/js/custom.js"></script>
+
+<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+<!--<script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>-->
+<script src="http://localhost:8060/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+    var pushShopId = "SB-SHOP-00001";//$("#shop_id").val();
+    /*var socket = io.connect('https://papastamp.com:8060');*/
+    var socket = io.connect('http://localhost:8060');
+    socket.on(pushShopId, function(data){
+        if (data.type == "request-stamp") {
+            pushStamp(data.sendId);
+        }else if(data.type == "request-coupon") {
+            useCoupon(data.sendId);
+        }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        var pushCountView = document.getElementById('push-count');
+        pushCountView.innerHTML = 0;
+    });
+
+    function mainView() {
+        document.menuAction.action = '/v1/admin/signin/initPage';
+        document.menuAction.submit();
+    }
+
+    function stampView() {
+        document.menuAction.action = '/v1/admin-stamp/main';
+        document.menuAction.submit();
+    }
+
+    function couponView() {
+        document.menuAction.action = '/v1/admin-coupon/main';
+        document.menuAction.submit();
+    }
+
+    function couponManagement() {
+        document.menuAction.action = '/v1/admin-coupon/manager';
+        document.menuAction.submit();
+    }
+
+    function test() {
+        var pushCountView = document.getElementById('push-count');
+        var pushCount = pushCountView.innerHTML;
+        pushCount++;
+        pushCountView.innerHTML = pushCount;
+
+        var pushData = document.getElementById('menu1');
+        var appendData = '<li>' +
+            '<a>' +
+            '<span class="image"><img src="images/img.jpg" alt="coupon Image" /></span>' +
+            '<span>' +
+            '<span>010-3729-1715</span>' +
+            '<span class="time">3 mins ago</span>' +
+            '</span>' +
+            '<span class="message">쿠폰 사용</span>' +
+            '</a>' +
+            '</li>';
+        pushData.innerHTML += appendData;
+        useCoupon();
+    }
+
+    function pushStampCallback(sendId) {
+        var userId = sendId;
+        var shopId = $("#shop_id").val();
+        var paramNumber = $("input:radio[name=paramValue]:checked").val();
+        var dataString = {'shop_id': shopId, 'param_number': paramNumber};
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/v1/notification/update-stamp',
+            type: 'POST',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                if($('#user-data').length > 0) {
+                    var userHisData = document.getElementById('user-data');
+                    var appendData = '';
+                    var dataLength = data.stampNumber;
+                    var stampLength = document.getElementById('stamp-length');
+                    var addLength = stampLength.innerHTML.substr(0, 1);
+                    for (var i=0; i<dataLength; i++) {
+                        appendData += '<tr class="even pointer green" >';
+                        appendData += '<td class="a-center ">' +
+                            '<input type="checkbox" class="flat search_checkbox" name="table_records">' +
+                            '</td>' +
+                            '<td class=" ">'+ data.userId +'</td>' +
+                            '<td class=" ">'+ data.visitDate +'</td>' +
+                            '<td class=" ">N</td>' +
+                            '<td class=" last red"><a onclick="stampDelete(\''+ data.userId +'\', \'' + data.visitDate +'\');">삭제</a>' +
+                            '<td class=" ">N</td>' +
+                            '<td class=" last"><a href="#"><i class="fa fa-bell blue"></i></a>' +
+                            '</td>' +
+                            '</tr>';
+                        addLength++;
+                    }
+                    userHisData.innerHTML = appendData + userHisData.innerHTML;
+                    stampLength.innerHTML = addLength +' 개';
+                    $("input:radio[name=paramValue]:checked").prop("checked", false);
+                    $("input:radio[name=paramValue]:radio[value='1']").prop("checked", true);
+                }else {
+
+                }
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
+    function pushStamp(sendId) {
+        $("#push-stamp-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "파파 스탬프 적립!",
+            height: 400,
+            width: 600,
+            resizable:false,
+            buttons: {
+                "예": function () {
+                    $(this).dialog('close');
+                    pushStampCallback(sendId);
+                },
+                "아니오": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
+
+    function useCouponCallback(shopId, couponNumber) {
+        var userId = $("#user_id").val();
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/v1/coupon/useCoupon',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                document.getElementById("use-coupon-btn").className = 'delete-coupon';
+                document.getElementById("use-coupon-btn").onclick = function(){deleteCoupon();};
+                document.getElementById("use-coupon-btn").innerHTML = '삭제하기';
+                document.getElementById("use-coupon-date-btn").innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + data.usedDate +'</span>';
+                $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
+    function useCoupon() {
+        $("#use-coupon-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "쿠폰 발급",
+            height: 350,
+            width: 360,
+            resizable:false,
+            buttons: {
+                "예": function () {
+                    $(this).dialog('close');
+                    useCouponCallback();
+                },
+                "아니오": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
+
+

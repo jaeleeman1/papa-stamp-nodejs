@@ -1,0 +1,424 @@
+<form name="admin_config" id="admin_config" style="display:none">
+  <input type="hidden" name="view_date" id="view_date" value="<%= viewDate %>"/>
+  <input type="hidden" name="admin_stamp" id="admin_stamp" value="<%= viewStamp %>"/>
+</form>
+
+<!-- page content -->
+<div class="right_col" role="main">
+  <div class="row">
+    <div class="page-title">
+      <div class="title_left">
+        <h3>Tables <small>Some examples to get you started</small></h3>
+      </div>
+
+      <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top-search">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for...">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" onclick="searchStampData()">Go!</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="form-group">
+      <label class="control-label col-md-3 col-sm-3 col-xs-3">유효일자</label>
+      <div class='col-sm-4' style="width:75%;">
+        Only Date Picker
+        <div class="form-group">
+          <div class='input-group date' id='start-datepicker'>
+            <input type='text' class="form-control" />
+            <span class="input-group-addon">
+                               <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class='col-sm-4' style="width:75%;float:right;">
+        Only Date Picker
+        <div class="form-group">
+          <div class='input-group date' id='end-datepicker'>
+            <input type='text' class="form-control" />
+            <span class="input-group-addon">
+                               <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div style="float:right;margin-right:20px;">
+      <label id="delete-check">삭제 여부</label>
+      <p>ALL: <input type="radio" class="flat" name="delete" id="delete-radio" value="ALL" />
+        Y: <input type="radio" class="flat" name="delete" id="delete-radio" value="Y" />
+        N: <input type="radio" class="flat" name="delete" id="delete-radio" value="N" checked="" required />
+      </p>
+    </div>
+
+    <div style="float:right;margin-right:60px;">
+      <label>사용 여부</label>
+      <p>ALL: <input type="radio" class="flat" name="used" id="used-radio" value="ALL" />
+        Y: <input type="radio" class="flat" name="used" id="used-radio" value="Y" />
+        N: <input type="radio" class="flat" name="used" id="used-radio" value="N" checked="" required />
+      </p>
+    </div>
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2 id="stamp-list-title">금일 데이터</h2>
+          <ul class="nav navbar-right panel_toolbox">
+            <li><a onclick="location.reload();"><i class="fa fa-rotate-left"></i></a></li>
+            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Settings 1</a>
+                </li>
+                <li><a href="#">Settings 2</a>
+                </li>
+              </ul>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close"></i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+
+        <div class="x_content">
+          <div class="clearfix"></div>
+
+          <div class="tiles">
+            <div class="col-md-4 tile" style="width:15%;">
+              <span>스탬프 발급 수</span>
+              <h2 id="stamp-length"><%= shopsStampTodayData.length %> 개</h2>
+              <div style="display:none; margin-top:20px;">
+                <span>스탬프 카운트</span>
+                <h2 id="stamp-count"></h2>
+              </div>
+              <span class="sparkline22 graph" style="height: 160px;">
+                <canvas width="200" height="60" style="display: inline-block; vertical-align: top; width: 94px; height: 30px;"></canvas>
+              </span>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+              <thead>
+              <tr class="headings">
+                <th>
+                  <input type="checkbox" id="check-all" class="flat">
+                </th>
+                <th class="column-title"> 사용자 </th>
+                <th class="column-title"> 발급일자 </th>
+                <th class="column-title no-link last"> 사용유무 </th>
+                <th class="column-title"> 삭제 </th>
+                <th class="column-title no-link last"> 삭제유무 </th>
+                <th class="column-title no-link last"><span class="nobr"> 호출 </span>
+                </th>
+                <th class="bulk-actions" colspan="7">
+                  <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                </th>
+              </tr>
+              </thead>
+
+              <tbody id="user-data">
+
+              <% for (var i=0; i<shopsStampTodayData.length; i++) { %>
+              <% if(i % 2 == 0) { %>
+              <tr class="even pointer">
+                  <% } else {%>
+              <tr class="odd pointer">
+                  <% } %>
+                <td class="a-center ">
+                  <input type="checkbox" class="flat search_checkbox" name="table_records">
+                </td>
+                <td class=" "><%= shopsStampTodayData[i].USER_ID %></td>
+                <td class=" "><%= shopsStampTodayData[i].VISIT_DATE %></td>
+                <td class=" "><%= shopsStampTodayData[i].USED_YN %></td>
+                <td class="red"><a onclick="deleteStamp('<%= shopsStampTodayData[i].USER_ID %>', '<%= shopsStampTodayData[i].VISIT_DATE %>');">삭제</a>
+                <td class=" "><%= shopsStampTodayData[i].DEL_YN %></td>
+                <td class=""><a onclick="completePush('<%= shopsStampTodayData[i].USER_ID %>');"><i class="fa fa-bell blue"></i></a>
+                </td>
+              </tr>
+              <% } %>
+              </tbody>
+            </table>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="col-md-6 col-sm-6 col-xs-12" style="width:100%;">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>Line graph<small>Sessions</small></h2>
+          <ul class="nav navbar-right panel_toolbox">
+            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Settings 1</a>
+                </li>
+                <li><a href="#">Settings 2</a>
+                </li>
+              </ul>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close"></i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+          <canvas id="lineChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<div id="delete-stamp-confirm" class="dialog-confirm">
+  <figure>
+    <h5 class="confirm-user-number" id="confirm-user-number"></h5>
+    <div style="margin-top: 15px;">해당 사용자의 적립한 스탬프를 삭제 시키겠습니까?</div>
+  </figure>
+</div>
+
+<script src="/vendors/DateJS/build/date.js"></script>
+<script src="/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/vendors/Chart.js/dist/Chart.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+<script src="/js/custom.js"></script>
+<script src="/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#start-datepicker').datetimepicker({
+            format: 'DD.MM.YYYY'
+        });
+
+        $('#start-datepicker').click(function() {
+            $('.top-search .input-group').find("input").val('날짜검색!');
+        });
+
+        $('#end-datepicker').datetimepicker({
+            format: 'DD.MM.YYYY'
+        });
+
+        $('#end-datepicker').click(function() {
+            $('.top-search .input-group').find("input").val('날짜검색!');
+        });
+
+        stamp_charts();
+
+        $(document).on('click', '.search_checkbox', function() {
+            $('input[type="checkbox"]').not(this).prop("checked", false);
+            var searchValue = $('input[type="checkbox"]:checked').parent("td").next().text();
+            $('.top-search .input-group').find("input").val(searchValue);
+        });
+    });
+
+    function searchStampData() {
+        var searchData = $('.top-search .input-group').find("input").val();
+        var usedYN = $("input:radio[name=used]:checked").val();
+        var delYN = $("input:radio[name=delete]:checked").val();
+        console.log('# :', searchData);
+        console.log('# :', usedYN);
+        console.log('# :', delYN);
+        if(searchData.length > 0) {
+            if(searchData != '날짜검색!') {
+                var dataString = {'user_id': searchData, 'used_yn': usedYN, 'del_yn': delYN};
+
+                $.ajax({
+                    url: $("#url").val() + '/v1/admin-stamp/user-data',//url: $("#url").val() + '/adminStamp/userData',
+                    type: 'GET',
+                    dataType: 'json',
+                    data : dataString,
+                    success: function(data) {
+//                data.userData
+                        console.log('# :', data.userHisData);
+                        var titleData = document.getElementById('stamp-list-title');
+                        titleData.innerHTML = '사용자 데이터';
+                        var userHisData = document.getElementById('user-data');
+                        var appendData = '';
+                        var dataLength = data.userHisData.length;
+                        for (var i=0; i<dataLength; i++) {
+                            if(i % 2 == 0) {
+                                appendData += '<tr class="even pointer">';
+                            }else {
+                                appendData += '<tr class="odd pointer">';
+                            }
+                            appendData += '<td class="a-center ">' +
+                                '<input type="checkbox" class="flat search_checkbox" name="table_records">' +
+                                '</td>' +
+                                '<td class=" ">'+ data.userHisData[i].USER_ID +'</td>' +
+                                '<td class=" ">'+ data.userHisData[i].VISIT_DATE +'</td>' +
+                                '<td class=" ">'+ data.userHisData[i].USED_YN +'</td>' +
+                                '<td class=" last red"><a onclick="stampDelete(\''+ data.userHisData[i].USER_ID +'\', \'' + data.userHisData[i].VISIT_DATE +'\');">삭제</a>' +
+                                '<td class=" ">'+ data.userHisData[i].DEL_YN +'</td>' +
+                                '<td class=" last grey"><a href="#"><i class="fa fa-bell-slash"></i></a>' +
+                                '</td>' +
+                                '</tr>';
+                        }
+                        userHisData.innerHTML = appendData;
+                        var stampLength = document.getElementById('stamp-length');
+                        stampLength.innerHTML = dataLength +' 개';
+
+                        var userCount = data.userStamp;
+                        $("#stamp-count").parent().css("display", "block");
+
+                        $("#stamp-count").text(userCount + "개");
+                    },
+                    error: function(request, status, error) {
+                        console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }else {
+                var startDate = $('#start-datepicker').find("input").val();
+                var endDate = $('#end-datepicker').find("input").val();
+                var dataString = {'start_date': startDate, 'end_date': endDate, 'used_yn': usedYN, 'del_yn': delYN};
+
+                $.ajax({
+                    url: $("#url").val() + '/v1/admin-stamp/period-data',//url: $("#url").val() + '/adminStamp/userData',
+                    type: 'GET',
+                    dataType: 'json',
+                    data : dataString,
+                    success: function(data) {
+                        var titleData = document.getElementById('stamp-list-title');
+                        titleData.innerHTML = '날짜 검색 데이터';
+                        var userData = document.getElementById('user-data');
+                        var appendData = '';
+                        var dataLength = data.periodData.length;
+                        for (var i=0; i<dataLength; i++) {
+                            if(i % 2 == 0) {
+                                appendData += '<tr class="even pointer">';
+                            }else {
+                                appendData += '<tr class="odd pointer">';
+                            }
+                            appendData += '<td class="a-center ">' +
+                                '<input type="checkbox" class="flat search_checkbox" name="table_records">' +
+                                '</td>' +
+                                '<td class=" ">'+ data.periodData[i].USER_ID +'</td>' +
+                                '<td class=" ">'+ data.periodData[i].VISIT_DATE +'</td>' +
+                                '<td class=" ">'+ data.periodData[i].USED_YN +'</td>' +
+                                '<td class=" last"><a onclick="stampDelete(\''+ data.periodData[i].USER_ID +'\', \'' + data.periodData[i].VISIT_DATE +'\');">삭제</a>' +
+                                '<td class=" ">'+ data.periodData[i].DEL_YN +'</td>' +
+                                '<td class=" last"><a href="#"><i class="fa fa-bell-slash"></i></a>' +
+                                '</td>' +
+                                '</tr>';
+                        }
+                        userData.innerHTML = appendData;
+                        var stampLength = document.getElementById('stamp-length');
+                        stampLength.innerHTML = dataLength +' 개';
+
+                        $("#stamp-count").parent().css("display", "none");
+                    },
+                    error: function(request, status, error) {
+                        console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }
+        }
+    }
+
+    function deleteStampcallback(userId, visitDate) {
+        var dataString = {'user_id': userId, 'visit_date': visitDate};
+        var headers = {};
+        headers["shop_id"] = 'SB-SHOP-00001';
+
+        $.ajax({
+            url: $("#url").val() + '/v1/admin-stamp/deleteStamp',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                if(data.result = 'success') {
+                    location.reload();
+                }else {
+                    console.error('error');
+                }
+            },
+            error: function(request, status, error) {
+                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
+    function deleteStamp(userId, visitDate) {
+        $("#delete-stamp-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "스탬프 삭제",
+            height: 200,
+            width: '90%',
+            resizable:false,
+            buttons: {
+                "예": function () {
+                    $(this).dialog('close');
+                    deleteStampcallback(userId, visitDate);
+                },
+                "아니오": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
+
+    function completePush(userId) {
+        console.log("# " + userId);
+    }
+
+    function splitStr(string) {
+        var splitStr = string.split(",");
+        var returnStr = [];
+        for(var i=0; i<splitStr.length; i++) {
+            returnStr.push(splitStr[i]);
+        }
+        return returnStr;
+    }
+
+    function stamp_charts() {
+        var viewDate = $('#view_date').val();
+        var inputDate = splitStr(viewDate);
+        var viewStamp = $('#admin_stamp').val();
+        var inputStamp = splitStr(viewStamp);
+
+        if ($('#lineChart').length ){
+            var ctx = document.getElementById("lineChart");
+            var lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: inputDate,
+                    datasets: [{
+                        label: "스탬프 발급 수",
+                        backgroundColor: "rgba(3, 88, 106, 0.3)",
+                        borderColor: "rgba(3, 88, 106, 0.70)",
+                        pointBorderColor: "rgba(3, 88, 106, 0.70)",
+                        pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(151,187,205,1)",
+                        pointBorderWidth: 1,
+                        data: inputStamp
+                    }]
+                },
+            });
+        }
+    }
+</script>

@@ -1,0 +1,259 @@
+var express = require('express');
+var router = express.Router();
+var config = require('../config/service_config');
+var getConnection = require('../config/db_connection');
+var logger = require('../config/logger');
+var mysql = require('mysql');
+var request = require('request');
+
+const TAG = '[ADMIN STAMP INFO] ';
+
+/* GET stamp listing. */
+router.get('/main', function(req, res, next) {
+    var shopId = 'SB-SHOP-00002';
+
+    getConnection(function (err, connection) {
+        var shopId = 'SB-SHOP-00001';//req.query.shop_id;
+        //Grgaph daily data
+        var selectStampTotalQuery = "select count(USER_ID) as STAMP_CNT, DATE_FORMAT(UPDATE_DT, '%Y-%m-%d') AS COMPARE_DATE " +
+            "from SB_USER_PUSH_HIS where UPDATE_DT > date_add(now(),interval -10 day) " +
+            "and SHOP_ID = 'SB-SHOP-00001' and USED_YN='N' " +
+            "group by COMPARE_DATE";
+        connection.query(selectStampTotalQuery, function (err, shopStampTotalData) {
+            if (err) {
+                console.error("*** initPage select id Error : " , err);
+                res.status(400);
+                res.send('Select user push history error');
+            }else {
+                console.log('Select user push history success : ' + JSON.stringify(shopStampTotalData));
+                //Today data
+                var selectStampTodayQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_PUSH_HIS " +
+                    "where SHOP_ID = 'SB-SHOP-00001' and DEL_YN='N' and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(),'%Y-%m-%d') group by UPDATE_DT desc";
+                connection.query(selectStampTodayQuery, function (err, shopsStampTodayData) {
+                    if (err) {
+                        console.error("*** initPage select id Error : " , err);
+                        res.status(400);
+                        res.send('Select stamp shop list error');
+                    }else {
+                        console.log('Select coupon list success : ' + JSON.stringify(shopsStampTodayData));
+                        //Weekly data
+                        var selectWeeklyQuery = "select DATE_FORMAT(DATE_NAME.WEEKLY_DAY,'%Y-%m-%d') as WEEKLY_DATE, DATE_FORMAT(DATE_NAME.WEEKLY_DAY,'%m/%d') as VIEW_DATE " +
+                            "from (select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as WEEKLY_DAY " +
+                            "from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a " +
+                            "cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b " +
+                            "cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c " +
+                            "limit 10) DATE_NAME order by WEEKLY_DAY";
+                        connection.query(selectWeeklyQuery, function (err, shopWeeklyData) {
+                            if (err) {
+                                console.error("*** initPage select id Error : " , err);
+                                res.status(400);
+                                res.send('Select stamp shop list error');
+                            }else {
+                                console.log('Select weekly list success : ' + JSON.stringify(shopWeeklyData));
+                                var today;
+                                var viewDate = [];
+                                var stampDate = [];
+
+                                var tempViewStamp = [];
+
+                                var viewStamp = [];
+
+                                for(var i=0; i<shopStampTotalData.length; i++) {
+                                    stampDate.push(shopStampTotalData[i].COMPARE_DATE);
+                                    tempViewStamp.push(shopStampTotalData[i].STAMP_CNT);
+                                }
+
+                                for(var i=0; i<shopWeeklyData.length; i++) {
+                                    viewDate.push(shopWeeklyData[i].VIEW_DATE);
+                                    if(i == (shopWeeklyData.length -1)) {
+                                        today = shopWeeklyData[i].WEEKLY_DATE;
+                                    }
+
+                                    if((stampDate.indexOf(shopWeeklyData[i].WEEKLY_DATE) > -1)) {
+                                        var index = stampDate.indexOf(shopWeeklyData[i].WEEKLY_DATE);
+                                        viewStamp.push(tempViewStamp[index]);
+                                    }else {
+                                        viewStamp.push(0);
+                                    }
+                                }
+
+                                res.status(200);
+                                res.render('common/papa-admin',{view:'stamp', url:config.url, shopId:shopId, today:today, shopsStampTodayData:shopsStampTodayData, viewDate:viewDate, viewStamp:viewStamp});
+                            }
+                        });
+                    }
+                });
+            }
+            connection.release();
+        });
+    });
+});
+
+//Get User Data
+router.get('/user-data', function(req, res, next) {
+    // logger.info(TAG, 'Get shop data');
+
+    var userId = req.query.user_id;
+    var usedYn = req.query.used_yn;
+    var delYn = req.query.del_yn;
+    console.log('userId : '+userId);
+    // logger.debug(TAG, 'User id : ' + userId);
+
+    if(userId == null || userId == undefined) {
+        // logger.debug(TAG, 'Invalid user id error');
+        res.status(400);
+        res.send('Invalid user id error');
+    }
+
+    //Shop Data API
+    getConnection(function (err, connection) {
+        var selectUserHisDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_PUSH_HIS where SHOP_ID = 'SB-SHOP-00001' and USER_ID ='" +userId +"'";
+        if(usedYn != "ALL") {
+            selectUserHisDataQuery += " and USED_YN = '"+ usedYn +"'";
+        }
+        if(delYn != "ALL") {
+            selectUserHisDataQuery += " and DEL_YN = '" + delYn + "'";
+        }
+        selectUserHisDataQuery += " group by UPDATE_DT desc";
+        console.log(selectUserHisDataQuery);
+        connection.query(selectUserHisDataQuery, function (err, userHisData) {
+            if (err) {
+                console.error("Select shop data Error : ", err);
+                res.status(400);
+                res.send('Select shop data error');
+            } else {
+                var selectUserInfoDataQuery = "select USER_STAMP from SB_USER_PUSH_INFO " +
+                    "where SHOP_ID = 'SB-SHOP-00001' and USER_ID ='" +userId +"'";
+                console.log(selectUserInfoDataQuery);
+                connection.query(selectUserInfoDataQuery, function (err, userInfoData) {
+                    if (err) {
+                        console.error("Select shop data Error : ", err);
+                        res.status(400);
+                        res.send('Select shop data error');
+                    } else {
+                        res.status(200);
+                        res.send({userHisData: userHisData, userStamp: userInfoData[0].USER_STAMP});
+                    }
+                });
+            }
+            connection.release();
+        });
+    });
+});
+
+//Get User Data
+router.get('/period-data', function(req, res, next) {
+    console.log('startDate : '+startDate);
+    // logger.info(TAG, 'Get shop data');
+
+    var startDate = req.query.start_date;
+    var endDate = req.query.end_date;
+    var usedYn = req.query.used_yn;
+    var delYn = req.query.del_yn;
+    console.log('startDate : '+startDate);
+    console.log('endDate : ' +endDate);
+
+    /*    if(startDate == null || startDate == undefined &&
+     endDate == null || endDate == undefined) {
+     logger.debug(TAG, 'Invalid location parameter error');
+     res.status(400);
+     res.send('Invalid location parameter error');
+     }*/
+
+    //Shop Data API
+    getConnection(function (err, connection) {
+        var selectPeriodDataQuery;
+        var paramStartDate;
+        var paramEndDate;
+
+        if(startDate.length > 0) {
+            paramStartDate = startDate.substr(6, 4) +'-'+ startDate.substr(3, 2) +'-'+ startDate.substr(0, 2);
+            if(endDate.length > 0) {
+                paramEndDate = endDate.substr(6, 4) +'-'+ endDate.substr(3, 2) +'-'+ endDate.substr(0, 2);
+                selectPeriodDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as 'VISIT_DATE' from SB_USER_PUSH_HIS " +
+                    "where UPDATE_DT between '"+ paramStartDate +"' and DATE_FORMAT(DATE_ADD('"+ paramEndDate +"',INTERVAL +1 day),'%Y-%m-%d') and SHOP_ID = 'SB-SHOP-00001'";
+            }else {
+                selectPeriodDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as 'VISIT_DATE' from SB_USER_PUSH_HIS " +
+                    "where UPDATE_DT between '"+ paramStartDate +"' and DATE_FORMAT(DATE_ADD('"+ paramStartDate +"',INTERVAL +1 day),'%Y-%m-%d') and SHOP_ID = 'SB-SHOP-00001'";
+            }
+            if(usedYn != "ALL") {
+                selectPeriodDataQuery += " and USED_YN = '"+ usedYn +"'";
+            }
+            if(delYn != "ALL") {
+                selectPeriodDataQuery += " and DEL_YN = '" + delYn + "'";
+            }
+            selectPeriodDataQuery += "group by VISIT_DATE";
+        }else {
+            if(endDate.length > 0) {
+                paramEndDate = endDate.substr(6, 4) +'-'+ endDate.substr(3, 2) +'-'+ endDate.substr(0, 2);
+                selectPeriodDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as 'VISIT_DATE' from SB_USER_PUSH_HIS " +
+                    "where UPDATE_DT between '"+ paramEndDate +"' and DATE_FORMAT(DATE_ADD('"+ paramEndDate +"',INTERVAL +1 day),'%Y-%m-%d') and SHOP_ID = 'SB-SHOP-00001'";
+            }else {
+                selectPeriodDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d') as VIEW_DATE, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_PUSH_HIS " +
+                    "where SHOP_ID = 'SB-SHOP-00001' and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(),'%Y-%m-%d')";
+            }
+            if(usedYn != "ALL") {
+                selectPeriodDataQuery += " and USED_YN = '"+ usedYn +"'";
+            }
+            if(delYn != "ALL") {
+                selectPeriodDataQuery += " and DEL_YN = '" + delYn + "'";
+            }
+            selectPeriodDataQuery += "group by VISIT_DATE";
+        }
+
+        console.log(selectPeriodDataQuery);
+        connection.query(selectPeriodDataQuery, function (err, periodData) {
+            if (err) {
+                console.error("Select shop data Error : ", err);
+                res.status(400);
+                res.send('Select shop data error');
+            } else {
+                console.log('Select shop data success : ' + JSON.stringify(periodData));
+                res.status(200);
+                res.send({periodData: periodData});
+            }
+            connection.release();
+        });
+    });
+});
+
+//Put Card Data
+router.put('/deleteStamp', function(req, res, next) {
+    console.log('Delete stamp data');
+
+    var shopId = 'SB-SHOP-00001';
+    // var shopId = req.headers.shop_id;
+    var userId = req.body.user_id;
+    var visitDate = req.body.visit_date;
+
+    console.log('User id : ' + userId);
+    console.log('Shop id : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        console.log('Invalid id parameter error');
+        res.status(400);
+        res.send('Invalid id parameter error');
+    }
+
+    //Card Data API
+    getConnection(function (err, connection) {
+        var deletePushInfo = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" ' +
+            /*'where SHOP_ID = ' + mysql.escape(shopId)+' and USER_ID = ' +mysql.escape(userId)+' and UPDATE_DT = ' +mysql.escape(visitDate);*/
+            'where SHOP_ID = "' + shopId + '" and USER_ID = "' + userId + '" and DATE_FORMAT(UPDATE_DT,"%Y-%m-%d %h:%i:%s") = "' + visitDate +'"';
+        console.log(deletePushInfo);
+        connection.query(deletePushInfo, function (err, DeletePushInfoData) {
+            if (err) {
+                console.error("DB deletePushInfo error : " + err);
+                res.status(400);
+                res.send('Delete push info error');
+            }else{
+                console.log('Delete push info success');
+                res.send({result: 'success'});
+            }
+            connection.release();
+        });
+    });
+});
+
+module.exports = router;

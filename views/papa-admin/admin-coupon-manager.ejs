@@ -1,0 +1,439 @@
+<!-- page content -->
+<div class="right_col" role="main">
+  <div class="row">
+    <div class="page-title">
+      <div class="title_left">
+        <h3>Tables <small>Some examples to get you started</small></h3>
+      </div>
+
+      <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for...">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" onclick="searchValue()">Go!</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+      <div class="col-md-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Input Mask</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Settings 1</a>
+                  </li>
+                  <li><a href="#">Settings 2</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <br />
+            <form class="form-horizontal form-label-left">
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-3">쿠폰 갯수</label>
+                <div class="col-md-9 col-sm-9 col-xs-9" id="coupon-count">
+                  <select class="form-control">
+                    <option>갯수 선택</option>
+                    <option>3</option>
+                    <option>50</option>
+                    <option>100</option>
+                    <option>150</option>
+                    <option>200</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-3">쿠폰 넘버</label>
+                <div class="col-md-9 col-sm-9 col-xs-9" id="coupon-count">
+                  <div class="generator">
+                    <textarea class="codes" id="coupon-number"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-3">쿠폰 이름</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                  <input type="text" class="form-control" id="coupon-name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-3">쿠폰 가격</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                  <input type="text" class="form-control" id="coupon-price" required="required" data-inputmask="'mask': '9,900 원'">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-3">유효일자</label>
+                <div class='col-sm-4' style="width:75%;">
+                  Only Date Picker
+                  <div class="form-group">
+                    <div class='input-group date' id='start-datepicker'>
+                      <input type='text' class="form-control" />
+                      <span class="input-group-addon">
+                               <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class='col-sm-4' style="width:75%;float:right;">
+                  Only Date Picker
+                  <div class="form-group">
+                    <div class='input-group date' id='end-datepicker'>
+                      <input type='text' class="form-control" />
+                      <span class="input-group-addon">
+                               <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                  <button type="reset" class="btn btn-primary" onclick="createCoupon();">등록</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <% var couponUsedLength = couponUsedListData.length; %>
+      <% var couponIssuedLength = couponIssuedListData.length; %>
+      <% var couponTotal = couponUsedLength + couponIssuedLength; %>
+      <% var couponIssued = 0; %>
+      <% var couponUsed = 0; %>
+      <% var couponUnused = 0; %>
+
+      <% for (var i=0; i<couponUsedLength; i++) { %>
+        <% if(couponUsedListData[i].USED_YN == 'Y') { %>
+          <% couponUsed++; %>
+        <% } else { %>
+          <% couponUnused++; %>
+        <% } %>
+      <% } %>
+
+      <% for (var i=0; i<couponIssuedLength; i++) { %>
+        <% couponIssued++; %>
+      <% } %>
+
+      <div class="row top_tiles">
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+          <div class="tile-stats">
+            <div class="count"><%= couponTotal %></div>
+            <h3>전체 발급 갯수</h3>
+          </div>
+        </div>
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+          <div class="tile-stats">
+            <div class="count"><%= couponIssued %></div>
+            <h3>쿠폰 발급 갯수</h3>
+          </div>
+        </div>
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+          <div class="tile-stats">
+            <div class="count"><%= couponUsed %></div>
+            <h3>쿠폰 사용 갯수</h3>
+          </div>
+        </div>
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+          <div class="tile-stats">
+            <div class="count"><%= couponUnused %></div>
+            <h3>쿠폰 미사용 갯수</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12 col-xs-12" style="width:100%;">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Stripped table <small>Stripped table subtitle</small></h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Settings 1</a>
+                  </li>
+                  <li><a href="#">Settings 2</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th>Num</th>
+                <th>Name</th>
+                <th>쿠폰 번호</th>
+                <th>사용유무</th>
+                <th>발급날짜</th>
+                <th>사용날짜</th>
+              </tr>
+              </thead>
+              <tbody>
+
+              <% for (var i=0; i<couponUsedLength; i++) { %>
+                <% if(couponUsedListData[i].USED_YN == 'Y') { %>
+                <tr class="red">
+                <% } else { %>
+                <tr>
+                <% } %>
+                  <th scope="row"><%= i+1 %></th>
+                  <td><%= couponUsedListData[i].USER_ID %></td>
+                  <td><%= couponUsedListData[i].COUPON_NUMBER %></td>
+                  <td><%= couponUsedListData[i].USED_YN %></td>
+                  <td><%= couponUsedListData[i].ISSUED_DATE %></td>
+                  <td><%= couponUsedListData[i].USED_DATE %></td>
+                </tr>
+              <% } %>
+
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-6 col-sm-12 col-xs-12" style="width:100%;">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Stripped table <small>Stripped table subtitle</small></h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Settings 1</a>
+                  </li>
+                  <li><a href="#">Settings 2</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th>Num</th>
+                <th>쿠폰 번호</th>
+                <th>쿠폰 이름</th>
+                <th>쿠폰 가격</th>
+                <th>유효 기간</th>
+              </tr>
+              </thead>
+              <tbody>
+
+              <% for (var i=0; i<couponIssuedLength; i++) { %>
+              <tr class="blue">
+                <th scope="row"><%= i+1 %></th>
+                <td><%= couponIssuedListData[i].COUPON_NUMBER %></td>
+                <td><%= couponIssuedListData[i].COUPON_NAME %></td>
+                <td><%= couponIssuedListData[i].COUPON_PRICE %></td>
+                <td><%= couponIssuedListData[i].EXPIRATION_DT %></td>
+              </tr>
+              <% } %>
+
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<script src="/vendors/jquery/dist/jquery.min.js"></script>
+<script>
+    var generated = [],
+        possible  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    $(document).ready(function() {
+        $('#start-datepicker').datetimepicker({
+            format: 'DD.MM.YYYY'
+        });
+
+        $('#end-datepicker').datetimepicker({
+            format: 'DD.MM.YYYY'
+        });
+
+        $('input[type="checkbox"]').bind('click',function() {
+            $('input[type="checkbox"]').not(this).prop("checked", false);
+            var searchValue = $('input[type="checkbox"]:checked').parent("td").next().text();
+            $('.input-group').find("input").val(searchValue);
+        });
+
+        $("#coupon-count").on("click", function(e) {
+            var couponCount = $('#coupon-count').find('select').val(),
+                len = 13;
+            if(couponCount != "갯수 선택"){
+                generateCodes(couponCount, len);
+            }
+        });
+    });
+
+    function generateCodes(number, length) {
+        for ( var i=0; i < number; i++ ) {
+            generateCode(length);
+        }
+        $("textarea").val(generated.join("\n"));
+        $(".generator").addClass("generated");
+    }
+
+    function generateCode(length) {
+        var text = "";
+
+        for ( var i=0; i < length; i++ ) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        if ( generated.indexOf(text) == -1 ) {
+            generated.push(text);
+        }else {
+            generateCode();
+        }
+    }
+
+    function createCoupon() {
+        var couponCount = $('#coupon-count').find('select').val();
+        var couponNumber = $('#coupon-number').val();
+        var couponName = $('#coupon-name').val();
+        var couponPrice = $('#coupon-price').val();
+        var startDate = $('#start-datepicker').find("input").val();
+        var endDate = $('#end-datepicker').find("input").val();
+        var dataString = {'coupon_count': couponCount, 'coupon_number': couponNumber, 'coupon_name': couponName, 'coupon_price': couponPrice, 'start_date': startDate, 'end_date': endDate};
+        console.log(couponPrice);
+        if(couponCount != "갯수 선택" && couponName.length >0 && couponNumber.length >0 && startDate.length >0 && endDate.length >0) {
+            $.ajax({
+                url: 'http://localhost:8080/adminCoupon/createCoupon',//url: $("#url").val() + '/adminCoupon/userData',
+                type: 'POST',
+                dataType: 'json',
+                data : dataString,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(request, status, error) {
+                    console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
+        }
+    }
+
+    function searchValue() {
+        var userId = $('.input-group').find("input").val();
+        var dataString = {'user_id': userId};
+
+        $.ajax({
+            url: 'http://localhost:8080/adminCoupon/userData',//url: $("#url").val() + '/adminCoupon/userData',
+            type: 'GET',
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+//                data.userData
+                var userData = document.getElementById('user-data');
+                var appendData = '';
+                var dataLength = data.userData.length;
+                for (var i=0; i<dataLength; i++) {
+                    if(i % 2 == 0) {
+                        appendData += '<tr class="even pointer">';
+                    }else {
+                        appendData += '<tr class="odd pointer">';
+                    }
+                    appendData += '<td class="a-center ">' +
+                        '<input type="checkbox" class="flat" name="table_records">' +
+                        '</td>' +
+                        '<td class=" ">'+ data.userData[i].USER_ID +'</td>' +
+                        '<td class=" ">'+ data.userData[i].COUPON_NUMBER +'</td>' +
+                        '<td class=" ">'+ data.userData[i].VISIT_DATE +'</td>' +
+                        '<td class=" ">'+ data.userData[i].USED_YN +'</td>' +
+                        '<td class=" last"><a href="#">삭제</a>' +
+                        '</td>' +
+                        '</tr>';
+                }
+                userData.innerHTML = appendData;
+                var couponLength = document.getElementById('coupon-length');
+                couponLength.innerHTML = dataLength +' 개';
+            },
+            error: function(request, status, error) {
+                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
+    function splitStr(string) {
+        console.log("##", string);
+        var splitStr = string.split(",");
+        var returnStr = [];
+        for(var i=0; i<splitStr.length; i++) {
+            returnStr.push(splitStr[i]);
+        }
+        return returnStr;
+    }
+
+    function stamp_charts() {
+        var viewDate = $('#admin_date').val();
+        var inputDate = splitStr(viewDate);
+        var viewCoupon = $('#admin_coupon').val();
+        var inputStamp = splitStr(viewCoupon);
+
+        if ($('#lineChart').length ){
+            var ctx = document.getElementById("lineChart");
+            var lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: inputDate,
+                    datasets: [{
+                        label: "쿠폰 발급 수",
+                        backgroundColor: "rgba(233, 71, 57, 0.3)",
+                        borderColor: "rgba(233, 71, 57, 0.70)",
+                        pointBorderColor: "rgba(233, 71, 57, 0.70)",
+                        pointBackgroundColor: "rgba(233, 71, 57, 0.70)",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(151,187,205,1)",
+                        pointBorderWidth: 1,
+                        data: inputStamp
+                    }]
+                },
+            });
+        }
+    }
+</script>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Gentelella Alela! | </title>
+
+  <!-- Bootstrap -->
+  <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <!-- NProgress -->
+  <link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
+  <!-- Animate.css -->
+  <link href="/vendors/animate.css/animate.min.css" rel="stylesheet">
+
+  <!-- Custom Theme Style -->
+  <link href="/css/custom.min.css" rel="stylesheet">
+
+  <script type ="text/javascript" src="/js/jquery-2.2.3.min.js"></script>
+</head>
+
+<form action="/" method="get" style="display:none" name="list_setting" id="list_setting">
+  <input type="hidden" name="url" id="url" value="<%= url %>"/>
+</form>
+
+<form action="signin/initPage" method="get" style="display:none" name="sendform" id="sendform">
+  <input type="hidden" name="shop_id" id="shop_id" value=""/>
+</form>
+
+<body class="login">
+<div>
+  <a class="hiddenanchor" id="signup"></a>
+  <a class="hiddenanchor" id="signin"></a>
+
+  <div class="login_wrapper">
+    <div class="animate form login_form">
+      <section class="login_content">
+        <form>
+          <h1>Admin Portal Login</h1>
+          <!--<form action="/login/initPage" method="post" id="sendform" class="form-inline">-->
+            <div>
+              <input type="text" class="form-control" placeholder="Username" required="" id="loginId"/>
+            </div>
+            <div>
+              <input type="password" class="form-control" placeholder="Password" required="" id="loginPassword"/>
+            </div>
+            <div>
+            <a class="btn btn-default submit" id="btn_send">Log in</a>
+            <a class="reset_pass" href="#">Lost your password?</a>
+          </div>
+
+          <div class="clearfix"></div>
+
+          <div class="separator">
+            <p class="change_link">New to site?
+              <a href="#signup" class="to_register"> Create Account </a>
+            </p>
+
+            <div class="clearfix"></div>
+            <br />
+
+            <div>
+              <h1><i class="fa fa-paw"></i> Papa-stamp Admin!</h1>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <div id="register" class="animate form registration_form">
+      <section class="login_content">
+        <form>
+          <h1>Create Account</h1>
+          <div>
+            <input type="text" class="form-control" placeholder="Username" required="" />
+          </div>
+          <div>
+            <input type="email" class="form-control" placeholder="Email" required="" />
+          </div>
+          <div>
+            <input type="password" class="form-control" placeholder="Password" required="" />
+          </div>
+          <div>
+            <a class="btn btn-default submit" href="index.html">Submit</a>
+          </div>
+
+          <div class="clearfix"></div>
+
+          <div class="separator">
+            <p class="change_link">Already a member ?
+              <a href="#signin" class="to_register"> Log in </a>
+            </p>
+
+            <div class="clearfix"></div>
+            <br />
+
+            <div>
+              <h1><i class="fa fa-paw"></i> Papa-stamp Admin!</h1>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+<script type ="text/javascript">
+    $(function() {
+        $('#btn_send').on('click',
+            function() {
+                if ($('#loginId').val() == "") {
+                    alert('ID 를 입력하세요!');
+                    $('#loginId').focus();
+                    return;
+                }
+
+                if ($('#loginPassword').val() == "") {
+                    alert('Password 를 입력하세요!');
+                    $('#loginPassword').focus();
+                    return;
+                }
+
+                var loginInfo = '{"login_id":"' + $('#loginId').val() + '", "login_password":"' + $('#loginPassword').val() + '"}';
+                $.ajax({
+                    url: $("#url").val()+'/v1/admin/signin/userCheck',
+                    type: 'GET',
+                    traditional:true,
+                    data: JSON.parse(loginInfo),
+                    success: function(data) {;
+//                          console.log('a' + data.loginIdCheck);
+//                          console.log('b' + data.loginPwCheck);
+                        if(data.loginIdCheck == '1' && data.loginPwCheck == '1'){
+                            $('#shop_id').val(data.shopId);
+                            $('#sendform').submit(); // 전송
+                        }else {
+                            if(data.loginIdCheck == '0') {
+                                alert('올바른 ID 를 입력하세요!');
+                            }else if(data.loginPwCheck == '0') {
+                                alert('올바른 Password 를 입력하세요!');
+                            }
+                        }
+                    },
+                    error: function(request, status, error) {
+                        console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        console.log('Error occured');
+                    }
+                });
+            });
+    });
+</script>
+<script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAn_RTcg2y4ek16TUM-R0aMjCZ_ILFUCZQ",
+        authDomain: "web-quick-386a3.firebaseapp.com",
+        databaseURL: "https://web-quick-386a3.firebaseio.com",
+        projectId: "web-quick-386a3",
+        storageBucket: "web-quick-386a3.appspot.com",
+        messagingSenderId: "653680124187"
+    };
+    firebase.initializeApp(config);
+
+    const messaging = firebase.messaging();
+    messaging.requestPermission()
+        .then(function () {
+            console.log('Have permission');
+            return messaging.getToken();
+        })
+        .then(function (token) {
+            console.log(token);
+        })
+        .catch (function () {
+            console.log('Error occured');
+        })
+</script>

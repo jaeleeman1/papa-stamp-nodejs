@@ -1,0 +1,237 @@
+  <form name="admin_config" id="admin_config" style="display:none">
+    <input type="hidden" name="admin_date" id="admin_date" value="<%= viewDate %>"/>
+    <input type="hidden" name="admin_visit" id="admin_visit" value="<%= viewVisit %>"/>
+    <input type="hidden" name="admin_stamp" id="admin_stamp" value="<%= viewStamp %>"/>
+    <input type="hidden" name="admin_coupon" id="admin_coupon" value="<%= viewCoupon %>"/>
+  </form>
+
+  <% var shopVisitTotalCnt = 0; %>
+  <% var shopVisitDayCnt = 0; %>
+  <% var stampTotalCnt = 0; %>
+  <% var stampDayCnt = 0; %>
+  <% for (var i=0; i<shopTotalData.length; i++) { %>
+    <% shopVisitTotalCnt += shopTotalData[i].VISIT_CNT; %>
+    <% stampTotalCnt += shopTotalData[i].STAMP_CNT; %>
+    <% if(today == shopTotalData[i].VIEWDATE) { %>
+      <% shopVisitDayCnt = shopTotalData[i].VISIT_CNT %>
+      <% stampDayCnt = shopTotalData[i].STAMP_CNT %>
+    <% } %>
+  <% } %>
+
+  <% var couponTotalCnt = 0 %>
+  <% var couponDayCnt = 0 %>
+  <% for (var i=0; i<shopCouponData.length; i++) { %>
+    <% couponTotalCnt += shopCouponData[i].ISSUED_CNT %>
+    <% if(today == shopCouponData[i].ISSUED_DATE) { %>
+      <% couponDayCnt += 1; %>
+    <% }%>
+  <% } %>
+
+  <!-- page content -->
+  <div class="right_col" role="main">
+    <!-- top tiles -->
+    <div class="row tile_count">
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> 총 누적 방문자</span>
+        <div class="count"><%= shopVisitTotalCnt %></div>
+        <span class="count_bottom"><i class="green"> Total</i> Visit</span>
+      </div>
+    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-gavel"></i> 총 스탬프 발급</span>
+        <div class="count green"><%= stampTotalCnt %></div>
+        <span class="count_bottom"><i class="green"> Total</i> Stamp</span>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-credit-card"></i> 총 쿠폰 발급</span>
+        <div class="count"><%= couponTotalCnt %></div>
+        <span class="count_bottom"><i class="green"> Total</i> Coupon</span>
+    </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user red"></i> 오늘 방문자</span>
+        <div class="count"><%= shopVisitDayCnt %></div>
+        <span class="count_bottom"><i class="red"> Today</i> Visit</span>
+      </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-gavel red"></i> 오늘 스탬프</span>
+        <div class="count"><%= stampDayCnt %></div>
+        <span class="count_bottom"><i class="red"> Today</i> Stamp</span>
+      </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-credit-card red"></i> 오늘 쿠폰 발급</span>
+        <div class="count"><%= couponDayCnt %></div>
+        <span class="count_bottom"><i class="red"> Today</i> Coupon</span>
+      </div>
+    </div>
+    <!-- /top tiles -->
+
+    <!-- graph content -->
+    <div class="clearfix"></div>
+
+    <div class="row">
+
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Line graph<small>Sessions</small></h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Settings 1</a>
+                  </li>
+                  <li><a href="#">Settings 2</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <canvas id="lineChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Bar graph <small>Sessions</small></h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Settings 1</a>
+                  </li>
+                  <li><a href="#">Settings 2</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <canvas id="mybarChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /graph content -->
+
+  </div>
+
+  <script src="/vendors/jquery/dist/jquery.min.js"></script>
+  <script src="/vendors/Chart.js/dist/Chart.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          init_charts();
+      });
+
+      function splitStr(string) {
+          var splitStr = string.split(",");
+          var returnStr = [];
+          for(var i=0; i<splitStr.length; i++) {
+              returnStr.push(splitStr[i]);
+          }
+          return returnStr;
+      }
+
+      function init_charts() {
+          var viewDate = $('#admin_date').val();
+          var inputDate = splitStr(viewDate);
+          var viewVisit = $('#admin_visit').val();
+          var inputVisit = splitStr(viewVisit);
+          var viewStamp = $('#admin_stamp').val();
+          var inputStamp = splitStr(viewStamp);
+          var viewCoupon = $('#admin_coupon').val();
+          var inputCoupon = splitStr(viewCoupon);
+
+          if ($('#lineChart').length ){
+              var ctx = document.getElementById("lineChart");
+              var lineChart = new Chart(ctx, {
+                  type: 'line',
+                  data: {
+                      labels: inputDate,
+                      datasets: [{
+                          label: "방문자",
+                          backgroundColor: "rgba(38, 185, 154, 0.31)",
+                          borderColor: "rgba(38, 185, 154, 0.7)",
+                          pointBorderColor: "rgba(38, 185, 154, 0.7)",
+                          pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+                          pointHoverBackgroundColor: "#fff",
+                          pointHoverBorderColor: "rgba(220,220,220,1)",
+                          pointBorderWidth: 1,
+                          data: inputVisit
+                      }, {
+                          label: "스탬프",
+                          backgroundColor: "rgba(3, 88, 106, 0.3)",
+                          borderColor: "rgba(3, 88, 106, 0.70)",
+                          pointBorderColor: "rgba(3, 88, 106, 0.70)",
+                          pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+                          pointHoverBackgroundColor: "#fff",
+                          pointHoverBorderColor: "rgba(151,187,205,1)",
+                          pointBorderWidth: 1,
+                          data: inputStamp
+                      }, {
+                          label: "쿠폰",
+                          backgroundColor: "rgba(233, 71, 57, 0.3)",
+                          borderColor: "rgba(233, 71, 57, 0.70)",
+                          pointBorderColor: "rgba(233, 71, 57, 0.70)",
+                          pointBackgroundColor: "rgba(233, 71, 57, 0.70)",
+                          pointHoverBackgroundColor: "#fff",
+                          pointHoverBorderColor: "rgba(151,187,205,1)",
+                          pointBorderWidth: 1,
+                          data: inputCoupon
+                      }]
+                  },
+              });
+          }
+
+          // Bar chart
+
+          if ($('#mybarChart').length ){
+
+              var ctx = document.getElementById("mybarChart");
+              var mybarChart = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                      labels: inputDate,
+                      datasets: [{
+                          label: "방문자",
+                          backgroundColor: "#26B99A",
+                          data: inputVisit
+                      }, {
+                          label: "스탬프",
+                          backgroundColor: "#03586A",
+                          data: inputStamp
+                      }, {
+                          label: "쿠폰",
+                          backgroundColor: "#e94739",
+                          data: inputCoupon
+                      }]
+                  },
+
+                  options: {
+                      scales: {
+                          yAxes: [{
+                              ticks: {
+                                  beginAtZero: true
+                              }
+                          }]
+                      }
+                  }
+              });
+
+          }
+      }
+  </script>
+
+  </body>
+</html>
