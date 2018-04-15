@@ -10,15 +10,14 @@ const TAG = '[ADMIN STAMP INFO] ';
 
 /* GET stamp listing. */
 router.get('/main', function(req, res, next) {
-    var shopId = 'SB-SHOP-00002';
+    var shopId = req.query.shop_id;
 
     getConnection(function (err, connection) {
-        var shopId = 'SB-SHOP-00001';//req.query.shop_id;
         //Grgaph daily data
-        var selectStampTotalQuery = "select count(USER_ID) as STAMP_CNT, DATE_FORMAT(UPDATE_DT, '%Y-%m-%d') AS COMPARE_DATE " +
-            "from SB_USER_PUSH_HIS where UPDATE_DT > date_add(now(),interval -10 day) " +
-            "and SHOP_ID = 'SB-SHOP-00001' and USED_YN='N' " +
-            "group by COMPARE_DATE";
+        var selectStampTotalQuery = 'select count(USER_ID) as STAMP_CNT, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d") AS COMPARE_DATE ' +
+            'from SB_USER_PUSH_HIS where UPDATE_DT > date_add(now(),interval -10 day) ' +
+            'and SHOP_ID = ' + mysql.escape(shopId) + ' and USED_YN="N" ' +
+            'group by COMPARE_DATE';
         connection.query(selectStampTotalQuery, function (err, shopStampTotalData) {
             if (err) {
                 console.error("*** initPage select id Error : " , err);
@@ -27,8 +26,8 @@ router.get('/main', function(req, res, next) {
             }else {
                 console.log('Select user push history success : ' + JSON.stringify(shopStampTotalData));
                 //Today data
-                var selectStampTodayQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_PUSH_HIS " +
-                    "where SHOP_ID = 'SB-SHOP-00001' and DEL_YN='N' and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(),'%Y-%m-%d') group by UPDATE_DT desc";
+                var selectStampTodayQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_PUSH_HIS ' +
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and DEL_YN="N" and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") group by UPDATE_DT desc';
                 connection.query(selectStampTodayQuery, function (err, shopsStampTodayData) {
                     if (err) {
                         console.error("*** initPage select id Error : " , err);
@@ -37,12 +36,12 @@ router.get('/main', function(req, res, next) {
                     }else {
                         console.log('Select coupon list success : ' + JSON.stringify(shopsStampTodayData));
                         //Weekly data
-                        var selectWeeklyQuery = "select DATE_FORMAT(DATE_NAME.WEEKLY_DAY,'%Y-%m-%d') as WEEKLY_DATE, DATE_FORMAT(DATE_NAME.WEEKLY_DAY,'%m/%d') as VIEW_DATE " +
-                            "from (select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as WEEKLY_DAY " +
-                            "from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a " +
-                            "cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b " +
-                            "cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c " +
-                            "limit 10) DATE_NAME order by WEEKLY_DAY";
+                        var selectWeeklyQuery = 'select DATE_FORMAT(DATE_NAME.WEEKLY_DAY, "%Y-%m-%d") as WEEKLY_DATE, DATE_FORMAT(DATE_NAME.WEEKLY_DAY, "%m/%d") as VIEW_DATE ' +
+                            'from (select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as WEEKLY_DAY ' +
+                            'from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a ' +
+                            'cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b ' +
+                            'cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c ' +
+                            'limit 10) DATE_NAME order by WEEKLY_DAY';
                         connection.query(selectWeeklyQuery, function (err, shopWeeklyData) {
                             if (err) {
                                 console.error("*** initPage select id Error : " , err);
@@ -91,7 +90,10 @@ router.get('/main', function(req, res, next) {
 
 //Get User Data
 router.get('/user-data', function(req, res, next) {
-    // logger.info(TAG, 'Get shop data');
+    logger.info(TAG, 'Get shop data');
+
+    var shopId = req.headers.shop_id;
+    logger.debug(TAG, 'Shop id : ' + shopId);
 
     var userId = req.query.user_id;
     var usedYn = req.query.used_yn;
@@ -107,7 +109,8 @@ router.get('/user-data', function(req, res, next) {
 
     //Shop Data API
     getConnection(function (err, connection) {
-        var selectUserHisDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_PUSH_HIS where SHOP_ID = 'SB-SHOP-00001' and USER_ID ='" +userId +"'";
+        var selectUserHisDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_PUSH_HIS ' +
+            'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
         if(usedYn != "ALL") {
             selectUserHisDataQuery += " and USED_YN = '"+ usedYn +"'";
         }
@@ -143,8 +146,10 @@ router.get('/user-data', function(req, res, next) {
 
 //Get User Data
 router.get('/period-data', function(req, res, next) {
-    console.log('startDate : '+startDate);
-    // logger.info(TAG, 'Get shop data');
+    logger.info(TAG, 'Get period data');
+
+    var shopId = req.headers.shop_id;
+    logger.debug(TAG, 'Shop id : ' + shopId);
 
     var startDate = req.query.start_date;
     var endDate = req.query.end_date;
@@ -170,35 +175,35 @@ router.get('/period-data', function(req, res, next) {
             paramStartDate = startDate.substr(6, 4) +'-'+ startDate.substr(3, 2) +'-'+ startDate.substr(0, 2);
             if(endDate.length > 0) {
                 paramEndDate = endDate.substr(6, 4) +'-'+ endDate.substr(3, 2) +'-'+ endDate.substr(0, 2);
-                selectPeriodDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as 'VISIT_DATE' from SB_USER_PUSH_HIS " +
-                    "where UPDATE_DT between '"+ paramStartDate +"' and DATE_FORMAT(DATE_ADD('"+ paramEndDate +"',INTERVAL +1 day),'%Y-%m-%d') and SHOP_ID = 'SB-SHOP-00001'";
+                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
+                    'where UPDATE_DT between "'+ paramStartDate +'" and DATE_FORMAT(DATE_ADD("'+ paramEndDate +'",INTERVAL +1 day), "%Y-%m-%d") and SHOP_ID = ' + mysql.escape(shopId) ;
             }else {
-                selectPeriodDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as 'VISIT_DATE' from SB_USER_PUSH_HIS " +
-                    "where UPDATE_DT between '"+ paramStartDate +"' and DATE_FORMAT(DATE_ADD('"+ paramStartDate +"',INTERVAL +1 day),'%Y-%m-%d') and SHOP_ID = 'SB-SHOP-00001'";
+                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
+                    'where UPDATE_DT between "'+ paramStartDate +'" and DATE_FORMAT(DATE_ADD("'+ paramStartDate +'",INTERVAL +1 day), "%Y-%m-%d") and SHOP_ID = ' + mysql.escape(shopId) ;
             }
             if(usedYn != "ALL") {
-                selectPeriodDataQuery += " and USED_YN = '"+ usedYn +"'";
+                selectPeriodDataQuery += ' and USED_YN = "' + usedYn + '"';
             }
             if(delYn != "ALL") {
-                selectPeriodDataQuery += " and DEL_YN = '" + delYn + "'";
+                selectPeriodDataQuery += ' and DEL_YN = "' + delYn + '"';
             }
-            selectPeriodDataQuery += "group by VISIT_DATE";
+            selectPeriodDataQuery += 'group by VISIT_DATE';
         }else {
             if(endDate.length > 0) {
                 paramEndDate = endDate.substr(6, 4) +'-'+ endDate.substr(3, 2) +'-'+ endDate.substr(0, 2);
-                selectPeriodDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as 'VISIT_DATE' from SB_USER_PUSH_HIS " +
-                    "where UPDATE_DT between '"+ paramEndDate +"' and DATE_FORMAT(DATE_ADD('"+ paramEndDate +"',INTERVAL +1 day),'%Y-%m-%d') and SHOP_ID = 'SB-SHOP-00001'";
+                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
+                    'where UPDATE_DT between "'+ paramEndDate +'" and DATE_FORMAT(DATE_ADD("'+ paramEndDate +'",INTERVAL +1 day), "%Y-%m-%d") and SHOP_ID = ' + mysql.escape(shopId) ;
             }else {
-                selectPeriodDataQuery = "select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d') as VIEW_DATE, DATE_FORMAT(UPDATE_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_PUSH_HIS " +
-                    "where SHOP_ID = 'SB-SHOP-00001' and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(),'%Y-%m-%d')";
+                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d") as "VIEW_DATE", DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d"")';
             }
             if(usedYn != "ALL") {
-                selectPeriodDataQuery += " and USED_YN = '"+ usedYn +"'";
+                selectPeriodDataQuery += ' and USED_YN = "' + usedYn + '"';
             }
             if(delYn != "ALL") {
-                selectPeriodDataQuery += " and DEL_YN = '" + delYn + "'";
+                selectPeriodDataQuery += ' and DEL_YN = "' + delYn + '"';
             }
-            selectPeriodDataQuery += "group by VISIT_DATE";
+            selectPeriodDataQuery += 'group by VISIT_DATE';
         }
 
         console.log(selectPeriodDataQuery);
@@ -221,8 +226,7 @@ router.get('/period-data', function(req, res, next) {
 router.put('/deleteStamp', function(req, res, next) {
     console.log('Delete stamp data');
 
-    var shopId = 'SB-SHOP-00001';
-    // var shopId = req.headers.shop_id;
+    var shopId = req.headers.shop_id;
     var userId = req.body.user_id;
     var visitDate = req.body.visit_date;
 
@@ -239,8 +243,7 @@ router.put('/deleteStamp', function(req, res, next) {
     //Card Data API
     getConnection(function (err, connection) {
         var deletePushInfo = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" ' +
-            /*'where SHOP_ID = ' + mysql.escape(shopId)+' and USER_ID = ' +mysql.escape(userId)+' and UPDATE_DT = ' +mysql.escape(visitDate);*/
-            'where SHOP_ID = "' + shopId + '" and USER_ID = "' + userId + '" and DATE_FORMAT(UPDATE_DT,"%Y-%m-%d %h:%i:%s") = "' + visitDate +'"';
+            'where SHOP_ID = "' + mysql.escape(shopId) + '" and USER_ID = "' + mysql.escape(userId) + '" and DATE_FORMAT(UPDATE_DT,"%Y-%m-%d %h:%i:%s") = "' + visitDate +'"';
         console.log(deletePushInfo);
         connection.query(deletePushInfo, function (err, DeletePushInfoData) {
             if (err) {

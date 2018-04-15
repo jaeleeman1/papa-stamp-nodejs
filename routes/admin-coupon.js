@@ -189,10 +189,10 @@ router.get('/periodData', function(req, res, next) {
 });
 
 router.get('/manager', function(req, res, next) {
-    var shopId = 'SB-SHOP-00001';
+    var shopId = req.headers.shop_id;
+    logger.debug(TAG, 'Shop id : ' + shopId);
 
     getConnection(function (err, connection) {
-        var shopId = 'SB-SHOP-00001';//req.query.shop_id;
         var selectCouponUsedListQuery = "select USER_ID, COUPON_NUMBER, USED_YN, DATE_FORMAT(USED_DT,'%Y-%m-%d %h:%i:%s') as USED_DATE, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d %h:%i:%s') as ISSUED_DATE, DATE_FORMAT(CURRENT_DATE(),'%Y-%m-%d') as TODAY " +
             "from SB_USER_COUPON where SHOP_ID = 'SB-SHOP-00001' and MAPPING_YN = 'Y' group by COUPON_NUMBER order by ISSUED_DATE desc";
         connection.query(selectCouponUsedListQuery, function (err, couponUsedListData) {
@@ -220,7 +220,8 @@ router.get('/manager', function(req, res, next) {
 });
 
 router.post('/createCoupon', function(req, res, next) {
-    var shopId = 'SB-SHOP-00001';
+    var shopId = req.headers.shop_id;
+    logger.debug(TAG, 'Shop id : ' + shopId);
 
     var couponCount = req.body.coupon_count;
     var couponNumber = req.body.coupon_number;
@@ -250,18 +251,17 @@ router.post('/createCoupon', function(req, res, next) {
     console.log('couponCount : ' ,couponPrice);
 
     getConnection(function (err, connection) {
-        var shopId = 'SB-SHOP-00001';//req.query.shop_id;
         var inputData = '';
         var inputLength = couponNumberSplit.length;
         for(var i=0; i<inputLength; i++) {
             if(i != (inputLength - 1)) {
-                inputData += '("SB-SHOP-00001", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'"), ';
+                inputData += '("'+ shopId +'", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'"), ';
             }else {
-                inputData += '("SB-SHOP-00001", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'")';
+                inputData += '("'+ shopId +'", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'")';
             }
         }
 
-        var selectCouponListQuery = "insert into SB_USER_COUPON (SHOP_ID, COUPON_IMG, COUPON_NUMBER, COUPON_NAME, COUPON_PRICE, EXPIRATION_DT) value " + inputData;
+        var selectCouponListQuery = 'insert into SB_USER_COUPON (SHOP_ID, COUPON_IMG, COUPON_NUMBER, COUPON_NAME, COUPON_PRICE, EXPIRATION_DT) value ' + inputData;
         connection.query(selectCouponListQuery, function (err, couponListData) {
             if (err) {
                 console.error("*** initPage select id Error : " , err);

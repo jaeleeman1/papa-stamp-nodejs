@@ -241,6 +241,9 @@
         console.log('# :', searchData);
         console.log('# :', usedYN);
         console.log('# :', delYN);
+        var shopId = $("#shop_id").val();
+        var headers = {};
+        headers["shop_id"] = shopId;
         if(searchData.length > 0) {
             if(searchData != '날짜검색!') {
                 var dataString = {'user_id': searchData, 'used_yn': usedYN, 'del_yn': delYN};
@@ -248,6 +251,7 @@
                 $.ajax({
                     url: $("#url").val() + '/v1/admin-stamp/user-data',//url: $("#url").val() + '/adminStamp/userData',
                     type: 'GET',
+                    headers : headers,
                     dataType: 'json',
                     data : dataString,
                     success: function(data) {
@@ -297,6 +301,7 @@
                 $.ajax({
                     url: $("#url").val() + '/v1/admin-stamp/period-data',//url: $("#url").val() + '/adminStamp/userData',
                     type: 'GET',
+                    headers : headers,
                     dataType: 'json',
                     data : dataString,
                     success: function(data) {
