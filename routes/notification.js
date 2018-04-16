@@ -164,8 +164,11 @@ router.post('/request-coupon', function (req, res, next) {
     logger.info(TAG, 'request user coupon');
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
+    var couponNumber = req.body.param_number;
+    logger.info(TAG, 'request userId' , userId);
+    logger.info(TAG, 'request shopId', shopId);
     io.sockets.emit(userId, {type:"request-coupon", sendId: shopId});
-    io.sockets.emit(shopId, {type:"request-coupon", sendId: userId});
+    io.sockets.emit(shopId, {type:"request-coupon", sendId: userId, couponNumber:couponNumber});
     res.status(200);
     res.send({resultData: 'request success'});
 });
@@ -196,17 +199,19 @@ router.post('/issued-coupon', function (req, res, next) {
 
     //Use Coupon Data API
     getConnection(function (err, connection) {
-        var useCouponNumber = 'update SB_USER_COUPON set USED_YN = "Y" ' +
-            'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and MAPPING_YN = "Y" and COUPON_NUMBER = '+mysql.escape(couponNumber);
-        connection.query(useCouponNumber, function (err, useCouponData) {
+        var selectCouponData = 'select (select date_format(NOW(), "%Y-%m-%d %h:%i:%s")) as VISIT_DATE ' +
+            'from SB_USER_COUPON as SUC ' +
+            'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
+            'limit 1';
+        connection.query(selectCouponData, function (err, useCouponData) {
             if (err) {
                 logger.error(TAG, "DB useCoupon error : " + err);
                 res.status(400);
                 res.send('Update use coupon error');
             }else{
                 logger.debug(TAG, 'Update use coupon success');
-                io.sockets.emit(userId, {type:"issued"});
-                res.send({result: 'success'});
+                io.sockets.emit(userId, {type:"issued", sendId: shopId, couponNumber:couponNumber, useCouponData:useCouponData[0]});
+                res.send({userId: userId, visitDate: shopData[0].VISIT_DATE, couponNumber:couponNumber});
             }
             connection.release();
         });

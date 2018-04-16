@@ -207,7 +207,11 @@
         if (data.type == "request-coupon") {
             shopManagerConfirm();
         } else if (data.type == "issued") {
-
+            document.getElementById("use-coupon-btn").className = 'delete-coupon';
+            document.getElementById("use-coupon-btn").onclick = function(){deleteCoupon();};
+            document.getElementById("use-coupon-btn").innerHTML = '삭제하기';
+            document.getElementById("use-coupon-date-btn").innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + data.useCouponData.VISIT_DATE +'</span>';
+            $("#"+data.shopId+"-"+data.couponNumber).addClass("used-deemed");
         }
     });
 </script>

@@ -223,7 +223,7 @@ router.put('/couponData', function(req, res, next) {
 });
 
 //Put Use Card Data
-/*router.put('/useCoupon', function(req, res, next) {
+router.put('/useCoupon', function(req, res, next) {
     logger.info(TAG, 'Update use coupon data');
 
     var userId = req.headers.user_id;
@@ -263,7 +263,7 @@ router.put('/couponData', function(req, res, next) {
             connection.release();
         });
     });
-});*/
+});
 
 //Put Delete Card Data
 router.put('/deleteCoupon', function(req, res, next) {

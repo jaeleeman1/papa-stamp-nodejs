@@ -125,8 +125,8 @@ router.get('/user-data', function(req, res, next) {
                 res.status(400);
                 res.send('Select shop data error');
             } else {
-                var selectUserInfoDataQuery = "select USER_STAMP from SB_USER_PUSH_INFO " +
-                    "where SHOP_ID = 'SB-SHOP-00001' and USER_ID ='" +userId +"'";
+                var selectUserInfoDataQuery = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = '+ mysql.escape(userId);
                 console.log(selectUserInfoDataQuery);
                 connection.query(selectUserInfoDataQuery, function (err, userInfoData) {
                     if (err) {

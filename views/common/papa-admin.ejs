@@ -207,7 +207,10 @@
   <figure>
     <h5 class="confirm-coupon-number" id="confirm-coupon-number"></h5>
     <h4 class="confirm-coupon-name" id="confirm-coupon-name"></h4>
-    쿠폰 사용을 시키겠습니까?
+    <div style="margin-top: 15px;">010-2618-1715</div>
+    <div>
+      <label style="margin-bottom: 30px;" for="terms">쿠폰 사용을 허용 하시겠습니까?</label><br/>
+    </div>
   </figure>
 </div>
 
@@ -259,14 +262,14 @@
 <!--<script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>-->
 <script src="http://localhost:8060/socket.io/socket.io.js"></script>
 <script type="text/javascript">
-    var pushShopId = "SB-SHOP-00001";//$("#shop_id").val();
+    var pushShopId = $("#shop_id").val();
     /*var socket = io.connect('https://papastamp.com:8060');*/
     var socket = io.connect('http://localhost:8060');
     socket.on(pushShopId, function(data){
         if (data.type == "request-stamp") {
             pushStamp(data.sendId);
         }else if(data.type == "request-coupon") {
-            useCoupon(data.sendId);
+            useCoupon(data.sendId, data.couponNumber);
         }
     });
 </script>
@@ -357,8 +360,6 @@
                     stampLength.innerHTML = addLength +' 개';
                     $("input:radio[name=paramValue]:checked").prop("checked", false);
                     $("input:radio[name=paramValue]:radio[value='1']").prop("checked", true);
-                }else {
-
                 }
             },
             error: function(request, status, error) {
@@ -394,17 +395,35 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/coupon/useCoupon',
-            type: 'PUT',
+            url: $("#url").val() + '/v1/notification/issued-coupon',
+            type: 'POST',
             headers : headers,
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                document.getElementById("use-coupon-btn").className = 'delete-coupon';
-                document.getElementById("use-coupon-btn").onclick = function(){deleteCoupon();};
-                document.getElementById("use-coupon-btn").innerHTML = '삭제하기';
-                document.getElementById("use-coupon-date-btn").innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + data.usedDate +'</span>';
-                $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
+                if($('#user-data').length > 0) {
+                    var userHisData = document.getElementById('user-data');
+                    var couponLength = document.getElementById('coupon-length');
+                    var addLength = stampLength.innerHTML.substr(0, 1);
+                    addLength++;
+                    var appendData = '';
+                    appendData += '<tr class="even pointer green" >';
+                    appendData += '<td class="a-center ">' +
+                        '<input type="checkbox" class="flat search_checkbox" name="table_records">' +
+                        '</td>' +
+                        '<td class=" ">'+ data.userData[i].USER_ID +'</td>' +
+                        '<td class=" ">'+ data.userData[i].COUPON_NUMBER +'</td>' +
+                        '<td class=" ">'+ data.userData[i].VISIT_DATE +'</td>' +
+                        '<td class=" ">Y</td>' +
+                        '<td class=" ">Y</td>' +
+                        '<td class=" ">N</td>' +
+                        '<td class=" last"><a href="#">삭제</a>' +
+                        '</td>' +
+                        '</tr>';
+
+                    userHisData.innerHTML = appendData + userHisData.innerHTML;
+                    couponLength.innerHTML = addLength +' 개';
+                }
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -412,18 +431,18 @@
         });
     }
 
-    function useCoupon() {
+    function useCoupon(sendId, couponNumber) {
         $("#use-coupon-confirm").dialog({
             resizable: false,
             modal: true,
             title: "쿠폰 발급",
-            height: 350,
-            width: 360,
+            height: 300,
+            width: 600,
             resizable:false,
             buttons: {
                 "예": function () {
                     $(this).dialog('close');
-                    useCouponCallback();
+                    useCouponCallback(sendId, couponNumber);
                 },
                 "아니오": function () {
                     $(this).dialog('close');

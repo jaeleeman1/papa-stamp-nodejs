@@ -10,15 +10,14 @@ const TAG = '[ADMIN COUPON INFO] ';
 
 /* GET stamp listing. */
 router.get('/main', function(req, res, next) {
-    var shopId = 'SB-SHOP-00001';
+    var shopId = req.query.shop_id;
 
     getConnection(function (err, connection) {
-        var shopId = 'SB-SHOP-00001';//req.query.shop_id;
         //Grgaph daily data
-        var selectCouponTotalQuery = "select count(USER_ID) as ISSUED_CNT, USER_ID, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d') as COMPARE_DATE " +
-            "from SB_USER_COUPON where ISSUED_DT > date_add(now(),interval -10 day) " +
-            "and SHOP_ID = 'SB-SHOP-00001' and MAPPING_YN='Y' " +
-            "group by COMPARE_DATE";
+        var selectCouponTotalQuery = 'select count(USER_ID) as ISSUED_CNT, USER_ID, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d") as COMPARE_DATE ' +
+            'from SB_USER_COUPON where ISSUED_DT > date_add(now(),interval -10 day) ' +
+            'and SHOP_ID = ' + mysql.escape(shopId) + ' and MAPPING_YN="Y" ' +
+            'group by COMPARE_DATE';
         connection.query(selectCouponTotalQuery, function (err, shopCouponTotalData) {
             if (err) {
                 console.error("*** initPage select id Error : " , err);
@@ -27,8 +26,8 @@ router.get('/main', function(req, res, next) {
             }else {
                 console.log('Select user push history success : ' + JSON.stringify(shopCouponTotalData));
                 //Today data
-                var selectCouponTodayQuery = "select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_COUPON " +
-                    "where SHOP_ID = 'SB-SHOP-00001' and MAPPING_YN='Y' and ISSUED_DT >= DATE_FORMAT(CURRENT_DATE(),'%Y-%m-%d') group by ISSUED_DT desc";
+                var selectCouponTodayQuery = 'select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_COUPON ' +
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and MAPPING_YN="Y" and ISSUED_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") group by ISSUED_DT desc';
                 connection.query(selectCouponTodayQuery, function (err, shopsCouponTodayData) {
                     if (err) {
                         console.error("*** initPage select id Error : " , err);
@@ -36,12 +35,12 @@ router.get('/main', function(req, res, next) {
                         res.send('Select stamp shop list error');
                     }else {
                         console.log('Select coupon list success : ' + JSON.stringify(shopsCouponTodayData));
-                        var selectWeeklyQuery = "select DATE_FORMAT(DATE_NAME.WEEKLY_DAY,'%Y-%m-%d') as WEEKLY_DATE, DATE_FORMAT(DATE_NAME.WEEKLY_DAY,'%m/%d') as VIEW_DATE " +
-                            "from (select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as WEEKLY_DAY " +
-                            "from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a " +
-                            "cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b " +
-                            "cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c " +
-                            "limit 10) DATE_NAME order by WEEKLY_DAY";
+                        var selectWeeklyQuery = 'select DATE_FORMAT(DATE_NAME.WEEKLY_DAY, "%Y-%m-%d") as WEEKLY_DATE, DATE_FORMAT(DATE_NAME.WEEKLY_DAY, "%m/%d") as VIEW_DATE ' +
+                            'from (select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as WEEKLY_DAY ' +
+                            'from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a ' +
+                            'cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b ' +
+                            'cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c ' +
+                            'limit 10) DATE_NAME order by WEEKLY_DAY';
                         connection.query(selectWeeklyQuery, function (err, shopWeeklyData) {
                             if (err) {
                                 console.error("*** initPage select id Error : " , err);
@@ -77,7 +76,7 @@ router.get('/main', function(req, res, next) {
                                 }
 
                                 res.status(200);
-                                res.render('common/commonPage',{view:'coupon', shopId:shopId, today:today, shopsCouponTodayData:shopsCouponTodayData, viewDate:viewDate, viewCoupon:viewCoupon});
+                                res.render('common/papa-admin',{view:'coupon', url:config.url, shopId:shopId, today:today, shopsCouponTodayData:shopsCouponTodayData, viewDate:viewDate, viewCoupon:viewCoupon});
                             }
                         });
                     }
@@ -91,6 +90,8 @@ router.get('/main', function(req, res, next) {
 //Get User Data
 router.get('/userData', function(req, res, next) {
     // logger.info(TAG, 'Get shop data');
+    var shopId = req.headers.shop_id;
+    logger.debug(TAG, 'Shop id : ' + shopId);
 
     var userId = req.query.user_id;
     var mappingYn = req.query.mapping_yn;
@@ -106,8 +107,8 @@ router.get('/userData', function(req, res, next) {
 
     //Shop Data API
     getConnection(function (err, connection) {
-        var selectUserDataQuery = "select USER_ID, COUPON_NUMBER, MAPPING_YN, USED_YN, DEL_YN, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_COUPON " +
-            "where SHOP_ID = 'SB-SHOP-00001' and USED_YN = '"+ usedYn + "' and DEL_YN = '" + delYn + "' and MAPPING_YN = '" + mappingYn + "' and USER_ID ='" +userId +"' group by ISSUED_DT desc";
+        var selectUserDataQuery = 'select USER_ID, COUPON_NUMBER, MAPPING_YN, USED_YN, DEL_YN, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_COUPON ' +
+            'where SHOP_ID = ' + mysql.escape(shopId) + ' and USED_YN = "'+ usedYn + '" and DEL_YN = "' + delYn + '" and MAPPING_YN = "' + mappingYn + '" and USER_ID ="' +userId + '" group by ISSUED_DT desc';
         connection.query(selectUserDataQuery, function (err, userData) {
             if (err) {
                 console.error("Select shop data Error : ", err);
@@ -152,22 +153,22 @@ router.get('/periodData', function(req, res, next) {
             paramStartDate = startDate.substr(6, 4) +'-'+ startDate.substr(3, 2) +'-'+ startDate.substr(0, 2);
             if(endDate.length > 0) {
                 paramEndDate = endDate.substr(6, 4) +'-'+ endDate.substr(3, 2) +'-'+ endDate.substr(0, 2);
-                selectPeriodDataQuery = "select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d') as VIEW_DATE, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_COUPON " +
-                    "where ISSUED_DT between '"+ paramStartDate +"' and DATE_FORMAT(DATE_ADD('"+ paramEndDate +"',INTERVAL +1 day),'%Y-%m-%d') and SHOP_ID = 'SB-SHOP-00001' " +
+                selectPeriodDataQuery = 'select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d") as VIEW_DATE, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_COUPON ' +
+                    'where ISSUED_DT between "'+ paramStartDate + '" and DATE_FORMAT(DATE_ADD("' + paramEndDate + '",INTERVAL +1 day), "%Y-%m-%d") and SHOP_ID = ' + mysql.escape(shopId) +
                     "and MAPPING_YN = '"+ mappingYn + "' and USED_YN = '" + usedYn + "' and DEL_YN = '"+ delYn + "' group by VISIT_DATE";
             }else {
-                selectPeriodDataQuery = "select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d') as VIEW_DATE, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_COUPON " +
+                selectPeriodDataQuery = 'select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d") as VIEW_DATE, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_COUPON ' +
                     "where ISSUED_DT between '"+ paramStartDate +"' and DATE_FORMAT(DATE_ADD('"+ paramStartDate +"',INTERVAL +1 day),'%Y-%m-%d') and SHOP_ID = 'SB-SHOP-00001' " +
                     "and MAPPING_YN = '"+ mappingYn + "' and USED_YN = '" + usedYn + "' and DEL_YN = '"+ delYn + "' group by VISIT_DATE";
             }
         }else {
             if(endDate.length > 0) {
                 paramEndDate = endDate.substr(6, 4) +'-'+ endDate.substr(3, 2) +'-'+ endDate.substr(0, 2);
-                selectPeriodDataQuery = "select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d') as VIEW_DATE, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_COUPON " +
+                selectPeriodDataQuery = 'select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d") as VIEW_DATE, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_COUPON ' +
                     "where ISSUED_DT between '"+ paramEndDate +"' and DATE_FORMAT(DATE_ADD('"+ paramEndDate +"',INTERVAL +1 day),'%Y-%m-%d') and SHOP_ID = 'SB-SHOP-00001' " +
                     "and MAPPING_YN = '"+ mappingYn + "' and USED_YN = '" + usedYn + "' and DEL_YN = '"+ delYn + "' group by VISIT_DATE";
             }else {
-                selectPeriodDataQuery = "select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d') as VIEW_DATE, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d %h:%i:%s') as VISIT_DATE from SB_USER_COUPON " +
+                selectPeriodDataQuery = 'select USER_ID, MAPPING_YN, USED_YN, DEL_YN, COUPON_NUMBER, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d") as VIEW_DATE, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_COUPON ' +
                     "where SHOP_ID = 'SB-SHOP-00001' and MAPPING_YN='Y' and ISSUED_DT >= DATE_FORMAT(CURRENT_DATE(),'%Y-%m-%d') group by ISSUED_DT desc";
             }
         }
@@ -193,16 +194,16 @@ router.get('/manager', function(req, res, next) {
     logger.debug(TAG, 'Shop id : ' + shopId);
 
     getConnection(function (err, connection) {
-        var selectCouponUsedListQuery = "select USER_ID, COUPON_NUMBER, USED_YN, DATE_FORMAT(USED_DT,'%Y-%m-%d %h:%i:%s') as USED_DATE, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d %h:%i:%s') as ISSUED_DATE, DATE_FORMAT(CURRENT_DATE(),'%Y-%m-%d') as TODAY " +
-            "from SB_USER_COUPON where SHOP_ID = 'SB-SHOP-00001' and MAPPING_YN = 'Y' group by COUPON_NUMBER order by ISSUED_DATE desc";
+        var selectCouponUsedListQuery = 'select USER_ID, COUPON_NUMBER, USED_YN, DATE_FORMAT(USED_DT, "%Y-%m-%d %h:%i:%s") as USED_DATE, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as ISSUED_DATE, DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") as TODAY ' +
+            'from SB_USER_COUPON where SHOP_ID = ' + mysql.escape(shopId) + ' and MAPPING_YN = "Y" group by COUPON_NUMBER order by ISSUED_DATE desc';
         connection.query(selectCouponUsedListQuery, function (err, couponUsedListData) {
             if (err) {
                 console.error("*** initPage select id Error : " , err);
                 res.status(400);
                 res.send('Select user push history error');
             }else {
-                var selectCouponIssuedListQuery = "select COUPON_NUMBER, COUPON_NAME, COUPON_PRICE, EXPIRATION_DT " +
-                    "from SB_USER_COUPON where SHOP_ID = 'SB-SHOP-00001' and MAPPING_YN = 'N' group by COUPON_NUMBER order by REG_DT desc";
+                var selectCouponIssuedListQuery = 'select COUPON_NUMBER, COUPON_NAME, COUPON_PRICE, EXPIRATION_DT ' +
+                    'from SB_USER_COUPON where SHOP_ID = ' + mysql.escape(shopId) + ' and MAPPING_YN = "N" group by COUPON_NUMBER order by REG_DT desc';
                 connection.query(selectCouponIssuedListQuery, function (err, couponIssuedListData) {
                     if (err) {
                         console.error("*** initPage select id Error : ", err);
