@@ -257,8 +257,21 @@ router.put('/useCoupon', function(req, res, next) {
                 res.status(400);
                 res.send('Update use coupon error');
             }else{
-                logger.debug(TAG, 'Update use coupon success');
-                res.send({result: 'success'});
+                var selectCouponData = 'select (select date_format(NOW(), "%Y-%m-%d %h:%i:%s")) as VISIT_DATE ' +
+                    'from SB_USER_COUPON as SUC ' +
+                    'where SUC.SHOP_ID = ' + mysql.escape(shopId) + ' ' +
+                    'limit 1';
+                console.log('dd ' + selectCouponData);
+                connection.query(selectCouponData, function (err, useCouponData) {
+                    if (err) {
+                        logger.error(TAG, "DB useCoupon error : " + err);
+                        res.status(400);
+                        res.send('Update use coupon error');
+                    } else {
+                        logger.debug(TAG, 'Update use coupon success');
+                        res.send({shopId: shopId, couponNumber: couponNumber, viewDate:useCouponData[0].VISIT_DATE});
+                    }
+                });
             }
             connection.release();
         });

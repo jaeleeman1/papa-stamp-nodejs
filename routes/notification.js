@@ -201,8 +201,9 @@ router.post('/issued-coupon', function (req, res, next) {
     getConnection(function (err, connection) {
         var selectCouponData = 'select (select date_format(NOW(), "%Y-%m-%d %h:%i:%s")) as VISIT_DATE ' +
             'from SB_USER_COUPON as SUC ' +
-            'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
+            'where SUC.SHOP_ID = ' + mysql.escape(shopId) + ' ' +
             'limit 1';
+        console.log('dd ' + selectCouponData);
         connection.query(selectCouponData, function (err, useCouponData) {
             if (err) {
                 logger.error(TAG, "DB useCoupon error : " + err);
@@ -210,8 +211,8 @@ router.post('/issued-coupon', function (req, res, next) {
                 res.send('Update use coupon error');
             }else{
                 logger.debug(TAG, 'Update use coupon success');
-                io.sockets.emit(userId, {type:"issued", sendId: shopId, couponNumber:couponNumber, useCouponData:useCouponData[0]});
-                res.send({userId: userId, visitDate: shopData[0].VISIT_DATE, couponNumber:couponNumber});
+                io.sockets.emit(userId, {type:"issued-coupon", sendId: shopId, couponNumber:couponNumber, useCouponData:useCouponData[0], visitDate:useCouponData[0].VISIT_DATE});
+                res.send({userId: userId, visitDate: useCouponData[0].VISIT_DATE, couponNumber:couponNumber});
             }
             connection.release();
         });

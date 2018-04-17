@@ -205,9 +205,9 @@
 
 <div id="use-coupon-confirm" class="dialog-confirm">
   <figure>
-    <h5 class="confirm-coupon-number" id="confirm-coupon-number"></h5>
-    <h4 class="confirm-coupon-name" id="confirm-coupon-name"></h4>
-    <div style="margin-top: 15px;">010-2618-1715</div>
+    <h5 class="confirm-coupon-number" id="confirm-coupon-number">bWZ9b1vVG7Jm5</h5>
+    <h4 class="confirm-coupon-name" id="confirm-coupon-name">카푸치노</h4>
+    <div class="confirm-user-number" id="coupon-user-number" style="margin-top: 15px;">010-2618-1715</div>
     <div>
       <label style="margin-bottom: 30px;" for="terms">쿠폰 사용을 허용 하시겠습니까?</label><br/>
     </div>
@@ -216,8 +216,7 @@
 
 <div id="push-stamp-confirm" class="dialog-confirm">
   <figure>
-    <h5 class="confirm-user-number" id="confirm-user-number"></h5>
-    <div style="margin-top: 15px;">010-2618-1715</div>
+    <div class="confirm-user-number" id="stamp-user-number" style="margin-top: 15px;">010-2618-1715</div>
     <div>
       <label style="margin-bottom: 30px;" for="terms">스탬프 적립 하시겠습니까?</label><br/>
       <input style="margin: 10px 10px 50px 20px;" type="radio" name="paramValue" value="1" checked="checked">1</input><br/>
@@ -269,7 +268,7 @@
         if (data.type == "request-stamp") {
             pushStamp(data.sendId);
         }else if(data.type == "request-coupon") {
-            useCoupon(data.sendId, data.couponNumber);
+            useCoupon(data.sendId, data.couponNumber, data.visitDate);
         }
     });
 </script>
@@ -320,8 +319,7 @@
         useCoupon();
     }
 
-    function pushStampCallback(sendId) {
-        var userId = sendId;
+    function pushStampCallback(userId) {
         var shopId = $("#shop_id").val();
         var paramNumber = $("input:radio[name=paramValue]:checked").val();
         var dataString = {'shop_id': shopId, 'param_number': paramNumber};
@@ -369,6 +367,9 @@
     }
 
     function pushStamp(sendId) {
+        var convertNumber = sendId;
+        $("#stamp-user-number").val(convertNumber);
+
         $("#push-stamp-confirm").dialog({
             resizable: false,
             modal: true,
@@ -388,9 +389,9 @@
         });
     }
 
-    function useCouponCallback(shopId, couponNumber) {
-        var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
+    function useCouponCallback(userId, couponNumber, visitDate) {
+        var shopId = $("#shop_id").val();
+        var dataString = {'shop_id': shopId, 'param_number': couponNumber, 'visitDate':visitDate};
         var headers = {};
         headers["user_id"] = userId;
 
@@ -404,16 +405,16 @@
                 if($('#user-data').length > 0) {
                     var userHisData = document.getElementById('user-data');
                     var couponLength = document.getElementById('coupon-length');
-                    var addLength = stampLength.innerHTML.substr(0, 1);
+                    var addLength = couponLength.innerHTML.substr(0, 1);
                     addLength++;
                     var appendData = '';
                     appendData += '<tr class="even pointer green" >';
                     appendData += '<td class="a-center ">' +
                         '<input type="checkbox" class="flat search_checkbox" name="table_records">' +
                         '</td>' +
-                        '<td class=" ">'+ data.userData[i].USER_ID +'</td>' +
-                        '<td class=" ">'+ data.userData[i].COUPON_NUMBER +'</td>' +
-                        '<td class=" ">'+ data.userData[i].VISIT_DATE +'</td>' +
+                        '<td class=" ">'+ data.userId +'</td>' +
+                        '<td class=" ">'+ data.couponNumber +'</td>' +
+                        '<td class=" ">'+ data.visitDate +'</td>' +
                         '<td class=" ">Y</td>' +
                         '<td class=" ">Y</td>' +
                         '<td class=" ">N</td>' +
@@ -431,7 +432,10 @@
         });
     }
 
-    function useCoupon(sendId, couponNumber) {
+    function useCoupon(sendId, couponNumber, visitDate) {
+        var convertNumber = sendId;
+        $("#coupon-user-number").val(convertNumber);
+
         $("#use-coupon-confirm").dialog({
             resizable: false,
             modal: true,
@@ -442,7 +446,7 @@
             buttons: {
                 "예": function () {
                     $(this).dialog('close');
-                    useCouponCallback(sendId, couponNumber);
+                    useCouponCallback(sendId, couponNumber, visitDate);
                 },
                 "아니오": function () {
                     $(this).dialog('close');
