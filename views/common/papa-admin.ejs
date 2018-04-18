@@ -258,12 +258,12 @@
 
 <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
-<!--<script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>-->
-<script src="http://localhost:8060/socket.io/socket.io.js"></script>
+<script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>
+<!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
 <script type="text/javascript">
     var pushShopId = $("#shop_id").val();
-    /*var socket = io.connect('https://papastamp.com:8060');*/
-    var socket = io.connect('http://localhost:8060');
+    var socket = io.connect('https://papastamp.com:8060');
+    /*var socket = io.connect('http://localhost:8060');*/
     socket.on(pushShopId, function(data){
         if (data.type == "request-stamp") {
             pushStamp(data.sendId);

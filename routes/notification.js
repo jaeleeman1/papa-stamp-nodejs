@@ -167,6 +167,7 @@ router.post('/request-coupon', function (req, res, next) {
     var couponNumber = req.body.param_number;
     logger.info(TAG, 'request userId' , userId);
     logger.info(TAG, 'request shopId', shopId);
+    logger.info(TAG, 'request couponNumber', couponNumber);
     io.sockets.emit(userId, {type:"request-coupon", sendId: shopId});
     io.sockets.emit(shopId, {type:"request-coupon", sendId: userId, couponNumber:couponNumber});
     res.status(200);
