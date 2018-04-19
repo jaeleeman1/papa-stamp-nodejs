@@ -70,6 +70,12 @@
     </figure>
 </div>
 
+<div id="request-popup-confirm" class="dialog-confirm">
+    <figure>
+        <div style="margin-top: 15px;">스탬프 요청 팝업을 닫으시겠습니까?</div>
+    </figure>
+</div>
+
 <script type="text/javascript">
     $(function() {
         var shopId = $("#shop_id").val();
@@ -118,8 +124,7 @@
         if(checkToast) {
             closeLayer('layerCardPopup');
         }else {
-            $.toast.config.width = 240;
-            $.toast('<h4>스탬프</h4>가 찍혀야 닫을 수 있습니다.', { type: 'danger', duration: 3000 } );
+            requestStampConfirm();
         }
     }
 
@@ -140,6 +145,27 @@
                 "아니오": function () {
                     $(this).dialog('close');
                 }
+            }
+        });
+    }
+
+    function requestStampConfirm() {
+        $("#request-popup-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "스탬프 요청 팝업",
+            height: 200,
+            width: '90%',
+            resizable:false,
+            buttons: {
+                "예": function () {
+                    $(this).dialog('close');
+                    closeLayer('layerCardPopup');
+                },
+                "아니오": function () {
+                    $(this).dialog('close');
+                }
+
             }
         });
     }
@@ -192,8 +218,7 @@
 
                 var stampCount = data.stampCount % 10;
                 var stampLength = data.stampDateList.length;
-                console.log(stampCount);
-                console.log(stampLength);
+
                 if(stampCount != stampLength) {
                     $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
                 }
@@ -270,7 +295,7 @@
                     $("#available-coupon").removeClass("exist-coupon");
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ 0 ]';
                 }
-                openLayer(showDivId, 170, 0, browserHeight);
+                openLayer(showDivId, 115, 0, browserHeight);
             },
             error: function(request, status, error) {
                 console.error("used stamp date : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
