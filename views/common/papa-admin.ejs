@@ -259,7 +259,7 @@
 <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
 <script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>
-<!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
+<!----><script src="http://localhost:8060/socket.io/socket.io.js"></script>
 <script type="text/javascript">
     var pushShopId = $("#shop_id").val();
     var socket = io.connect('https://papastamp.com:8060');
@@ -268,6 +268,9 @@
         if (data.type == "request-stamp") {
             pushStamp(data.sendId);
         }else if(data.type == "request-coupon") {
+            console.log(data.sendId);
+            console.log(data.couponNumber);
+            console.log(data.visitDate);
             useCoupon(data.sendId, data.couponNumber, data.visitDate);
         }
     });

@@ -104,7 +104,6 @@
             success: function(data) {
                 var shopBeacon = data.shopBeacon;
                 if(window.Bridge) {
-                    $("#shop_id").val(shopId);
                     window.Bridge.callSettingsActivity(shopId, shopBeacon, couponNumber);
                 }
             },
@@ -139,6 +138,8 @@
         document.getElementById("confirm-coupon-number").innerHTML= couponNum;
         document.getElementById("confirm-shop-name").innerHTML= shopName+'<span class="confirm-sub-name">('+ shopSubName +')</span>';
         document.getElementById("confirm-coupon-name").innerHTML= couponName;
+        $("#shop_id").val(shopId);
+        console.log(shopId);
         $("#use-coupon-confirm").dialog({
             resizable: false,
             modal: true,
@@ -199,39 +200,43 @@
 </script>
 
 <script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>
-<!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
+<!----><script src="http://localhost:8060/socket.io/socket.io.js"></script>
 <script type="text/javascript">
     var pushUserId = $("#user_id").val();
     var socket = io.connect('https://papastamp.com:8060');
     /*var socket = io.connect('http://localhost:8060');*/
     socket.on(pushUserId, function(data) {
         var shopId = $("#shop_id").val();
-        if (data.type == "request-coupon") {
-            shopManagerConfirm();
-        } else if (data.type == "issued-coupon") {
-            var headers = {};
-            headers["user_id"] = pushUserId;
-            var dataString = {'shop_id': shopId, 'param_number':data.couponNumber};
-            $.ajax({
-                url: $("#url").val() + '/v1/coupon/useCoupon',
-                type: 'PUT',
-                headers: headers,
-                dataType: 'json',
-                data: dataString,
-                success: function (data) {
-                    $("#shop-manager-confirm").dialog('close');
-                    $("#use-coupon-confirm").dialog('close');
-                    document.getElementById("use-coupon-"+data.couponNumber).className = 'delete-coupon';
-                    document.getElementById("use-coupon-"+data.couponNumber).onclick = function(){deleteCoupon();};
-                    document.getElementById("use-coupon-"+data.couponNumber).innerHTML = '삭제하기';
-                    document.getElementById("use-coupon-date-"+data.couponNumber).innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + data.viewDate +'</span>';
-                    $("#"+data.shopId+"-"+data.couponNumber).addClass("used-deemed");
-                    $("#shop_id").val('');
-                },
-                error: function (request, status, error) {
-                    console.error("selectStampDate : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                }
-            });
+        if(shopId == data.sendId) {
+            if (data.type == "request-coupon") {
+                shopManagerConfirm();
+            } else if (data.type == "issued-coupon") {
+                var headers = {};
+                headers["user_id"] = pushUserId;
+                var dataString = {'shop_id': shopId, 'param_number': data.couponNumber};
+                $.ajax({
+                    url: $("#url").val() + '/v1/coupon/useCoupon',
+                    type: 'PUT',
+                    headers: headers,
+                    dataType: 'json',
+                    data: dataString,
+                    success: function (data) {
+                        $("#shop-manager-confirm").dialog('close');
+                        $("#use-coupon-confirm").dialog('close');
+                        document.getElementById("use-coupon-" + data.couponNumber).className = 'delete-coupon';
+                        document.getElementById("use-coupon-" + data.couponNumber).onclick = function () {
+                            deleteCoupon();
+                        };
+                        document.getElementById("use-coupon-" + data.couponNumber).innerHTML = '삭제하기';
+                        document.getElementById("use-coupon-date-" + data.couponNumber).innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + data.viewDate + '</span>';
+                        $("#" + data.shopId + "-" + data.couponNumber).addClass("used-deemed");
+                        $("#shop_id").val('');
+                    },
+                    error: function (request, status, error) {
+                        console.error("selectStampDate : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    }
+                });
+            }
         }
     });
 </script>

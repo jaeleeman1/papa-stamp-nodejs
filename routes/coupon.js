@@ -51,7 +51,7 @@ router.get('/main', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select coupon shop main success : ' + JSON.stringify(couponListData));
                 res.status(200);
-                res.render('common/papa-stamp', {view:'coupon', url:config.url, userId:userId, shopId:'', couponNum:'', couponListData:couponListData});
+                res.render('common/papa-stamp', {view:'coupon', url:config.url, userId:userId, shopId:'', couponNum:'', popupCheck:false, couponListData:couponListData});
             }
             connection.release();
         });
@@ -261,15 +261,14 @@ router.put('/useCoupon', function(req, res, next) {
                     'from SB_USER_COUPON as SUC ' +
                     'where SUC.SHOP_ID = ' + mysql.escape(shopId) + ' ' +
                     'limit 1';
-                console.log('dd ' + selectCouponData);
-                connection.query(selectCouponData, function (err, useCouponData) {
+                connection.query(selectCouponData, function (err, couponDateData) {
                     if (err) {
                         logger.error(TAG, "DB useCoupon error : " + err);
                         res.status(400);
                         res.send('Update use coupon error');
                     } else {
-                        logger.debug(TAG, 'Update use coupon success');
-                        res.send({shopId: shopId, couponNumber: couponNumber, viewDate:useCouponData[0].VISIT_DATE});
+                        logger.debug(TAG, 'Update use coupon success', couponDateData);
+                        res.send({shopId: shopId, couponNumber: couponNumber, viewDate:couponDateData[0].VISIT_DATE});
                     }
                 });
             }

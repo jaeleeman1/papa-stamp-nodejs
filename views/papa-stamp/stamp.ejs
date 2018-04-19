@@ -73,7 +73,8 @@
 <script type="text/javascript">
     $(function() {
         var shopId = $("#shop_id").val();
-        if(shopId.length > 0) {
+        var popupCheck = $("#popup_check").val();
+        if(popupCheck == 'true') {
             stampActionOpenLayer('layerCardPopup', shopId);
         }
     });
@@ -286,7 +287,8 @@
     /*var socket = io.connect('http://localhost:8060');*/
     socket.on(pushUserId, function(data) {
         var shopId = $("#shop_id").val();
-        if(shopId.length > 0) {
+        var popupCheck = $("#popup_check").val();
+        if(popupCheck == 'true' && shopId == data.sendId) {
             if (data.type == "request-stamp") {
                 shopManagerConfirm();
             } else if (data.type == "update") {

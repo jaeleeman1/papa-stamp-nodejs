@@ -13,9 +13,11 @@ router.get('/main', function(req, res, next) {
 
     var userId = req.query.user_id;
     var shopId = req.query.shop_id;
+    var popupCheck = req.query.popup_check;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'Popup check : ' + popupCheck);
 
     if(userId == null || userId == undefined &&
         shopId == null || shopId == undefined) {
@@ -61,7 +63,7 @@ router.get('/main', function(req, res, next) {
                 logger.debug(TAG, 'Select stamp shop list success : ' + JSON.stringify(stampShopListData));
 
                 res.status(200);
-                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopId:shopId, stampShopListData:stampShopListData});
+                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopId:shopId, popupCheck:popupCheck, stampShopListData:stampShopListData});
 
             }
             connection.release();

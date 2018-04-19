@@ -32,7 +32,7 @@ router.get('/main', function(req, res, next) {
         res.send('Invalid location parameter error');
     }
 
-    res.render('common/papa-stamp', { view: 'event', url:config.url, userId: userId, shopId:''});
+    res.render('common/papa-stamp', { view: 'event', url:config.url, userId: userId, shopId:'', popupCheck:false});
 });
 
 module.exports = router;
