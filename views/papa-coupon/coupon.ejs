@@ -139,7 +139,7 @@
         document.getElementById("confirm-shop-name").innerHTML= shopName+'<span class="confirm-sub-name">('+ shopSubName +')</span>';
         document.getElementById("confirm-coupon-name").innerHTML= couponName;
         $("#shop_id").val(shopId);
-        console.log(shopId);
+        console.log('ㅌㅌㅌㅌㅌㅌ', couponNum);
         $("#use-coupon-confirm").dialog({
             resizable: false,
             modal: true,
@@ -192,6 +192,9 @@
             resizable:false,
             buttons: {
                 "매니저에게 재요청": function () {
+                    $(this).dialog('close');
+                },
+                "닫기": function () {
                     $(this).dialog('close');
                 }
             }

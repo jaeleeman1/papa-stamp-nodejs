@@ -270,8 +270,7 @@
         }else if(data.type == "request-coupon") {
             console.log(data.sendId);
             console.log(data.couponNumber);
-            console.log(data.visitDate);
-            useCoupon(data.sendId, data.couponNumber, data.visitDate);
+            useCoupon(data.sendId, data.couponNumber);
         }
     });
 </script>
@@ -392,9 +391,9 @@
         });
     }
 
-    function useCouponCallback(userId, couponNumber, visitDate) {
+    function useCouponCallback(userId, couponNumber) {
         var shopId = $("#shop_id").val();
-        var dataString = {'shop_id': shopId, 'param_number': couponNumber, 'visitDate':visitDate};
+        var dataString = {'shop_id': shopId, 'param_number': couponNumber};
         var headers = {};
         headers["user_id"] = userId;
 
@@ -435,7 +434,7 @@
         });
     }
 
-    function useCoupon(sendId, couponNumber, visitDate) {
+    function useCoupon(sendId, couponNumber) {
         var convertNumber = sendId;
         $("#coupon-user-number").val(convertNumber);
 
@@ -449,7 +448,7 @@
             buttons: {
                 "예": function () {
                     $(this).dialog('close');
-                    useCouponCallback(sendId, couponNumber, visitDate);
+                    useCouponCallback(sendId, couponNumber);
                 },
                 "아니오": function () {
                     $(this).dialog('close');
