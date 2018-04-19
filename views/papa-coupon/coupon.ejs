@@ -216,7 +216,7 @@
             } else if (data.type == "issued-coupon") {
                 var headers = {};
                 headers["user_id"] = pushUserId;
-                var dataString = {'shop_id': shopId, 'param_number': data.couponNumber};
+                var dataString = {'shop_id': shopId, 'coupon_number': data.couponNumber};
                 $.ajax({
                     url: $("#url").val() + '/v1/coupon/useCoupon',
                     type: 'PUT',

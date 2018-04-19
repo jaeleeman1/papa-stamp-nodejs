@@ -164,7 +164,7 @@ router.post('/request-coupon', function (req, res, next) {
     logger.info(TAG, 'request user coupon');
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
-    var couponNumber = req.body.param_number;
+    var couponNumber = req.body.coupon_number;
     logger.info(TAG, 'request userId' , userId);
     logger.info(TAG, 'request shopId', shopId);
     logger.info(TAG, 'request couponNumber', couponNumber);
