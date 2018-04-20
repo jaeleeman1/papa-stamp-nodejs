@@ -36,6 +36,7 @@
                             설정-튜토리얼에서 스탬프 적립 방법을 확인해 보세요.
                         </h6>
                     </div>
+                </figure>
             </div>
         </div>
     </li>
@@ -120,6 +121,27 @@
         });
     }
 
+    function tryRequestStamp(shopId) {
+        var userId = $("#user_d").val();
+        var dataString = {'shop_id': shopId};
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/v1/notification/request-stamp',
+            type: 'POST',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                console.log(data.resultData);
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
     function closeCard(checkToast) {
         if(checkToast) {
             closeLayer('layerCardPopup');
@@ -180,6 +202,15 @@
             resizable:false,
             buttons: {
                 "매니저에게 재요청": function () {
+                    var shopId = $("#shop_id").val();
+                    tryRequestStamp(shopId);
+                    $(this).dialog('option',
+                        'buttons',
+                        { "닫기": function() {
+                            $(this).dialog('close');
+                        }});
+                },
+                "닫기": function () {
                     $(this).dialog('close');
                 }
             }

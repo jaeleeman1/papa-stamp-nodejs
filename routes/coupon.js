@@ -189,7 +189,7 @@ router.put('/couponData', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Update push history success');
 
-                var updateCouponMapping = 'update SB_USER_COUPON SET USER_ID = ' + mysql.escape(userId) + ', MAPPING_YN = "Y"' +
+                var updateCouponMapping = 'update SB_USER_COUPON SET USER_ID = ' + mysql.escape(userId) + ', MAPPING_YN = "Y", ISSUED_DT = NOW() ' +
                     'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' ' +
                     'order by REG_DT ASC limit 1';
                 connection.query(updateCouponMapping, function (err, UpdateCouponData) {
@@ -249,7 +249,7 @@ router.put('/useCoupon', function(req, res, next) {
 
     //Use Coupon Data API
     getConnection(function (err, connection) {
-        var useCouponNumber = 'update SB_USER_COUPON set USED_YN = "Y" ' +
+        var useCouponNumber = 'update SB_USER_COUPON set USED_YN = "Y", USED_DT = NOW() ' +
             'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId)+' and MAPPING_YN = "Y" and COUPON_NUMBER = '+mysql.escape(couponNumber);
         connection.query(useCouponNumber, function (err, useCouponData) {
             if (err) {
