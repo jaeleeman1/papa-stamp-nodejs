@@ -412,13 +412,13 @@
 
                                     setTimeout(function () {
                                         var appendStamp = '';
-                                        for (var i = 1; i <= viewtStampNumber; i++) {
+                                        for (var i = 0; i < viewtStampNumber; i++) {
                                             appendStamp += '<div class="stamp-icon-' + shopId + '">' +
                                                 '<img class="stamp-img" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
                                                 '</div>';
                                         }
                                         $("#" + shopId).find($(".img-repeat-" + shopId)).append(appendStamp);
-                                    }, i * 1000);
+                                    }, viewtStampNumber * 1000);
 
                                     for (var j = 0; j < viewtStampNumber; j++) {
                                         (function(delayTime) {

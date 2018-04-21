@@ -323,8 +323,8 @@
 
     function pushStampCallback(userId) {
         var shopId = $("#shop_id").val();
-        var paramNumber = $("input:radio[name=paramValue]:checked").val();
-        var dataString = {'shop_id': shopId, 'param_number': paramNumber};
+        var stampNumber = $("input:radio[name=paramValue]:checked").val();
+        var dataString = {'shop_id': shopId, 'stamp_number': stampNumber};
         var headers = {};
         headers["user_id"] = userId;
 
@@ -393,7 +393,7 @@
 
     function useCouponCallback(userId, couponNumber) {
         var shopId = $("#shop_id").val();
-        var dataString = {'shop_id': shopId, 'param_number': couponNumber};
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
         var headers = {};
         headers["user_id"] = userId;
 

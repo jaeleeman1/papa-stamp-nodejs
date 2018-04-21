@@ -112,7 +112,7 @@ router.post('/update-stamp', function (req, res, next) {
 
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
-    var stampNumber = req.body.param_number;
+    var stampNumber = req.body.stamp_number;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
@@ -179,7 +179,7 @@ router.post('/issued-coupon', function (req, res, next) {
 
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
-    var couponNumber = req.body.param_number;
+    var couponNumber = req.body.coupon_number;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
