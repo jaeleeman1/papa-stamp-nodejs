@@ -319,8 +319,7 @@
                 popupCardData.innerHTML = appendData;
 
                 if(data.availableCoupon.COUPON_CNT > 0) {
-                    $("#available-coupon").addClass("exist-coupon");
-                    $('#available-coupon').removeAttr("onclick");
+                    $("#available-coupon").removeClass("exist-coupon");
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ data.availableCoupon.COUPON_CNT +' ]';
                 }else {
                     $("#available-coupon").removeClass("exist-coupon");
