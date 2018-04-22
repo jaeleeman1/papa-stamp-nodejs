@@ -41,7 +41,7 @@ router.get('/main', function(req, res, next) {
             ' from SB_USER_COUPON as SUC ' +
             'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
             'where SUC.MAPPING_YN = "Y" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
-            'having distance < 25 ' +
+            'having distance < 250 ' +
             'order by distance limit 0, 10';
         connection.query(selectCouponList, function (err, couponListData) {
             if (err) {
@@ -92,7 +92,7 @@ router.get('/shopList', function (req, res, next) {
             'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_COUPON as SUC on SUC.SHOP_ID = SSI.SHOP_ID ' +
             'where SSI.DEL_YN = "N" and SUC.USER_ID =' + mysql.escape(userId) + ' ' +
-            'having distance < 25 ' +
+            'having distance < 250 ' +
             'order by distance limit 0, 10';
         connection.query(selectShopListQuery, function (err, shopListData) {
             if (err) {

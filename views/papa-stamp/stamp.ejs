@@ -183,6 +183,9 @@
                 "예": function () {
                     $(this).dialog('close');
                     closeLayer('layerCardPopup');
+                    if(window.Bridge) {
+                        window.Bridge.closeButtonActivity();
+                    }
                 },
                 "아니오": function () {
                     $(this).dialog('close');

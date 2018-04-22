@@ -52,7 +52,7 @@ router.get('/main', function(req, res, next) {
             'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_PUSH_INFO as SUPI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
             'where SUPI.USER_ID = ' + mysql.escape(userId) + ' and SUPI.DEL_YN = "N" ' +
-            'having distance < 25 ' +
+            'having distance < 250 ' +
             'order by distance limit 0, 10';
         connection.query(selectStampShopList, function (err, stampShopListData) {
             if (err) {
@@ -105,7 +105,7 @@ router.get('/shopList', function (req, res, next) {
             'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_PUSH_INFO as SUPI on SUPI.SHOP_ID = SSI.SHOP_ID ' +
             'where SUPI.DEL_YN = "N" and SUPI.USER_ID =' + mysql.escape(userId) + ' ' +
-            'having distance < 25 ' +
+            'having distance < 250 ' +
             'order by distance limit 0, 10';
         connection.query(selectShopListQuery, function (err, shopListData) {
             if (err) {

@@ -22,17 +22,16 @@ router.post('/finish_order/:uid/', function(req, res, next) {
 
     var uid = req.params.uid;
 
-
-
-
     console.log(TAG, 'requested UID: ' + uid);
 
     var info = {
         uid: uid,
-        nickname: "[주문 완료]"
+        nickname: "[주문 완료]",
+        ordermessage: "고객님~ 주문한 상품 준비되었습니다.!",
+        finishmessage: "상품을 수령하시면 감사하겠습니다 ^.^"
     };
 
-    sendNotification("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI3YzI4ZDFjNTA4OGYwMWNkYTdlNGNhNjU0ZWM4OGVmOCIsImlhdCI6MTUyMjU4MDMxOSwiZXhwIjoxNTIyNTgzOTE5LCJhdWQiOiJodHR",
+    sendNotification("e_9dzLDGHk0:APA91bFkENFMoPZsVDQKE4iotXFhLVyv_FZAbRZBINZ2A1I9PAMyLytXJhOXOGoUJEM2-nc_v3kmuztbVcuV1PAEx3f-Fia10kfCKg9y7DG9XbQMXonPv9tzS1xbrg5dCtX35T8xDQqT",
         notificationType.NOTIFICATION_TYPE_ORDER_NOTIFICATION, info);
 
     res.status(200);
@@ -45,7 +44,7 @@ var sendNotification = function sendNotification(accessToken, notiType, info) {
         case notificationType.NOTIFICATION_TYPE_ORDER_NOTIFICATION:
             var callapse_key = 'ORDER';
             var title = info.nickname;
-            var body = '01026181715 님의 주문이 완료되었습니다.';
+            var body = "파파스탬프 주문 푸쉬";
             var tag = 1;
             break;
         default:
@@ -66,6 +65,9 @@ var sendNotification = function sendNotification(accessToken, notiType, info) {
         data: {
             msgType: callapse_key,
             uid: info.uid,
+            shopid: "SB-SHOP-00002",
+            ordermessage: info.ordermessage,
+            finishmessage: info.finishmessage,
             nickname: info.nickname
         }
     };

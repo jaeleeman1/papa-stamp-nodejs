@@ -38,7 +38,7 @@ router.get('/main', function(req, res, next) {
             '* cos( radians(SHOP_LNG) - radians(' + mysql.escape(currentLng) + ') ) + sin( radians(' + mysql.escape(currentLat) + ') ) ' +
             '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
             'from SB_SHOP_INFO as SSI ' +
-            'having distance < 25 ' +
+            'having distance < 250 ' +
             'order by distance limit 0, 10';
         connection.query(selectShopListMainQuery, function (err, shopListMainData) {
             if (err) {
