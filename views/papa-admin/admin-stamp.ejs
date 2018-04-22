@@ -387,7 +387,21 @@
     }
 
     function completePush(userId) {
-        console.log("# " + userId);
+        $.ajax({
+            url: $("#url").val() + '/v1/notification/finish_order/' + userId,
+            type: 'POST',
+            dataType: 'json',
+            success: function(data) {
+                if(data.result = 'success') {
+                    console.log("success");
+                }else {
+                    console.error('error');
+                }
+            },
+            error: function(request, status, error) {
+                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
     }
 
     function splitStr(string) {
