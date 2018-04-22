@@ -168,6 +168,79 @@ router.post('/userInfo', function(req, res, next) {
 });
 
 //Put User Location
+router.put('/accessToekn', function (req, res, next) {
+    logger.info(TAG, 'Update user location');
+
+    var userId = req.headers.user_id;
+    var accessToken = req.body.access_token;
+
+    logger.debug(TAG, 'User iD : ' + userId);
+    logger.debug(TAG, 'Access Token : ' + accessToken);
+
+    if(userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid user id value');
+        res.status(400);
+        res.send('Invalid user id error');
+    }
+
+    if(accessToken == null || accessToken == undefined) {
+        logger.debug(TAG, 'Invalid access token value');
+        res.status(400);
+        res.send('Invalid access token error');
+    }
+
+    getConnection(function (err, connection){
+        var updateAccessTokenQuery = 'insert into SB_USER_INFO (ACCESS_TOKEN) value ("'+ accessToken +'") ' +
+            'on duplicate key update USER_ID = "'+ userId;
+        connection.query(updateAccessTokenQuery, function (err, accessTokenData) {
+            if (err) {
+                logger.error(TAG, "DB updateUserLocationQuery error : " + err);
+                res.status(400);
+                res.send('Update access token error');
+            }else{
+                logger.debug(TAG, 'Update access token success');
+                res.status(200);
+                res.send();
+            }
+            connection.release();
+        });
+    });
+});
+
+//Get User Location
+router.get('/accessToekn', function (req, res, next) {
+    logger.info(TAG, 'Update user location');
+
+    var userId = req.headers.user_id;
+
+    logger.debug(TAG, 'User iD : ' + userId);
+    logger.debug(TAG, 'Access Token : ' + accessToken);
+
+    if(userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid user id value');
+        res.status(400);
+        res.send('Invalid user id error');
+    }
+
+    getConnection(function (err, connection){
+        var getAccessTokenQuery = 'select ACCESS_TOKEN from SB_USER_INFO ' +
+            'wheere USER_ID = "'+ userId;
+        connection.query(getAccessTokenQuery, function (err, accessTokenData) {
+            if (err) {
+                logger.error(TAG, "DB updateUserLocationQuery error : " + err);
+                res.status(400);
+                res.send('Update access token error');
+            }else{
+                logger.debug(TAG, 'Update access token success');
+                res.status(200);
+                res.send({accessTokenData:accessTokenData});
+            }
+            connection.release();
+        });
+    });
+});
+
+//Put User Location
 router.put('/updateLocation', function (req, res, next) {
     logger.info(TAG, 'Update user location');
 
