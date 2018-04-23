@@ -387,10 +387,18 @@
     }
 
     function completePush(userId) {
+        //get token
+        //var accessToken = userid;
+        var headers = {};
+        headers["Authorization"] = 'key=AIzaSyASnovAUqeRII4F7npkdPPea7j8oxUUu6A';
+        var dataString = {'to': "e_9dzLDGHk0:APA91bFkENFMoPZsVDQKE4iotXFhLVyv_FZAbRZBINZ2A1I9PAMyLytXJhOXOGoUJEM2-nc_v3kmuztbVcuV1PAEx3f-Fia10kfCKg9y7DG9XbQMXonPv9tzS1xbrg5dCtX35T8xDQqT",
+            'data': {'title': '고객님~ 주문한 상품 준비되었습니다.!', 'body': '상품을 수령하시면 감사하겠습니다 ^.^'}};
         $.ajax({
-            url: $("#url").val() + '/v1/notification/finish_order/' + userId,
+            url: 'https://fcm.googleapis.com/fcm/send',
             type: 'POST',
+            headers : headers,
             dataType: 'json',
+            data : dataString,
             success: function(data) {
                 if(data.result = 'success') {
                     console.log("success");

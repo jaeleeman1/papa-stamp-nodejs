@@ -26,7 +26,6 @@ router.post('/finish_order/:uid/', function(req, res, next) {
 
     var info = {
         uid: uid,
-        nickname: "[주문 완료]",
         ordermessage: "고객님~ 주문한 상품 준비되었습니다.!",
         finishmessage: "상품을 수령하시면 감사하겠습니다 ^.^"
     };
@@ -43,8 +42,9 @@ var sendNotification = function sendNotification(accessToken, notiType, info) {
     switch (notiType) {
         case notificationType.NOTIFICATION_TYPE_ORDER_NOTIFICATION:
             var callapse_key = 'ORDER';
-            var title = info.nickname;
-            var body = "파파스탬프 주문 푸쉬";
+            var title = info.ordermessage;
+            var body = info.finishmessage;
+            var icon = '/images/papastamp_icon.png';
             var tag = 1;
             break;
         default:
@@ -59,7 +59,7 @@ var sendNotification = function sendNotification(accessToken, notiType, info) {
         notification: {
             title: title,
             body: body,
-            icon: '/images/cafejass/couphone.png',
+            icon: icon,
             tag: tag
         },
         data: {
@@ -67,8 +67,7 @@ var sendNotification = function sendNotification(accessToken, notiType, info) {
             uid: info.uid,
             shopid: "SB-SHOP-00002",
             ordermessage: info.ordermessage,
-            finishmessage: info.finishmessage,
-            nickname: info.nickname
+            finishmessage: info.finishmessage
         }
     };
 
