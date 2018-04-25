@@ -121,7 +121,7 @@
         });
     }
 
-    function tryRequestStamp(shopId) {
+    function requestStamp(shopId) {
         var userId = $("#user_d").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
@@ -206,7 +206,7 @@
             buttons: {
                 "매니저에게 재요청": function () {
                     var shopId = $("#shop_id").val();
-                    tryRequestStamp(shopId);
+                    requestStamp(shopId);
                     $(this).dialog('option',
                         'buttons',
                         { "닫기": function() {
@@ -341,8 +341,8 @@
 <!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
 <script type="text/javascript">
     var pushUserId = $("#user_id").val();
-    var socket = io.connect('https://papastamp.com:8060');
-    /*var socket = io.connect('http://localhost:8060');*/
+    var convertUrl = ($("#url").val().substr(0, 5) == 'https') ? $("#url").val() : $("#url").val().substr(0,16);
+    var socket = io.connect(convertUrl+':8060');
     socket.on(pushUserId, function(data) {
         var shopId = $("#shop_id").val();
         var popupCheck = $("#popup_check").val();

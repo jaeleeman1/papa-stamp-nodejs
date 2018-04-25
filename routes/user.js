@@ -208,13 +208,12 @@ router.put('/accessToekn', function (req, res, next) {
 });
 
 //Get User Location
-router.get('/accessToekn', function (req, res, next) {
+router.get('/accessToken', function (req, res, next) {
     logger.info(TAG, 'Update user location');
 
     var userId = req.headers.user_id;
 
-    logger.debug(TAG, 'User iD : ' + userId);
-    logger.debug(TAG, 'Access Token : ' + accessToken);
+    logger.debug(TAG, 'User ID : ' + userId);
 
     if(userId == null || userId == undefined) {
         logger.debug(TAG, 'Invalid user id value');
@@ -224,16 +223,17 @@ router.get('/accessToekn', function (req, res, next) {
 
     getConnection(function (err, connection){
         var getAccessTokenQuery = 'select ACCESS_TOKEN from SB_USER_INFO ' +
-            'wheere USER_ID = "'+ userId;
+            'where USER_ID = "'+ userId + '"';
+        console.log(getAccessTokenQuery);
         connection.query(getAccessTokenQuery, function (err, accessTokenData) {
             if (err) {
                 logger.error(TAG, "DB updateUserLocationQuery error : " + err);
                 res.status(400);
                 res.send('Update access token error');
             }else{
-                logger.debug(TAG, 'Update access token success');
+                logger.debug(TAG, 'Update access token success', accessTokenData);
                 res.status(200);
-                res.send({accessTokenData:accessTokenData});
+                res.send({accessToken:accessTokenData.ACCESS_TOKEN});
             }
             connection.release();
         });

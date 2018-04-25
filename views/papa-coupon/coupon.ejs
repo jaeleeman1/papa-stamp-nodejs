@@ -232,8 +232,8 @@
 <!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
 <script type="text/javascript">
     var pushUserId = $("#user_id").val();
-    var socket = io.connect('https://papastamp.com:8060');
-    /*var socket = io.connect('http://localhost:8060');*/
+    var convertUrl = ($("#url").val().substr(0, 5) == 'https') ? $("#url").val() : $("#url").val().substr(0,16);
+    var socket = io.connect(convertUrl+':8060');
     socket.on(pushUserId, function(data) {
         var shopId = $("#shop_id").val();
         if(shopId == data.sendId) {

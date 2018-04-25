@@ -262,8 +262,8 @@
 <!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
 <script type="text/javascript">
     var pushShopId = $("#shop_id").val();
-    var socket = io.connect('https://papastamp.com:8060');
-    /*var socket = io.connect('http://localhost:8060');*/
+    var convertUrl = ($("#url").val().substr(0, 5) == 'https') ? $("#url").val() : $("#url").val().substr(0,16);
+    var socket = io.connect(convertUrl+':8060');
     socket.on(pushShopId, function(data){
         if (data.type == "request-stamp") {
             pushStamp(data.sendId);
@@ -351,7 +351,7 @@
                             '<td class=" ">N</td>' +
                             '<td class=" last red"><a onclick="stampDelete(\''+ data.userId +'\', \'' + data.visitDate +'\');">삭제</a>' +
                             '<td class=" ">N</td>' +
-                            '<td class=" last"><a onclick="completePush(\''+ data.userId +'\'");><i class="fa fa-bell blue"></i></a>' +
+                            '<td class=" last"><a onclick="completePush(\''+ data.userId +'\');"><i class="fa fa-bell blue"></i></a>' +
                             '</td>' +
                             '</tr>';
                         addLength++;
