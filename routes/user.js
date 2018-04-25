@@ -233,7 +233,7 @@ router.get('/accessToken', function (req, res, next) {
             }else{
                 logger.debug(TAG, 'Update access token success', accessTokenData);
                 res.status(200);
-                res.send({accessToken:accessTokenData.ACCESS_TOKEN});
+                res.send({result:"success", accessToken:accessTokenData[0].ACCESS_TOKEN});
             }
             connection.release();
         });

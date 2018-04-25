@@ -388,14 +388,6 @@ fcmKey
     }
 
     function completePush(userId) {
-        //get token
-        //var accessToken = userid;
-
-
-        getAccessToken(userId);
-    }
-
-    function getAccessToken(userId) {
         var headers = {};
         headers["user_id"] = userId;
         $.ajax({
@@ -404,7 +396,7 @@ fcmKey
             headers : headers,
             dataType: 'json',
             success: function(data) {
-                if(data.length > 0) {
+                if(data.result == "success") {
                     var headers = {};
                     headers["Authorization"] = $("#fcm_key").val();
                     var accessToken = data.accessToken;
