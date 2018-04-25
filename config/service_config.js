@@ -19,6 +19,9 @@ config.loglevel = 'debug';
 //Firebase
 config.serverKey = 'AAAAHIVXzfk:APA91bHqH863OCv5t6oNHwoYjDp5kmqd-D6GtrrU-QW_ikVCkW2HteP6pnvCT58XhKH4bobu0jOPZyzF2w1DFE1z4ktQ1bVS59iXQi70qqGFyW8g9LNLR8KgksXrm9lzQ1_FVsDsQZt0';
 
+//Firebase Custom Push
+config.fcmKey = 'key=AIzaSyASnovAUqeRII4F7npkdPPea7j8oxUUu6A';
+
 //AES Key
 config.secrectKey = 'Glu0r6o0GzBZIe0Qsrh2FA==';
 
