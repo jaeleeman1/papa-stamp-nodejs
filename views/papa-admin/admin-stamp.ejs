@@ -1,8 +1,9 @@
 <form name="admin_config" id="admin_config" style="display:none">
+  <input type="hidden" name="fcm_key" id="fcm_key" value="<%= fcmKey %>"/>
   <input type="hidden" name="view_date" id="view_date" value="<%= viewDate %>"/>
   <input type="hidden" name="admin_stamp" id="admin_stamp" value="<%= viewStamp %>"/>
 </form>
-
+fcmKey
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="row">
@@ -390,7 +391,10 @@
         //get token
         //var accessToken = userid;
         var headers = {};
-        headers["Authorization"] = 'key=AIzaSyASnovAUqeRII4F7npkdPPea7j8oxUUu6A';
+        headers["Authorization"] = $("#fcm_key").val();
+
+        getAccessToken();
+
         var dataString = {'to': "e_9dzLDGHk0:APA91bFkENFMoPZsVDQKE4iotXFhLVyv_FZAbRZBINZ2A1I9PAMyLytXJhOXOGoUJEM2-nc_v3kmuztbVcuV1PAEx3f-Fia10kfCKg9y7DG9XbQMXonPv9tzS1xbrg5dCtX35T8xDQqT",
             'data': {'title': '고객님~ 주문한 상품 준비되었습니다.!', 'body': '상품을 수령하시면 감사하겠습니다 ^.^'}};
         $.ajax({
@@ -402,6 +406,28 @@
             success: function(data) {
                 if(data.result = 'success') {
                     console.log("success");
+                }else {
+                    console.error('error');
+                }
+            },
+            error: function(request, status, error) {
+                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
+    function getAccessToken() {
+        var headers = {};
+        headers["user_id"] = 'SB-SHOP-00001';
+
+        $.ajax({
+            url: $("#url").val() + '/v1/user/accessToekn',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            success: function(data) {
+                if(data.result = 'success') {
+                    location.reload();
                 }else {
                     console.error('error');
                 }

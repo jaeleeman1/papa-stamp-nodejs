@@ -27,7 +27,7 @@ router.get('/main', function(req, res, next) {
                 console.log('Select user push history success : ' + JSON.stringify(shopStampTotalData));
                 //Today data
                 var selectStampTodayQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_PUSH_HIS ' +
-                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and DEL_YN="N" and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") group by UPDATE_DT desc';
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and DEL_YN="N" and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") order by UPDATE_DT desc';
                 connection.query(selectStampTodayQuery, function (err, shopsStampTodayData) {
                     if (err) {
                         console.error("*** initPage select id Error : " , err);
@@ -77,7 +77,7 @@ router.get('/main', function(req, res, next) {
                                 }
 
                                 res.status(200);
-                                res.render('common/papa-admin',{view:'stamp', url:config.url, shopId:shopId, today:today, shopsStampTodayData:shopsStampTodayData, viewDate:viewDate, viewStamp:viewStamp});
+                                res.render('common/papa-admin',{view:'stamp', url:config.url, fcmKey:config.fcmKey, shopId:shopId, today:today, shopsStampTodayData:shopsStampTodayData, viewDate:viewDate, viewStamp:viewStamp});
                             }
                         });
                     }
