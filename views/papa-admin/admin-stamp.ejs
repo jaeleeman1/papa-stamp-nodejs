@@ -390,8 +390,7 @@ fcmKey
     function completePush(userId) {
         //get token
         //var accessToken = userid;
-        var headers = {};
-        headers["Authorization"] = $("#fcm_key").val();
+
 
         getAccessToken(userId);
     }
@@ -406,26 +405,30 @@ fcmKey
             headers : headers,
             dataType: 'json',
             success: function(data) {
-                var accessToken = data.accessToken;
-                var dataString = {'to': accessToken,
-                    'data': {'title': '고객님~ 주문한 상품 준비되었습니다.!', 'body': '상품을 수령하시면 감사하겠습니다 ^.^'}};
-                $.ajax({
-                    url: 'https://fcm.googleapis.com/fcm/send',
-                    type: 'POST',
-                    headers : headers,
-                    dataType: 'json',
-                    data : dataString,
-                    success: function(data) {
-                        if(data.result = 'success') {
-                            console.log("success");
-                        }else {
-                            console.error('error');
+                if(data.length > 0) {
+                    var headers = {};
+                    headers["Authorization"] = $("#fcm_key").val();
+                    var accessToken = data.accessToken;
+                    var dataString = {'to': accessToken,
+                        'data': {'title': '고객님~ 주문한 상품 준비되었습니다.!', 'body': '상품을 수령하시면 감사하겠습니다 ^.^'}};
+                    $.ajax({
+                        url: 'https://fcm.googleapis.com/fcm/send',
+                        type: 'POST',
+                        headers : headers,
+                        dataType: 'json',
+                        data : dataString,
+                        success: function(data) {
+                            if(data.result = 'success') {
+                                console.log("success");
+                            }else {
+                                console.error('error');
+                            }
+                        },
+                        error: function(request, status, error) {
+                            console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         }
-                    },
-                    error: function(request, status, error) {
-                        console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                    }
-                });
+                    });
+                }
             },
             error: function(request, status, error) {
                 console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
