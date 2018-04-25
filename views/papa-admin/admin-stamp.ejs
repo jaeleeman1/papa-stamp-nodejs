@@ -409,11 +409,7 @@ fcmKey
                         dataType: 'json',
                         data : dataString,
                         success: function(data) {
-                            if(data.result = 'success') {
-                                console.log("success");
-                            }else {
-                                console.error('error');
-                            }
+                            console.log("success");
                         },
                         error: function(request, status, error) {
                             console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
