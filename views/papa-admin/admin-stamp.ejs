@@ -398,7 +398,6 @@ fcmKey
     function getAccessToken(userId) {
         var headers = {};
         headers["user_id"] = userId;
-
         $.ajax({
             url: $("#url").val() + '/v1/user/accessToken',
             type: 'GET',
