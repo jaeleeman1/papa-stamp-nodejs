@@ -396,18 +396,19 @@ fcmKey
             headers : headers,
             dataType: 'json',
             success: function(data) {
-                if(data.result == "success") {
+                if(data.accessToken != null) {
                     var headers = {};
                     headers["Authorization"] = $("#fcm_key").val();
                     var accessToken = data.accessToken;
-                    var dataString = {'to': accessToken,
-                        'data': {'title': '고객님~ 주문한 상품 준비되었습니다.!', 'body': '상품을 수령하시면 감사하겠습니다 ^.^'}};
+                    var dataString = {"to": accessToken,
+                        "data": {"title": "고객님~ 주문한 상품 준비되었습니다.!", "body": "상품을 수령하시면 감사하겠습니다 ^.^"}};
                     $.ajax({
                         url: 'https://fcm.googleapis.com/fcm/send',
                         type: 'POST',
                         headers : headers,
+                        contentType : 'application/json',
                         dataType: 'json',
-                        data : dataString,
+                        data: JSON.stringify(dataString),
                         success: function(data) {
                             console.log("success");
                         },
@@ -415,6 +416,8 @@ fcmKey
                             console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         }
                     });
+                }else {
+                    console.log("fail");
                 }
             },
             error: function(request, status, error) {
