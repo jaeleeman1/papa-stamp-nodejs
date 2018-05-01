@@ -10,7 +10,7 @@
                 var shopStampImg = stampShopListData[i].SHOP_STAMP_IMG %>
             <div class="my-card" onclick="focusOpenLayer('layerCardPopup', '<%= shopId %>', '<%= shopFrontImg %>', '<%= shopBackImg %>', '<%=shopStampImg %>');">
                 <figure class="front">
-                    <img class="base-img" src="/images/shop-card/<%= shopBackImg %>" alt="back">
+                    <img class="base-img" src="/images/shop-card/back/<%= shopBackImg %>" alt="back">
                     <div class="img-repeat-<%=shopId%>">
                         <% var userStamp = (stampShopListData[i].USER_STAMP % 10)  %>
                         <% for (var j=1; j<=userStamp; j++) {%>
@@ -244,14 +244,12 @@
                 });
                 var popupCardData = document.getElementById('popup-card');
                 var appendData = '<figure class="front">' +
-                    '<img class="base-img" src="/images/shop-card/'+ frontImg +'" alt="front">' +
+                    '<img class="base-img" src="/images/shop-card/front/'+ frontImg +'" alt="front">' +
                     '</figure>' +
-                    '<figure class="back">' +
-                    '<img class="base-img" src="/images/shop-card/'+ backImg +'" alt="back">' +
                     '<div class="img-repeat-'+ shopId +'">';
 
                 var stampCount = data.stampCount % 10;
-                var stampLength = data.stampDateList.length;
+                var stampLength = data.stampDateList.length % 10;
 
                 if(stampCount != stampLength) {
                     $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
@@ -306,10 +304,8 @@
                 });
                 var popupCardData = document.getElementById('popup-card');
                 var appendData = '<figure class="front">' +
-                    '<img class="base-img" src="/images/shop-card/'+ data.availableCoupon.SHOP_FRONT_IMG +'" alt="front">' +
+                    '<img class="base-img" src="/images/shop-card/front/'+ data.availableCoupon.SHOP_FRONT_IMG +'" alt="front">' +
                     '</figure>' +
-                    '<figure class="back">' +
-                    '<img class="base-img" src="/images/shop-card/'+ data.availableCoupon.SHOP_BACK_IMG +'" alt="back">' +
                     '<div class="img-repeat-'+ shopId +'">';
                 for(var i=0; i<data.stampDateList.length; i++) {
                     appendData += '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon_'+i+'>">'+
@@ -363,7 +359,7 @@
                         '<div class="my-container">' +
                         '<div class="my-card" onclick="focusOpenLayer(' + '\'layerCardPopup\'' + ', \'' + shopId + '\', \'' + data.shopData.SHOP_FRONT_IMG + '\', \'' + data.shopData.SHOP_BACK_IMG + '\', \'' + data.shopData.SHOP_STAMP_IMG + '\')">' +
                         '<figure class="front">' +
-                        '<img class="base-img" src="/images/shop-card/' + data.shopData.SHOP_BACK_IMG + '" alt="back">' +
+                        '<img class="base-img" src="/images/shop-card/back/' + data.shopData.SHOP_BACK_IMG + '" alt="back">' +
                         '<div class="img-repeat-' + shopId + '">' +
                         '</div>' +
                         '</figure>' +
@@ -667,7 +663,7 @@
                             '<div class="my-container">' +
                             '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopData.SHOP_ID +'\', \''+ shopData.SHOP_FRONT_IMG +'\', \''+ shopData.SHOP_BACK_IMG +'\', \''+ shopData.SHOP_STAMP_IMG +'\')">' +
                             '<figure class="front">' +
-                            '<img class="base-img" src="/images/shop-card/'+ shopData.SHOP_BACK_IMG +'" alt="back">' +
+                            '<img class="base-img" src="/images/shop-card/back/'+ shopData.SHOP_BACK_IMG +'" alt="back">' +
                             '<div class="img-repeat-'+ shopData.SHOP_ID +'">';
                         for(var i=0; i<shopData.USER_STAMP; i++) {
                             appendData += '<div class="stamp-icon-'+ shopData.SHOP_ID +'" id="stamp_icon_'+i+'>">' +
