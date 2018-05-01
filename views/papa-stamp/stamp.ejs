@@ -246,6 +246,8 @@
                 var appendData = '<figure class="front">' +
                     '<img class="base-img" src="/images/shop-card/front/'+ frontImg +'" alt="front">' +
                     '</figure>' +
+                    '<figure class="back">' +
+                    '<img class="base-img" src="/images/shop-card/back/'+ backImg +'" alt="back">' +
                     '<div class="img-repeat-'+ shopId +'">';
 
                 var stampCount = data.stampCount % 10;
@@ -306,6 +308,8 @@
                 var appendData = '<figure class="front">' +
                     '<img class="base-img" src="/images/shop-card/front/'+ data.availableCoupon.SHOP_FRONT_IMG +'" alt="front">' +
                     '</figure>' +
+                    '<figure class="back">' +
+                    '<img class="base-img" src="/images/shop-card/back'+ data.availableCoupon.SHOP_BACK_IMG +'" alt="back">' +
                     '<div class="img-repeat-'+ shopId +'">';
                 for(var i=0; i<data.stampDateList.length; i++) {
                     appendData += '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon_'+i+'>">'+
