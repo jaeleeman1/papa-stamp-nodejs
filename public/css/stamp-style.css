@@ -9,12 +9,6 @@
     float:left;
 }
 
-.stamp-img{
-    width: 36px;
-    margin-left: 10px;
-    border-radius: 20px;
-}
-
 .stamp-date{
     position: relative;
     font-size: 25px;
@@ -38,7 +32,55 @@
     animation-fill-mode:forwards;
 }
 
+/* SB-SHOP-00002 stamp image */
+.stamp-img-SB-SHOP-00002{
+    width: 50px;
+    margin-left: 10px;
+    border-radius: 20px;
+}
+
+.img-repeat-SB-SHOP-00002 {
+    margin-left: 0px;
+}
+
+.stamp-icon-SB-SHOP-00002 {
+    top: -188px;
+    width: 59.7px;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 2px;
+    margin-bottom: 13px;
+    float: left;
+}
+
+.stamp-popup-icon-SB-SHOP-00002 {
+    top: -161px;
+    width: 54px;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 2px;
+    margin-bottom: 0px;
+    float: left;
+}
+
+.stamp-date-SB-SHOP-00002 {
+    display: inline-block;
+    width: 60px;
+    position: relative;
+    font-size: 10px;
+    vertical-align: bottom;
+    padding: 0 5px 8px 5px;
+    color: darkmagenta;
+}
+/* SB-SHOP-00002 stamp image */
+
 /* SB-SHOP-00001 stamp image */
+.stamp-img-SB-SHOP-00001{
+    width: 36px;
+    margin-left: 10px;
+    border-radius: 20px;
+}
+
 .img-repeat-SB-SHOP-00001 {
     margin-left: 95px;
 }
@@ -74,45 +116,13 @@
 }
 /* SB-SHOP-00001 stamp image */
 
-
-/* SB-SHOP-00002 stamp image */
-.img-repeat-SB-SHOP-00002 {
-    margin-left: 14px;
-}
-
-.stamp-icon-SB-SHOP-00002 {
-    top: -161px;
-    width: 54px;
-    border-radius: 5px;
-    position: relative;
-    margin-left: 2px;
-    margin-bottom: 21px;
-    float: left;
-}
-
-.stamp-popup-icon-SB-SHOP-00002 {
-    top: -161px;
-    width: 54px;
-    border-radius: 5px;
-    position: relative;
-    margin-left: 2px;
-    margin-bottom: 0px;
-    float: left;
-}
-
-.stamp-date-SB-SHOP-00002 {
-    display: inline-block;
-    width: 60px;
-    position: relative;
-    font-size: 10px;
-    vertical-align: bottom;
-    padding: 0 5px 8px 5px;
-    color: darkmagenta;
-}
-/* SB-SHOP-00002 stamp image */
-
-
 /* SB-SHOP-00003 stamp image */
+.stamp-img-SB-SHOP-00003{
+    width: 36px;
+    margin-left: 10px;
+    border-radius: 20px;
+}
+
 .img-repeat-SB-SHOP-00003 {
     margin-left: 106px;
 }
@@ -149,6 +159,12 @@
 /* SB-SHOP-00003 stamp image */
 
 /* SB-SHOP-00004 stamp image */
+.stamp-img-SB-SHOP-00004{
+    width: 36px;
+    margin-left: 10px;
+    border-radius: 20px;
+}
+
 .img-repeat-SB-SHOP-00004 {
     margin-left: 8px;
 }

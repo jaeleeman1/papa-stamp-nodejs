@@ -15,7 +15,7 @@
                         <% var userStamp = (stampShopListData[i].USER_STAMP % 10)  %>
                         <% for (var j=1; j<=userStamp; j++) {%>
                         <div class="stamp-icon-<%=shopId%>">
-                            <img class="stamp-img" src="/images/shop-stamp/<%= shopStampImg %>"/>
+                            <img class="stamp-img-<%=shopId%>" src="/images/shop-stamp/<%= shopStampImg %>"/>
                         </div>
                         <%}%>
                     </div>
@@ -259,7 +259,7 @@
 
                 for(var i=0; i<stampLength; i++) {
                     appendData += '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon_'+i+'>">'+
-                        '<img class="stamp-img" src="/images/shop-stamp/'+ stampImg +'"/>' +
+                        '<img class="stamp-img-'+ shopId +'" src="/images/shop-stamp/'+ stampImg +'"/>' +
                         '<span class="stamp-date-'+ shopId +'">['+data.stampDateList[i].REG_DT+']</span>' +
                         '</div>';
                 }
@@ -313,7 +313,7 @@
                     '<div class="img-repeat-'+ shopId +'">';
                 for(var i=0; i<data.stampDateList.length; i++) {
                     appendData += '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon_'+i+'>">'+
-                        '<img class="stamp-img" src="/images/shop-stamp/'+ data.availableCoupon.SHOP_STAMP_IMG +'"/>' +
+                        '<img class="stamp-img-'+ shopId +'" src="/images/shop-stamp/'+ data.availableCoupon.SHOP_STAMP_IMG +'"/>' +
                         '<span class="stamp-date-'+ shopId +'">['+data.stampDateList[i].REG_DT+']</span>' +
                         '</div>';
                 }
@@ -416,7 +416,7 @@
                                         var appendStamp = '';
                                         for (var i = 0; i < viewtStampNumber; i++) {
                                             appendStamp += '<div class="stamp-icon-' + shopId + '">' +
-                                                '<img class="stamp-img" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                                                '<img class="stamp-img' + shopId + '" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
                                                 '</div>';
                                         }
                                         $("#" + shopId).find($(".img-repeat-" + shopId)).append(appendStamp);
@@ -427,7 +427,7 @@
                                             setTimeout(function () {
                                                 $("#layerCardPopup").find($(".img-repeat-" + shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
                                                     '<div class="stamp-popup-icon-' + shopId + '">' +
-                                                    '<img class="stamp-img" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                                                    '<img class="stamp-img' + shopId + '" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
                                                     '<span class="stamp-date-' + shopId + '">[' + data.shopData.TODAY_DT + ']</span>' +
                                                     '</div>');
                                                 delayTime += 1000;
@@ -485,7 +485,7 @@
             var appendStamp = '';
             for (var i = 0; i < viewtStampNumberr; i++) {
                 appendStamp += '<div class="stamp-icon-' + shopId + '">' +
-                    '<img class="stamp-img" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                    '<img class="stamp-img' + shopId + '" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
                     '</div>';
             }
             $("#" + shopId).find($(".img-repeat-" + shopId)).append(appendStamp);
@@ -495,7 +495,7 @@
                     setTimeout(function () {
                         $("#layerCardPopup").find($(".img-repeat-" + shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
                             '<div class="stamp-popup-icon-' + shopId + '">' +
-                            '<img class="stamp-img" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
+                            '<img class="stamp-img' + shopId + '" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
                             '<span class="stamp-date-' + shopId + '">[' + data.shopData.TODAY_DT + ']</span>' +
                             '</div>');
                         delayTime += 1000;
@@ -671,7 +671,7 @@
                             '<div class="img-repeat-'+ shopData.SHOP_ID +'">';
                         for(var i=0; i<shopData.USER_STAMP; i++) {
                             appendData += '<div class="stamp-icon-'+ shopData.SHOP_ID +'" id="stamp_icon_'+i+'>">' +
-                                '<img class="stamp-img" src="/images/shop-stamp/'+ shopData.SHOP_STAMP_IMG +'"/>' +
+                                '<img class="stamp-img-'+ shopData.SHOP_ID +'" src="/images/shop-stamp/'+ shopData.SHOP_STAMP_IMG +'"/>' +
                                 '</div>';
                         }
                         appendData += '</div>' +
