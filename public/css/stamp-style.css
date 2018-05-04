@@ -34,18 +34,18 @@
 
 /* SB-SHOP-00002 stamp image */
 .stamp-img-SB-SHOP-00002{
-    width: 50px;
+    width: 45px;
     margin-left: 10px;
     border-radius: 20px;
 }
 
 .img-repeat-SB-SHOP-00002 {
-    margin-left: 0px;
+    margin-left: 8px;
 }
 
 .stamp-icon-SB-SHOP-00002 {
-    top: -188px;
-    width: 59.7px;
+    top: -181px;
+    width: 55.2px;
     border-radius: 5px;
     position: relative;
     margin-left: 2px;
@@ -54,23 +54,23 @@
 }
 
 .stamp-popup-icon-SB-SHOP-00002 {
-    top: -161px;
-    width: 54px;
+    top: -181px;
+    width: 55.2px;
     border-radius: 5px;
     position: relative;
     margin-left: 2px;
-    margin-bottom: 0px;
+    margin-bottom: -10px;
     float: left;
 }
 
 .stamp-date-SB-SHOP-00002 {
     display: inline-block;
-    width: 60px;
+    width: 68px;
     position: relative;
     font-size: 10px;
     vertical-align: bottom;
     padding: 0 5px 8px 5px;
-    color: darkmagenta;
+    color: darkgray;
 }
 /* SB-SHOP-00002 stamp image */
 
