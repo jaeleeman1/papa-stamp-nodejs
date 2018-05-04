@@ -55,7 +55,10 @@
                 </div>
             </div>
         </div>
-        <p class="stamp-ti" id="available-coupon" onclick="moveCoupon();"></p>
+
+        <div onclick="requestStamp(<%=shopId%>);">
+            <img class="stamp-ti" src="/images/papastamp-request.png"/>
+        </div>
     </div>
 </div>
 
@@ -86,7 +89,7 @@
         }
     });
 
-    function moveCoupon() {
+/*    function moveCoupon() {
         if($("#available-coupon").hasClass("exist-coupon")){
             document.footerAction.action = '/v1/coupon/main';
             document.footerAction.submit();
@@ -94,7 +97,7 @@
             $.toast.config.width = 220;
             $.toast('매장에서 <h4>스탬프</h4>를 모아보세요.', { type: 'info', duration: 3000 } );
         }
-    }
+    }*/
 
     function deleteCardcallback(shopId) {
         var userId = $("#user_id").val();
@@ -122,6 +125,30 @@
     }
 
     function requestStamp(shopId) {
+        if(window.Bridge) {
+            window.Bridge.callStampActivity(shopId);
+        }
+        /*var userId = $("#user_d").val();
+        var dataString = {'shop_id': shopId};
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/v1/notification/request-stamp',
+            type: 'POST',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                console.log(data.resultData);
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });*/
+    }
+
+    function retryStamp(shopId) {
         var userId = $("#user_d").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
@@ -206,7 +233,7 @@
             buttons: {
                 "매니저에게 재요청": function () {
                     var shopId = $("#shop_id").val();
-                    requestStamp(shopId);
+                    retryStamp(shopId);
                     $(this).dialog('option',
                         'buttons',
                         { "닫기": function() {
@@ -267,13 +294,13 @@
                     '</figure>';
                 popupCardData.innerHTML = appendData;
 
-                if(data.availableCoupon.COUPON_CNT > 0) {
+/*                if(data.availableCoupon.COUPON_CNT > 0) {
                     $("#available-coupon").addClass("exist-coupon");
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ data.availableCoupon.COUPON_CNT +' ]';
                 }else {
                     $("#available-coupon").removeClass("exist-coupon");
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ 0 ]';
-                }
+                }*/
 
                 var popupHeight = browserHeight * 0.15;
                 openLayer(showDivId, popupHeight, 0, browserHeight);
@@ -321,13 +348,13 @@
                     '</figure>';
                 popupCardData.innerHTML = appendData;
 
-                if(data.availableCoupon.COUPON_CNT > 0) {
+/*                if(data.availableCoupon.COUPON_CNT > 0) {
                     $("#available-coupon").removeClass("exist-coupon");
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ '+ data.availableCoupon.COUPON_CNT +' ]';
                 }else {
                     $("#available-coupon").removeClass("exist-coupon");
                     document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ 0 ]';
-                }
+                }*/
                 openLayer(showDivId, 115, 0, browserHeight);
             },
             error: function(request, status, error) {
