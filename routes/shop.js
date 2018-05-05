@@ -48,7 +48,7 @@ router.get('/main', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select shop list main success : ' + JSON.stringify(shopListMainData));
                 res.status(200);
-                res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', popupCheck:false, shopListMainData:shopListMainData});
+                res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', shopListMainData:shopListMainData});
             }
             connection.release();
         });

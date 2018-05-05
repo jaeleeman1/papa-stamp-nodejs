@@ -190,7 +190,7 @@ router.get('/periodData', function(req, res, next) {
 });
 
 router.get('/manager', function(req, res, next) {
-    var shopId = req.headers.shop_id;
+    var shopId = req.query.shop_id;
     logger.debug(TAG, 'Shop id : ' + shopId);
 
     getConnection(function (err, connection) {
@@ -211,7 +211,7 @@ router.get('/manager', function(req, res, next) {
                         res.send('Select user push history error');
                     } else {
                         res.status(200);
-                        res.render('common/commonPage',{view:'manager', shopId:shopId,  today:couponUsedListData[0].TODAY, couponUsedListData:couponUsedListData, couponIssuedListData:couponIssuedListData});
+                        res.render('common/papa-admin',{view:'manager', url:config.url, shopId:shopId,  today:couponUsedListData[0].TODAY, couponUsedListData:couponUsedListData, couponIssuedListData:couponIssuedListData});
                     }
                 });
             }

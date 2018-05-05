@@ -13,11 +13,9 @@ router.get('/main', function(req, res, next) {
 
     var userId = req.query.user_id;
     var shopId = req.query.shop_id;
-    var popupCheck = req.query.popup_check;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
-    logger.debug(TAG, 'Popup check : ' + popupCheck);
 
     if(userId == null || userId == undefined &&
         shopId == null || shopId == undefined) {
@@ -63,7 +61,7 @@ router.get('/main', function(req, res, next) {
                 logger.debug(TAG, 'Select stamp shop list success : ' + JSON.stringify(stampShopListData));
 
                 res.status(200);
-                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopId:shopId, popupCheck:popupCheck, stampShopListData:stampShopListData});
+                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopId:shopId, stampShopListData:stampShopListData});
 
             }
             connection.release();
@@ -196,28 +194,17 @@ router.get('/selectStampDate', function(req, res) {
                 res.status(400);
                 res.send('Select stamp date error');
             }else {
-                var selectAvailableCoupon = 'select count(COUPON_NUMBER) as COUPON_CNT from SB_USER_COUPON ' +
-                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId) +' and USED_YN = "N"';
-                connection.query(selectAvailableCoupon, function (err, availableCoupon) {
+                var selectCheckStamp = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId) +' and DEL_YN = "N"';
+                connection.query(selectCheckStamp, function (err, stampCount) {
                     if (err) {
-                        logger.error(TAG, "Select available coupon error : " + err);
+                        logger.error(TAG, "Select stamp count error : " + err);
                         res.status(400);
-                        res.send('Select available coupon error');
+                        res.send('Select stamp count error');
                     } else {
-                        logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(availableCoupon));
-                        var selectCheckStamp = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
-                            'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId) +' and DEL_YN = "N"';
-                        connection.query(selectCheckStamp, function (err, stampCount) {
-                            if (err) {
-                                logger.error(TAG, "Select stamp count error : " + err);
-                                res.status(400);
-                                res.send('Select stamp count error');
-                            } else {
-                                logger.debug(TAG, 'Select stamp count success : ' + JSON.stringify(stampCount));
-                                res.status(200);
-                                res.send({stampDateList: stampDateList, availableCoupon: availableCoupon[0], stampCount:stampCount[0].USER_STAMP});
-                            }
-                        });
+                        logger.debug(TAG, 'Select stamp count success : ' + JSON.stringify(stampCount));
+                        res.status(200);
+                        res.send({stampDateList: stampDateList, stampCount:stampCount[0].USER_STAMP});
                     }
                 });
             }
@@ -253,19 +240,19 @@ router.get('/selectPopupStampDate', function(req, res) {
                 res.status(400);
                 res.send('Select stamp date error');
             }else {
-                var selectAvailableCoupon = 'select count(SUC.COUPON_NUMBER) as COUPON_CNT, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
-                    'from SB_USER_COUPON as SUC ' +
-                    'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SUC.SHOP_ID ' +
-                    'where SUC.SHOP_ID = ' + mysql.escape(shopId) + ' and SUC.USER_ID = ' + mysql.escape(userId) +' and SUC.USED_YN = "N"';
-                connection.query(selectAvailableCoupon, function (err, availableCoupon) {
+                var selectShopUserQuery = 'select SUPI.USER_STAMP, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
+                    'from SB_USER_PUSH_INFO as SUPI ' +
+                    'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
+                    'where SUPI.SHOP_ID = ' + mysql.escape(shopId) + ' and SUPI.USER_ID = ' + mysql.escape(userId) +' and SUPI.DEL_YN = "N"';
+                connection.query(selectShopUserQuery, function (err, shopUserData) {
                     if (err) {
                         logger.error(TAG, "Select available coupon error : " + err);
                         res.status(400);
                         res.send('Select available coupon error');
                     } else {
-                        logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(availableCoupon));
+                        logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(shopUserData));
                         res.status(200);
-                        res.send({stampDateList: stampDateList, availableCoupon: availableCoupon[0]});
+                        res.send({stampDateList: stampDateList, shopUserData: shopUserData[0]});
                     }
                 });
             }

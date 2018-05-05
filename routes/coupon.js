@@ -51,7 +51,7 @@ router.get('/main', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select coupon shop main success : ' + JSON.stringify(couponListData));
                 res.status(200);
-                res.render('common/papa-stamp', {view:'coupon', url:config.url, userId:userId, shopId:'', couponNum:'', popupCheck:false, couponListData:couponListData});
+                res.render('common/papa-stamp', {view:'coupon', url:config.url, userId:userId, shopId:'', couponNum:'', couponListData:couponListData});
             }
             connection.release();
         });
