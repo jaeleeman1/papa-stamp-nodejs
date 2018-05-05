@@ -277,6 +277,41 @@ router.put('/useCoupon', function(req, res, next) {
     });
 });
 
+//Get Coupon Data
+router.get('/selectCoupon', function(req, res, next) {
+    logger.info(TAG, 'Update delete coupon data');
+
+    var userId = req.headers.user_id;
+    var shopId = req.query.shop_id;
+
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid id parameter error');
+        res.status(400);
+        res.send('Invalid id parameter error');
+    }
+
+    //Selectg Coupon Data API
+    getConnection(function (err, connection) {
+        var selectCouponQuery = 'select COUPON_NAME, COUPON_NUMBER, EXPIRATION_DT from SB_USER_COUPON ' +
+            'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId) +' and MAPPING_YN="Y" and USED_YN="N"';
+        connection.query(selectCouponQuery, function (err, selectCouponData) {
+            if (err) {
+                logger.error(TAG, "Select Coupon error : " + err);
+                res.status(400);
+                res.send('Select coupon error');
+            }else{
+                logger.debug(TAG, 'Select coupon success');
+                res.send({selectCouponData: selectCouponData});
+            }
+            connection.release();
+        });
+    });
+});
+
 //Put Delete Card Data
 router.put('/deleteCoupon', function(req, res, next) {
     logger.info(TAG, 'Update delete coupon data');

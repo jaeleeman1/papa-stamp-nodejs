@@ -47,7 +47,7 @@
     <div class="pop_up_body">
         <p class="btn_txt_stamp_nor mt20">
             <span class="delete-card" id="delete_card">카드 삭제</span>
-            <span class="close-card" id="close_card">닫기</span>
+            <span class="close-card" onclick="closeCard();">닫기</span>
         </p>
         <div class="card-img">
             <div class="container">
@@ -150,12 +150,9 @@
         });
     }
 
-    function closeCard(checkToast) {
-        if(checkToast) {
-            closeLayer('layerCardPopup');
-        }else {
-            requestStampConfirm();
-        }
+    function closeCard() {
+        $("#shop_id").val('');
+        closeLayer('layerCardPopup');
     }
 
     function deleteCard(shopId) {
@@ -175,27 +172,6 @@
                 "아니오": function () {
                     $(this).dialog('close');
                 }
-            }
-        });
-    }
-
-    function requestStampConfirm() {
-        $("#request-popup-confirm").dialog({
-            resizable: false,
-            modal: true,
-            title: "스탬프 요청 팝업",
-            height: 200,
-            width: '90%',
-            resizable:false,
-            buttons: {
-                "예": function () {
-                    $(this).dialog('close');
-                    closeLayer('layerCardPopup');
-                },
-                "아니오": function () {
-                    $(this).dialog('close');
-                }
-
             }
         });
     }
@@ -243,10 +219,7 @@
                 $('#delete_card').click(function() {
                     deleteCard(shopId);
                 });
-                $('#close_card').unbind('click');
-                $('#close_card').click(function() {
-                    closeCard(true);
-                });
+
                 var popupCardData = document.getElementById('popup-card');
                 var appendData = '<figure class="front">' +
                     '<img class="base-img" src="/images/shop-card/front/'+ frontImg +'" alt="front">' +
@@ -302,10 +275,6 @@
                 var browserHeight = $(document).height();
                 var scrollPosition = $(document).scrollTop();
 
-                $('#close_card').unbind('click');
-                $('#close_card').click(function() {
-                    closeCard(false);
-                });
                 var popupCardData = document.getElementById('popup-card');
                 var appendData = '<figure class="front">' +
                     '<img class="base-img" src="/images/shop-card/front/'+ data.shopUserData.SHOP_FRONT_IMG +'" alt="front">' +
@@ -479,11 +448,6 @@
 
                 $('#delete_card').click(function () {
                     deleteCard(shopId);
-                });
-
-                $('#close_card').unbind('click');
-                $('#close_card').click(function () {
-                    closeCard(true);
                 });
             }
         }

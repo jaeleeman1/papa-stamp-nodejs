@@ -15,6 +15,7 @@ var notification = require('./routes/notification');
 var admin = require('./routes/admin');
 var adminStamp = require('./routes/admin-stamp');
 var adminCoupon = require('./routes/admin-coupon');
+var adminTablet = require('./routes/admin-tablet');
 var download = require('./routes/download');
 
 var app = express();
@@ -41,6 +42,7 @@ const notificationURL = '/v1/notification';
 const adminURL = '/v1/admin';
 const adminStampURL = '/v1/admin-stamp';
 const adminCouponURL = '/v1/admin-coupon';
+const adminTabletURL = '/v1/admin-tablet';
 const downloadURL = '/v1/download';
 
 app.use(shopUrl, shop);
@@ -53,6 +55,7 @@ app.use(notificationURL, notification);
 app.use(adminURL, admin);
 app.use(adminStampURL, adminStamp);
 app.use(adminCouponURL, adminCoupon);
+app.use(adminTabletURL, adminTablet);
 app.use(downloadURL, download);
 
 // catch 404 and forward to error handler

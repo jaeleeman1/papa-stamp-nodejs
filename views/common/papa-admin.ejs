@@ -10,6 +10,8 @@
 
   <title>Papa-stamp Admin! | </title>
 
+  <link rel="stylesheet" href="/css/jquery.toast.min.css" type="text/css"/>
+
   <!-- Bootstrap -->
   <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
@@ -85,7 +87,7 @@
                 </ul>
               </li>
 
-              <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i>신규 기능 <span class="label label-success pull-right">Coming Soon</span></a></li>
+              <li><a onclick="customNumber();"><i class="fa fa-laptop"></i>전화 번호<span class="label label-success pull-right">Coming Soon</span></a></li>
             </ul>
           </div>
 
@@ -189,7 +191,9 @@
     <% } else if(view == 'coupon') { %>
       <% include ../papa-admin/admin-coupon.ejs %>
     <% } else if(view == 'manager') { %>
-    <% include ../papa-admin/admin-coupon-manager.ejs %>
+      <% include ../papa-admin/admin-coupon-manager.ejs %>
+    <% } else if(view == 'tablet') { %>
+      <% include ../papa-admin/admin-tablet.ejs %>
     <% } %>
 
     <!-- footer content -->
@@ -258,6 +262,8 @@
 
 <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
+<script src='/js/jquery.toast.min.js' type='text/javascript'></script>
+
 <script src="https://papastamp.com:8060/socket.io/socket.io.js"></script>
 <!--<script src="http://localhost:8060/socket.io/socket.io.js"></script>-->
 <script type="text/javascript">
@@ -268,8 +274,6 @@
         if (data.type == "request-stamp") {
             pushStamp(data.sendId);
         }else if(data.type == "request-coupon") {
-            console.log(data.sendId);
-            console.log(data.couponNumber);
             useCoupon(data.sendId, data.couponNumber);
         }
     });
@@ -297,6 +301,11 @@
 
     function couponManagement() {
         document.menuAction.action = '/v1/admin-coupon/manager';
+        document.menuAction.submit();
+    }
+
+    function customNumber() {
+        document.menuAction.action = '/v1/admin-tablet/main';
         document.menuAction.submit();
     }
 
