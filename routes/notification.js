@@ -149,10 +149,39 @@ router.post('/update-stamp', function (req, res, next) {
                         res.status(400);
                         res.send('Select shop data error');
                     } else {
-                        logger.debug(TAG, 'Insert user push history success');
-                        io.sockets.emit(userId, {type:"update", sendId: shopId, userCheck:userCheckData[0], stampCnt:userCheckData[0].USER_STAMP, stampNumber:stampNumber, shopData:shopData[0]});
-                        res.status(200);
-                        res.send({userId: userId, visitDate: shopData[0].VISIT_DATE, stampNumber:stampNumber});
+                        logger.debug(TAG, 'select user push history success');
+
+                        var arrayValue = 'value ';
+                        for(var i=0; i<stampNumber; i++) {
+                            if(i != (stampNumber -1))
+                                arrayValue += '(' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + '),';
+                            else
+                                arrayValue += '(' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
+                        }
+                        var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' + arrayValue;
+                        connection.query(insertStampHistory, function (err, insertStampHistoryData) {
+                            if (err) {
+                                logger.error(TAG, "Insert stamp history error : " + err);
+                                res.status(400);
+                                res.send('Insert stamp history error');
+                            }else{
+                                var insertUserPushQuery = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) ' +
+                                    'value (' + mysql.escape(shopId) + ',' + mysql.escape(userId) + ', '+ stampNumber +') ' +
+                                    'on duplicate key update USER_STAMP = USER_STAMP + ' + stampNumber;
+                                connection.query(insertUserPushQuery, function (err, userPushData) {
+                                    if (err) {
+                                        logger.error(TAG, "Insert user push info error : " + err);
+                                        res.status(400);
+                                        res.send('Insert user push info error');
+                                    } else {
+                                        logger.debug(TAG, 'Insert user push info success');
+                                        io.sockets.emit(userId, {type:"update", sendId: shopId, userCheck:userCheckData[0], stampCnt:userCheckData[0].USER_STAMP, stampNumber:stampNumber, shopData:shopData[0]});
+                                        res.status(200);
+                                        res.send({userId: userId, visitDate: shopData[0].VISIT_DATE, stampNumber:stampNumber});
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }

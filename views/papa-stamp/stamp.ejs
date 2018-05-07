@@ -74,12 +74,6 @@
     </figure>
 </div>
 
-<div id="request-popup-confirm" class="dialog-confirm">
-    <figure>
-        <div style="margin-top: 15px;">스탬프 요청 팝업을 닫으시겠습니까?</div>
-    </figure>
-</div>
-
 <script type="text/javascript">
     $(function() {
         var shopId = $("#shop_id").val();
@@ -87,16 +81,6 @@
             stampActionOpenLayer('layerCardPopup', shopId);
         }
     });
-
-/*    function moveCoupon() {
-        if($("#available-coupon").hasClass("exist-coupon")){
-            document.footerAction.action = '/v1/coupon/main';
-            document.footerAction.submit();
-        }else {
-            $.toast.config.width = 220;
-            $.toast('매장에서 <h4>스탬프</h4>를 모아보세요.', { type: 'info', duration: 3000 } );
-        }
-    }*/
 
     function deleteCardcallback(shopId) {
         var userId = $("#user_id").val();
@@ -202,6 +186,7 @@
     }
 
     function focusOpenLayer(showDivId, shopId, frontImg, backImg, stampImg) {
+        console.log('@@ :' +shopId);
         var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
@@ -228,6 +213,9 @@
                     '<img class="base-img" src="/images/shop-card/back/'+ backImg +'" alt="back">' +
                     '<div class="img-repeat-'+ shopId +'">';
 
+                var stampCount = data.stampCount % 10;
+                var stampLength = data.stampDateList.length % 10;
+
                 for(var i=0; i<stampLength; i++) {
                     appendData += '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon_'+i+'>">'+
                         '<img class="stamp-img-'+ shopId +'" src="/images/shop-stamp/'+ stampImg +'"/>' +
@@ -237,9 +225,6 @@
                 appendData += '</div>' +
                     '</figure>';
                 popupCardData.innerHTML = appendData;
-
-                var stampCount = data.stampCount % 10;
-                var stampLength = data.stampDateList.length % 10;
 
                 if(stampCount != stampLength) {
                     $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
@@ -425,26 +410,6 @@
                         viewStamp(viewtStampNumber);
                     }
                 }
-
-                var headers = {};
-                headers["user_id"] = pushUserId;
-                var dataString = {'shop_id': shopId, 'param_number': stampNumber};
-
-                $.ajax({
-                    url: $("#url").val() + '/v1/stamp/historyData',
-                    type: 'PUT',
-                    headers: headers,
-                    dataType: 'json',
-                    data: dataString,
-                    success: function (data) {
-                        if (data.result == "success") {
-                            console.log("insert history success");
-                        }
-                    },
-                    error: function (request, status, error) {
-                        console.error("selectStampDate : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                    }
-                });
 
                 $('#delete_card').click(function () {
                     deleteCard(shopId);

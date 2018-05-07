@@ -51,12 +51,11 @@
 </div>
 <!-- //banner -->
 
-<div id="pre-coupon-confirm" class="dialog-confirm">
+<div id="admin-coupon-confirm" class="dialog-confirm">
   <figure>
-    <div class="confirm-user-number" id="stamp-user-number" style="margin-top: 15px;">010-2618-1715</div>
-    <div>
-      <label style="margin-bottom: 30px;" for="terms">사용될 쿠폰을 선택하세요</label><br/>
-      <input style="margin: 10px 10px 50px 20px;" type="radio" name="paramValue" value="1" checked="checked">1</input><br/>
+    <div class="confirm-coupon-user-number" id="stamp-user-number" style="margin-top: 15px;">010-2618-1715</div>
+    <label style="margin-bottom: 30px;" for="terms">적립된 쿠폰을 사용하시겠습니까?</label><br/>
+    <div id="admin-coupon-list" style="float:left;margin-left:20px;width: 85%;">
     </div>
   </figure>
 </div>
@@ -69,25 +68,23 @@
 
         $("#stamp_btn_push").click(
             function() {
-                inputData = $("#phone-text").val();
+                inputData = '9c4e059cb007a6d5065017d8f07133cd';//$("#phone-text").val();
 
                 if(tempNumber.length < 17) {
-                    tempNumber = tempNumber.substr(0, tempNumber.length-1);
                     $.toast.config.align = 'center';
                     $.toast.config.width = 230;
                     $.toast('<h4>올바른 번호</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 } );
                 }else {
-                    pushStamp(inputData);
+                    pushStamp(inputData, 'admin');
                 }
             }
         );
 
         $("#coupon_btn_push").click(
             function() {
-                inputData = $("#phone-text").val();
+                inputData = '9c4e059cb007a6d5065017d8f07133cd';//$("#phone-text").val();
 
                 if(tempNumber.length < 17) {
-                    tempNumber = tempNumber.substr(0, tempNumber.length-1);
                     $.toast.config.align = 'center';
                     $.toast.config.width = 230;
                     $.toast('<h4>올바른 번호</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 } );
@@ -95,7 +92,7 @@
                     var shopId = $("#shop_id").val();
                     var dataString = {'shop_id': shopId};
                     var headers = {};
-                    headers["user_id"] = '9c4e059cb007a6d5065017d8f07133cd';
+                    headers["user_id"] = inputData;
 
                     $.ajax({
                         url: $("#url").val() + '/v1/coupon/selectCoupon',
@@ -105,17 +102,29 @@
                         data : dataString,
                         success: function(data) {
                             if(data.selectCouponData.length > 0) {
-                                console.log(data.selectCouponData);
+                                var couponList = document.getElementById("admin-coupon-list");
+                                var appendData = '';
+                                var couponLength = data.selectCouponData.length;
+                                for(var i=0; i<couponLength; i++) {
+                                    appendData += '<div style="margin-bottom:50px;">';
+                                    if(i == 0) {
+                                        appendData += '<input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="'+data.selectCouponData[i].COUPON_NUMBER+'" checked="checked">';
+                                    }else {
+                                        appendData += '<input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="'+data.selectCouponData[i].COUPON_NUMBER+'">';
+                                    }
+                                    appendData += '<h5 style="padding-top:16px;" class="confirm-coupon-number">'+ data.selectCouponData[i].COUPON_NUMBER +' / '+ data.selectCouponData[i].COUPON_NAME +
+                                        ' / '+ data.selectCouponData[i].EXPIRATION_DT +'</h5>' +
+                                        '</input>' +
+                                        '</div>';
+                                }
+                                couponList.innerHTML = appendData;
+                                adminCoupon(inputData);
                             }else {
                                 $.toast.config.width = 150;
                                 $.toast('<h4>사용 가능한 쿠폰</h4>이 없습니다.!', { type: 'danger', sticky : true } );
                             }
                         }
                     });
-
-
-//                    userCoupon();
-
 
                     /*useCoupon(inputData);*/
                 }
@@ -145,7 +154,6 @@
 
                 if(tempNumber.length > 17) {
                     tempNumber = tempNumber.substr(0, tempNumber.length-1);
-                    console.log(tempNumber);
                 }else {
                     if(tempNumber.length == 3 || tempNumber.length == 10) {
                         tempNumber += ' - ';
@@ -171,18 +179,40 @@
             }, 200);
         }
 
-        function userCoupon() {
-            $("#pre-coupon-confirm").dialog({
+        function adminCouponCallback(userId) {
+            var shopId = $("#shop_id").val();
+            var couponNumber = $("input:radio[name=paramCouponValue]:checked").val();
+            var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
+            var headers = {};
+            headers["user_id"] = userId;
+
+            $.ajax({
+                url: $("#url").val() + '/v1/coupon/useCoupon',
+                type: 'PUT',
+                headers: headers,
+                dataType: 'json',
+                data: dataString,
+                success: function (data) {
+                    $.toast('<h4>쿠폰 사용</h4>이 완료되었습니다!!.', { type: 'info', duration: 3000 } );
+                },
+                error: function (request, status, error) {
+                    console.error("selectStampDate : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                }
+            });
+        }
+
+        function adminCoupon(userId) {
+            $("#admin-coupon-confirm").dialog({
                 resizable: false,
                 modal: true,
                 title: "사용 가능 쿠폰!",
-                height: 400,
-                width: 600,
+                height: 450,
+                width: 700,
                 resizable:false,
                 buttons: {
-                    "선택": function () {
+                    "확인": function () {
                         $(this).dialog('close');
-                        pushStampCallback(sendId);
+                        adminCouponCallback(userId);
                     },
                     "취소": function () {
                         $(this).dialog('close');

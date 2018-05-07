@@ -32,13 +32,8 @@
   <link href="/vendors/cropper/dist/cropper.min.css" rel="stylesheet">
 
   <!-- Custom Theme Style -->
-  <link href="/css/custom.css" rel="stylesheet">
-
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
-
-
-
-
+  <link href="/css/custom.css" rel="stylesheet">
 
 </head>
 
@@ -209,25 +204,26 @@
 
 <div id="use-coupon-confirm" class="dialog-confirm">
   <figure>
-    <h5 class="confirm-coupon-number" id="confirm-coupon-number">bWZ9b1vVG7Jm5</h5>
-    <h4 class="confirm-coupon-name" id="confirm-coupon-name">카푸치노</h4>
-    <div class="confirm-user-number" id="coupon-user-number" style="margin-top: 15px;">010-2618-1715</div>
+    <div class="confirm-coupon-user-number" id="coupon-user-number" style="margin-top: 15px;">010-2618-1715</div>
     <div>
       <label style="margin-bottom: 30px;" for="terms">쿠폰 사용을 허용 하시겠습니까?</label><br/>
     </div>
+    <h5 class="confirm-coupon-number" id="confirm-coupon-number">bWZ9b1vVG7Jm5</h5>
+    <h4 class="confirm-coupon-name" id="confirm-coupon-name">카푸치노</h4>
+    <h4 class="confirm-coupon-date">2017-06-01 ~ 2017-12-31</h4>
   </figure>
 </div>
 
 <div id="push-stamp-confirm" class="dialog-confirm">
   <figure>
-    <div class="confirm-user-number" id="stamp-user-number" style="margin-top: 15px;">010-2618-1715</div>
+    <div class="confirm-stamp-user-number" id="stamp-user-number">010-2618-1715</div>
     <div>
       <label style="margin-bottom: 30px;" for="terms">스탬프 적립 하시겠습니까?</label><br/>
-      <input style="margin: 10px 10px 50px 20px;" type="radio" name="paramValue" value="1" checked="checked">1</input><br/>
-      <input style="margin: 10px 10px 30px 20px;" type="radio" name="paramValue" value="2">2</input>
-      <input style="margin: 10px 10px 30px 20px;" type="radio" name="paramValue" value="3">3</input>
-      <input style="margin: 10px 10px 30px 20px;" type="radio" name="paramValue" value="4">4</input>
-      <input style="margin: 10px 10px 30px 20px;" type="radio" name="paramValue" value="5">5</input>
+      <input type="radio" name="paramStampValue" value="1" checked="checked">1</input><br/>
+      <input type="radio" name="paramStampValue" value="2">2</input>
+      <input type="radio" name="paramStampValue" value="3">3</input>
+      <input type="radio" name="paramStampValue" value="4">4</input>
+      <input type="radio" name="paramStampValue" value="5">5</input>
     </div>
   </figure>
 </div>
@@ -332,7 +328,7 @@
 
     function pushStampCallback(userId) {
         var shopId = $("#shop_id").val();
-        var stampNumber = $("input:radio[name=paramValue]:checked").val();
+        var stampNumber = $("input:radio[name=paramStampValue]:checked").val();
         var dataString = {'shop_id': shopId, 'stamp_number': stampNumber};
         var headers = {};
         headers["user_id"] = userId;
@@ -367,8 +363,8 @@
                     }
                     userHisData.innerHTML = appendData + userHisData.innerHTML;
                     stampLength.innerHTML = addLength +' 개';
-                    $("input:radio[name=paramValue]:checked").prop("checked", false);
-                    $("input:radio[name=paramValue]:radio[value='1']").prop("checked", true);
+                    $("input:radio[name=paramStampValue]:checked").prop("checked", false);
+                    $("input:radio[name=paramStampValue]:radio[value='1']").prop("checked", true);
                 }
             },
             error: function(request, status, error) {
@@ -377,7 +373,52 @@
         });
     }
 
-    function pushStamp(sendId) {
+    function adminStampCallback(userId) {
+        var shopId = $("#shop_id").val();
+        var stampNumber = $("input:radio[name=paramStampValue]:checked").val();
+        var dataString = {'shop_id': shopId, 'stamp_number': stampNumber};
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/v1/stamp/update-stamp-admin',
+            type: 'POST',
+            headers: headers,
+            dataType: 'json',
+            data: dataString,
+            success: function (data) {
+                if (data.result == "success") {
+                    $.toast('<h4>스탬프 적립</h4> 완료되었습니다!!.', { type: 'info', duration: 3000 } );
+                    var visitRateCnt = data.stampCnt % 10;
+                    var sumStamp = Number(visitRateCnt) + Number(stampNumber);
+
+                    if (sumStamp > 9) {
+                        var headers = {};
+                        headers["user_id"] = userId;
+                        var dataString = {'shop_id': shopId};
+                        $.ajax({
+                            url: $("#url").val() + '/v1/coupon/couponData',
+                            type: 'PUT',
+                            headers: headers,
+                            dataType: 'json',
+                            data: dataString,
+                            success: function (data) {
+                                $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', {type: 'success', sticky: true});
+                            },
+                            error: function (request, status, error) {
+                                console.error("issued coupon : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                            }
+                        });
+                    }
+                }
+            },
+            error: function (request, status, error) {
+                console.error("selectStampDate : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            }
+        });
+    }
+
+    function pushStamp(sendId, checkCall) {
         var convertNumber = sendId;
         $("#stamp-user-number").val(convertNumber);
 
@@ -385,15 +426,19 @@
             resizable: false,
             modal: true,
             title: "파파 스탬프 적립!",
-            height: 400,
-            width: 600,
+            height: 420,
+            width: 700,
             resizable:false,
             buttons: {
-                "예": function () {
+                "확인": function () {
                     $(this).dialog('close');
-                    pushStampCallback(sendId);
+                    if(checkCall == 'admin') {
+                        adminStampCallback(sendId);
+                    }else {
+                        pushStampCallback(sendId);
+                    }
                 },
-                "아니오": function () {
+                "취소": function () {
                     $(this).dialog('close');
                 }
             }
@@ -451,15 +496,15 @@
             resizable: false,
             modal: true,
             title: "쿠폰 발급",
-            height: 300,
-            width: 600,
+            height: 350,
+            width: 700,
             resizable:false,
             buttons: {
-                "예": function () {
+                "확인": function () {
                     $(this).dialog('close');
                     useCouponCallback(sendId, couponNumber);
                 },
-                "아니오": function () {
+                "취소": function () {
                     $(this).dialog('close');
                 }
             }

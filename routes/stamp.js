@@ -262,12 +262,12 @@ router.get('/selectPopupStampDate', function(req, res) {
 });
 
 //Put Coupon Data
-router.put('/historyData', function(req, res, next) {
+router.post('/update-stamp-admin', function(req, res, next) {
     logger.info(TAG, 'Put stamp history data');
 
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
-    var stampNumber = req.body.param_number;
+    var stampNumber = req.body.stamp_number;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
@@ -283,31 +283,43 @@ router.put('/historyData', function(req, res, next) {
 
     //Coupon Data API
     getConnection(function (err, connection) {
-        var arrayValue = 'value ';
-        for(var i=0; i<stampNumber; i++) {
-            if(i != (stampNumber -1))
-                arrayValue += '(' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + '),';
-            else
-                arrayValue += '(' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
-        }
-        var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' + arrayValue;
-        connection.query(insertStampHistory, function (err, insertStampHistoryData) {
+        var selectExistQuery  = 'select count(*) as USER_CHECK, USER_STAMP from SB_USER_PUSH_INFO ' +
+            'where SHOP_ID =' + mysql.escape(shopId) + 'and USER_ID = ' + mysql.escape(userId);
+        connection.query(selectExistQuery, function (err, userCheckData) {
             if (err) {
-                logger.error(TAG, "Insert stamp history error : " + err);
+                logger.error(TAG, "Select user exist error : " + err);
                 res.status(400);
-                res.send('Insert stamp history error');
-            }else{
-                var insertUserPushQuery = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) ' +
-                    'value (' + mysql.escape(shopId) + ',' + mysql.escape(userId) + ', '+ stampNumber +') ' +
-                    'on duplicate key update USER_STAMP = USER_STAMP + ' + stampNumber;
-                connection.query(insertUserPushQuery, function (err, userPushData) {
+                res.send('Select user exist error');
+            } else {
+                logger.debug(TAG, 'Select user exist success', userCheckData);
+
+                var arrayValue = 'value ';
+                for (var i = 0; i < stampNumber; i++) {
+                    if (i != (stampNumber - 1))
+                        arrayValue += '(' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + '),';
+                    else
+                        arrayValue += '(' + mysql.escape(shopId) + ', ' + mysql.escape(userId) + ')';
+                }
+                var insertStampHistory = 'insert into SB_USER_PUSH_HIS (SHOP_ID, USER_ID) ' + arrayValue;
+                connection.query(insertStampHistory, function (err, insertStampHistoryData) {
                     if (err) {
-                        logger.error(TAG, "Insert user push info error : " + err);
+                        logger.error(TAG, "Insert stamp history error : " + err);
                         res.status(400);
-                        res.send('Insert user push info error');
+                        res.send('Insert stamp history error');
                     } else {
-                        logger.debug(TAG, 'Insert user push info success');
-                        res.send({result: 'success'});
+                        var insertUserPushQuery = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID, USER_STAMP) ' +
+                            'value (' + mysql.escape(shopId) + ',' + mysql.escape(userId) + ', ' + stampNumber + ') ' +
+                            'on duplicate key update USER_STAMP = USER_STAMP + ' + stampNumber;
+                        connection.query(insertUserPushQuery, function (err, userPushData) {
+                            if (err) {
+                                logger.error(TAG, "Insert user push info error : " + err);
+                                res.status(400);
+                                res.send('Insert user push info error');
+                            } else {
+                                logger.debug(TAG, 'Insert user push info success');
+                                res.send({result:'success', userCheck:userCheckData[0], stampCnt:userCheckData[0].USER_STAMP});
+                            }
+                        });
                     }
                 });
             }
