@@ -364,14 +364,6 @@
                                     $("#popup-card").find($(".img-repeat-" + shopId)).empty();
                                     //Toast Success Message
                                     $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', {type: 'success', sticky: true});
-                                    var couponText = $("#available-coupon").text().split(" ");
-                                    var couponCnt = Number(couponText[4]);
-                                    if (couponCnt < 1) {
-                                        $("#available-coupon").addClass("exist-coupon");
-                                    }
-
-                                    couponCnt++;
-                                    document.getElementById("available-coupon").innerHTML = '사용 가능 쿠폰 [ ' + couponCnt + ' ]';
 
                                     setTimeout(function () {
                                         var appendStamp = '';

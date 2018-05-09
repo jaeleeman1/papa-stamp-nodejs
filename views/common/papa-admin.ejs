@@ -202,9 +202,9 @@
   </div>
 </div>
 
-<div id="use-coupon-confirm" class="dialog-confirm">
+<div id="push-coupon-confirm" class="dialog-confirm">
   <figure>
-    <div class="confirm-coupon-user-number" id="coupon-user-number" style="margin-top: 15px;">010-2618-1715</div>
+    <div class="confirm-coupon-user-number" id="push-coupon-user-number" style="margin-top: 15px;">010-2618-1715</div>
     <div>
       <label style="margin-bottom: 30px;" for="terms">쿠폰 사용을 허용 하시겠습니까?</label><br/>
     </div>
@@ -216,7 +216,7 @@
 
 <div id="push-stamp-confirm" class="dialog-confirm">
   <figure>
-    <div class="confirm-stamp-user-number" id="stamp-user-number">010-2618-1715</div>
+    <div class="confirm-stamp-user-number" id="stamp-user-number"></div>
     <div>
       <label style="margin-bottom: 30px;" for="terms">스탬프 적립 하시겠습니까?</label><br/>
       <input type="radio" name="paramStampValue" value="1" checked="checked">1</input><br/>
@@ -268,7 +268,7 @@
     var socket = io.connect(convertUrl+':8060');
     socket.on(pushShopId, function(data){
         if (data.type == "request-stamp") {
-            pushStamp(data.sendId);
+            pushStamp(data.sendId, 'push');
         }else if(data.type == "request-coupon") {
             useCoupon(data.sendId, data.couponNumber);
         }
@@ -373,7 +373,7 @@
         });
     }
 
-    function adminStampCallback(userId) {
+    function adminStampCallback(userId, checkCoupon) {
         var shopId = $("#shop_id").val();
         var stampNumber = $("input:radio[name=paramStampValue]:checked").val();
         var dataString = {'shop_id': shopId, 'stamp_number': stampNumber};
@@ -410,6 +410,10 @@
                             }
                         });
                     }
+
+                    if(checkCoupon != true) {
+                        $("#phone-text").val('');
+                    }
                 }
             },
             error: function (request, status, error) {
@@ -418,22 +422,19 @@
         });
     }
 
-    function pushStamp(sendId, checkCall) {
-        var convertNumber = sendId;
-        $("#stamp-user-number").val(convertNumber);
-
+    function pushStamp(sendId, checkCall, checkCoupon) {
         $("#push-stamp-confirm").dialog({
             resizable: false,
             modal: true,
             title: "파파 스탬프 적립!",
-            height: 420,
+            height: 460,
             width: 700,
             resizable:false,
             buttons: {
                 "확인": function () {
                     $(this).dialog('close');
                     if(checkCall == 'admin') {
-                        adminStampCallback(sendId);
+                        adminStampCallback(sendId, checkCoupon);
                     }else {
                         pushStampCallback(sendId);
                     }
@@ -492,7 +493,7 @@
         var convertNumber = sendId;
         $("#coupon-user-number").val(convertNumber);
 
-        $("#use-coupon-confirm").dialog({
+        $("#push-coupon-confirm").dialog({
             resizable: false,
             modal: true,
             title: "쿠폰 발급",

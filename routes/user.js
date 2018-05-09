@@ -6,6 +6,7 @@ var logger = require('../config/logger');
 var mysql = require('mysql');
 var request = require('request');
 var admin = require("firebase-admin");
+var crypto = require( "crypto" );
 var serviceAccount = require("../config/papastamp-a72f6-firebase-adminsdk-qqp2q-6484dc5daa.json");
 
 const TAG = '[USER INFO] ';
@@ -13,6 +14,63 @@ const TAG = '[USER INFO] ';
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://papastamp-a72f6.firebaseio.com"
+});
+
+/* GET encrypt uid */
+router.get('/encryptUid', function(req, res, next) {
+    var dataId = req.query.phone_id;
+    var shopId = req.query.shop_id;
+
+    var secrect = config.secrectKey;
+    var cipher = crypto.createCipher("aes-128-ecb", secrect);
+    var crypted = cipher.update(dataId, 'utf8', 'hex');
+    crypted += cipher.final('hex');
+
+    logger.debug(TAG, 'Phone ID : ' + dataId);
+    logger.debug(TAG, 'Encrypted ID : ' + crypted);
+
+    getConnection(function (err, connection) {
+        var selectStampCount = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
+            'where DEL_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(crypted);
+        connection.query(selectStampCount, function (err, selectStampCountData) {
+            if (err) {
+                logger.error(TAG, "DB Select stamp count error : " + err);
+                res.status(400);
+                res.send('Select stamp count error');
+            } else {
+                logger.debug(TAG, 'Select stamp count success');
+
+                var selectCouponQuery = 'select COUPON_NAME, COUPON_NUMBER, EXPIRATION_DT from SB_USER_COUPON ' +
+                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(crypted) +' and MAPPING_YN="Y" and USED_YN="N"';
+                connection.query(selectCouponQuery, function (err, selectCouponData) {
+                    if (err) {
+                        logger.error(TAG, "Select Coupon error : " + err);
+                        res.status(400);
+                        res.send('Select coupon error');
+                    } else {
+                        logger.debug(TAG, 'Select coupon success');
+                        res.send({cryptedData: crypted, userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
+                    }
+                });
+            }
+            connection.release();
+        });
+    });
+});
+
+/* GET decrypt uid */
+router.get('/decryptUid', function(req, res, next) {
+    var text = req.query.user_id;
+    var secrect = "Glu0r6o0GzBZIe0Qsrh2FA==";
+    var cipher = crypto.createDecipher('aes-128-ecb', secrect);
+    var decrypted = cipher.update(text, 'hex', 'utf8');
+    decrypted += cipher.final('utf8');
+
+    console.log( "Input : ", text );
+    console.log( "secrect : ", secrect );
+    console.log( "Decrypted : ", decrypted );
+
+    res.send({decryptedData: decrypted});
 });
 
 //Get User Location
