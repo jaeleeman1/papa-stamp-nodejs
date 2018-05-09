@@ -108,9 +108,23 @@
     }
 
     function requestStamp(shopId) {
-        if(window.Bridge) {
-            window.Bridge.callStampActivity(shopId);
-        }
+        var dataString = {'shop_id': shopId};
+
+        $.ajax({
+            url: $("#url").val() + '/v1/user/shopIdToBeacon',
+            type: 'GET',
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                var shopBeacon = data.shopBeacon;
+                if(window.Bridge) {
+                    window.Bridge.callStampActivity(shopId, shopBeacon);
+                }
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
     }
 
     function retryStamp(shopId) {
@@ -186,7 +200,7 @@
     }
 
     function focusOpenLayer(showDivId, shopId, frontImg, backImg, stampImg) {
-        console.log('@@ :' +shopId);
+        $("#shop_id").val(shopId);
         var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
