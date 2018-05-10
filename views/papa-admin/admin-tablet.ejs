@@ -83,7 +83,7 @@
                     data: dataString,
                     success: function (data) {
                         inputData = data.cryptedData;
-                        $("#stamp-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp +'장)</h4>');
+                        $("#stamp-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
 
                         if(tempNumber.length < 17) {
                             $.toast.config.align = 'center';
@@ -91,12 +91,16 @@
                             $.toast('<h4>올바른 번호</h 4>를 입력하세요!!.', { type: 'danger', duration: 3000 } );
                         }else {
                             if (data.selectCouponData.length > 0) {
-                                $.toast('발급된 <h4>쿠폰</h4>이 '+ data.selectCouponData.length +'장 있습니다.', {type: 'danger', duration: 5000});
-                                pushStamp(inputData, 'admin', true);
-                            }else {
-                                pushStamp(inputData, 'admin', false);
+                                $.toast('발급된 <h4>쿠폰</h4>이 ' + data.selectCouponData.length + '장 있습니다.', {
+                                    type: 'danger',
+                                    duration: 3000
+                                });
                             }
+                            pushStamp(inputData, 'admin', false);
                         }
+                    },
+                    error: function(request, status, error) {
+                        console.error("encryptUid : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     }
                 });
             }
@@ -119,7 +123,7 @@
                     data: dataString,
                     success: function (data) {
                         inputData = data.cryptedData;
-                        $("#admin-coupon-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp +'장)</h4>');
+                        $("#admin-coupon-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
 
                         if(tempNumber.length < 17) {
                             $.toast.config.align = 'center';
@@ -149,6 +153,9 @@
                                 $.toast('<h4>사용 가능한 쿠폰</h4>이 없습니다.!', { type: 'danger', sticky : true } );
                             }
                         }
+                    },
+                    error: function(request, status, error) {
+                        console.error("encryptUid : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     }
                 });
             }
@@ -181,10 +188,63 @@
                     if(tempNumber.length == 3 || tempNumber.length == 10) {
                         tempNumber += ' - ';
                     }
+
                     $("#phone-text").val(tempNumber);
+
+                    if(tempNumber.length == 17) {
+                        callFunction();
+                    }
                 }
             }
         });
+        
+        function callFunction() {
+            var shopId = $("#shop_id").val();
+            var convertNumber = $("#phone-text").val();
+            document.getElementById("stamp-user-number").innerHTML = convertNumber;
+            convertNumber = convertNumber.replace(/ /gi, '');
+            convertNumber = convertNumber.replace(/-/gi, '');
+            convertNumber = '082'+ convertNumber;
+
+            var dataString = {'phone_id': convertNumber, 'shop_id': shopId};
+            $.ajax({
+                url: $("#url").val() + '/v1/user/encryptUid',
+                type: 'GET',
+                dataType: 'json',
+                data: dataString,
+                success: function (data) {
+                    inputData = data.cryptedData;
+                    $("#stamp-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
+                    $("#admin-coupon-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
+
+                    if (data.selectCouponData.length > 0) {
+                        $.toast('발급된 <h4>쿠폰</h4>이 '+ data.selectCouponData.length +'장 있습니다.', {type: 'danger', duration: 5000});
+                        var couponList = document.getElementById("admin-coupon-list");
+                        var appendData = '';
+                        var couponLength = data.selectCouponData.length;
+                        for(var i=0; i<couponLength; i++) {
+                            appendData += '<div style="margin-bottom:50px;">';
+                            if(i == 0) {
+                                appendData += '<input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="'+data.selectCouponData[i].COUPON_NUMBER+'" checked="checked">';
+                            }else {
+                                appendData += '<input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="'+data.selectCouponData[i].COUPON_NUMBER+'">';
+                            }
+                            appendData += '<h5 style="padding-top:16px;" class="confirm-coupon-number">'+ data.selectCouponData[i].COUPON_NUMBER +' / '+ data.selectCouponData[i].COUPON_NAME +
+                                ' / '+ data.selectCouponData[i].EXPIRATION_DT +'</h5>' +
+                                '</input>' +
+                                '</div>';
+                        }
+                        couponList.innerHTML = appendData;
+                        adminCoupon(inputData);
+                    }else {
+                        pushStamp(inputData, 'admin');
+                    }
+                },
+                error: function(request, status, error) {
+                    console.error("encryptUid : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
+        }
 
         function clickCss(index) {
             $("#click"+index).css({"-webkit-transform": "scale(0)",
@@ -237,6 +297,7 @@
                     "확인": function () {
                         $(this).dialog('close');
                         adminCouponCallback(userId);
+                        $("#phone-text").val('');
                     },
                     "취소": function () {
                         $(this).dialog('close');

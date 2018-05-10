@@ -73,11 +73,11 @@
           <div class="menu_section">
             <h3>General</h3>
             <ul class="nav side-menu">
-              <li><a onclick="stampView();"><i class="fa fa-home"></i> 스탬프</a>
+              <li><a onclick="stampView();"><i class="fa fa-home"></i>스탬프 적립</a>
               </li>
               <li><a><i class="fa fa-edit"></i> 쿠폰 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                  <li><a onclick="couponView();">General Form</a></li>
+                  <li><a onclick="couponView();">쿠폰 적립</a></li>
                   <li><a onclick="couponManagement();">쿠폰 관리</a></li>
                 </ul>
               </li>
@@ -200,6 +200,13 @@
     </footer>
     <!-- /footer content -->
   </div>
+</div>
+
+<div id="create-coupon-confirm" class="dialog-confirm">
+  <figure>
+    <h5 class="confirm-coupon-count" id="confirm-coupon-count"></h5>
+    <label style="margin-bottom: 30px;" for="terms">새로 생성 하시겠습니까?</label><br/>
+  </figure>
 </div>
 
 <div id="push-coupon-confirm" class="dialog-confirm">
@@ -326,6 +333,8 @@
         useCoupon();
     }
 
+
+
     function pushStampCallback(userId) {
         var shopId = $("#shop_id").val();
         var stampNumber = $("input:radio[name=paramStampValue]:checked").val();
@@ -373,7 +382,7 @@
         });
     }
 
-    function adminStampCallback(userId, checkCoupon) {
+    function adminStampCallback(userId) {
         var shopId = $("#shop_id").val();
         var stampNumber = $("input:radio[name=paramStampValue]:checked").val();
         var dataString = {'shop_id': shopId, 'stamp_number': stampNumber};
@@ -388,6 +397,7 @@
             data: dataString,
             success: function (data) {
                 if (data.result == "success") {
+                    $("#phone-text").val('');
                     $.toast('<h4>스탬프 적립</h4> 완료되었습니다!!.', { type: 'info', duration: 3000 } );
                     var visitRateCnt = data.stampCnt % 10;
                     var sumStamp = Number(visitRateCnt) + Number(stampNumber);
@@ -410,10 +420,6 @@
                             }
                         });
                     }
-
-                    if(checkCoupon != true) {
-                        $("#phone-text").val('');
-                    }
                 }
             },
             error: function (request, status, error) {
@@ -422,7 +428,7 @@
         });
     }
 
-    function pushStamp(sendId, checkCall, checkCoupon) {
+    function pushStamp(sendId, checkCall) {
         $("#push-stamp-confirm").dialog({
             resizable: false,
             modal: true,
@@ -434,7 +440,7 @@
                 "확인": function () {
                     $(this).dialog('close');
                     if(checkCall == 'admin') {
-                        adminStampCallback(sendId, checkCoupon);
+                        adminStampCallback(sendId);
                     }else {
                         pushStampCallback(sendId);
                     }

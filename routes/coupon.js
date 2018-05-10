@@ -42,7 +42,7 @@ router.get('/main', function(req, res, next) {
             'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
             'where SUC.MAPPING_YN = "Y" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
             'having distance < 250 ' +
-            'order by distance limit 0, 10';
+            'order by USED_YN <> "N", distance, ISSUED_DT limit 0, 10';
         connection.query(selectCouponList, function (err, couponListData) {
             if (err) {
                 logger.error(TAG, "DB select coupon shop main error : " + err);

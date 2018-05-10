@@ -112,7 +112,7 @@
 
               <div class="form-group">
                 <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-                  <button type="reset" class="btn btn-primary" onclick="createCoupon();">등록</button>
+                  <button type="button" class="btn btn-primary" onclick="createCouponPopup();">등록</button>
                 </div>
               </div>
 
@@ -333,6 +333,27 @@
         }
     }
 
+    function createCouponPopup() {
+        document.getElementById('confirm-coupon-count').innerHTML = '쿠폰 ' + $('#coupon-count').find('select').val() + ' 개';
+        $("#create-coupon-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "파파 스탬프 쿠폰 생성!",
+            height: 260,
+            width: 700,
+            resizable:false,
+            buttons: {
+                "확인": function () {
+                    createCoupon();
+                    $(this).dialog('close');
+                },
+                "취소": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
+
     function createCoupon() {
         var couponCount = $('#coupon-count').find('select').val();
         var couponNumber = $('#coupon-number').val();
@@ -341,11 +362,16 @@
         var startDate = $('#start-datepicker').find("input").val();
         var endDate = $('#end-datepicker').find("input").val();
         var dataString = {'coupon_count': couponCount, 'coupon_number': couponNumber, 'coupon_name': couponName, 'coupon_price': couponPrice, 'start_date': startDate, 'end_date': endDate};
-        console.log(couponPrice);
+
+        var shopId = $("#shop_id").val();
+        var headers = {};
+        headers["shop_id"] = shopId;
+
         if(couponCount != "갯수 선택" && couponName.length >0 && couponNumber.length >0 && startDate.length >0 && endDate.length >0) {
             $.ajax({
-                url: 'http://localhost:8080/adminCoupon/createCoupon',//url: $("#url").val() + '/adminCoupon/userData',
+                url: $("#url").val() + '/v1/admin-coupon/createCoupon',
                 type: 'POST',
+                headers : headers,
                 dataType: 'json',
                 data : dataString,
                 success: function(data) {
@@ -363,7 +389,7 @@
         var dataString = {'user_id': userId};
 
         $.ajax({
-            url: 'http://localhost:8080/adminCoupon/userData',//url: $("#url").val() + '/adminCoupon/userData',
+            url: $("#url").val() + '/v1/admin-coupon/userData',
             type: 'GET',
             dataType: 'json',
             data : dataString,

@@ -2,45 +2,45 @@
     <% var couponListCnt = couponListData.length %>
     <% if(couponListCnt > 0) { %>
     <% for (var i=0; i<couponListCnt; i++) {%>
-    <% var shopID = couponListData[i].SHOP_ID
-        var shopName = couponListData[i].SHOP_NAME
-        var shopSubName = couponListData[i].SHOP_SUB_NAME
-        var couponImg = couponListData[i].COUPON_IMG
-        var couponName = couponListData[i].COUPON_NAME
-        var couponPrice = couponListData[i].COUPON_PRICE
-        var expirationDate = couponListData[i].EXPIRATION_DT
-        var couponNumber = couponListData[i].COUPON_NUMBER
-        var usedDate = couponListData[i].USED_DT
-        var usedYn = couponListData[i].USED_YN %>
-    <%if(usedYn == 'Y') {%>
-    <li class="my-card-coupon used-deemed" id="<%= shopID %>-<%= couponNumber %>">
+        <% var shopID = couponListData[i].SHOP_ID
+            var shopName = couponListData[i].SHOP_NAME
+            var shopSubName = couponListData[i].SHOP_SUB_NAME
+            var couponImg = couponListData[i].COUPON_IMG
+            var couponName = couponListData[i].COUPON_NAME
+            var couponPrice = couponListData[i].COUPON_PRICE
+            var expirationDate = couponListData[i].EXPIRATION_DT
+            var couponNumber = couponListData[i].COUPON_NUMBER
+            var usedDate = couponListData[i].USED_DT
+            var usedYn = couponListData[i].USED_YN %>
+        <%if(usedYn == 'Y') {%>
+        <li class="my-card-coupon used-deemed" id="<%= shopID %>-<%= couponNumber %>">
         <%}else {%>
-    <li class="my-card-coupon" id="<%= shopID %>-<%= couponNumber %>">
+        <li class="my-card-coupon" id="<%= shopID %>-<%= couponNumber %>">
         <%}%>
-        <div class="my-container">
-            <div class="my-card">
-                <figure class="front">
-                    <img class="base-img" src="/images/shop-coupon/<%= couponImg %>" alt="back">
-                    <div class="caption">
-                        <%if(usedYn == 'Y') {%>
-                        <h5 class="delete-coupon" onclick="deleteCoupon('<%= shopID %>', '<%= couponNumber %>');">삭제하기</h5>
-                        <h3><%= shopName %><span>(<%= shopSubName %>)</span></h3>
-                        <h4><%= couponName %><span><%= couponPrice %>원</span></h4>
-                        <div class="coupon-name">사용날짜 : <span style="font-size:1em;color:white"><%= usedDate %></span></div>
-                        <h6>✿ 유효 기간 : <%= expirationDate %></h6>
-                        <%}else {%>
-                        <h5 id="use-coupon-<%= couponNumber %>" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>')">사용하기</h5>
-                        <h3><%= shopName %><span>(<%= shopSubName %>)</span></h3>
-                        <h4><%= couponName %><span><%= couponPrice %>원</span></h4>
-                        <div class="coupon-name" id="use-coupon-date-<%= couponNumber %>">쿠폰 번호 : <span style="font-size:1em;color:white"><%= couponNumber %></span></div>
-                        <h6>✿ 유효 기간 : <%= expirationDate %></h6>
-                        <%}%>
-                    </div>
-                </figure>
+            <div class="my-container">
+                <div class="my-card">
+                    <figure class="front">
+                        <img class="base-img" src="/images/shop-coupon/<%= couponImg %>" alt="back">
+                        <div class="caption">
+                            <%if(usedYn == 'Y') {%>
+                            <h5 class="delete-coupon" onclick="deleteCoupon('<%= shopID %>', '<%= couponNumber %>');">삭제하기</h5>
+                            <h3><%= shopName %><span>(<%= shopSubName %>)</span></h3>
+                            <h4><%= couponName %><span><%= couponPrice %>원</span></h4>
+                            <div class="coupon-name">사용날짜 : <span style="font-size:1em;color:white"><%= usedDate %></span></div>
+                            <h6>✿ 유효 기간 : <%= expirationDate %></h6>
+                            <%}else {%>
+                            <h5 id="use-coupon-<%= couponNumber %>" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>')">사용하기</h5>
+                            <h3><%= shopName %><span>(<%= shopSubName %>)</span></h3>
+                            <h4><%= couponName %><span><%= couponPrice %>원</span></h4>
+                            <div class="coupon-name" id="use-coupon-date-<%= couponNumber %>">쿠폰 번호 : <span style="font-size:1em;color:white"><%= couponNumber %></span></div>
+                            <h6>✿ 유효 기간 : <%= expirationDate %></h6>
+                            <%}%>
+                        </div>
+                    </figure>
+                </div>
             </div>
-        </div>
-    </li>
-    <%}%>
+        </li>
+        <%}%>
     <%} else {%>
     <li class="my-card-coupon blank-card">
         <div class="my-container">
@@ -114,7 +114,7 @@
     }
 
     function deleteCouponCallback(shopId, couponNumber) {
-        var userId = $("#user_d").val();
+        var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
         var headers = {};
         headers["user_id"] = userId;
@@ -135,7 +135,7 @@
     }
 
     function tryRequestCoupon(shopId, couponNumber) {
-        var userId = $("#user_d").val();
+        var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
         var headers = {};
         headers["user_id"] = userId;
