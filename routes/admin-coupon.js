@@ -11,6 +11,9 @@ const TAG = '[ADMIN COUPON INFO] ';
 /* GET stamp listing. */
 router.get('/main', function(req, res, next) {
     var shopId = req.query.shop_id;
+    var shopName = req.query.shop_name;
+    var shopIcon = req.query.shop_icon;
+    var userEmail = req.query.user_email;
 
     getConnection(function (err, connection) {
         //Grgaph daily data
@@ -76,7 +79,7 @@ router.get('/main', function(req, res, next) {
                                 }
 
                                 res.status(200);
-                                res.render('common/papa-admin',{view:'coupon', url:config.url, shopId:shopId, today:today, shopsCouponTodayData:shopsCouponTodayData, viewDate:viewDate, viewCoupon:viewCoupon});
+                                res.render('common/papa-admin',{view:'coupon', url:config.url, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon, today:today, shopsCouponTodayData:shopsCouponTodayData, viewDate:viewDate, viewCoupon:viewCoupon});
                             }
                         });
                     }
@@ -191,7 +194,9 @@ router.get('/periodData', function(req, res, next) {
 
 router.get('/manager', function(req, res, next) {
     var shopId = req.query.shop_id;
-    logger.debug(TAG, 'Shop id : ' + shopId);
+    var shopName = req.query.shop_name;
+    var shopIcon = req.query.shop_icon;
+    var userEmail = req.query.user_email;
 
     getConnection(function (err, connection) {
         var selectCouponUsedListQuery = 'select USER_ID, COUPON_NUMBER, USED_YN, DATE_FORMAT(USED_DT, "%Y-%m-%d %h:%i:%s") as USED_DATE, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as ISSUED_DATE, DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") as TODAY ' +
@@ -211,7 +216,7 @@ router.get('/manager', function(req, res, next) {
                         res.send('Select user push history error');
                     } else {
                         res.status(200);
-                        res.render('common/papa-admin',{view:'manager', url:config.url, shopId:shopId,  today:couponUsedListData[0].TODAY, couponUsedListData:couponUsedListData, couponIssuedListData:couponIssuedListData});
+                        res.render('common/papa-admin',{view:'manager', url:config.url, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon,  today:couponUsedListData[0].TODAY, couponUsedListData:couponUsedListData, couponIssuedListData:couponIssuedListData});
                     }
                 });
             }

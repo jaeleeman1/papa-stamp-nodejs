@@ -30,6 +30,9 @@
 
 <form action="signin/initPage" method="get" style="display:none" name="sendform" id="sendform">
   <input type="hidden" name="shop_id" id="shop_id" value=""/>
+  <input type="hidden" name="shop_name" id="shop_name" value=""/>
+  <input type="hidden" name="shop_icon" id="shop_icon" value=""/>
+  <input type="hidden" name="user_email" id="user_email" value=""/>
 </form>
 
 <body class="login">
@@ -41,66 +44,30 @@
     <div class="animate form login_form">
       <section class="login_content">
         <form>
-          <h1>Admin Portal Login</h1>
+          <h1>Admin Portal 로그인 화면</h1>
           <!--<form action="/login/initPage" method="post" id="sendform" class="form-inline">-->
             <div>
-              <input type="text" class="form-control" placeholder="Username" required="" id="loginId"/>
+              <input type="text" class="form-control" placeholder=<%= userId %> required="" id="loginId"/>
             </div>
             <div>
               <input type="password" class="form-control" placeholder="Password" required="" id="loginPassword"/>
             </div>
             <div>
-            <a class="btn btn-default submit" id="btn_send">Log in</a>
-            <a class="reset_pass" href="#">Lost your password?</a>
+            <a class="btn btn-default submit" id="btn_send">관리자 로그인</a>
           </div>
 
           <div class="clearfix"></div>
 
           <div class="separator">
-            <p class="change_link">New to site?
-              <a href="#signup" class="to_register"> Create Account </a>
+            <p class="change_link">
+              <a href="#signup" class="to_register">해당 지점 접속 정보는 Papa-stamp 담당자에게 문의 바랍니다! </a>
             </p>
 
             <div class="clearfix"></div>
             <br />
 
             <div>
-              <h1><i class="fa fa-paw"></i> Papa-stamp Admin!</h1>
-            </div>
-          </div>
-        </form>
-      </section>
-    </div>
-
-    <div id="register" class="animate form registration_form">
-      <section class="login_content">
-        <form>
-          <h1>Create Account</h1>
-          <div>
-            <input type="text" class="form-control" placeholder="Username" required="" />
-          </div>
-          <div>
-            <input type="email" class="form-control" placeholder="Email" required="" />
-          </div>
-          <div>
-            <input type="password" class="form-control" placeholder="Password" required="" />
-          </div>
-          <div>
-            <a class="btn btn-default submit" href="index.html">Submit</a>
-          </div>
-
-          <div class="clearfix"></div>
-
-          <div class="separator">
-            <p class="change_link">Already a member ?
-              <a href="#signin" class="to_register"> Log in </a>
-            </p>
-
-            <div class="clearfix"></div>
-            <br />
-
-            <div>
-              <h1><i class="fa fa-paw"></i> Papa-stamp Admin!</h1>
+              <h1><img style="width:80px;margin-right:20px;" src="/images/papastamp_icon.png"/> 파파 스탬프 !!! </h1>
             </div>
           </div>
         </form>
@@ -116,7 +83,7 @@
         $('#btn_send').on('click',
             function() {
                 if ($('#loginId').val() == "") {
-                    alert('ID 를 입력하세요!');
+                    alert('사용자 ID 를 입력하세요!');
                     $('#loginId').focus();
                     return;
                 }
@@ -127,22 +94,24 @@
                     return;
                 }
 
-                var loginInfo = '{"login_id":"' + $('#loginId').val() + '", "login_password":"' + $('#loginPassword').val() + '"}';
+                var loginInfo = '{"signin_id":"' + $('#loginId').val() + '", "signin_password":"' + $('#loginPassword').val() + '"}';
                 $.ajax({
                     url: $("#url").val()+'/v1/admin/signin/userCheck',
                     type: 'GET',
                     traditional:true,
                     data: JSON.parse(loginInfo),
                     success: function(data) {;
-//                          console.log('a' + data.loginIdCheck);
-//                          console.log('b' + data.loginPwCheck);
-                        if(data.loginIdCheck == '1' && data.loginPwCheck == '1'){
+                        if(data.signinIdCheck == '1' && data.signinPwCheck == '1'){
                             $('#shop_id').val(data.shopId);
+                            $('#shop_name').val(data.shopName);
+                            $('#shop_icon').val(data.shopIcon);
+                            $('#user_email').val(data.signinId);
+
                             $('#sendform').submit(); // 전송
                         }else {
-                            if(data.loginIdCheck == '0') {
+                            if(data.signinIdCheck == '0') {
                                 alert('올바른 ID 를 입력하세요!');
-                            }else if(data.loginPwCheck == '0') {
+                            }else if(data.signinPwCheck == '0') {
                                 alert('올바른 Password 를 입력하세요!');
                             }
                         }

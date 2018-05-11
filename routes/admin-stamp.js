@@ -11,6 +11,9 @@ const TAG = '[ADMIN STAMP INFO] ';
 /* GET stamp listing. */
 router.get('/main', function(req, res, next) {
     var shopId = req.query.shop_id;
+    var shopName = req.query.shop_name;
+    var shopIcon = req.query.shop_icon;
+    var userEmail = req.query.user_email;
 
     getConnection(function (err, connection) {
         //Grgaph daily data
@@ -77,7 +80,7 @@ router.get('/main', function(req, res, next) {
                                 }
 
                                 res.status(200);
-                                res.render('common/papa-admin',{view:'stamp', url:config.url, fcmKey:config.fcmKey, shopId:shopId, today:today, shopsStampTodayData:shopsStampTodayData, viewDate:viewDate, viewStamp:viewStamp});
+                                res.render('common/papa-admin',{view:'stamp', url:config.url, fcmKey:config.fcmKey, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon, today:today, shopsStampTodayData:shopsStampTodayData, viewDate:viewDate, viewStamp:viewStamp});
                             }
                         });
                     }

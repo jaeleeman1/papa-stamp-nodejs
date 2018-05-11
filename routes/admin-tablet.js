@@ -11,6 +11,9 @@ const TAG = '[ADMIN TABLET INFO] ';
 /* GET Tablet Main */
 router.get('/main', function(req, res, next) {
     var shopId = req.query.shop_id;
+    var shopName = req.query.shop_name;
+    var shopIcon = req.query.shop_icon;
+    var userEmail = req.query.user_email;
     var userId = '9c4e059cb007a6d5065017d8f07133cd';//req.query.user_id;
 
     logger.debug(TAG, 'Shop ID : ' + shopId);
@@ -33,7 +36,7 @@ router.get('/main', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select shop order number success : ' + JSON.stringify(currentShopData));
                 res.status(200);
-                res.render('common/papa-admin',{view:'tablet', url:config.url, shopId:shopId, today:currentShopData[0].TODAY, currentNumberData:currentShopData[0]});
+                res.render('common/papa-admin',{view:'tablet', url:config.url, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon, today:currentShopData[0].TODAY, currentNumberData:currentShopData[0]});
             }
             connection.release();
         });

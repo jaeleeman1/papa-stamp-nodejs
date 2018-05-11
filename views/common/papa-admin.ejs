@@ -41,6 +41,9 @@
   <input type="hidden" name="url" id="url" value="<%= url %>"/>
   <input type="hidden" name="user_id" id="user_id" value=""/>
   <input type="hidden" name="shop_id" id="shop_id" value="<%= shopId %>"/>
+  <input type="hidden" name="shop_name" id="shop_name" value="<%= shopName %>"/>
+  <input type="hidden" name="shop_icon" id="shop_icon" value="<%= shopIcon %>"/>
+  <input type="hidden" name="user_email" id="user_email" value="<%= userEmail %>"/>
 </form>
 
 <body class="nav-md">
@@ -49,7 +52,7 @@
     <div class="col-md-3 left_col">
       <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
-          <a onclick="mainView();" class="site_title"><i class="fa fa-paw"></i> <span>Papastamp!</span></a>
+          <a onclick="mainView();" class="site_title"><img style="width:50px;margin-right:5px;" src="/images/papastamp_icon.png"/><span>파파스탬프!</span></a>
         </div>
 
         <div class="clearfix"></div>
@@ -57,11 +60,11 @@
         <!-- menu profile quick info -->
         <div class="profile clearfix">
           <div class="profile_pic">
-            <img src="/images/shop-stamp/cafe-jass-stamp.png" alt="..." class="img-circle profile_img">
+            <img src="/images/shop-stamp/<%= shopIcon %>" alt="..." class="img-circle profile_img">
           </div>
           <div class="profile_info">
             <span>Welcome,</span>
-            <h2>John Doe</h2>
+            <h2><%= shopName %></h2>
           </div>
         </div>
         <!-- /menu profile quick info -->
@@ -71,7 +74,7 @@
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
           <div class="menu_section">
-            <h3>General</h3>
+            <h3>메뉴</h3>
             <ul class="nav side-menu">
               <li><a onclick="stampView();"><i class="fa fa-home"></i>스탬프 적립</a>
               </li>
@@ -121,7 +124,7 @@
 
             <li class="">
               <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <img src="images/img.jpg" alt="">John Doe
+                <img src="images/img.jpg" alt=""><%= userEmail %>
                 <span class=" fa fa-angle-down"></span>
               </a>
               <ul class="dropdown-menu dropdown-usermenu pull-right">

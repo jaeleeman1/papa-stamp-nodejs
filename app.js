@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 
 var shop = require('./routes/shop');
 var stamp = require('./routes/stamp');
@@ -19,6 +20,21 @@ var adminTablet = require('./routes/admin-tablet');
 var download = require('./routes/download');
 
 var app = express();
+
+function ignoreFavicon(req, res, next) {
+    if (req.originalUrl === '/favicon.ico') {
+        res.status(204).json({nope: true});
+    } else {
+        next();
+    }
+}
+
+//session
+app.use(session({
+    secret: 'Glu0r6o0GzBZIe0Qsrh2FA==',
+    resave: false,
+    saveUninitialized: true
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
