@@ -212,7 +212,7 @@ figure .base-img{
     height: 100%;
     padding: 1em;
     backface-visibility: hidden;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .my-card-list figure .caption h5 {
