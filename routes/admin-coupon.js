@@ -4,9 +4,18 @@ var config = require('../config/service_config');
 var getConnection = require('../config/db_connection');
 var logger = require('../config/logger');
 var mysql = require('mysql');
-var request = require('request');
+var crypto = require( "crypto" );
 
 const TAG = '[ADMIN COUPON INFO] ';
+
+var decryptUid = function(uid) {
+    var secrect = config.secrectKey;
+    var cipher = crypto.createDecipher('aes-128-ecb', secrect);
+    var decrypted = cipher.update(uid, 'hex', 'utf8');
+    decrypted += cipher.final('utf8');
+    var returnValue = decrypted.substr(3,3) + '-' + decrypted.substr(6,4) + '-' + decrypted.substr(10,4);
+    return returnValue;
+}
 
 /* GET stamp listing. */
 router.get('/main', function(req, res, next) {
@@ -78,6 +87,11 @@ router.get('/main', function(req, res, next) {
                                     }
                                 }
 
+                                for(var i=0; i<shopsCouponTodayData.length; i++) {
+                                    var tempId = shopsCouponTodayData[i].USER_ID;
+                                    shopsCouponTodayData[i].USER_ID = decryptUid(tempId);
+                                }
+
                                 res.status(200);
                                 res.render('common/papa-admin',{view:'coupon', url:config.url, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon, today:today, shopsCouponTodayData:shopsCouponTodayData, viewDate:viewDate, viewCoupon:viewCoupon});
                             }
@@ -119,6 +133,11 @@ router.get('/userData', function(req, res, next) {
                 res.send('Select shop data error');
             } else {
                 // logger.debug(TAG, 'Select shop data success : ' + JSON.stringify(userData));
+                for(var i=0; i<userData.length; i++) {
+                    var tempId = userData[i].USER_ID;
+                    userData[i].USER_ID = decryptUid(tempId);
+                }
+
                 res.status(200);
                 res.send({userData: userData});
             }
@@ -184,6 +203,11 @@ router.get('/periodData', function(req, res, next) {
                 res.send('Select shop data error');
             } else {
                 console.log('Select shop data success : ' + JSON.stringify(periodData));
+                for(var i=0; i<periodData.length; i++) {
+                    var tempId = periodData[i].USER_ID;
+                    periodData[i].USER_ID = decryptUid(tempId);
+                }
+
                 res.status(200);
                 res.send({periodData: periodData});
             }
@@ -257,25 +281,33 @@ router.post('/createCoupon', function(req, res, next) {
     console.log('couponCount : ' ,couponPrice);
 
     getConnection(function (err, connection) {
-        var inputData = '';
-        var inputLength = couponNumberSplit.length;
-        for(var i=0; i<inputLength; i++) {
-            if(i != (inputLength - 1)) {
-                inputData += '("'+ shopId +'", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'"), ';
-            }else {
-                inputData += '("'+ shopId +'", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'")';
-            }
-        }
-
-        var selectCouponListQuery = 'insert into SB_USER_COUPON (SHOP_ID, COUPON_IMG, COUPON_NUMBER, COUPON_NAME, COUPON_PRICE, EXPIRATION_DT) value ' + inputData;
-        connection.query(selectCouponListQuery, function (err, couponListData) {
+        var selectCouponImgQuery = 'select SHOP_FRONT_IMG from SB_SHOP_INFO where  SHOP_ID = ' + mysql.escape(shopId);
+        connection.query(selectCouponImgQuery, function (err, couponImgData) {
             if (err) {
-                console.error("*** initPage select id Error : " , err);
+                console.error("*** initPage select id Error : ", err);
                 res.status(400);
                 res.send('Select user push history error');
-            }else {
-                res.status(200);
-                res.send({resultData: 'Insert coupon data success'});
+            } else {
+                var inputData = '';
+                var inputLength = couponNumberSplit.length;
+                for(var i=0; i<inputLength; i++) {
+                    if(i != (inputLength - 1)) {
+                        inputData += '("'+ shopId +'", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'"), ';
+                    }else {
+                        inputData += '("'+ shopId +'", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'")';
+                    }
+                }
+                var selectCouponListQuery = 'insert into SB_USER_COUPON (SHOP_ID, COUPON_IMG, COUPON_NUMBER, COUPON_NAME, COUPON_PRICE, EXPIRATION_DT) value ' + inputData;
+                connection.query(selectCouponListQuery, function (err, couponListData) {
+                    if (err) {
+                        console.error("*** initPage select id Error : " , err);
+                        res.status(400);
+                        res.send('Select user push history error');
+                    }else {
+                        res.status(200);
+                        res.send({resultData: 'Insert coupon data success'});
+                    }
+                });
             }
             connection.release();
         });

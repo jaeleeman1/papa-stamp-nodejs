@@ -4,9 +4,18 @@ var config = require('../config/service_config');
 var getConnection = require('../config/db_connection');
 var logger = require('../config/logger');
 var mysql = require('mysql');
-var request = require('request');
+var crypto = require( "crypto" );
 
 const TAG = '[ADMIN STAMP INFO] ';
+
+var decryptUid = function(uid) {
+    var secrect = config.secrectKey;
+    var cipher = crypto.createDecipher('aes-128-ecb', secrect);
+    var decrypted = cipher.update(uid, 'hex', 'utf8');
+    decrypted += cipher.final('utf8');
+    var returnValue = decrypted.substr(3,3) + '-' + decrypted.substr(6,4) + '-' + decrypted.substr(10,4);
+    return returnValue;
+}
 
 /* GET stamp listing. */
 router.get('/main', function(req, res, next) {
@@ -79,6 +88,11 @@ router.get('/main', function(req, res, next) {
                                     }
                                 }
 
+                                for(var i=0; i<shopsStampTodayData.length; i++) {
+                                    var tempId = shopsStampTodayData[i].USER_ID;
+                                    shopsStampTodayData[i].USER_ID = decryptUid(tempId);
+                                }
+
                                 res.status(200);
                                 res.render('common/papa-admin',{view:'stamp', url:config.url, fcmKey:config.fcmKey, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon, today:today, shopsStampTodayData:shopsStampTodayData, viewDate:viewDate, viewStamp:viewStamp});
                             }
@@ -137,6 +151,11 @@ router.get('/user-data', function(req, res, next) {
                         res.status(400);
                         res.send('Select shop data error');
                     } else {
+                        for(var i=0; i<userHisData.length; i++) {
+                            var tempId = userHisData[i].USER_ID;
+                            userHisData[i].USER_ID = decryptUid(tempId);
+                        }
+
                         res.status(200);
                         res.send({userHisData: userHisData, userStamp: userInfoData[0].USER_STAMP});
                     }
@@ -217,6 +236,11 @@ router.get('/period-data', function(req, res, next) {
                 res.send('Select shop data error');
             } else {
                 console.log('Select shop data success : ' + JSON.stringify(periodData));
+                for(var i=0; i<periodData.length; i++) {
+                    var tempId = periodData[i].USER_ID;
+                    periodData[i].USER_ID = decryptUid(tempId);
+                }
+
                 res.status(200);
                 res.send({periodData: periodData});
             }

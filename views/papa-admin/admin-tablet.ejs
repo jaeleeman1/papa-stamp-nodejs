@@ -63,29 +63,82 @@
 <script src='/js/jquery-2.2.3.min.js' type='text/javascript'></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        var tempNumber = '';
+        var tabletNumber = '';
+        var keyNumber = '';
         var inputData = '';
+
+        $("#phone-text").keyup(function(event) {
+            keyNumber = $(this).val();
+            switch(event.keyCode) {
+                case 8 :
+                    var checkNumber = keyNumber.charAt(keyNumber.length-1);
+                    if(checkNumber == '-') {
+                        keyNumber = keyNumber.substr(0, keyNumber.length-1);
+                        $(this).val(keyNumber);
+                    }
+                    clickCss(11);break;
+                case 48 :
+                    clickCss(10);break;
+                case 49 :
+                    clickCss(0);break;
+                case 50 :
+                    clickCss(1);break;
+                case 51 :
+                    clickCss(2);break;
+                case 52 :
+                    clickCss(3);break;
+                case 53 :
+                    clickCss(4);break;
+                case 54 :
+                    clickCss(5);break;
+                case 55 :
+                    clickCss(6);break;
+                case 56 :
+                    clickCss(7);break;
+                case 57 :
+                    clickCss(8);break;
+                case 58 :
+                    clickCss(9);break;
+            }
+
+            if(event.keyCode >=48 && event.keyCode <= 59) {
+                var textLength = $(this).val().length;
+
+                if(textLength > 13) {
+                    keyNumber = $(this).val();
+                    $(this).val(keyNumber.substr(0, keyNumber.length-1));
+                }else {
+                    if (textLength == 3 || textLength == 8) {
+                        keyNumber = $(this).val();
+                        keyNumber += '-';
+                        $(this).val(keyNumber);
+                    }
+
+                    if(textLength == 13) {
+                        callFunction();
+                    }
+                }
+            }
+        });
 
         $("#stamp_btn_push").click(
             function() {
                 var shopId = $("#shop_id").val();
-                var convertNumber = $("#phone-text").val();
-                document.getElementById("stamp-user-number").innerHTML = convertNumber;
-                convertNumber = convertNumber.replace(/ /gi, '');
-                convertNumber = convertNumber.replace(/-/gi, '');
-                convertNumber = '082'+ convertNumber;
+                var userNumber = $("#phone-text").val();
+                document.getElementById("stamp-user-number").innerHTML = userNumber;
 
-                var dataString = {'phone_id': convertNumber, 'shop_id': shopId};
+                var dataString = {'user_number': userNumber, 'shop_id': shopId};
                 $.ajax({
-                    url: $("#url").val() + '/v1/user/encryptUid',
+                    url: $("#url").val() + '/v1/user/couponCheck',
                     type: 'GET',
                     dataType: 'json',
                     data: dataString,
                     success: function (data) {
-                        inputData = data.cryptedData;
-                        $("#stamp-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
-
-                        if(tempNumber.length < 17) {
+                        inputData = data.userId;
+                        $("#stamp-user-number").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
+                        tabletNumber = $("#phone-text").val();
+                        console.log(tabletNumber.length);
+                        if(tabletNumber.length < 13) {
                             $.toast.config.align = 'center';
                             $.toast.config.width = 230;
                             $.toast('<h4>올바른 번호</h 4>를 입력하세요!!.', { type: 'danger', duration: 3000 } );
@@ -117,15 +170,15 @@
 
                 var dataString = {'phone_id': convertNumber, 'shop_id': shopId};
                 $.ajax({
-                    url: $("#url").val() + '/v1/user/encryptUid',
+                    url: $("#url").val() + '/v1/user/couponCheck',
                     type: 'GET',
                     dataType: 'json',
                     data: dataString,
                     success: function (data) {
                         inputData = data.cryptedData;
-                        $("#admin-coupon-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
-
-                        if(tempNumber.length < 17) {
+                        $("#admin-coupon-user-number").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
+                        tabletNumber = $("#phone-text").val();
+                        if(tabletNumber.length < 13) {
                             $.toast.config.align = 'center';
                             $.toast.config.width = 230;
                             $.toast('<h4>올바른 번호</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 } );
@@ -166,32 +219,33 @@
 
             clickCss(index);
 
+            tabletNumber = $("#phone-text").val();
+
             if(index == '10') index = -1;
 
             if(index == '9') {
                 $("#phone-text").val('');
-                tempNumber = '';
+                tabletNumber = '';
             }else if(index == '11') {
-                var checkNumber = tempNumber.charAt(tempNumber.length-1);
-                if(checkNumber == ' ') {
-                    tempNumber = tempNumber.substr(0, tempNumber.length-4);
+                var checkNumber = tabletNumber.charAt(tabletNumber.length-1);
+                if(checkNumber == '-') {
+                    tabletNumber = tabletNumber.substr(0, tabletNumber.length-2);
                 }else {
-                    tempNumber = tempNumber.substr(0, tempNumber.length-1);
+                    tabletNumber = tabletNumber.substr(0, tabletNumber.length-1);
                 }
-                $("#phone-text").val(tempNumber);
+                $("#phone-text").val(tabletNumber);
             }else {
-                tempNumber += (index+1);
-
-                if(tempNumber.length > 17) {
-                    tempNumber = tempNumber.substr(0, tempNumber.length-1);
+                tabletNumber += (index+1);
+                if(tabletNumber.length > 13) {
+                    tabletNumber = tabletNumber.substr(0, tabletNumber.length-1);
                 }else {
-                    if(tempNumber.length == 3 || tempNumber.length == 10) {
-                        tempNumber += ' - ';
+                    if(tabletNumber.length == 3 || tabletNumber.length == 8) {
+                        tabletNumber += '-';
                     }
 
-                    $("#phone-text").val(tempNumber);
+                    $("#phone-text").val(tabletNumber);
 
-                    if(tempNumber.length == 17) {
+                    if(tabletNumber.length == 13) {
                         callFunction();
                     }
                 }
@@ -208,14 +262,14 @@
 
             var dataString = {'phone_id': convertNumber, 'shop_id': shopId};
             $.ajax({
-                url: $("#url").val() + '/v1/user/encryptUid',
+                url: $("#url").val() + '/v1/user/couponCheck',
                 type: 'GET',
                 dataType: 'json',
                 data: dataString,
                 success: function (data) {
                     inputData = data.cryptedData;
-                    $("#stamp-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
-                    $("#admin-coupon-user-number").append('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
+                    $("#stamp-user-number").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
+                    $("#admin-coupon-user-number").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
 
                     if (data.selectCouponData.length > 0) {
                         $.toast('발급된 <h4>쿠폰</h4>이 '+ data.selectCouponData.length +'장 있습니다.', {type: 'danger', duration: 5000});

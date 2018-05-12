@@ -4,12 +4,21 @@ var config = require('../config/service_config');
 var getConnection = require('../config/db_connection');
 var logger = require('../config/logger');
 var mysql = require('mysql');
-var request = require('request');
 var admin = require("firebase-admin");
 var crypto = require( "crypto" );
 var serviceAccount = require("../config/papastamp-a72f6-firebase-adminsdk-qqp2q-6484dc5daa.json");
 
 const TAG = '[USER INFO] ';
+
+var encryptUid = function(unumber) {
+    unumber = unumber.replace(/-/gi, '');
+    unumber = '082'+ unumber;
+    var secrect = config.secrectKey;
+    var cipher = crypto.createCipher("aes-128-ecb", secrect);
+    var crypted = cipher.update(unumber, 'utf8', 'hex');
+    crypted += cipher.final('hex');
+    return crypted;
+}
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -17,16 +26,11 @@ admin.initializeApp({
 });
 
 /* GET encrypt uid */
-router.get('/encryptUid', function(req, res, next) {
-    var dataId = req.query.phone_id;
+router.get('/couponCheck', function(req, res, next) {
+    var userNumber = req.query.user_number;
     var shopId = req.query.shop_id;
 
-    var secrect = config.secrectKey;
-    var cipher = crypto.createCipher("aes-128-ecb", secrect);
-    var crypted = cipher.update(dataId, 'utf8', 'hex');
-    crypted += cipher.final('hex');
-
-    logger.debug(TAG, 'Phone ID : ' + dataId);
+    logger.debug(TAG, 'Phone ID : ' + userNumber);
     logger.debug(TAG, 'Encrypted ID : ' + crypted);
 
     getConnection(function (err, connection) {
@@ -49,28 +53,17 @@ router.get('/encryptUid', function(req, res, next) {
                         res.send('Select coupon error');
                     } else {
                         logger.debug(TAG, 'Select coupon success');
-                        res.send({cryptedData: crypted, userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
+                        if(selectStampCountData.length > 0) {
+                            res.send({cryptedData: crypted, userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
+                        }else {
+                            res.send({userId: encryptUid(userNumber), userStamp: 0, selectCouponData: selectCouponData});
+                        }
                     }
                 });
             }
             connection.release();
         });
     });
-});
-
-/* GET decrypt uid */
-router.get('/decryptUid', function(req, res, next) {
-    var text = req.query.user_id;
-    var secrect = "Glu0r6o0GzBZIe0Qsrh2FA==";
-    var cipher = crypto.createDecipher('aes-128-ecb', secrect);
-    var decrypted = cipher.update(text, 'hex', 'utf8');
-    decrypted += cipher.final('utf8');
-
-    console.log( "Input : ", text );
-    console.log( "secrect : ", secrect );
-    console.log( "Decrypted : ", decrypted );
-
-    res.send({decryptedData: decrypted});
 });
 
 //Get User Location

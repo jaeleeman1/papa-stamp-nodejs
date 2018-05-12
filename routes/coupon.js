@@ -4,8 +4,17 @@ var config = require('../config/service_config');
 var getConnection = require('../config/db_connection');
 var logger = require('../config/logger');
 var mysql = require('mysql');
+var crypto = require( "crypto" );
 
 const TAG = "[COUPON INFO] ";
+
+var decryptUid = function(uid) {
+    var secrect = config.secrectKey;
+    var cipher = crypto.createDecipher('aes-128-ecb', secrect);
+    var decrypted = cipher.update(uid, 'hex', 'utf8');
+    decrypted += cipher.final('utf8');
+    return decrypted;
+}
 
 //Get Coupon Shop Page
 router.get('/main', function(req, res, next) {
@@ -180,7 +189,7 @@ router.put('/couponData', function(req, res, next) {
     getConnection(function (err, connection) {
         var updatePushHistory = 'update SB_USER_PUSH_HIS set USED_YN = "Y" ' +
             'where  SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId) + ' and USED_YN = "N" and DEL_YN = "N" ' +
-            'order by REG_DT DESC limit 10';
+            'order by REG_DT ASC limit 10';
         connection.query(updatePushHistory, function (err, UpdateHistoryData) {
             if (err) {
                 logger.error(TAG, "DB updatePushHistory error : " + err);
@@ -277,7 +286,7 @@ router.put('/useCoupon', function(req, res, next) {
     });
 });
 
-//Get Coupon Data
+/*//Get Coupon Data
 router.get('/selectCoupon', function(req, res, next) {
     logger.info(TAG, 'Update delete coupon data');
 
@@ -306,6 +315,44 @@ router.get('/selectCoupon', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select coupon success');
                 res.send({selectCouponData: selectCouponData});
+            }
+            connection.release();
+        });
+    });
+});*/
+
+//Get Coupon Data
+router.get('/selectCoupon', function(req, res, next) {
+    logger.info(TAG, 'Update delete coupon data');
+
+    var userId = req.headers.user_id;
+    var shopId = req.query.shop_id;
+    var couponNumber = req.query.coupon_number;
+
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'Coupon number : ' + couponNumber);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid id parameter error');
+        res.status(400);
+        res.send('Invalid id parameter error');
+    }
+
+    //Selectg Coupon Data API
+    getConnection(function (err, connection) {
+        var selectCouponQuery = 'select COUPON_NAME, COUPON_NUMBER, EXPIRATION_DT from SB_USER_COUPON ' +
+            'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId) +' and COUPON_NUMBER = '+mysql.escape(couponNumber) +
+            'and MAPPING_YN="Y" and USED_YN="N" limit 1';
+        connection.query(selectCouponQuery, function (err, selectCouponData) {
+            if (err) {
+                logger.error(TAG, "Select Coupon error : " + err);
+                res.status(400);
+                res.send('Select coupon error');
+            }else{
+                logger.debug(TAG, 'Select coupon success');
+                res.send({userNumber: decryptUid(userId), selectCouponData: selectCouponData[0]});
             }
             connection.release();
         });

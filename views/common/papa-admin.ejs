@@ -214,13 +214,13 @@
 
 <div id="push-coupon-confirm" class="dialog-confirm">
   <figure>
-    <div class="confirm-coupon-user-number" id="push-coupon-user-number" style="margin-top: 15px;">010-2618-1715</div>
+    <div class="confirm-coupon-user-number" id="push-coupon-user-number" style="margin-top: 15px;"></div>
     <div>
       <label style="margin-bottom: 30px;" for="terms">쿠폰 사용을 허용 하시겠습니까?</label><br/>
     </div>
-    <h5 class="confirm-coupon-number" id="confirm-coupon-number">bWZ9b1vVG7Jm5</h5>
-    <h4 class="confirm-coupon-name" id="confirm-coupon-name">카푸치노</h4>
-    <h4 class="confirm-coupon-date">2017-06-01 ~ 2017-12-31</h4>
+    <h5 class="confirm-coupon-number" id="push-coupon-number"></h5>
+    <h4 class="confirm-coupon-name" id="push-coupon-name"></h4>
+    <h4 class="confirm-coupon-date" id="push-coupon-date"></h4>
   </figure>
 </div>
 
@@ -499,24 +499,43 @@
     }
 
     function useCoupon(sendId, couponNumber) {
-        var convertNumber = sendId;
-        $("#coupon-user-number").val(convertNumber);
+        var shopId = $("#shop_id").val();
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
+        var headers = {};
+        headers["user_id"] = userId;
 
-        $("#push-coupon-confirm").dialog({
-            resizable: false,
-            modal: true,
-            title: "쿠폰 발급",
-            height: 350,
-            width: 700,
-            resizable:false,
-            buttons: {
-                "확인": function () {
-                    $(this).dialog('close');
-                    useCouponCallback(sendId, couponNumber);
-                },
-                "취소": function () {
-                    $(this).dialog('close');
-                }
+        $.ajax({
+            url: $("#url").val() + '/v1/coupon/selectCoupon',
+            type: 'GET',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                $("#push-coupon-user-number").html(data.userNumber);
+                $("#push-coupon-number").html(data.COUPON_NUMBER);
+                $("#push-coupon-name").html(data.COUPON_NAME);
+                $("#push-coupon-date").html(data.EXPIRATION_DT);
+
+                $("#push-coupon-confirm").dialog({
+                    resizable: false,
+                    modal: true,
+                    title: "쿠폰 발급",
+                    height: 350,
+                    width: 700,
+                    resizable:false,
+                    buttons: {
+                        "확인": function () {
+                            $(this).dialog('close');
+                            useCouponCallback(sendId, couponNumber);
+                        },
+                        "취소": function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
     }
