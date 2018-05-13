@@ -30,12 +30,12 @@ router.get('/couponCheck', function(req, res, next) {
     var userNumber = req.query.user_number;
     var shopId = req.query.shop_id;
 
-    logger.debug(TAG, 'Phone ID : ' + userNumber);
-    logger.debug(TAG, 'Encrypted ID : ' + crypted);
+    logger.debug(TAG, 'User Number : ' + userNumber);
+    logger.debug(TAG, 'Shop ID : ' + shopId);
 
     getConnection(function (err, connection) {
         var selectStampCount = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
-            'where DEL_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(crypted);
+            'where DEL_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(encryptUid(userNumber));
         connection.query(selectStampCount, function (err, selectStampCountData) {
             if (err) {
                 logger.error(TAG, "DB Select stamp count error : " + err);
@@ -45,7 +45,7 @@ router.get('/couponCheck', function(req, res, next) {
                 logger.debug(TAG, 'Select stamp count success');
 
                 var selectCouponQuery = 'select COUPON_NAME, COUPON_NUMBER, EXPIRATION_DT from SB_USER_COUPON ' +
-                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(crypted) +' and MAPPING_YN="Y" and USED_YN="N"';
+                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(encryptUid(userNumber)) +' and MAPPING_YN="Y" and USED_YN="N"';
                 connection.query(selectCouponQuery, function (err, selectCouponData) {
                     if (err) {
                         logger.error(TAG, "Select Coupon error : " + err);
@@ -54,7 +54,7 @@ router.get('/couponCheck', function(req, res, next) {
                     } else {
                         logger.debug(TAG, 'Select coupon success');
                         if(selectStampCountData.length > 0) {
-                            res.send({cryptedData: crypted, userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
+                            res.send({userId: encryptUid(userNumber), userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
                         }else {
                             res.send({userId: encryptUid(userNumber), userStamp: 0, selectCouponData: selectCouponData});
                         }

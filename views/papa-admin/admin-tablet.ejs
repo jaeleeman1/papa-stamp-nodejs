@@ -184,11 +184,8 @@
                 var shopId = $("#shop_id").val();
                 var convertNumber = $("#phone-text").val();
                 document.getElementById("admin-coupon-user-number").innerHTML = convertNumber;
-                convertNumber = convertNumber.replace(/ /gi, '');
-                convertNumber = convertNumber.replace(/-/gi, '');
-                convertNumber = '082'+ convertNumber;
 
-                var dataString = {'phone_id': convertNumber, 'shop_id': shopId};
+                var dataString = {'user_number': convertNumber, 'shop_id': shopId};
                 $.ajax({
                     url: $("#url").val() + '/user/v1/couponCheck',
                     type: 'GET',
@@ -276,11 +273,8 @@
             var shopId = $("#shop_id").val();
             var convertNumber = $("#phone-text").val();
             document.getElementById("stamp-user-number").innerHTML = convertNumber;
-            convertNumber = convertNumber.replace(/ /gi, '');
-            convertNumber = convertNumber.replace(/-/gi, '');
-            convertNumber = '082'+ convertNumber;
 
-            var dataString = {'phone_id': convertNumber, 'shop_id': shopId};
+            var dataString = {'user_number': convertNumber, 'shop_id': shopId};
             $.ajax({
                 url: $("#url").val() + '/user/v1/couponCheck',
                 type: 'GET',
