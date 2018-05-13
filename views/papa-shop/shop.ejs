@@ -122,7 +122,7 @@
                     //shop data
                     var dataString = {'current_lat': position.lat, 'current_lng': position.lng};
                     $.ajax({
-                        url: $("#url").val() + '/v1/shop/shopData',
+                        url: $("#url").val() + '/shop/v1/shopData',
                         type: 'GET',
                         dataType: 'json',
                         data: dataString,

@@ -1,4 +1,54 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <title>Papa stamp </title>
+
+    <!-- Bootstrap -->
+    <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/css/custom.min.css" rel="stylesheet">
+</head>
+
+<body class="error" style="background:#ffffff;">
+<div>
+    <a class="hiddenanchor" id="signup"></a>
+    <a class="hiddenanchor" id="signin"></a>
+
+    <div class="login_wrapper">
+        <div class="animate form login_form">
+            <section class="login_content">
+                <form>
+                    <h1><i class="fa fa-exclamation-triangle" style="margin-right:20px;"></i>죄송합니다.</h1>
+
+
+                    <div class="clearfix"></div>
+
+                    <h2 style="color:red;margin: 50px 100px 50px -100px;font-size:3em;width:600px;">시스템에 에러가 발생했습니다.</h2>
+                    <div class="separator">
+                        <p class="change_link">
+                            <a href="#signup" class="to_register">서비스 이용에 불편을 드려 죄송합니다.! </a>
+                        </p>
+
+                        <div class="clearfix"></div>
+                        <br />
+
+                        <div>
+                            <h1><img style="width:80px;margin-right:20px;" src="/images/papastamp_icon.png"/> 파파 스탬프 !!! </h1>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+</body>
+</html>

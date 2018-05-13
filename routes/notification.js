@@ -102,7 +102,10 @@ router.post('/request-stamp', function (req, res, next) {
     logger.info(TAG, 'request user stamp');
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
-    io.sockets.emit(userId, {type:"request-stamp", sendId: shopId});
+    var requestCheck = req.body.request_check;
+    if(requestCheck == 'true') {
+        io.sockets.emit(userId, {type:"request-stamp", sendId: shopId});
+    }
     io.sockets.emit(shopId, {type:"request-stamp", sendId: userId});
     res.status(200);
     res.send({resultData: 'request success'});
@@ -195,10 +198,13 @@ router.post('/request-coupon', function (req, res, next) {
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
     var couponNumber = req.body.coupon_number;
+    var requestCheck = req.body.request_check;
     logger.info(TAG, 'request userId' , userId);
     logger.info(TAG, 'request shopId', shopId);
     logger.info(TAG, 'request couponNumber', couponNumber);
-    io.sockets.emit(userId, {type:"request-coupon", sendId: shopId});
+    if(requestCheck == 'true') {
+        io.sockets.emit(userId, {type:"request-coupon", sendId: shopId});
+    }
     io.sockets.emit(shopId, {type:"request-coupon", sendId: userId, couponNumber:couponNumber});
     res.status(200);
     res.send({resultData: 'request success'});

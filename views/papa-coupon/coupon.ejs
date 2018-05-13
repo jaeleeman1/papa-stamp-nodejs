@@ -97,7 +97,7 @@
         var dataString = {'shop_id': shopId};
 
         $.ajax({
-            url: $("#url").val() + '/v1/user/shopIdToBeacon',
+            url: $("#url").val() + '/user/v1/shopIdToBeacon',
             type: 'GET',
             dataType: 'json',
             data : dataString,
@@ -120,7 +120,7 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/coupon/deleteCoupon',
+            url: $("#url").val() + '/coupon/v1/deleteCoupon',
             type: 'PUT',
             headers : headers,
             dataType: 'json',
@@ -134,14 +134,16 @@
         });
     }
 
-    function tryRequestCoupon(shopId, couponNumber) {
+    function retryCoupon() {
+        var shopId = $("#shop_id").val();
+        var couponNumber = $("#confirm-coupon-number").text();
         var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber, 'request_check' : 'false'};
         var headers = {};
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/notification/request-coupon',
+            url: $("#url").val() + '/notification/v1/request-coupon',
             type: 'POST',
             headers : headers,
             dataType: 'json',
@@ -211,14 +213,15 @@
             resizable:false,
             buttons: {
                 "매니저에게 재요청": function () {
-                    var shopId = $("#shop_id").val();
-                    var couponNumber = $("#confirm-coupon-number").text();
-                    tryRequestCoupon(shopId, couponNumber);
+                    retryCoupon();
                     $(this).dialog('option',
                         'buttons',
-                        { "닫기": function() {
-                            $(this).dialog('close');
-                        }});
+                        {
+                            "닫기": function () {
+                                $(this).dialog('close');
+                           }
+                        }
+                    );
                 },
                 "닫기": function () {
                     $(this).dialog('close');
@@ -244,7 +247,7 @@
                 headers["user_id"] = pushUserId;
                 var dataString = {'shop_id': shopId, 'coupon_number': data.couponNumber};
                 $.ajax({
-                    url: $("#url").val() + '/v1/coupon/useCoupon',
+                    url: $("#url").val() + '/coupon/v1/useCoupon',
                     type: 'PUT',
                     headers: headers,
                     dataType: 'json',
@@ -322,7 +325,7 @@
 
         var dataString = {'current_lat': currentLat, 'current_lng': currentLng};
         $.ajax({
-            url: $("#url").val() + '/v1/coupon/shopList',
+            url: $("#url").val() + '/coupon/v1/shopList',
             type: 'GET',
             headers : headers,
             dataType: 'json',
@@ -395,7 +398,7 @@
                 //shop data
                 var dataString = {'current_lat': position.lat, 'current_lng': position.lng};
                 $.ajax({
-                    url: $("#url").val() + '/v1/coupon/shopData',
+                    url: $("#url").val() + '/coupon/v1/shopData',
                     type: 'GET',
                     headers : headers,
                     dataType: 'json',

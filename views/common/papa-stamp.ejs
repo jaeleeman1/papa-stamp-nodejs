@@ -154,7 +154,7 @@
                 var headers = {};
                 headers["user_id"] = userId;
                 $.ajax({
-                    url: $("#url").val() + '/v1/user/userLocation',
+                    url: $("#url").val() + '/user/v1/userLocation',
                     type: 'GET',
                     headers : headers,
                     dataType: 'json',
@@ -207,15 +207,15 @@
             var index = footermenu.index(this);
 
             if(index == 0) {
-                document.footerAction.action = '/v1/shop/main';
+                document.footerAction.action = '/shop/v1/main';
             }else if(index == 1) {
-                document.footerAction.action = '/v1/stamp/main';
+                document.footerAction.action = '/stamp/v1/main';
             }else if(index == 2) {
-                document.footerAction.action = '/v1/coupon/main';
+                document.footerAction.action = '/coupon/v1/main';
             }else if(index == 3) {
-                document.footerAction.action = '/v1/event/main';
+                document.footerAction.action = '/event/v1/main';
             }else {
-                document.footerAction.action = '/v1/setting/main';
+                document.footerAction.action = '/setting/v1/main';
             }
             document.footerAction.submit();
         });

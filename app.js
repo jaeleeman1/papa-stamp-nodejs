@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
+var login = require('./routes/login');
 var shop = require('./routes/shop');
 var stamp = require('./routes/stamp');
 var coupon = require('./routes/coupon');
@@ -41,26 +42,28 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const shopUrl = '/v1/shop';
-const stampUrl = '/v1/stamp';
-const couponUrl = '/v1/coupon';
-const eventUrl = '/v1/event';
-const settingUrl = '/v1/setting';
-const userURL = '/v1/user';
-const notificationURL = '/v1/notification';
-const adminURL = '/v1/admin';
-const adminStampURL = '/v1/admin-stamp';
-const adminCouponURL = '/v1/admin-coupon';
-const adminTabletURL = '/v1/admin-tablet';
-const downloadURL = '/v1/download';
+const loginUrl = '/';
+const shopUrl = '/shop/v1';
+const stampUrl = '/stamp/v1';
+const couponUrl = '/coupon/v1';
+const eventUrl = '/event/v1';
+const settingUrl = '/setting/v1';
+const userURL = '/user/v1';
+const notificationURL = '/notification/v1';
+const adminURL = '/admin/v1';
+const adminStampURL = '/admin-stamp/v1';
+const adminCouponURL = '/admin-coupon/v1';
+const adminTabletURL = '/admin-tablet/v1';
+const downloadURL = '/download/v1';
 
+app.use(loginUrl, login);
 app.use(shopUrl, shop);
 app.use(stampUrl, stamp);
 app.use(couponUrl, coupon);

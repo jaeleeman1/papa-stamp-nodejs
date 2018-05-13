@@ -89,7 +89,7 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/stamp/deleteCard',
+            url: $("#url").val() + '/stamp/v1/deleteCard',
             type: 'PUT',
             headers : headers,
             dataType: 'json',
@@ -111,7 +111,7 @@
         var dataString = {'shop_id': shopId};
 
         $.ajax({
-            url: $("#url").val() + '/v1/user/shopIdToBeacon',
+            url: $("#url").val() + '/user/v1/shopIdToBeacon',
             type: 'GET',
             dataType: 'json',
             data : dataString,
@@ -127,14 +127,15 @@
         });
     }
 
-    function retryStamp(shopId) {
+    function retryStamp() {
+        var shopId = $("#shop_id").val();
         var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId};
+        var dataString = {'shop_id': shopId, 'request_check' : 'false'};
         var headers = {};
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/notification/request-stamp',
+            url: $("#url").val() + '/notification/v1/request-stamp',
             type: 'POST',
             headers : headers,
             dataType: 'json',
@@ -184,13 +185,15 @@
             resizable:false,
             buttons: {
                 "매니저에게 재요청": function () {
-                    var shopId = $("#shop_id").val();
-                    retryStamp(shopId);
+                    retryStamp();
                     $(this).dialog('option',
                         'buttons',
-                        { "닫기": function() {
+                        {
+                            "닫기": function() {
                             $(this).dialog('close');
-                        }});
+                            }
+                        }
+                    );
                 },
                 "닫기": function () {
                     $(this).dialog('close');
@@ -207,7 +210,7 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/stamp/selectStampDate',
+            url: $("#url").val() + '/stamp/v1/selectStampDate',
             type: 'GET',
             headers : headers,
             dataType: 'json',
@@ -262,7 +265,7 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/stamp/selectPopupStampDate',
+            url: $("#url").val() + '/stamp/v1/selectPopupStampDate',
             type: 'GET',
             headers : headers,
             dataType: 'json',
@@ -362,7 +365,7 @@
                             headers["user_id"] = pushUserId;
                             var dataString = {'shop_id': shopId};
                             $.ajax({
-                                url: $("#url").val() + '/v1/coupon/couponData',
+                                url: $("#url").val() + '/coupon/v1/couponData',
                                 type: 'PUT',
                                 headers: headers,
                                 dataType: 'json',
@@ -499,7 +502,7 @@
 
         var dataString = {'current_lat': currentLat, 'current_lng': currentLng};
         $.ajax({
-            url: $("#url").val() + '/v1/stamp/shopList',
+            url: $("#url").val() + '/stamp/v1/shopList',
             type: 'GET',
             headers : headers,
             dataType: 'json',
@@ -575,7 +578,7 @@
                 //shop data
                 var dataString = {'current_lat': position.lat, 'current_lng': position.lng};
                 $.ajax({
-                    url: $("#url").val() + '/v1/stamp/shopData',
+                    url: $("#url").val() + '/stamp/v1/shopData',
                     type: 'GET',
                     headers : headers,
                     dataType: 'json',

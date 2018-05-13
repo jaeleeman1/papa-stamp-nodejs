@@ -369,13 +369,18 @@
 
         if(couponCount != "갯수 선택" && couponName.length >0 && couponNumber.length >0 && startDate.length >0 && endDate.length >0) {
             $.ajax({
-                url: $("#url").val() + '/v1/admin-coupon/createCoupon',
+                url: $("#url").val() + '/admin-coupon/v1/createCoupon',
                 type: 'POST',
                 headers : headers,
                 dataType: 'json',
                 data : dataString,
                 success: function(data) {
-                    location.reload();
+                    $.toast.config.align = 'center';
+                    $.toast.config.width = 230;
+                    $.toast('<h4>쿠폰 생성</h4>이 완료되었습니다.!!.', { type: 'info', duration: 3000 } );
+                    setTimeout(function () {
+                       location.reload();
+                    }, 3000);
                 },
                 error: function(request, status, error) {
                     console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -389,7 +394,7 @@
         var dataString = {'user_id': userId};
 
         $.ajax({
-            url: $("#url").val() + '/v1/admin-coupon/userData',
+            url: $("#url").val() + '/admin-coupon/v1/userData',
             type: 'GET',
             dataType: 'json',
             data : dataString,

@@ -278,7 +278,6 @@ router.post('/createCoupon', function(req, res, next) {
      res.status(400);
      res.send('Invalid id parameter error');
      }*/
-    console.log('couponCount : ' ,couponPrice);
 
     getConnection(function (err, connection) {
         var selectCouponImgQuery = 'select SHOP_FRONT_IMG from SB_SHOP_INFO where  SHOP_ID = ' + mysql.escape(shopId);
@@ -292,9 +291,9 @@ router.post('/createCoupon', function(req, res, next) {
                 var inputLength = couponNumberSplit.length;
                 for(var i=0; i<inputLength; i++) {
                     if(i != (inputLength - 1)) {
-                        inputData += '("'+ shopId +'", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'"), ';
+                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_FRONT_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'"), ';
                     }else {
-                        inputData += '("'+ shopId +'", "cafe-jass-coupon.png", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'")';
+                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_FRONT_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'")';
                     }
                 }
                 var selectCouponListQuery = 'insert into SB_USER_COUPON (SHOP_ID, COUPON_IMG, COUPON_NUMBER, COUPON_NAME, COUPON_PRICE, EXPIRATION_DT) value ' + inputData;

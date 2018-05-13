@@ -249,7 +249,7 @@
                 var dataString = {'user_id': searchData, 'used_yn': usedYN, 'del_yn': delYN};
 
                 $.ajax({
-                    url: $("#url").val() + '/v1/admin-stamp/user-data',
+                    url: $("#url").val() + '/admin-stamp/v1/user-data',
                     type: 'GET',
                     headers : headers,
                     dataType: 'json',
@@ -299,7 +299,7 @@
                 var dataString = {'start_date': startDate, 'end_date': endDate, 'used_yn': usedYN, 'del_yn': delYN};
 
                 $.ajax({
-                    url: $("#url").val() + '/v1/admin-stamp/period-data',//url: $("#url").val() + '/adminStamp/userData',
+                    url: $("#url").val() + '/admin-stamp/v1/period-data',//url: $("#url").val() + '/adminStamp/userData',
                     type: 'GET',
                     headers : headers,
                     dataType: 'json',
@@ -348,7 +348,7 @@
         headers["shop_id"] = 'SB-SHOP-00001';
 
         $.ajax({
-            url: $("#url").val() + '/v1/admin-stamp/deleteStamp',
+            url: $("#url").val() + '/admin-stamp/v1/deleteStamp',
             type: 'PUT',
             headers : headers,
             dataType: 'json',
@@ -390,7 +390,7 @@
         var headers = {};
         headers["user_id"] = userId;
         $.ajax({
-            url: $("#url").val() + '/v1/user/accessToken',
+            url: $("#url").val() + '/user/v1/accessToken',
             type: 'GET',
             headers : headers,
             dataType: 'json',

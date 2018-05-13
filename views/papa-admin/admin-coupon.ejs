@@ -241,7 +241,7 @@
                 var dataString = {'user_id': searchData, 'mapping_yn': mappingYN, 'used_yn': usedYN, 'del_yn': delYN};
 
                 $.ajax({
-                    url: $("#url").val() + '/v1/admin-coupon/userData',//url: $("#url").val() + '/adminCoupon/userData',
+                    url: $("#url").val() + '/admin-coupon/v1/userData',//url: $("#url").val() + '/adminCoupon/userData',
                     type: 'GET',
                     dataType: 'json',
                     data : dataString,
@@ -284,7 +284,7 @@
                 var dataString = {'start_date': startDate, 'end_date': endDate, 'mapping_yn': mappingYN, 'used_yn': usedYN, 'del_yn': delYN};
 
                 $.ajax({
-                    url: $("#url").val() + '/v1/admin-coupon/periodData',//url: $("#url").val() + '/adminStamp/userData',
+                    url: $("#url").val() + '/admin-coupon/v1/periodData',//url: $("#url").val() + '/adminStamp/userData',
                     type: 'GET',
                     dataType: 'json',
                     data : dataString,

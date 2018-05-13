@@ -552,7 +552,7 @@
         var dataString = {'input_password': inputPassword};
 
         $.ajax({
-            url: $("#url").val() + '/v1/setting/changePassword',
+            url: $("#url").val() + '/setting/v1/changePassword',
             type: 'PUT',
             headers : headers,
             dataType: 'json',
@@ -624,7 +624,7 @@
             headers["user_id"] = userId;
             var dataString = {'user_email': loginEmail, 'user_password': loginPassword};
             $.ajax({
-                url: $("#url").val() + '/v1/user/userLogin',
+                url: $("#url").val() + '/user/v1/userLogin',
                 type: 'POST',
                 headers : headers,
                 dataType: 'json',
@@ -635,7 +635,7 @@
                             if(window.Bridge) {
                                 window.Bridge.loginActivity();
                             }
-                            location.href = $("#url").val()+'/v1/shop/main?user_id='+ data.userId +'&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                            location.href = $("#url").val()+'/shop/v1/main?user_id='+ data.userId +'&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
                         }else {
                             $.toast.config.width = 225;
                             $.toast('<h4>비밀번호</h4>를 확인하세요.!!', {type: 'danger', duration: 3000});
@@ -669,7 +669,7 @@
                     if(window.Bridge) {
                         window.Bridge.logoutActivity();
                     }
-                    location.href = $("#url").val()+'/v1/shop/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                    location.href = $("#url").val()+'/shop/v1/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
                 },
                 "아니오": function () {
                     $(this).dialog('close');
@@ -683,7 +683,7 @@
         var headers = {};
         headers["user_id"] = userId;
         $.ajax({
-            url: $("#url").val() + '/v1/user/userSignout',
+            url: $("#url").val() + '/user/v1/userSignout',
             type: 'PUT',
             headers : headers,
             dataType: 'json',
@@ -692,7 +692,7 @@
                     if(window.Bridge) {
                         window.Bridge.logoutActivity();
                     }
-                    location.href = $("#url").val()+'/v1/shop/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                    location.href = $("#url").val()+'/shop/v1/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
                 }else {
                     $.toast.config.width = 225;
                     $.toast('<h4>회원 탈퇴</h4>를 다시 하세요.!!', {type: 'danger', duration: 3000});

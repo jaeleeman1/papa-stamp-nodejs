@@ -97,7 +97,27 @@
                     clickCss(7);break;
                 case 57 :
                     clickCss(8);break;
-                case 58 :
+                case 96 :
+                    clickCss(10);break;
+                case 97 :
+                    clickCss(0);break;
+                case 98 :
+                    clickCss(1);break;
+                case 99 :
+                    clickCss(2);break;
+                case 100 :
+                    clickCss(3);break;
+                case 101 :
+                    clickCss(4);break;
+                case 102 :
+                    clickCss(5);break;
+                case 103 :
+                    clickCss(6);break;
+                case 104 :
+                    clickCss(7);break;
+                case 105 :
+                    clickCss(8);break;
+                default :
                     clickCss(9);break;
             }
 
@@ -129,7 +149,7 @@
 
                 var dataString = {'user_number': userNumber, 'shop_id': shopId};
                 $.ajax({
-                    url: $("#url").val() + '/v1/user/couponCheck',
+                    url: $("#url").val() + '/user/v1/couponCheck',
                     type: 'GET',
                     dataType: 'json',
                     data: dataString,
@@ -170,7 +190,7 @@
 
                 var dataString = {'phone_id': convertNumber, 'shop_id': shopId};
                 $.ajax({
-                    url: $("#url").val() + '/v1/user/couponCheck',
+                    url: $("#url").val() + '/user/v1/couponCheck',
                     type: 'GET',
                     dataType: 'json',
                     data: dataString,
@@ -262,7 +282,7 @@
 
             var dataString = {'phone_id': convertNumber, 'shop_id': shopId};
             $.ajax({
-                url: $("#url").val() + '/v1/user/couponCheck',
+                url: $("#url").val() + '/user/v1/couponCheck',
                 type: 'GET',
                 dataType: 'json',
                 data: dataString,
@@ -324,7 +344,7 @@
             headers["user_id"] = userId;
 
             $.ajax({
-                url: $("#url").val() + '/v1/coupon/useCoupon',
+                url: $("#url").val() + '/coupon/v1/useCoupon',
                 type: 'PUT',
                 headers: headers,
                 dataType: 'json',

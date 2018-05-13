@@ -291,27 +291,27 @@
     });
 
     function mainView() {
-        document.menuAction.action = '/v1/admin/signin/initPage';
+        document.menuAction.action = '/admin/v1/signin/initPage';
         document.menuAction.submit();
     }
 
     function stampView() {
-        document.menuAction.action = '/v1/admin-stamp/main';
+        document.menuAction.action = '/admin-stamp/v1/main';
         document.menuAction.submit();
     }
 
     function couponView() {
-        document.menuAction.action = '/v1/admin-coupon/main';
+        document.menuAction.action = '/admin-coupon/v1/main';
         document.menuAction.submit();
     }
 
     function couponManagement() {
-        document.menuAction.action = '/v1/admin-coupon/manager';
+        document.menuAction.action = '/admin-coupon/v1/manager';
         document.menuAction.submit();
     }
 
     function customNumber() {
-        document.menuAction.action = '/v1/admin-tablet/main';
+        document.menuAction.action = '/admin-tablet/v1/main';
         document.menuAction.submit();
     }
 
@@ -346,7 +346,7 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/notification/update-stamp',
+            url: $("#url").val() + '/notification/v1/update-stamp',
             type: 'POST',
             headers : headers,
             dataType: 'json',
@@ -393,7 +393,7 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/stamp/update-stamp-admin',
+            url: $("#url").val() + '/stamp/v1/update-stamp-admin',
             type: 'POST',
             headers: headers,
             dataType: 'json',
@@ -410,7 +410,7 @@
                         headers["user_id"] = userId;
                         var dataString = {'shop_id': shopId};
                         $.ajax({
-                            url: $("#url").val() + '/v1/coupon/couponData',
+                            url: $("#url").val() + '/coupon/v1/couponData',
                             type: 'PUT',
                             headers: headers,
                             dataType: 'json',
@@ -462,7 +462,7 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/notification/issued-coupon',
+            url: $("#url").val() + '/notification/v1/issued-coupon',
             type: 'POST',
             headers : headers,
             dataType: 'json',
@@ -505,7 +505,7 @@
         headers["user_id"] = userId;
 
         $.ajax({
-            url: $("#url").val() + '/v1/coupon/selectCoupon',
+            url: $("#url").val() + '/coupon/v1/selectCoupon',
             type: 'GET',
             headers : headers,
             dataType: 'json',
