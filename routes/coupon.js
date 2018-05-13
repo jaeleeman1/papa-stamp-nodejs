@@ -13,6 +13,7 @@ var decryptUid = function(uid) {
     var cipher = crypto.createDecipher('aes-128-ecb', secrect);
     var decrypted = cipher.update(uid, 'hex', 'utf8');
     decrypted += cipher.final('utf8');
+    decrypted = decrypted.substr(3,11);
     return decrypted;
 }
 
@@ -197,30 +198,39 @@ router.put('/couponData', function(req, res, next) {
                 res.send('Update push history error');
             }else{
                 logger.debug(TAG, 'Update push history success');
-
-                var updateCouponMapping = 'update SB_USER_COUPON SET USER_ID = ' + mysql.escape(userId) + ', MAPPING_YN = "Y", ISSUED_DT = NOW() ' +
-                    'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' ' +
-                    'order by REG_DT ASC limit 1';
-                connection.query(updateCouponMapping, function (err, UpdateCouponData) {
+                var countDay = 'select (select date_format(NOW(), "%Y-%m-%d")) as STARTDAY, (select date_format(DATE_SUB(NOW(), INTERVAL -1 YEAR), "%Y-%m-%d")) as ENDDAY';
+                connection.query(countDay, function (err, countDayData) {
                     if (err) {
-                        logger.error(TAG, "DB updateCouponMapping error : " + err);
+                        logger.error(TAG, "DB count day error : " + err);
                         res.status(400);
-                        res.send('Update coupon mapping error');
-                    }else{
-                        logger.debug(TAG, 'Update coupon mapping success',  UpdateCouponData);
-                        var selectShopData = 'select (select date_format(NOW(), "%y-%m-%d")) as TODAY_DT, (select date_format(NOW(), "%Y-%m-%d %h:%i:%s")) as VISIT_DATE, ' +
-                            'SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
-                            'from SB_SHOP_INFO as SSI ' +
-                            'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
-                            'limit 1';
-                        connection.query(selectShopData, function (err, shopData) {
+                        res.send('select count day error');
+                    } else {
+                        logger.debug(TAG, 'Update coupon mapping success', countDayData);
+                        var updateCouponMapping = 'update SB_USER_COUPON SET USER_ID = ' + mysql.escape(userId) + ', MAPPING_YN = "Y", ISSUED_DT = NOW(), EXPIRATION_DT = "'+ countDayData[0].STARTDAY +' ~ '+ countDayData[0].ENDDAY +'" ' +
+                            'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' ' +
+                            'order by REG_DT ASC limit 1';
+                        connection.query(updateCouponMapping, function (err, UpdateCouponData) {
                             if (err) {
-                                logger.error(TAG, "DB select shop data error : " + err);
+                                logger.error(TAG, "DB updateCouponMapping error : " + err);
                                 res.status(400);
-                                res.send('Select shop data error');
-                            } else {
-                                logger.debug(TAG, 'Select shop info success',  shopData);
-                                res.send({shopData:shopData[0]});
+                                res.send('Update coupon mapping error');
+                            }else{
+                                logger.debug(TAG, 'Update coupon mapping success',  UpdateCouponData);
+                                var selectShopData = 'select (select date_format(NOW(), "%y-%m-%d")) as TODAY_DT, (select date_format(NOW(), "%Y-%m-%d %h:%i:%s")) as VISIT_DATE, ' +
+                                    'SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
+                                    'from SB_SHOP_INFO as SSI ' +
+                                    'where SSI.SHOP_ID = ' + mysql.escape(shopId) +
+                                    'limit 1';
+                                connection.query(selectShopData, function (err, shopData) {
+                                    if (err) {
+                                        logger.error(TAG, "DB select shop data error : " + err);
+                                        res.status(400);
+                                        res.send('Select shop data error');
+                                    } else {
+                                        logger.debug(TAG, 'Select shop info success',  shopData);
+                                        res.send({shopData:shopData[0]});
+                                    }
+                                });
                             }
                         });
                     }
@@ -323,7 +333,7 @@ router.get('/selectCoupon', function(req, res, next) {
 
 //Get Coupon Data
 router.get('/selectCoupon', function(req, res, next) {
-    logger.info(TAG, 'Update delete coupon data');
+    logger.info(TAG, 'Select push coupon data');
 
     var userId = req.headers.user_id;
     var shopId = req.query.shop_id;

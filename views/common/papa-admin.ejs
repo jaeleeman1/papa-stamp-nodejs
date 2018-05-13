@@ -280,7 +280,7 @@
         if (data.type == "request-stamp") {
             pushStamp(data.sendId, 'push');
         }else if(data.type == "request-coupon") {
-            useCoupon(data.sendId, data.couponNumber);
+            pushUseCoupon(data.sendId, data.couponNumber);
         }
     });
 </script>
@@ -455,7 +455,7 @@
         });
     }
 
-    function useCouponCallback(userId, couponNumber) {
+    function pushUseCouponCallback(userId, couponNumber) {
         var shopId = $("#shop_id").val();
         var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
         var headers = {};
@@ -498,11 +498,11 @@
         });
     }
 
-    function useCoupon(sendId, couponNumber) {
+    function pushUseCoupon(sendId, couponNumber) {
         var shopId = $("#shop_id").val();
         var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
         var headers = {};
-        headers["user_id"] = userId;
+        headers["user_id"] = sendId;
 
         $.ajax({
             url: $("#url").val() + '/coupon/v1/selectCoupon',
@@ -512,9 +512,9 @@
             data : dataString,
             success: function(data) {
                 $("#push-coupon-user-number").html(data.userNumber);
-                $("#push-coupon-number").html(data.COUPON_NUMBER);
-                $("#push-coupon-name").html(data.COUPON_NAME);
-                $("#push-coupon-date").html(data.EXPIRATION_DT);
+                $("#push-coupon-number").html(data.selectCouponData.COUPON_NUMBER);
+                $("#push-coupon-name").html(data.selectCouponData.COUPON_NAME);
+                $("#push-coupon-date").html(data.selectCouponData.EXPIRATION_DT);
 
                 $("#push-coupon-confirm").dialog({
                     resizable: false,
@@ -526,7 +526,7 @@
                     buttons: {
                         "확인": function () {
                             $(this).dialog('close');
-                            useCouponCallback(sendId, couponNumber);
+                            pushUseCouponCallback(sendId, couponNumber);
                         },
                         "취소": function () {
                             $(this).dialog('close');

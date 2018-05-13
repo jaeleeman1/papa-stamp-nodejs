@@ -257,20 +257,14 @@ router.post('/createCoupon', function(req, res, next) {
     var couponNumber = req.body.coupon_number;
     var couponName = req.body.coupon_name;
     var couponPrice = req.body.coupon_price;
-    var startDate = req.body.start_date;
-    var endDate = req.body.end_date;
-    var paramStartDate = startDate.substr(6, 4) +'-'+ startDate.substr(3, 2) +'-'+ startDate.substr(0, 2);
-    var paramEndDate = endDate.substr(6, 4) +'-'+ endDate.substr(3, 2) +'-'+ endDate.substr(0, 2);
 
     couponPrice = Number(couponPrice.replace("원","").replace(",",""));
     var couponNumberSplit = couponNumber.split("\n");
 
-    /*logger.debug(TAG, 'Shop id : ' + shopId);
-     logger.debug(TAG, 'User id : ' + couponCount);
-     logger.debug(TAG, 'Shop id : ' + couponName);
-     logger.debug(TAG, 'User id : ' + couponPrice);
-     logger.debug(TAG, 'Shop id : ' + startDate);
-     logger.debug(TAG, 'User id : ' + endDate);*/
+    logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'Coupon Count: ' + couponCount);
+    logger.debug(TAG, 'Coupon Number : ' + couponName);
+    logger.debug(TAG, 'Coupon Price : ' + couponPrice);
 
     /*    if(shopId == null || shopId == undefined &&
      userId == null || userId == undefined) {
@@ -291,12 +285,12 @@ router.post('/createCoupon', function(req, res, next) {
                 var inputLength = couponNumberSplit.length;
                 for(var i=0; i<inputLength; i++) {
                     if(i != (inputLength - 1)) {
-                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_FRONT_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'"), ';
+                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_FRONT_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + '), ';
                     }else {
-                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_FRONT_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ', "' + paramStartDate + ' ~ ' + paramEndDate +'")';
+                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_FRONT_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ')';
                     }
                 }
-                var selectCouponListQuery = 'insert into SB_USER_COUPON (SHOP_ID, COUPON_IMG, COUPON_NUMBER, COUPON_NAME, COUPON_PRICE, EXPIRATION_DT) value ' + inputData;
+                var selectCouponListQuery = 'insert into SB_USER_COUPON (SHOP_ID, COUPON_IMG, COUPON_NUMBER, COUPON_NAME, COUPON_PRICE) value ' + inputData;
                 connection.query(selectCouponListQuery, function (err, couponListData) {
                     if (err) {
                         console.error("*** initPage select id Error : " , err);
