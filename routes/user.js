@@ -45,7 +45,8 @@ router.get('/couponCheck', function(req, res, next) {
                 logger.debug(TAG, 'Select stamp count success');
 
                 var selectCouponQuery = 'select COUPON_NAME, COUPON_NUMBER, EXPIRATION_DT from SB_USER_COUPON ' +
-                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(encryptUid(userNumber)) +' and MAPPING_YN="Y" and USED_YN="N"';
+                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(encryptUid(userNumber)) +' and MAPPING_YN="Y" and USED_YN="N" and DEL_YN="N" ' +
+                    'order by ISSUED_DT ASC';
                 connection.query(selectCouponQuery, function (err, selectCouponData) {
                     if (err) {
                         logger.error(TAG, "Select Coupon error : " + err);

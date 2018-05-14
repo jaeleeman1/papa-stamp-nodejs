@@ -226,7 +226,9 @@
 
 <div id="push-stamp-confirm" class="dialog-confirm">
   <figure>
-    <div class="confirm-stamp-user-number" id="stamp-user-number"></div>
+    <div id="push-stamp-user-count"></div>
+    <div id="push-coupon-user-count"></div>
+    <div class="user-number" id="push-stamp-user-number"></div>
     <div>
       <label style="margin-bottom: 30px;" for="terms">스탬프 적립 하시겠습니까?</label><br/>
       <input type="radio" name="paramStampValue" value="1" checked="checked">1</input><br/>
@@ -440,7 +442,7 @@
             resizable: false,
             modal: true,
             title: "파파 스탬프 적립!",
-            height: 460,
+            height: 510,
             width: 700,
             resizable:false,
             buttons: {

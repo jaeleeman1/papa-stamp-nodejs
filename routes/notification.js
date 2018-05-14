@@ -237,8 +237,8 @@ router.post('/issued-coupon', function (req, res, next) {
     //Use Coupon Data API
     getConnection(function (err, connection) {
         var selectCouponData = 'select (select date_format(NOW(), "%Y-%m-%d %h:%i:%s")) as VISIT_DATE ' +
-            'from SB_USER_COUPON as SUC ' +
-            'where SUC.SHOP_ID = ' + mysql.escape(shopId) + ' ' +
+            'from SB_USER_COUPON ' +
+            'where MAPPING_YN="Y" and DEL_YN="N" and SHOP_ID = ' + mysql.escape(shopId) + ' ' +
             'limit 1';
         console.log('dd ' + selectCouponData);
         connection.query(selectCouponData, function (err, useCouponData) {

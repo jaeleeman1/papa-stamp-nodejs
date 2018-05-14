@@ -262,7 +262,8 @@
     }
 
     function stampActionOpenLayer(showDivId, shopId) {
-        $("body").bind('touchmove', function(e){e.preventDefault()});
+        $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+
         var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
         var headers = {};

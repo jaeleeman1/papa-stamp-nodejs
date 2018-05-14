@@ -288,7 +288,7 @@ figure .base-img{
 /* Event */
 .card-event {
     width: 340px;
-    background: #848484;
+    background: #000000;
     position: relative;
     height: 222px;
     margin-bottom: 5vh;
@@ -302,7 +302,7 @@ figure .base-img{
 /* Setting */
 .card-setting {
     width: 340px;
-    background: #000000;
+    background: #848484;
     position: relative;
     height: 222px;
     margin-bottom: 5vh;

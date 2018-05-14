@@ -50,9 +50,9 @@ router.get('/main', function(req, res, next) {
             '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
             ' from SB_USER_COUPON as SUC ' +
             'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
-            'where SUC.MAPPING_YN = "Y" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
+            'where SUC.MAPPING_YN = "Y" and USED_YN = "N" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
             'having distance < 250 ' +
-            'order by USED_YN <> "N", distance, ISSUED_DT limit 0, 10';
+            'order by distance, ISSUED_DT ASC';
         connection.query(selectCouponList, function (err, couponListData) {
             if (err) {
                 logger.error(TAG, "DB select coupon shop main error : " + err);
