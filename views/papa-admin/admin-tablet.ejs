@@ -67,16 +67,23 @@
     $(document).ready(function() {
         $('#phone-text').focus();
 
-        if($("#phone-text").length ){
-
-        }
-
         var tabletNumber = '';
         var keyNumber = '';
         var inputData = '';
 
         $("#phone-text").keyup(function(event) {
             keyNumber = $(this).val();
+
+            if(keyNumber.length == 3 || keyNumber.length == 8) {
+                keyNumber = $(this).val();
+                keyNumber += '-';
+                $(this).val(keyNumber);
+            }
+
+            if(keyNumber.length == 13) {
+                callFunction();
+            }
+
             switch(event.keyCode) {
                 case 8 :
                     var checkNumber = keyNumber.charAt(keyNumber.length-1);
@@ -129,7 +136,7 @@
                     clickCss(9);break;
             }
 
-            if(event.keyCode >=48 && event.keyCode <= 59 || event.keyCode >=96 && event.keyCode <= 105) {
+            /*if(event.keyCode >=48 && event.keyCode <= 59 || event.keyCode >=96 && event.keyCode <= 105) {
                 var textLength = $(this).val().length;
 
                 if(textLength > 13) {
@@ -146,7 +153,7 @@
                         callFunction();
                     }
                 }
-            }
+            }*/
         });
 
         $("#stamp_btn_push").click(
