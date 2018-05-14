@@ -151,6 +151,7 @@
 
     function closeCard() {
         $("#shop_id").val('');
+        $('html, body').css({'overflow': 'visible', 'height': '100%'});
         closeLayer('layerCardPopup');
     }
 
@@ -203,6 +204,8 @@
     }
 
     function focusOpenLayer(showDivId, shopId, frontImg, backImg, stampImg) {
+        $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+
         $("#shop_id").val(shopId);
         var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
@@ -259,6 +262,7 @@
     }
 
     function stampActionOpenLayer(showDivId, shopId) {
+        $("body").bind('touchmove', function(e){e.preventDefault()});
         var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
         var headers = {};

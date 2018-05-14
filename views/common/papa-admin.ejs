@@ -401,7 +401,9 @@
             success: function (data) {
                 if (data.result == "success") {
                     $("#phone-text").val('');
-                    $.toast('<h4>스탬프 적립</h4> 완료되었습니다!!.', { type: 'info', duration: 3000 } );
+                    $.toast.config.align = 'center';
+                    $.toast.config.width = 500;
+                    $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">스탬프 적립</h4>이 완료되었습니다.!!!.</span>', { type: 'info', duration: 3000 });
                     var visitRateCnt = data.stampCnt % 10;
                     var sumStamp = Number(visitRateCnt) + Number(stampNumber);
 
@@ -416,7 +418,9 @@
                             dataType: 'json',
                             data: dataString,
                             success: function (data) {
-                                $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', {type: 'success', sticky: true});
+                                $.toast.config.align = 'center';
+                                $.toast.config.width = 500;
+                                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 발급</h4>이 완료되었습니다.</span>', {type: 'success', sticky: true});
                             },
                             error: function (request, status, error) {
                                 console.error("issued coupon : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);

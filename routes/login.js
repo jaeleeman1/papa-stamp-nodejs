@@ -15,9 +15,10 @@ router.get('/', function(req, res, next) {
 
     try {
         user_id = userInfo.user_id;
-    }catch(e) {console.error('session error'+ e);}
+    }catch(err) {
+        logger.error(TAG, "Session error : " + err);
+    }
 
-    console.log('session : ' + userInfo);
     if(user_id == '') {
         res.render('loginin', {url:config.url, userId: "Username"});
     }else {

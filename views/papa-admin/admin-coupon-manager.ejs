@@ -374,8 +374,8 @@
                 data : dataString,
                 success: function(data) {
                     $.toast.config.align = 'center';
-                    $.toast.config.width = 230;
-                    $.toast('<h4>쿠폰 생성</h4>이 완료되었습니다.!!.', { type: 'info', duration: 3000 } );
+                    $.toast.config.width = 430;
+                    $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 생성</h4>이 완료되었습니다.!!.</span>', { type: 'success', duration: 3000 });
                     setTimeout(function () {
                        location.reload();
                     }, 3000);

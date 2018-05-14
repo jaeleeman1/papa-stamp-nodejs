@@ -160,14 +160,13 @@
                         console.log(tabletNumber.length);
                         if(tabletNumber.length < 13) {
                             $.toast.config.align = 'center';
-                            $.toast.config.width = 230;
-                            $.toast('<h4>올바른 번호</h 4>를 입력하세요!!.', { type: 'danger', duration: 3000 } );
+                            $.toast.config.width = 470;
+                            $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">올바른 번호</h4>를 입력하세요!!.</span>', { type: 'danger', duration: 3000 });
                         }else {
                             if (data.selectCouponData.length > 0) {
-                                $.toast('발급된 <h4>쿠폰</h4>이 ' + data.selectCouponData.length + '장 있습니다.', {
-                                    type: 'danger',
-                                    duration: 3000
-                                });
+                                $.toast.config.align = 'center';
+                                $.toast.config.width = 420;
+                                $.toast('<span style="font-size:1.8em;">발급된 <h4 style="font-size:2em;">쿠폰</h4>이 ' + data.selectCouponData.length + '장 있습니다.</span>', {type: 'danger', duration: 5000});
                             }
                             pushStamp(inputData, 'admin', false);
                         }
@@ -197,8 +196,8 @@
                         tabletNumber = $("#phone-text").val();
                         if(tabletNumber.length < 13) {
                             $.toast.config.align = 'center';
-                            $.toast.config.width = 230;
-                            $.toast('<h4>올바른 번호</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 } );
+                            $.toast.config.width = 470;
+                            $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">올바른 번호</h4>를 입력하세요!!.</span>', { type: 'danger', duration: 3000 });
                         }else {
                             if(data.selectCouponData.length > 0) {
                                 var couponList = document.getElementById("admin-coupon-list");
@@ -219,8 +218,9 @@
                                 couponList.innerHTML = appendData;
                                 adminCoupon(inputData);
                             }else {
-                                $.toast.config.width = 150;
-                                $.toast('<h4>사용 가능한 쿠폰</h4>이 없습니다.!', { type: 'danger', sticky : true } );
+                                $.toast.config.align = 'center';
+                                $.toast.config.width = 500;
+                                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">사용 가능한 쿠폰</h4>이 이 없습니다.!</span>', {type: 'success', uration: 3000 });
                             }
                         }
                     },
@@ -286,7 +286,9 @@
                     $("#admin-coupon-user-number").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ data.userStamp%10 +'장)</h4>');
 
                     if (data.selectCouponData.length > 0) {
-                        $.toast('발급된 <h4>쿠폰</h4>이 '+ data.selectCouponData.length +'장 있습니다.', {type: 'danger', duration: 5000});
+                        $.toast.config.align = 'center';
+                        $.toast.config.width = 420;
+                        $.toast('<span style="font-size:1.8em;">발급된 <h4 style="font-size:2em;">쿠폰</h4>이 ' + data.selectCouponData.length + '장 있습니다.</span>', {type: 'danger', duration: 5000});
                         var couponList = document.getElementById("admin-coupon-list");
                         var appendData = '';
                         var couponLength = data.selectCouponData.length;
@@ -344,7 +346,9 @@
                 dataType: 'json',
                 data: dataString,
                 success: function (data) {
-                    $.toast('<h4>쿠폰 사용</h4>이 완료되었습니다!!.', { type: 'info', duration: 3000 } );
+                    $.toast.config.align = 'center';
+                    $.toast.config.width = 600;
+                    $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰</h4> 사용이 완료되었습니다.</span>', {type: 'success', duration: 3000});
                     $("#phone-text").val('');
                 },
                 error: function (request, status, error) {
