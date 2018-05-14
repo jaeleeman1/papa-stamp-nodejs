@@ -17,22 +17,23 @@
   <link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
   <!-- Animate.css -->
   <link href="/vendors/animate.css/animate.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/jquery.toast.min.css" type="text/css"/>
 
   <!-- Custom Theme Style -->
   <link href="/css/custom.min.css" rel="stylesheet">
 
   <script type ="text/javascript" src="/js/jquery-2.2.3.min.js"></script>
+  <script src='/js/jquery.toast.min.js' type='text/javascript'></script>
 </head>
 
 <form action="/" method="get" style="display:none" name="list_setting" id="list_setting">
-  <!--<input type="hidden" name="url" id="url" value="<%= url %>"/>-->
+  <input type="hidden" name="url" id="url" value="<%= url %>"/>
 </form>
 
-<form action="signin/initPage" method="get" style="display:none" name="sendform" id="sendform">
-  <input type="hidden" name="shop_id" id="shop_id" value=""/>
-  <input type="hidden" name="shop_name" id="shop_name" value=""/>
-  <input type="hidden" name="shop_icon" id="shop_icon" value=""/>
-  <input type="hidden" name="user_email" id="user_email" value=""/>
+<form action="shop/v1/main" method="post" style="display:none" name="sendform" id="sendform">
+  <input type="hidden" name="user_id" id="user_id" value=""/>
+  <input type="hidden" name="current_lat" id="current_lat" value=""/>
+  <input type="hidden" name="current_lng" id="current_lng" value=""/>
 </form>
 
 <body class="login">
@@ -44,23 +45,22 @@
     <div class="animate form login_form">
       <section class="login_content">
         <form>
-          <h1>Admin Portal 로그인 화면</h1>
-          <!--<form action="/login/initPage" method="post" id="sendform" class="form-inline">-->
-            <div>
-              <input type="text" class="form-control" placeholder="<%= userId %>" required="" id="loginId"/>
-            </div>
-            <div>
-              <input type="password" class="form-control" placeholder="Password" required="" id="loginPassword"/>
-            </div>
-            <div>
-            <a class="btn btn-default submit" id="btn_send">관리자 로그인</a>
+          <h1>파파스탬프 로그인</h1>
+          <div>
+            <input type="text" class="form-control" placeholder="<%= userEmail %>" required="" id="loginEmail"/>
+          </div>
+          <div>
+            <input type="password" class="form-control" placeholder="Password" required="" id="loginPassword"/>
+          </div>
+          <div>
+            <a class="btn btn-default submit" id="btn_send">로그인</a>
           </div>
 
           <div class="clearfix"></div>
 
           <div class="separator">
             <p class="change_link">
-              <a href="#signup" class="to_register">해당 지점 접속 정보는 Papa-stamp 담당자에게 문의 바랍니다! </a>
+              <a href="#signup" class="to_register">회원 가입! </a>
             </p>
 
             <div class="clearfix"></div>
@@ -82,37 +82,38 @@
     $(function() {
         $('#btn_send').on('click',
             function() {
-                if ($('#loginId').val() == "") {
-                    alert('사용자 ID 를 입력하세요!');
-                    $('#loginId').focus();
+                if ($('#loginEmail').val() == "") {
+                    $.toast('<h4>E-Mail</h4>을 입력하세요!!.', { type: 'info', duration: 3000 });
+                    $('#loginEmail').focus();
                     return;
                 }
 
                 if ($('#loginPassword').val() == "") {
-                    alert('Password 를 입력하세요!');
+                    $.toast('<h4>Password</h4>를 입력하세요!!.', { type: 'info', duration: 3000 });
                     $('#loginPassword').focus();
                     return;
                 }
 
-                var loginInfo = '{"signin_id":"' + $('#loginId').val() + '", "signin_password":"' + $('#loginPassword').val() + '"}';
+                var loginInfo = '{"login_email":"' + $('#loginEmail').val() + '", "login_password":"' + $('#loginPassword').val() + '"}';
                 $.ajax({
-                    url: $("#url").val()+'/admin/v1/signin/userCheck',
+                    url: $("#url").val()+'/login/userCheck',
                     type: 'GET',
                     traditional:true,
                     data: JSON.parse(loginInfo),
                     success: function(data) {;
-                        if(data.signinIdCheck == '1' && data.signinPwCheck == '1'){
-                            $('#shop_id').val(data.shopId);
-                            $('#shop_name').val(data.shopName);
-                            $('#shop_icon').val(data.shopIcon);
-                            $('#user_email').val(data.signinId);
+                        if(data.loginEmailCheck == '1' && data.loginPwCheck == '1'){
+                            $('#user_id').val(data.userId);
+                            $('#current_lat').val(data.currentLat);
+                            $('#current_lng').val(data.currentLng);
 
-                            $('#sendform').submit(); // 전송
+                            $('#sendform').submit();
                         }else {
-                            if(data.signinIdCheck == '0') {
-                                alert('올바른 ID 를 입력하세요!');
-                            }else if(data.signinPwCheck == '0') {
-                                alert('올바른 Password 를 입력하세요!');
+                            console.log('dddd', data.loginEmailCheck);
+                            console.log('dddd', data.loginPwCheck);
+                            if(data.loginEmailCheck == '0') {
+                                $.toast('<h4>올바른 E-Mail</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 });
+                            }else if(data.loginPwCheck == '0') {
+                                $.toast('<h4>올바른 Password</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 });
                             }
                         }
                     },
@@ -123,30 +124,4 @@
                 });
             });
     });
-</script>
-<script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
-<script>
-    // Initialize Firebase
-    var config = {
-        apiKey: "AIzaSyAn_RTcg2y4ek16TUM-R0aMjCZ_ILFUCZQ",
-        authDomain: "web-quick-386a3.firebaseapp.com",
-        databaseURL: "https://web-quick-386a3.firebaseio.com",
-        projectId: "web-quick-386a3",
-        storageBucket: "web-quick-386a3.appspot.com",
-        messagingSenderId: "653680124187"
-    };
-    firebase.initializeApp(config);
-
-    const messaging = firebase.messaging();
-    messaging.requestPermission()
-        .then(function () {
-            console.log('Have permission');
-            return messaging.getToken();
-        })
-        .then(function (token) {
-            console.log(token);
-        })
-        .catch (function () {
-            console.log('Error occured');
-        })
 </script>

@@ -10,18 +10,13 @@ const TAG = '[ADMIN INFO] ';
 
 /* GET users listing. */
 router.get('/signin', function(req, res, next) {
-    var userInfo = req.session.userInfo;
     var user_id = '';
-
-    try {
+    if(req.session.userInfo) {
+        var userInfo = req.session.userInfo;
         user_id = userInfo.user_id;
-    }catch(e) {console.error('session error'+ e);}
-
-    console.log('session : ' + userInfo);
-    if(user_id == '') {
-        res.render('papa-admin/admin-signin', {url:config.url, userId: "Username"});
-    }else {
         res.render('papa-admin/admin-signin', {url:config.url, userId: user_id});
+    }else {
+        res.render('papa-admin/admin-signin', {url:config.url, userId: "Username"});
     }
 });
 
@@ -47,7 +42,7 @@ router.get('/signin/userCheck', function(req, res, next) {
                 if(signinIdCheck == '1') {
                     var selectPwQuery = 'select count(*) as PW_CHECK, SUI.SHOP_ID, SSI.SHOP_STAMP_IMG, SSI.SHOP_NAME from SB_USER_INFO as SUI ' +
                         'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SUI.SHOP_ID ' +
-                        'where SUI.USER_TYPE = "100" and SUI.USER_EMAIL = ' + mysql.escape(signinId) + ' and SUI.USER_PASSWORD = ' + mysql.escape(signinPassword);
+                        'where SUI.USER_TYPE = "200" and SUI.USER_EMAIL = ' + mysql.escape(signinId) + ' and SUI.USER_PASSWORD = ' + mysql.escape(signinPassword);
                     connection.query(selectPwQuery, function (err, dataPw) {
                         if (err) {
                             console.error("*** initPage select password Error : ", err);
