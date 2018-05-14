@@ -10,16 +10,10 @@ const TAG = '[LOGIN INFO] ';
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    var userInfo = req.session.userInfo;
     var user_id = '';
-
-    try {
+    if(req.session.userInfo) {
+        var userInfo = req.session.userInfo;
         user_id = userInfo.user_id;
-    }catch(err) {
-        logger.error(TAG, "Session error : " + err);
-    }
-
-    if(user_id == '') {
         res.render('loginin', {url:config.url, userId: "Username"});
     }else {
         res.render('papa-admin/admin-signin', {url:config.url, userId: user_id});
