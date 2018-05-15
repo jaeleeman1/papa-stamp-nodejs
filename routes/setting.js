@@ -32,7 +32,7 @@ router.get('/main', function(req, res, next) {
                 }else{
                     logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
                     res.status(200);
-                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0]});
+                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0], webCheck:false});
                 }
                 connection.release();
             });
@@ -40,7 +40,7 @@ router.get('/main', function(req, res, next) {
     }else {
         logger.debug(TAG, 'Blank user info success');
         res.status(200);
-        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}});
+        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:false});
     }
 
 });
