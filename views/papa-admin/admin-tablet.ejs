@@ -74,18 +74,24 @@
         $("#phone-text").on("input propertychange",function() {
             var val = this.value.replace(/\D/g, '');
             var newVal = '';
+            keyNumber = $(this).val();
             if($(this).val().length == 13) {
                 callFunction();
             }
+
             if (val.length > 3 && val.length < 8) {
                 newVal += val.substr(0, 3) + '-';
                 val = val.substr(3);
-            }else if (val.length > 7 && val.length < 12) {
+            }else if (val.length > 7) {
                 newVal += val.substr(0, 3) + '-' + val.substr(3, 4) + '-';
                 val = val.substr(7);
             }
             newVal += val;
             this.value = newVal;
+
+            if($(this).val().length > 13) {
+                $(this).val(keyNumber.substr(0, keyNumber.length - 1));
+            }
         });
 
 

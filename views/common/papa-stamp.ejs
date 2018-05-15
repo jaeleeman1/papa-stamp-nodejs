@@ -41,6 +41,7 @@
     <input type="hidden" name="shop_id" id="shop_id" value="<%= shopId %>"/>
     <input type="hidden" name="current_lat" id="current_lat" value=""/>
     <input type="hidden" name="current_lng" id="current_lng" value=""/>
+    <input type="hidden" name="web_check" id="web_check" value="<%= webCheck %>"/>
 </form>
 
 <form name="papa_config" id="papa_config" style="display:none">
@@ -149,30 +150,48 @@
             var currentLat = '';//37.4979887529;
             var currentLng = '';//127.0296421998;
             var userId = $("#user_id").val();
+            if($("#web_check").val()) {
+                //web 에서 위치 정보
+                if (navigator.geolocation) {
+                    // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+                    if (navigator.geolocation) {
+                        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            currentLat = position.coords.latitude; // 위도
+                            currentLng = position.coords.longitude; // 경도
 
-            if(userId.length > 0) {
-                var headers = {};
-                headers["user_id"] = userId;
-                $.ajax({
-                    url: $("#url").val() + '/user/v1/userLocation',
-                    type: 'GET',
-                    headers : headers,
-                    dataType: 'json',
-                    success: function(data) {
-                        var userLocationData = data.userLocationData;
-                        currentLat = userLocationData.CURRENT_LAT;
-                        currentLng = userLocationData.CURRENT_LNG;
-
-                        $("#current_lat").val(currentLat);
-                        $("#current_lng").val(currentLng);
-                    },
-                    error: function(request, status, error) {
-                        console.error("userLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                            $("#current_lat").val(currentLat);
+                            $("#current_lng").val(currentLng);
+                        });
+                    } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+                        console.error("geolocation error : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     }
-                });
+                }
             }else {
-                $("#current_lat").val('37.65067382324312');
-                $("#current_lng").val('126.88702399396053');
+                if(userId.length > 0) {
+                    var headers = {};
+                    headers["user_id"] = userId;
+                    $.ajax({
+                        url: $("#url").val() + '/user/v1/userLocation',
+                        type: 'GET',
+                        headers : headers,
+                        dataType: 'json',
+                        success: function(data) {
+                            var userLocationData = data.userLocationData;
+                            currentLat = userLocationData.CURRENT_LAT;
+                            currentLng = userLocationData.CURRENT_LNG;
+
+                            $("#current_lat").val(currentLat);
+                            $("#current_lng").val(currentLng);
+                        },
+                        error: function(request, status, error) {
+                            console.error("userLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                }else {
+                    $("#current_lat").val('37.65067382324312');
+                    $("#current_lng").val('126.88702399396053');
+                }
             }
         });
 

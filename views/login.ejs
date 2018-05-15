@@ -47,7 +47,11 @@
         <form>
           <h1>파파스탬프 로그인</h1>
           <div>
-            <input type="text" class="form-control" placeholder="<%= userEmail %>" required="" id="loginEmail"/>
+            <% if(userEmail == "E-Mail") {%>
+              <input type="text" class="form-control" placeholder="<%= userEmail %>" required="" id="loginEmail"/>
+            <% }else {%>
+              <input type="text" class="form-control" placeholder="<%= userEmail %>" value="<%= userEmail %>" required="" id="loginEmail"/>
+            <% }%>
           </div>
           <div>
             <input type="password" class="form-control" placeholder="Password" required="" id="loginPassword"/>
