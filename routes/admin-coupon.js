@@ -223,8 +223,9 @@ router.get('/manager', function(req, res, next) {
     var userEmail = req.query.user_email;
 
     getConnection(function (err, connection) {
-        var selectCouponUsedListQuery = 'select USER_ID, COUPON_NUMBER, USED_YN, DATE_FORMAT(USED_DT, "%Y-%m-%d %h:%i:%s") as USED_DATE, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as ISSUED_DATE, DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") as TODAY ' +
+        var selectCouponUsedListQuery = 'select USER_ID, COUPON_NUMBER, USED_YN, DATE_FORMAT(USED_DT, "%Y-%m-%d %h:%i:%s") as USED_DATE, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as ISSUED_DATE ' +
             'from SB_USER_COUPON where SHOP_ID = ' + mysql.escape(shopId) + ' and MAPPING_YN = "Y" group by COUPON_NUMBER order by ISSUED_DATE desc';
+        console.log(selectCouponUsedListQuery);
         connection.query(selectCouponUsedListQuery, function (err, couponUsedListData) {
             if (err) {
                 console.error("*** initPage select id Error : " , err);
@@ -239,8 +240,17 @@ router.get('/manager', function(req, res, next) {
                         res.status(400);
                         res.send('Select user push history error');
                     } else {
-                        res.status(200);
-                        res.render('common/papa-admin',{view:'manager', url:config.url, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon,  today:couponUsedListData[0].TODAY, couponUsedListData:couponUsedListData, couponIssuedListData:couponIssuedListData});
+                        var selectCurrentQuery = 'select DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") as TODAY';
+                        connection.query(selectCurrentQuery, function (err, selectCurrentData) {
+                            if (err) {
+                                console.error("*** initPage select id Error : ", err);
+                                res.status(400);
+                                res.send('Select user push history error');
+                            } else {
+                                res.status(200);
+                                res.render('common/papa-admin',{view:'manager', url:config.url, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon,  today:selectCurrentData[0].TODAY, couponUsedListData:couponUsedListData, couponIssuedListData:couponIssuedListData});
+                            }
+                        });
                     }
                 });
             }
