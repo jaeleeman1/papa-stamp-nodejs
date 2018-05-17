@@ -13,33 +13,23 @@ router.get('/main', function(req, res, next) {
 
     var userId = req.query.user_id;
     var shopId = req.query.shop_id;
+    var currentLat = req.query.current_lat;
+    var currentLng = req.query.current_lng;
+    var webCheck = req.query.web_check;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Shop id : ' + shopId);
-
-    if(userId == null || userId == undefined &&
-        shopId == null || shopId == undefined) {
-        logger.debug(TAG, 'Invalid id parameter error');
-        res.status(400);
-        res.send('Invalid id parameter error');
-    }
-
-    var currentLat = req.query.current_lat;
-    var currentLng = req.query.current_lng;
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
+    logger.debug(TAG, 'Web check : ' + userId);
 
-    if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid user id parameter error');
-        res.status(400);
-        res.send('Invalid user id parameter error');
-    }
-
-    if(currentLat == null || currentLat == undefined ||
+    if(userId == null || userId == undefined ||
+        shopId == null || shopId == undefined ||
+        currentLat == null || currentLat == undefined ||
         currentLng == null || currentLng == undefined) {
-        logger.debug(TAG, 'Invalid location parameter error');
+        logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
-        res.send('Invalid location parameter error');
+        res.send('Invalid parameter error');
     }
 
     getConnection(function (err, connection){
@@ -61,7 +51,58 @@ router.get('/main', function(req, res, next) {
                 logger.debug(TAG, 'Select stamp shop list success : ' + JSON.stringify(stampShopListData));
 
                 res.status(200);
-                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopId:shopId, stampShopListData:stampShopListData, webCheck:false});
+                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopId:shopId, stampShopListData:stampShopListData, webCheck:webCheck});
+            }
+            connection.release();
+        });
+    });
+});
+
+//Get Stamp Shop Page
+router.post('/main', function(req, res, next) {
+    logger.info(TAG, 'Get stamp shop information');
+
+    var userId = req.body.user_id;
+    var shopId = req.body.shop_id;
+    var currentLat = req.body.current_lat;
+    var currentLng = req.body.current_lng;
+    var webCheck = req.body.web_check;
+
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
+    logger.debug(TAG, 'Web check : ' + userId);
+
+    if(userId == null || userId == undefined ||
+        shopId == null || shopId == undefined ||
+        currentLat == null || currentLat == undefined ||
+        currentLng == null || currentLng == undefined) {
+        logger.debug(TAG, 'Invalid parameter error');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    getConnection(function (err, connection){
+        var selectStampShopList = 'select SUPI.USER_STAMP, SSI.SHOP_ID, SSI.SHOP_STAMP_IMG, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, ' +
+            '( 3959 * acos( cos( radians(' + mysql.escape(currentLat) + ') ) * cos( radians(SHOP_LAT) ) ' +
+            '* cos( radians(SHOP_LNG) - radians(' + mysql.escape(currentLng) + ') ) + sin( radians(' + mysql.escape(currentLat) + ') ) ' +
+            '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
+            'from SB_SHOP_INFO as SSI ' +
+            'inner join SB_USER_PUSH_INFO as SUPI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
+            'where SUPI.USER_ID = ' + mysql.escape(userId) + ' and SUPI.DEL_YN = "N" ' +
+            'having distance < 250 ' +
+            'order by distance limit 0, 10';
+        connection.query(selectStampShopList, function (err, stampShopListData) {
+            if (err) {
+                logger.error(TAG, "Select stamp shop list error : " + err);
+                res.status(400);
+                res.send('Select stamp shop list error');
+            }else{
+                logger.debug(TAG, 'Select stamp shop list success : ' + JSON.stringify(stampShopListData));
+
+                res.status(200);
+                res.render('common/papa-stamp', {view:'stamp', url:config.url, userId:userId, shopId:shopId, stampShopListData:stampShopListData, webCheck:webCheck});
             }
             connection.release();
         });

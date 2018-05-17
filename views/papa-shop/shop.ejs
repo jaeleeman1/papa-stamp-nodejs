@@ -1,5 +1,6 @@
 <div class="cards" id="card-list">
     <% var shopListMainCnt = shopListMainData.length %>
+    <% if(shopListMainCnt > 0) { %>
     <% for (var i=0; i<shopListMainCnt; i++) {%>
     <div class="card-img shadow">
         <div class="container">
@@ -15,7 +16,23 @@
         </div>
     </div>
     <%}%>
-
+    <%} else {%>
+    <li class="my-card-shop blank-card">
+        <div class="my-container">
+            <div class="my-card">
+                <figure class="front">
+                    <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
+                    <div class="caption">
+                        <h6>근처에 지점이 없습니다.
+                            <br>
+                            지점 확보를 위해 조금 더 노력하겠습니다.
+                        </h6>
+                    </div>
+                </figure>
+            </div>
+        </div>
+    </li>
+    <%}%>
 
 </div>
 
@@ -145,7 +162,7 @@
                             var appendData = '<div class="cards" id="select-card">' +
                                 '<div class="card-img shadow">' +
                                 '<div class="container">' +
-                                '<div class="card flipped">' +
+                                '<div class="card flipped shop">' +
                                 '<figure class="front">' +
                                 '<img class="papa-base-img" src="/images/shop-card/back/'+ shopData.SHOP_BACK_IMG +'" alt="back">' +
                                 '</figure>' +

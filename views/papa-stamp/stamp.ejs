@@ -249,7 +249,14 @@
 
                 $('#stamp-request').unbind('click');
                 $("#stamp-request").bind('click', function() {
-                    requestStamp(shopId);
+                    if($('#web_check').val() == 'true') {
+                        console.log('KK');
+                    }else {
+                        console.log('JJ ', $('#web_check').val());
+//                        requestStamp(shopId);
+                    }
+
+
                 });
 
                 var popupHeight = browserHeight * 0.15;

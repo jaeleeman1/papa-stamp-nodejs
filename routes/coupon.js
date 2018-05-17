@@ -22,24 +22,22 @@ router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get coupon shop main information');
 
     var userId = req.query.user_id;
-    logger.debug(TAG, 'User id : ' + userId);
-
-    if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid user id parameter error');
-        res.status(400);
-        res.send('Invalid user id parameter error');
-    }
-
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
+    var webCheck = req.query.web_check;
+
+    logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
+    logger.debug(TAG, 'Web check : ' + userId);
 
-    if(currentLat == null || currentLat == undefined ||
+
+    if(userId == null || userId == undefined ||
+        currentLat == null || currentLat == undefined ||
         currentLng == null || currentLng == undefined) {
-        logger.debug(TAG, 'Invalid location parameter error');
+        logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
-        res.send('Invalid location parameter error');
+        res.send('Invalid parameter error');
     }
 
     getConnection(function (err, connection){
@@ -61,7 +59,56 @@ router.get('/main', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Select coupon shop main success : ' + JSON.stringify(couponListData));
                 res.status(200);
-                res.render('common/papa-stamp', {view:'coupon', url:config.url, userId:userId, shopId:'', couponNum:'', couponListData:couponListData, webCheck:false});
+                res.render('common/papa-stamp', {view:'coupon', url:config.url, userId:userId, shopId:'', couponNum:'', couponListData:couponListData, webCheck:webCheck});
+            }
+            connection.release();
+        });
+    });
+});
+
+//Get Coupon Shop Page
+router.post('/main', function(req, res, next) {
+    logger.info(TAG, 'Get coupon shop main information');
+
+    var userId = req.body.user_id;
+    var currentLat = req.body.current_lat;
+    var currentLng = req.body.current_lng;
+    var webCheck = req.body.web_check;
+
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Current latitude : ' + currentLat);
+    logger.debug(TAG, 'Current longitude : ' + currentLng);
+    logger.debug(TAG, 'Web check : ' + userId);
+
+
+    if(userId == null || userId == undefined ||
+        currentLat == null || currentLat == undefined ||
+        currentLng == null || currentLng == undefined) {
+        logger.debug(TAG, 'Invalid parameter error');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    getConnection(function (err, connection){
+        var selectCouponList = 'select SSI.SHOP_ID, SSI.SHOP_NAME, SSI.SHOP_SUB_NAME, SUC.COUPON_IMG, SUC.COUPON_NAME, SUC.COUPON_PRICE, ' +
+            'SUC.EXPIRATION_DT, date_format(SUC.USED_DT, "%Y-%m-%d, %h:%i") as USED_DT, SUC.COUPON_NUMBER, SUC.USED_YN, ' +
+            '( 3959 * acos( cos( radians(' + mysql.escape(currentLat) + ') ) * cos( radians(SHOP_LAT) ) ' +
+            '* cos( radians(SHOP_LNG) - radians(' + mysql.escape(currentLng) + ') ) + sin( radians(' + mysql.escape(currentLat) + ') ) ' +
+            '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
+            ' from SB_USER_COUPON as SUC ' +
+            'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
+            'where SUC.MAPPING_YN = "Y" and USED_YN = "N" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
+            'having distance < 250 ' +
+            'order by distance, ISSUED_DT ASC';
+        connection.query(selectCouponList, function (err, couponListData) {
+            if (err) {
+                logger.error(TAG, "DB select coupon shop main error : " + err);
+                res.status(400);
+                res.send('Select coupon shop main error');
+            }else{
+                logger.debug(TAG, 'Select coupon shop main success : ' + JSON.stringify(couponListData));
+                res.status(200);
+                res.render('common/papa-stamp', {view:'coupon', url:config.url, userId:userId, shopId:'', couponNum:'', couponListData:couponListData, webCheck:webCheck});
             }
             connection.release();
         });

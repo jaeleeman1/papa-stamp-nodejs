@@ -12,6 +12,7 @@ router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get setting main information');
 
     var userId = req.query.user_id;
+    var webCheck = req.query.web_check;
 
     logger.debug(TAG, 'User id : ' + userId);
 
@@ -32,7 +33,7 @@ router.get('/main', function(req, res, next) {
                 }else{
                     logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
                     res.status(200);
-                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0], webCheck:false});
+                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
                 }
                 connection.release();
             });
@@ -40,7 +41,46 @@ router.get('/main', function(req, res, next) {
     }else {
         logger.debug(TAG, 'Blank user info success');
         res.status(200);
-        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:false});
+        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
+    }
+
+});
+
+//Get Setting Page
+router.post('/main', function(req, res, next) {
+    logger.info(TAG, 'Get setting main information');
+
+    var userId = req.body.user_id;
+    var webCheck = req.body.web_check;
+
+    logger.debug(TAG, 'User id : ' + userId);
+
+    if(userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid user id parameter error');
+        res.status(400);
+        res.send('Invalid user id parameter error');
+    }
+
+    if(userId.length > 0) {
+        getConnection(function (err, connection){
+            var selectUserInfo = 'select USER_ID, USER_EMAIL from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
+            connection.query(selectUserInfo, function (err, userInfoData) {
+                if (err) {
+                    logger.error(TAG, "Select user info error : " + err);
+                    res.status(400);
+                    res.send('Select user info error');
+                }else{
+                    logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
+                    res.status(200);
+                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
+                }
+                connection.release();
+            });
+        });
+    }else {
+        logger.debug(TAG, 'Blank user info success');
+        res.status(200);
+        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
     }
 
 });

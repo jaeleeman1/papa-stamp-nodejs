@@ -36,7 +36,7 @@
 </head>
 <meta name="viewport" content="width=device-width, user-scalable=no">
 
-<form name="footerAction" method="get" style="display:none">
+<form name="footerAction" style="display:none">
     <input type="hidden" name="user_id" id="user_id" value="<%= userId %>"/>
     <input type="hidden" name="shop_id" id="shop_id" value="<%= shopId %>"/>
     <input type="hidden" name="current_lat" id="current_lat" value=""/>
@@ -56,7 +56,7 @@
     <div class="header">
         <div class="top-status-bar">
             <div class="header-title" id="map-icon"><i class="fa fa-map-marker" style="color: whitesmoke;"></i></div>
-            <img class="top-icon" src="/images/papastamp_icon.png"></img>
+            <img class="top-icon" src="/images/papastamp_icon.png"/>
             <div class="top-title">파파스탬프</div>
             <div class="top-description">스탬프<br>관리 시스템</div>
         </div>
@@ -220,6 +220,12 @@
         footermenu.click(function(){
             footermenu.find('a').removeClass('show');
             var index = footermenu.index(this);
+            var webCheck = $('#web_check').val();
+            if(webCheck == 'true') {
+                document.footerAction.method = 'post'
+            }else {
+                document.footerAction.method = 'get'
+            }
 
             if(index == 0) {
                 document.footerAction.action = '/shop/v1/main';

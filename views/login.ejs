@@ -34,6 +34,7 @@
   <input type="hidden" name="user_id" id="user_id" value=""/>
   <input type="hidden" name="current_lat" id="current_lat" value=""/>
   <input type="hidden" name="current_lng" id="current_lng" value=""/>
+  <input type="hidden" name="web_check" id="web_check" value="true"/>
 </form>
 
 <body class="login">
@@ -112,8 +113,6 @@
 
                             $('#sendform').submit();
                         }else {
-                            console.log('dddd', data.loginEmailCheck);
-                            console.log('dddd', data.loginPwCheck);
                             if(data.loginEmailCheck == '0') {
                                 $.toast('<h4>올바른 E-Mail</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 });
                             }else if(data.loginPwCheck == '0') {
