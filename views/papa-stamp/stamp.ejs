@@ -250,13 +250,12 @@
                 $('#stamp-request').unbind('click');
                 $("#stamp-request").bind('click', function() {
                     if($('#web_check').val() == 'true') {
-                        console.log('KK');
+                        $.toast.config.align = 'center';
+                        $.toast.config.width = 200;
+                        $.toast('<h4>앱에서만</h4> 사용 가능합니다.', {type: 'info', duration: 3000 });
                     }else {
-                        console.log('JJ ', $('#web_check').val());
-//                        requestStamp(shopId);
+                        requestStamp(shopId);
                     }
-
-
                 });
 
                 var popupHeight = browserHeight * 0.15;

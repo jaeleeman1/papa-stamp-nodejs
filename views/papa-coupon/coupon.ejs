@@ -29,7 +29,11 @@
                             <div class="coupon-name">사용날짜 : <span style="font-size:1em;color:white"><%= usedDate %></span></div>
                             <h6>✿ 유효 기간 : <%= expirationDate %></h6>
                             <%}else {%>
-                            <h5 id="use-coupon-<%= couponNumber %>" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>')">사용하기</h5>
+                                <%if(webCheck == 'true') {%>
+                            <h5 id="use-coupon-<%= couponNumber %>" onclick="webCheckCoupon();">사용하기</h5>
+                                <%}else {%>
+                            <h5 id="use-coupon-<%= couponNumber %>" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>');">사용하기</h5>
+                            <%}%>
                             <h3><%= shopName %><span>(<%= shopSubName %>)</span></h3>
                             <h4><%= couponName %><span><%= couponPrice %>원</span></h4>
                             <div class="coupon-name" id="use-coupon-date-<%= couponNumber %>">쿠폰 번호 : <span style="font-size:1em;color:white"><%= couponNumber %></span></div>
@@ -113,50 +117,6 @@
         });
     }
 
-    function deleteCouponCallback(shopId, couponNumber) {
-        var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
-        var headers = {};
-        headers["user_id"] = userId;
-
-        $.ajax({
-            url: $("#url").val() + '/coupon/v1/deleteCoupon',
-            type: 'PUT',
-            headers : headers,
-            dataType: 'json',
-            data : dataString,
-            success: function(data) {
-                location.reload();
-            },
-            error: function(request, status, error) {
-                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-        });
-    }
-
-    function retryCoupon() {
-        var shopId = $("#shop_id").val();
-        var couponNumber = $("#confirm-coupon-number").text();
-        var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber, 'request_check' : 'false'};
-        var headers = {};
-        headers["user_id"] = userId;
-
-        $.ajax({
-            url: $("#url").val() + '/notification/v1/request-coupon',
-            type: 'POST',
-            headers : headers,
-            dataType: 'json',
-            data : dataString,
-            success: function(data) {
-                console.log(data.resultData);
-            },
-            error: function(request, status, error) {
-                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-        });
-    }
-
     function useCoupon(shopId, shopName, shopSubName, couponName, couponNum) {
         document.getElementById("confirm-coupon-number").innerHTML= couponNum;
         document.getElementById("confirm-shop-name").innerHTML= shopName+'<span class="confirm-sub-name">('+ shopSubName +')</span>';
@@ -182,6 +142,27 @@
         });
     }
 
+    function deleteCouponCallback(shopId, couponNumber) {
+        var userId = $("#user_id").val();
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/coupon/v1/deleteCoupon',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                location.reload();
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
     function deleteCoupon(shopId, couponNum) {
         $("#delete-coupon-confirm").dialog({
             resizable: false,
@@ -199,6 +180,35 @@
                 "아니오": function () {
                     $(this).dialog('close');
                 }
+            }
+        });
+    }
+
+    function webCheckCoupon() {
+        $.toast.config.align = 'center';
+        $.toast.config.width = 200;
+        $.toast('<h4>앱에서만</h4> 사용 가능합니다.', {type: 'info', duration: 3000 });
+    }
+
+    function retryCoupon() {
+        var shopId = $("#shop_id").val();
+        var couponNumber = $("#confirm-coupon-number").text();
+        var userId = $("#user_id").val();
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber, 'request_check' : 'false'};
+        var headers = {};
+        headers["user_id"] = userId;
+
+        $.ajax({
+            url: $("#url").val() + '/notification/v1/request-coupon',
+            type: 'POST',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                console.log(data.resultData);
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
     }
