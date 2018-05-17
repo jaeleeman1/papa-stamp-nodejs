@@ -136,6 +136,7 @@
                     $(this).dialog('close');
                 },
                 "아니오": function () {
+                    $("#shop_id").val('');
                     $(this).dialog('close');
                 }
             }
@@ -342,9 +343,7 @@
             data: dataString,
             success: function(data) {
                 var shopData = data.shopListData;
-                if(shopData.length == 0) { //|| shopData[0].USER_ID == initShopId) {
-
-                }else {
+                if(shopData.length != 0) { //|| shopData[0].USER_ID == initShopId) {
                     var mypositions = [];
 
                     for(var i=0; i<shopData.length; i++) {
@@ -417,6 +416,7 @@
                         var shopData = data.shopData;
                         var userId = data.userId;
                         var usedYn = shopData.USED_YN;
+                        console.log('ZZZ : ', usedYn);
                         var clickMapData = document.getElementById('map_list_wrap');
                         clickMapData.innerHTML = '';
 
@@ -432,6 +432,7 @@
                             '</div>';
 
                         var appendId = $('#common-template');
+                        var webCheck = $('#web_check').val();
                         var appendData = '<ul class="my-card-list" id="select-card">';
                         if(usedYn == "Y") {
                             appendData +='<li class="my-card-coupon used-deemed" >';
@@ -441,7 +442,7 @@
                         appendData +='<div class="my-container">' +
                             '<div class="my-card">' +
                             '<figure class="front">' +
-                            '<img class="base-img" src="/images/shop-coupon/'+ shopData.COUPON_IMG +'" alt="back">' +
+                            '<img class="base-img" src="/images/shop-card/front/'+ shopData.COUPON_IMG +'" alt="back">' +
                             '<div class="caption">';
                         if(usedYn == "Y") {
                             appendData += '<h5 class="delete-coupon" onclick="deleteCoupon(\''+ shopData.SHOP_ID +'\',\'' + shopData.COUPON_NUMBER +'\');">삭제하기</h5>' +
@@ -450,9 +451,13 @@
                                 '<div class="coupon-name" id="use-coupon-date-btn">사용날짜 : <span style="font-size:1em;color:white">'+ shopData.USED_DT +'</span></div>' +
                                 '<h6>✿ 유효 기간 : ' + shopData.EXPIRATION_DT + '</h6>';
                         }else {
-                            appendData += '<h5 calss="coupon-use" onclick="useCoupon(\''+ shopData.SHOP_ID +'\',\'' + shopData.SHOP_NAME +'\',\'' + shopData.SHOP_SUB_NAME +'\',' +
-                                '\'' + shopData.COUPON_NAME +'\',\'' + shopData.COUPON_NUMBER +'\');">사용하기</h5>' +
-                                '<h3>' + shopData.SHOP_NAME + '<span>(' + shopData.SHOP_SUB_NAME + ')</span></h3>' +
+                            if(webCheck == 'true') {
+                                appendData += '<h5 calss="coupon-use" onclick="webCheckCoupon();">사용하기</h5>';
+                            }else {
+                                appendData += '<h5 calss="coupon-use" onclick="useCoupon(\''+ shopData.SHOP_ID +'\',\'' + shopData.SHOP_NAME +'\',\'' + shopData.SHOP_SUB_NAME +'\',' +
+                                    '\'' + shopData.COUPON_NAME +'\',\'' + shopData.COUPON_NUMBER +'\');">사용하기</h5>';
+                            }
+                            appendData += '<h3>' + shopData.SHOP_NAME + '<span>(' + shopData.SHOP_SUB_NAME + ')</span></h3>' +
                                 '<h4>' + shopData.COUPON_NAME + '<span>' + shopData.COUPON_PRICE + '원</span></h4>' +
                                 '<div class="coupon-name" id="use-coupon-date-btn">쿠폰 번호 : <span style="font-size:1em;color:white">'+ shopData.COUPON_NUMBER +'</span></div>' +
                                 '<h6>✿ 유효 기간 : ' + shopData.EXPIRATION_DT + '</h6>';

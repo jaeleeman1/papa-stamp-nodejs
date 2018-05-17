@@ -148,9 +148,10 @@ router.get('/shopList', function (req, res, next) {
             '* sin( radians(SHOP_LAT) ) ) ) AS distance ' +
             'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_COUPON as SUC on SUC.SHOP_ID = SSI.SHOP_ID ' +
-            'where SSI.DEL_YN = "N" and SUC.USER_ID =' + mysql.escape(userId) + ' ' +
+            'where SUC.USED_YN = "N" and SUC.DEL_YN = "N" and SSI.DEL_YN = "N" and SUC.USER_ID =' + mysql.escape(userId) + ' ' +
+            'group by SSI.SHOP_ID ' +
             'having distance < 250 ' +
-            'order by distance limit 0, 10';
+            'order by distance';
         connection.query(selectShopListQuery, function (err, shopListData) {
             if (err) {
                 console.error("Select coupon shop list Error : ", err);
@@ -200,7 +201,7 @@ router.get('/shopData', function(req, res, next) {
             'from SB_SHOP_INFO as SSI ' +
             'inner join SB_USER_COUPON as SUC on SUC.SHOP_ID = SSI.SHOP_ID ' +
             'where SSI.SHOP_LAT =' + mysql.escape(currentLat)+ ' and SSI.SHOP_LNG =' + mysql.escape(currentLng)  +' and SUC.USER_ID =' + mysql.escape(userId) + ' ' +
-            'and SUC.DEL_YN = "N"';
+            'and SUC.USED_YN = "N" and SUC.DEL_YN = "N" limit 1';
         connection.query(selectShopDataQuery, function (err, shopData) {
             if (err) {
                 console.error("Select coupon shop data Error : ", err);

@@ -244,6 +244,8 @@
                 popupCardData.innerHTML = appendData;
 
                 if(stampCount != stampLength) {
+                    $.toast.config.align = 'center';
+                    $.toast.config.width = 200;
                     $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
                 }
 
@@ -303,6 +305,8 @@
                 var stampLength = data.stampDateList.length % 10;
 
                 if(stampCount != stampLength) {
+                    $.toast.config.align = 'center';
+                    $.toast.config.width = 200;
                     $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
                 }
 
@@ -385,6 +389,8 @@
                                     $("#" + shopId).find($(".img-repeat-" + shopId)).empty();
                                     $("#popup-card").find($(".img-repeat-" + shopId)).empty();
                                     //Toast Success Message
+                                    $.toast.config.align = 'center';
+                                    $.toast.config.width = 200;
                                     $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', {type: 'success', sticky: true});
 
                                     setTimeout(function () {
@@ -597,6 +603,7 @@
                     success: function (data) {
                         var shopData = data.shopData;
                         var userId = data.userId;
+                        var visitRateCnt = Number(shopData.USER_STAMP) % 10;
                         var clickMapData = document.getElementById('map_list_wrap');
                         clickMapData.innerHTML = '';
 
@@ -619,7 +626,7 @@
                             '<figure class="front">' +
                             '<img class="base-img" src="/images/shop-card/back/'+ shopData.SHOP_BACK_IMG +'" alt="back">' +
                             '<div class="img-repeat-'+ shopData.SHOP_ID +'">';
-                        for(var i=0; i<shopData.USER_STAMP; i++) {
+                        for(var i=0; i<visitRateCnt; i++) {
                             appendData += '<div class="stamp-icon-'+ shopData.SHOP_ID +'" id="stamp_icon_'+i+'>">' +
                                 '<img class="stamp-img-'+ shopData.SHOP_ID +'" src="/images/shop-stamp/'+ shopData.SHOP_STAMP_IMG +'"/>' +
                                 '</div>';
