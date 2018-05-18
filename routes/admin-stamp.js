@@ -8,6 +8,16 @@ var crypto = require( "crypto" );
 
 const TAG = '[ADMIN STAMP INFO] ';
 
+var encryptUid = function(unumber) {
+    unumber = unumber.replace(/-/gi, '');
+    unumber = '082'+ unumber;
+    var secrect = config.secrectKey;
+    var cipher = crypto.createCipher("aes-128-ecb", secrect);
+    var crypted = cipher.update(unumber, 'utf8', 'hex');
+    crypted += cipher.final('hex');
+    return crypted;
+}
+
 var decryptUid = function(uid) {
     var secrect = config.secrectKey;
     var cipher = crypto.createDecipher('aes-128-ecb', secrect);
@@ -112,22 +122,21 @@ router.get('/user-data', function(req, res, next) {
     var shopId = req.headers.shop_id;
     logger.debug(TAG, 'Shop id : ' + shopId);
 
-    var userId = req.query.user_id;
+    var userNumber = req.query.user_number;
     var usedYn = req.query.used_yn;
     var delYn = req.query.del_yn;
-    console.log('userId : '+userId);
-    // logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'User number : ' + userNumber);
 
-    if(userId == null || userId == undefined) {
-        // logger.debug(TAG, 'Invalid user id error');
+    if(userNumber == null || userNumber == undefined) {
+        logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
-        res.send('Invalid user id error');
+        res.send('Invalid parameter error');
     }
 
     //Shop Data API
     getConnection(function (err, connection) {
         var selectUserHisDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_PUSH_HIS ' +
-            'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
+            'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(encryptUid(userNumber));
         if(usedYn != "ALL") {
             selectUserHisDataQuery += " and USED_YN = '"+ usedYn +"'";
         }
@@ -143,7 +152,7 @@ router.get('/user-data', function(req, res, next) {
                 res.send('Select shop data error');
             } else {
                 var selectUserInfoDataQuery = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
-                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = '+ mysql.escape(userId);
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = '+ mysql.escape(encryptUid(userNumber));
                 console.log(selectUserInfoDataQuery);
                 connection.query(selectUserInfoDataQuery, function (err, userInfoData) {
                     if (err) {

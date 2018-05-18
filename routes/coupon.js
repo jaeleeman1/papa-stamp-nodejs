@@ -50,7 +50,7 @@ router.get('/main', function(req, res, next) {
             'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
             'where SUC.MAPPING_YN = "Y" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
             'having distance < 250 ' +
-            'order by distance, ISSUED_DT ASC';
+            'order by distance, field(USED_YN, "N", "Y"), ISSUED_DT ASC';
         connection.query(selectCouponList, function (err, couponListData) {
             if (err) {
                 logger.error(TAG, "DB select coupon shop main error : " + err);
@@ -99,7 +99,7 @@ router.post('/main', function(req, res, next) {
             'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
             'where SUC.MAPPING_YN = "Y" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
             'having distance < 250 ' +
-            'order by distance, ISSUED_DT ASC';
+            'order by distance, field(USED_YN, "N", "Y"), ISSUED_DT ASC';
         connection.query(selectCouponList, function (err, couponListData) {
             if (err) {
                 logger.error(TAG, "DB select coupon shop main error : " + err);

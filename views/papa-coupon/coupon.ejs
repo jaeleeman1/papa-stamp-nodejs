@@ -156,7 +156,12 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                location.reload();
+                $.toast.config.align = 'center';
+                $.toast.config.width = 260;
+                $.toast('<h4>사용한 쿠폰 삭제</h4>가 완료 되었습니다.', {type: 'info', duration: 3000 });
+                setTimeout(function () {
+                    location.reload();
+                }, 3100);
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

@@ -9,7 +9,7 @@
   <div class="row">
     <div class="page-title">
       <div class="title_left">
-        <h3>Tables <small>Some examples to get you started</small></h3>
+        <h3>스탬프 적립 내역<small> 사용자별, 기간별 내역을 확인 가능.</small></h3>
       </div>
 
       <div class="title_right">
@@ -27,9 +27,9 @@
     <div class="clearfix"></div>
 
     <div class="form-group">
-      <label class="control-label col-md-3 col-sm-3 col-xs-3">유효일자</label>
+      <label class="control-label col-md-3 col-sm-3 col-xs-3">검색일자</label>
       <div class='col-sm-4' style="width:75%;">
-        Only Date Picker
+        시작 날짜
         <div class="form-group">
           <div class='input-group date' id='start-datepicker'>
             <input type='text' class="form-control" />
@@ -42,7 +42,7 @@
 
 
       <div class='col-sm-4' style="width:75%;float:right;">
-        Only Date Picker
+        종료 날짜
         <div class="form-group">
           <div class='input-group date' id='end-datepicker'>
             <input type='text' class="form-control" />
@@ -145,9 +145,9 @@
                 <td class=" "><%= shopsStampTodayData[i].USER_ID %></td>
                 <td class=" "><%= shopsStampTodayData[i].VISIT_DATE %></td>
                 <td class=" "><%= shopsStampTodayData[i].USED_YN %></td>
-                <td class="red"><a onclick="deleteStamp('<%= shopsStampTodayData[i].USER_ID %>', '<%= shopsStampTodayData[i].VISIT_DATE %>');">삭제</a>
+                <td class=""><a onclick="deleteStamp('<%= shopsStampTodayData[i].USER_ID %>', '<%= shopsStampTodayData[i].VISIT_DATE %>', '<%=i%>');" id="delete-<%=i%>">삭제</a>
                 <td class=" "><%= shopsStampTodayData[i].DEL_YN %></td>
-                <td class=""><a onclick="completePush('<%= shopsStampTodayData[i].USER_ID %>');"><i class="fa fa-bell blue"></i></a>
+                <td class=""><a onclick="completePush('<%= shopsStampTodayData[i].USER_ID %>', '<%=i%>');"><i class="fa fa-bell blue" id="fcm-<%=i%>"></i></a>
                 </td>
               </tr>
               <% } %>
@@ -165,7 +165,7 @@
     <div class="col-md-6 col-sm-6 col-xs-12" style="width:100%;">
       <div class="x_panel">
         <div class="x_title">
-          <h2>Line graph<small>Sessions</small></h2>
+          <h2>스탬프 발급 선 그래프<small> 10일</small></h2>
           <ul class="nav navbar-right panel_toolbox">
             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
             </li>
@@ -238,15 +238,12 @@
         var searchData = $('.top-search .input-group').find("input").val();
         var usedYN = $("input:radio[name=used]:checked").val();
         var delYN = $("input:radio[name=delete]:checked").val();
-        console.log('# :', searchData);
-        console.log('# :', usedYN);
-        console.log('# :', delYN);
         var shopId = $("#shop_id").val();
         var headers = {};
         headers["shop_id"] = shopId;
         if(searchData.length > 0) {
             if(searchData != '날짜검색!') {
-                var dataString = {'user_id': searchData, 'used_yn': usedYN, 'del_yn': delYN};
+                var dataString = {'user_number': searchData, 'used_yn': usedYN, 'del_yn': delYN};
 
                 $.ajax({
                     url: $("#url").val() + '/admin-stamp/v1/user-data',
@@ -255,8 +252,6 @@
                     dataType: 'json',
                     data : dataString,
                     success: function(data) {
-//                data.userData
-                        console.log('# :', data.userHisData);
                         var titleData = document.getElementById('stamp-list-title');
                         titleData.innerHTML = '사용자 데이터';
                         var userHisData = document.getElementById('user-data');
@@ -274,7 +269,7 @@
                                 '<td class=" ">'+ data.userHisData[i].USER_ID +'</td>' +
                                 '<td class=" ">'+ data.userHisData[i].VISIT_DATE +'</td>' +
                                 '<td class=" ">'+ data.userHisData[i].USED_YN +'</td>' +
-                                '<td class=" last red"><a onclick="stampDelete(\''+ data.userHisData[i].USER_ID +'\', \'' + data.userHisData[i].VISIT_DATE +'\');">삭제</a>' +
+                                '<td class=" last red"><a onclick="deleteStamp(\''+ data.userHisData[i].USER_ID +'\', \'' + data.userHisData[i].VISIT_DATE +'\', '+i+');" id="delete-'+i+'">삭제</a>' +
                                 '<td class=" ">'+ data.userHisData[i].DEL_YN +'</td>' +
                                 '<td class=" last grey"><a href="#"><i class="fa fa-bell-slash"></i></a>' +
                                 '</td>' +
@@ -322,7 +317,7 @@
                                 '<td class=" ">'+ data.periodData[i].USER_ID +'</td>' +
                                 '<td class=" ">'+ data.periodData[i].VISIT_DATE +'</td>' +
                                 '<td class=" ">'+ data.periodData[i].USED_YN +'</td>' +
-                                '<td class=" last"><a onclick="stampDelete(\''+ data.periodData[i].USER_ID +'\', \'' + data.periodData[i].VISIT_DATE +'\');">삭제</a>' +
+                                '<td class=" last"><a onclick="deleteStamp(\''+ data.periodData[i].USER_ID +'\', \'' + data.periodData[i].VISIT_DATE +'\', '+i+');" id="delete-'+i+'">삭제</a>' +
                                 '<td class=" ">'+ data.periodData[i].DEL_YN +'</td>' +
                                 '<td class=" last"><a href="#"><i class="fa fa-bell-slash"></i></a>' +
                                 '</td>' +
@@ -344,8 +339,9 @@
 
     function deleteStampcallback(userId, visitDate) {
         var dataString = {'user_id': userId, 'visit_date': visitDate};
+        var shopId = $("#shop_id").val();
         var headers = {};
-        headers["shop_id"] = 'SB-SHOP-00001';
+        headers["shop_id"] = shopId;
 
         $.ajax({
             url: $("#url").val() + '/admin-stamp/v1/deleteStamp',
@@ -366,12 +362,13 @@
         });
     }
 
-    function deleteStamp(userId, visitDate) {
+    function deleteStamp(userId, visitDate, index) {
+        $("#delete-"+index).addClass("red");
         $("#delete-stamp-confirm").dialog({
             resizable: false,
             modal: true,
             title: "스탬프 삭제",
-            height: 200,
+            height: 300,
             width: 700,
             resizable:false,
             buttons: {
@@ -380,13 +377,14 @@
                     deleteStampcallback(userId, visitDate);
                 },
                 "아니오": function () {
+                    $("#delete-"+index).removeClass("red");
                     $(this).dialog('close');
                 }
             }
         });
     }
 
-    function completePush(userId) {
+    function completePush(userId, index) {
         var headers = {};
         headers["user_id"] = userId;
         $.ajax({
@@ -409,7 +407,9 @@
                         dataType: 'json',
                         data: JSON.stringify(dataString),
                         success: function(data) {
-                            console.log("success");
+                            console.log("success", index);
+                            $("#fcm-"+index).removeClass("blue");
+                            $("#fcm-"+index).addClass("red");
                         },
                         error: function(request, status, error) {
                             console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

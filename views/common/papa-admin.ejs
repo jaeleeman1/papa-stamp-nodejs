@@ -455,6 +455,9 @@
                             }
                         });
                     }
+
+                    $("input:radio[name=paramStampValue]:checked").prop("checked", false);
+                    $("input:radio[name=paramStampValue]:radio[value='1']").prop("checked", true);
                 }
             },
             error: function (request, status, error) {

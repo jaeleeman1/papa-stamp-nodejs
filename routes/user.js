@@ -275,7 +275,7 @@ router.get('/accessToken', function (req, res, next) {
 
     getConnection(function (err, connection){
         var getAccessTokenQuery = 'select ACCESS_TOKEN from SB_USER_INFO ' +
-            'where USER_ID = "'+ userId + '"';
+            'where USER_ID = "'+ encryptUid(userId) + '"';
         console.log(getAccessTokenQuery);
         connection.query(getAccessTokenQuery, function (err, accessTokenData) {
             if (err) {

@@ -8,6 +8,16 @@ var crypto = require( "crypto" );
 
 const TAG = '[ADMIN COUPON INFO] ';
 
+var encryptUid = function(unumber) {
+    unumber = unumber.replace(/-/gi, '');
+    unumber = '082'+ unumber;
+    var secrect = config.secrectKey;
+    var cipher = crypto.createCipher("aes-128-ecb", secrect);
+    var crypted = cipher.update(unumber, 'utf8', 'hex');
+    crypted += cipher.final('hex');
+    return crypted;
+}
+
 var decryptUid = function(uid) {
     var secrect = config.secrectKey;
     var cipher = crypto.createDecipher('aes-128-ecb', secrect);
@@ -105,28 +115,38 @@ router.get('/main', function(req, res, next) {
 });
 
 //Get User Data
-router.get('/userData', function(req, res, next) {
+router.get('/user-data', function(req, res, next) {
     // logger.info(TAG, 'Get shop data');
     var shopId = req.headers.shop_id;
     logger.debug(TAG, 'Shop id : ' + shopId);
 
-    var userId = req.query.user_id;
+    var userNumber = req.query.user_number;
     var mappingYn = req.query.mapping_yn;
     var usedYn = req.query.used_yn;
     var delYn = req.query.del_yn;
     // logger.debug(TAG, 'User id : ' + userId);
 
-    if(userId == null || userId == undefined) {
+    if(userNumber == null || userNumber == undefined) {
         // logger.debug(TAG, 'Invalid user id error');
         res.status(400);
-        res.send('Invalid user id error');
+        res.send('Invalid parameter error');
     }
 
     //Shop Data API
     getConnection(function (err, connection) {
-        var selectUserDataQuery = 'select USER_ID, COUPON_NUMBER, MAPPING_YN, USED_YN, DEL_YN, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_COUPON ' +
-            'where SHOP_ID = ' + mysql.escape(shopId) + ' and USED_YN = "'+ usedYn + '" and DEL_YN = "' + delYn + '" and MAPPING_YN = "' + mappingYn + '" and USER_ID ="' +userId + '" group by ISSUED_DT desc';
-        connection.query(selectUserDataQuery, function (err, userData) {
+        var selectUserCouponQuery = 'select USER_ID, COUPON_NUMBER, MAPPING_YN, USED_YN, DEL_YN, DATE_FORMAT(ISSUED_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_COUPON ' +
+            'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' +mysql.escape(encryptUid(userNumber));
+            if(mappingYn != "ALL") {
+                selectUserCouponQuery += " and MAPPING_YN = '"+ usedYn +"'";
+            }
+            if(usedYn != "ALL") {
+                selectUserCouponQuery += " and USED_YN = '"+ usedYn +"'";
+            }
+            if(delYn != "ALL") {
+                selectUserCouponQuery += " and DEL_YN = '" + delYn + "'";
+            }
+        selectUserCouponQuery += " group by ISSUED_DT desc";
+        connection.query(selectUserCouponQuery, function (err, userData) {
             if (err) {
                 console.error("Select shop data Error : ", err);
                 res.status(400);
@@ -147,8 +167,10 @@ router.get('/userData', function(req, res, next) {
 });
 
 //Get User Data
-router.get('/periodData', function(req, res, next) {
+router.get('/period-data', function(req, res, next) {
     // logger.info(TAG, 'Get shop data');
+    var shopId = req.headers.shop_id;
+    logger.debug(TAG, 'Shop id : ' + shopId);
 
     var startDate = req.query.start_date;
     var endDate = req.query.end_date;
