@@ -7,7 +7,7 @@ var mysql = require('mysql');
 var http = require('http');
 var path = require('path');
 var FCM = require('fcm-push');
-
+var crypto = require( "crypto" );
 
 const TAG = '[NOTIFICATION INFO] ';
 const serverKey = 'AAAAHIVXzfk:APA91bHqH863OCv5t6oNHwoYjDp5kmqd-D6GtrrU-QW_ikVCkW2HteP6pnvCT58XhKH4bobu0jOPZyzF2w1DFE1z4ktQ1bVS59iXQi70qqGFyW8g9LNLR8KgksXrm9lzQ1_FVsDsQZt0';
@@ -82,6 +82,25 @@ var sendNotification = function sendNotification(accessToken, notiType, info) {
     });
 };
 
+var encryptUid = function(unumber) {
+    unumber = unumber.replace(/-/gi, '');
+    unumber = '082'+ unumber;
+    var secrect = config.secrectKey;
+    var cipher = crypto.createCipher("aes-128-ecb", secrect);
+    var crypted = cipher.update(unumber, 'utf8', 'hex');
+    crypted += cipher.final('hex');
+    return crypted;
+}
+
+var decryptUid = function(uid) {
+    var secrect = config.secrectKey;
+    var cipher = crypto.createDecipher('aes-128-ecb', secrect);
+    var decrypted = cipher.update(uid, 'hex', 'utf8');
+    decrypted += cipher.final('utf8');
+    var returnValue = decrypted.substr(3,3) + '-' + decrypted.substr(6,4) + '-' + decrypted.substr(10,4);
+    return returnValue;
+}
+
 //Setting Socket.io
 var app = express();
 app.use(express.static(path.join(__dirname, 'public')));
@@ -103,12 +122,44 @@ router.post('/request-stamp', function (req, res, next) {
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
     var requestCheck = req.body.request_check;
-    if(requestCheck == 'true') {
-        io.sockets.emit(userId, {type:"request-stamp", sendId: shopId});
-    }
-    io.sockets.emit(shopId, {type:"request-stamp", sendId: userId});
-    res.status(200);
-    res.send({resultData: 'request success'});
+
+    getConnection(function (err, connection) {
+        var selectStampCount = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
+            'where DEL_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
+        connection.query(selectStampCount, function (err, selectStampCountData) {
+            if (err) {
+                logger.error(TAG, "DB Select stamp count error : " + err);
+                res.status(400);
+                res.send('Select stamp count error');
+            } else {
+                logger.debug(TAG, 'Select stamp count success');
+
+                var selectCouponQuery = 'select COUPON_NAME, COUPON_NUMBER, EXPIRATION_DT from SB_USER_COUPON ' +
+                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId) +' and MAPPING_YN="Y" and USED_YN="N" and DEL_YN="N" ' +
+                    'order by ISSUED_DT ASC';
+                connection.query(selectCouponQuery, function (err, selectCouponData) {
+                    if (err) {
+                        logger.error(TAG, "Select Coupon error : " + err);
+                        res.status(400);
+                        res.send('Select coupon error');
+                    } else {
+                        logger.debug(TAG, 'Select coupon success');
+                        if(requestCheck == 'true') {
+                            io.sockets.emit(userId, {type:"request-stamp", sendId: shopId});
+                        }
+                        if(selectStampCountData.length > 0) {
+                            io.sockets.emit(shopId, {type:"request-stamp", sendId: userId, phoneNumber: decryptUid(userId), userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
+                        }else {
+                            io.sockets.emit(shopId, {type:"request-stamp", sendId: userId, phoneNumber: decryptUid(userId), userStamp: 0, selectCouponData: selectCouponData});
+                        }
+                        res.status(200);
+                        res.send({resultData: 'request success'});
+                    }
+                });
+            }
+            connection.release();
+        });
+    });
 });
 
 router.post('/update-stamp', function (req, res, next) {
@@ -202,12 +253,44 @@ router.post('/request-coupon', function (req, res, next) {
     logger.info(TAG, 'request userId' , userId);
     logger.info(TAG, 'request shopId', shopId);
     logger.info(TAG, 'request couponNumber', couponNumber);
-    if(requestCheck == 'true') {
-        io.sockets.emit(userId, {type:"request-coupon", sendId: shopId});
-    }
-    io.sockets.emit(shopId, {type:"request-coupon", sendId: userId, couponNumber:couponNumber});
-    res.status(200);
-    res.send({resultData: 'request success'});
+
+    getConnection(function (err, connection) {
+        var selectStampCount = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
+            'where DEL_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(userId);
+        connection.query(selectStampCount, function (err, selectStampCountData) {
+            if (err) {
+                logger.error(TAG, "DB Select stamp count error : " + err);
+                res.status(400);
+                res.send('Select stamp count error');
+            } else {
+                logger.debug(TAG, 'Select stamp count success');
+
+                var selectCouponQuery = 'select COUPON_NAME, COUPON_NUMBER, EXPIRATION_DT from SB_USER_COUPON ' +
+                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId) +' and MAPPING_YN="Y" and USED_YN="N" and DEL_YN="N" ' +
+                    'order by ISSUED_DT ASC';
+                connection.query(selectCouponQuery, function (err, selectCouponData) {
+                    if (err) {
+                        logger.error(TAG, "Select Coupon error : " + err);
+                        res.status(400);
+                        res.send('Select coupon error');
+                    } else {
+                        logger.debug(TAG, 'Select coupon success');
+                        if(requestCheck == 'true') {
+                            io.sockets.emit(userId, {type:"request-coupon", sendId: shopId});
+                        }
+                        if(selectStampCountData.length > 0) {
+                            io.sockets.emit(shopId, {type:"request-coupon", sendId: userId, phoneNumber: decryptUid(userId), couponNumber:couponNumber, userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
+                        }else {
+                            io.sockets.emit(shopId, {type:"request-coupon", sendId: userId, phoneNumber: decryptUid(userId), couponNumber:couponNumber, userStamp: 0, selectCouponData: selectCouponData});
+                        }
+                        res.status(200);
+                        res.send({resultData: 'request success'});
+                    }
+                });
+            }
+            connection.release();
+        });
+    });
 });
 
 router.post('/issued-coupon', function (req, res, next) {

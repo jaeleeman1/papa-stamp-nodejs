@@ -130,12 +130,12 @@
             width: '90%',
             resizable:false,
             buttons: {
-                "예": function () {
+                "확인": function () {
                     $('#delete_card').unbind('click');
                     useCouponCallback(shopId, couponNum);
                     $(this).dialog('close');
                 },
-                "아니오": function () {
+                "취소": function () {
                     $("#shop_id").val('');
                     $(this).dialog('close');
                 }
@@ -173,12 +173,12 @@
             width: '90%',
             resizable:false,
             buttons: {
-                "예": function () {
+                "확인": function () {
                     $('#delete_card').unbind('click');
                     $(this).dialog('close');
                     deleteCouponCallback(shopId, couponNum);
                 },
-                "아니오": function () {
+                "취소": function () {
                     $(this).dialog('close');
                 }
             }

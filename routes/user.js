@@ -5,10 +5,15 @@ var getConnection = require('../config/db_connection');
 var logger = require('../config/logger');
 var mysql = require('mysql');
 var admin = require("firebase-admin");
-var crypto = require( "crypto" );
 var serviceAccount = require("../config/papastamp-a72f6-firebase-adminsdk-qqp2q-6484dc5daa.json");
+var crypto = require( "crypto" );
 
 const TAG = '[USER INFO] ';
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://papastamp-a72f6.firebaseio.com"
+});
 
 var encryptUid = function(unumber) {
     unumber = unumber.replace(/-/gi, '');
@@ -19,11 +24,6 @@ var encryptUid = function(unumber) {
     crypted += cipher.final('hex');
     return crypted;
 }
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://papastamp-a72f6.firebaseio.com"
-});
 
 /* GET encrypt uid */
 router.get('/couponCheck', function(req, res, next) {

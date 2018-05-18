@@ -51,17 +51,6 @@
 </div>
 <!-- //banner -->
 
-<div id="admin-coupon-confirm" class="dialog-confirm">
-  <figure>
-    <div id="admin-stamp-user-count"></div>
-    <div id="admin-coupon-user-count"></div>
-    <span class="user-number"></span>
-    <label style="margin-bottom: 30px;" for="terms">적립된 쿠폰을 사용하시겠습니까?</label><br/>
-    <div id="admin-coupon-list" style="float:left;margin-left:20px;width: 85%;">
-    </div>
-  </figure>
-</div>
-
 <script src='/js/jquery-2.2.3.min.js' type='text/javascript'></script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -169,11 +158,6 @@
                             $.toast.config.width = 470;
                             $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">올바른 번호</h4>를 입력하세요!!.</span>', { type: 'danger', duration: 3000 });
                         }else {
-                            if (data.selectCouponData.length > 0) {
-                                $.toast.config.align = 'center';
-                                $.toast.config.width = 420;
-                                $.toast('<span style="font-size:1.8em;">발급된 <h4 style="font-size:2em;">쿠폰</h4>이 ' + data.selectCouponData.length + '장 있습니다.</span>', {type: 'danger', duration: 5000});
-                            }
                             pushStamp(inputData, 'admin', false);
                         }
                     },
@@ -198,39 +182,45 @@
                     data: dataString,
                     success: function (data) {
                         inputData = data.userId;
-                        var stampCount = Number(data.userStamp)%10;
+                        var stampCount = Number(data.userStamp) % 10;
                         var couponCount = data.selectCouponData.length;
-                        $("#stamp-user-count").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ stampCount +'개)</h4>');
-                        $("#coupon-user-count").html('<h4 class="coupon-count" id="coupon-count">(현재까지 미사용 쿠폰 : '+ couponCount +'장)</h4>');
+                        $("#stamp-user-count").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : ' + stampCount + '개)</h4>');
+                        $("#coupon-user-count").html('<h4 class="coupon-count" id="coupon-count">(현재까지 미사용 쿠폰 : ' + couponCount + '장)</h4>');
                         tabletNumber = $("#phone-text").val();
 
-                        if(tabletNumber.length < 13) {
+                        if (tabletNumber.length < 13) {
                             $.toast.config.align = 'center';
                             $.toast.config.width = 470;
-                            $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">올바른 번호</h4>를 입력하세요!!.</span>', { type: 'danger', duration: 3000 });
-                        }else {
-                            if(data.selectCouponData.length > 0) {
+                            $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">올바른 번호</h4>를 입력하세요!!.</span>', {
+                                type: 'danger',
+                                duration: 3000
+                            });
+                        } else {
+                            if (data.selectCouponData.length > 0) {
                                 var couponList = document.getElementById("admin-coupon-list");
                                 var appendData = '';
                                 var couponLength = data.selectCouponData.length;
-                                for(var i=0; i<couponLength; i++) {
+                                for (var i = 0; i < couponLength; i++) {
                                     appendData += '<div style="margin-bottom:50px;">';
-                                    if(i == 0) {
-                                        appendData += '<input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="'+data.selectCouponData[i].COUPON_NUMBER+'" checked="checked">';
-                                    }else {
-                                        appendData += '<input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="'+data.selectCouponData[i].COUPON_NUMBER+'">';
+                                    if (i == 0) {
+                                        appendData += '<input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="' + data.selectCouponData[i].COUPON_NUMBER + '" checked="checked">';
+                                    } else {
+                                        appendData += '<input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="' + data.selectCouponData[i].COUPON_NUMBER + '">';
                                     }
-                                    appendData += '<h5 style="padding-top:16px;" class="confirm-coupon-number">'+ data.selectCouponData[i].COUPON_NUMBER +' / '+ data.selectCouponData[i].COUPON_NAME +
-                                        ' / '+ data.selectCouponData[i].EXPIRATION_DT +'</h5>' +
+                                    appendData += '<h5 style="padding-top:16px;" class="confirm-coupon-number">' + data.selectCouponData[i].COUPON_NUMBER + ' / ' + data.selectCouponData[i].COUPON_NAME +
+                                        ' / ' + data.selectCouponData[i].EXPIRATION_DT + '</h5>' +
                                         '</input>' +
                                         '</div>';
                                 }
                                 couponList.innerHTML = appendData;
-                                adminCoupon(inputData);
-                            }else {
+                                adminUseCoupon(inputData);
+                            } else {
                                 $.toast.config.align = 'center';
                                 $.toast.config.width = 430;
-                                $.toast('<span style="font-size:1.8em;">사용 가능한 <h4 style="font-size:2em;">쿠폰</h4>이 없습니다.!</span>', {type: 'success', uration: 3000 });
+                                $.toast('<span style="font-size:1.8em;">사용 가능한 <h4 style="font-size:2em;">쿠폰</h4>이 없습니다.!</span>', {
+                                    type: 'success',
+                                    uration: 3000
+                                });
                             }
                         }
                     },
@@ -316,7 +306,7 @@
                                 '</div>';
                         }
                         couponList.innerHTML = appendData;
-                        adminCoupon(inputData);
+                        adminUseCoupon(inputData);
                     }else {
                         pushStamp(inputData, 'admin');
                     }
@@ -343,7 +333,7 @@
             }, 200);
         }
 
-        function adminCouponCallback(userId) {
+        function adminUseCouponCallback(userId) {
             var shopId = $("#shop_id").val();
             var couponNumber = $("input:radio[name=paramCouponValue]:checked").val();
             var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
@@ -368,18 +358,18 @@
             });
         }
 
-        function adminCoupon(userId) {
+        function adminUseCoupon(userId) {
             $("#admin-coupon-confirm").dialog({
                 resizable: false,
                 modal: true,
-                title: "파파스탬프 쿠폰!",
-                height: 450,
+                title: "파파스탬프 쿠폰 사용 요청! (TABLET)",
+                height: 500,
                 width: 700,
                 resizable:false,
                 buttons: {
                     "확인": function () {
                         $(this).dialog('close');
-                        adminCouponCallback(userId);
+                        adminUseCouponCallback(userId);
                         $("#phone-text").val('');
                     },
                     "취소": function () {

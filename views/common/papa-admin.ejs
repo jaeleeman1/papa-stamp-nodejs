@@ -224,11 +224,27 @@
   </figure>
 </div>
 
+<div id="admin-coupon-confirm" class="dialog-confirm">
+  <figure>
+    <div id="admin-stamp-user-count"></div>
+    <div id="admin-coupon-user-count"></div>
+    <span class="user-number"></span>
+    <label style="margin-bottom: 30px;" for="terms">적립된 쿠폰을 사용하시겠습니까?</label><br/>
+    <div id="admin-coupon-list" style="float:left;margin-left:20px;width: 85%;">
+      <div style="margin-bottom:50px;">
+        <input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="' + data.selectCouponData[i].COUPON_NUMBER + '" checked="checked">
+          <h5 style="padding-top:16px;" class="confirm-coupon-number" id="confirm-coupon-number"></h5>
+        </input>
+        </div>
+    </div>
+  </figure>
+</div>
+
 <div id="push-stamp-confirm" class="dialog-confirm">
   <figure>
     <div id="push-stamp-user-count"></div>
     <div id="push-coupon-user-count"></div>
-    <span class="user-number"></span>
+    <div class="user-number"></div>
     <div>
       <label style="margin-bottom: 30px;" for="terms">스탬프 적립 하시겠습니까?</label><br/>
       <input type="radio" name="paramStampValue" value="1" checked="checked">1</input><br/>
@@ -280,8 +296,20 @@
     var socket = io.connect(convertUrl+':8060');
     socket.on(pushShopId, function(data){
         if (data.type == "request-stamp") {
+            $(".user-number").html(data.phoneNumber);
+            var stampCount = Number(data.userStamp)%10;
+            var couponCount = data.selectCouponData.length;
+            $("#push-stamp-user-count").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ stampCount +'개)</h4>');
+            $("#push-coupon-user-count").html('<h4 class="coupon-count" id="coupon-count">(현재까지 미사용 쿠폰 : '+ couponCount +'장)</h4>');
+
             pushStamp(data.sendId, 'push');
         }else if(data.type == "request-coupon") {
+            $(".user-number").html(data.phoneNumber);
+            var stampCount = Number(data.userStamp)%10;
+            var couponCount = data.selectCouponData.length;
+            $("#admin-stamp-user-count").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ stampCount +'개)</h4>');
+            $("#admin-coupon-user-count").html('<h4 class="coupon-count" id="coupon-count">(현재까지 미사용 쿠폰 : '+ couponCount +'장)</h4>');
+
             pushUseCoupon(data.sendId, data.couponNumber);
         }
     });
@@ -337,8 +365,6 @@
         pushData.innerHTML += appendData;
         useCoupon();
     }
-
-
 
     function pushStampCallback(userId) {
         var shopId = $("#shop_id").val();
@@ -517,16 +543,14 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                $("#push-coupon-user-number").html(data.userNumber);
-                $("#push-coupon-number").html(data.selectCouponData.COUPON_NUMBER);
-                $("#push-coupon-name").html(data.selectCouponData.COUPON_NAME);
-                $("#push-coupon-date").html(data.selectCouponData.EXPIRATION_DT);
+                $(".user-number").html(data.userNumber);
+                $("#confirm-coupon-number").html(data.selectCouponData.COUPON_NUMBER + ' / ' + data.selectCouponData.COUPON_NAME + ' / ' + data.selectCouponData.EXPIRATION_DT);
 
-                $("#push-coupon-confirm").dialog({
+                $("#admin-coupon-confirm").dialog({
                     resizable: false,
                     modal: true,
-                    title: "쿠폰 발급",
-                    height: 350,
+                    title: "파파스탬프 쿠폰 사용 요청! (도장)",
+                    height: 500,
                     width: 700,
                     resizable:false,
                     buttons: {

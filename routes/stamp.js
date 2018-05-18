@@ -41,7 +41,7 @@ router.get('/main', function(req, res, next) {
             'inner join SB_USER_PUSH_INFO as SUPI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
             'where SUPI.USER_ID = ' + mysql.escape(userId) + ' and SUPI.DEL_YN = "N" ' +
             'having distance < 250 ' +
-            'order by distance limit 0, 10';
+            'order by distance';
         connection.query(selectStampShopList, function (err, stampShopListData) {
             if (err) {
                 logger.error(TAG, "Select stamp shop list error : " + err);
@@ -92,7 +92,7 @@ router.post('/main', function(req, res, next) {
             'inner join SB_USER_PUSH_INFO as SUPI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
             'where SUPI.USER_ID = ' + mysql.escape(userId) + ' and SUPI.DEL_YN = "N" ' +
             'having distance < 250 ' +
-            'order by distance limit 0, 10';
+            'order by distance';
         connection.query(selectStampShopList, function (err, stampShopListData) {
             if (err) {
                 logger.error(TAG, "Select stamp shop list error : " + err);
