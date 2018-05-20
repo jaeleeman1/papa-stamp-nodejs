@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Gentelella Alela! | </title>
+
+  <!-- Bootstrap -->
+  <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <!-- NProgress -->
+  <link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
+  <!-- Animate.css -->
+  <link href="/vendors/animate.css/animate.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/jquery.toast.min.css" type="text/css"/>
+
+  <!-- Custom Theme Style -->
+  <link href="/css/custom.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
+  <style>
+    .ui-dialog .ui-dialog-buttonpane button {
+      font-size:1em;
+    }
+  </style>
+  <script type ="text/javascript" src="/js/jquery-2.2.3.min.js"></script>
+  <script src='/js/jquery.toast.min.js' type='text/javascript'></script>
+  <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+</head>
+
+<form action="/" method="get" style="display:none" name="list_setting" id="list_setting">
+  <input type="hidden" name="url" id="url" value="<%= url %>"/>
+  <input type="hidden" name="authCheck" id="authCheck" value="true"/>
+</form>
+
+<body class="login">
+<div>
+  <a class="hiddenanchor" id="signup"></a>
+  <a class="hiddenanchor" id="signin"></a>
+
+  <div class="login_wrapper">
+    <div class="animate form login_form">
+      <section class="login_content">
+        <form>
+          <h1>파파스탬프 회원가입</h1>
+          <div>
+            <input type="text" class="form-control" placeholder="E-Mail" required="" id="loginEmail"/>
+          </div>
+          <div>
+            <input type="password" class="form-control" placeholder="Password" required="" id="loginPassword"/>
+          </div>
+          <div>
+            <input type="password" class="form-control" placeholder="Password-Cofirm" required="" id="loginPasswordConfirm"/>
+          </div>
+          <div>
+            <input type="text" class="form-control" placeholder="Phone-Number" required="" id="phoneNumber"/>
+          </div>
+          <div class="input-group">
+            <input id="authCode" type="text" class="form-control" placeholder="인증번호를 입력하세요!" pattern="^(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}$">
+            <span class="input-group-btn">
+              <button id="authButton" style="margin-bottom:20px;" class="btn btn-default" type="button" onclick="authNumber();">인증번호 요청</button>
+            </span>
+          </div>
+          <div>
+            <a class="btn btn-default submit" id="btn_send" style="font-size: 20px;margin-bottom: 50px;">회원가입</a>
+            <a id="kakao-login-btn"></a>
+          </div>
+
+          <div class="clearfix"></div>
+
+          <div class="separator">
+            <p class="change_link">
+              <a href="#signup" class="to_register" id="signup">ID / Password 찾기</a>
+            </p>
+
+            <div class="clearfix"></div>
+            <br />
+
+            <div>
+              <h1><img style="width:80px;margin-right:20px;" src="/images/papastamp_icon.png"/> 파파 스탬프 !!! </h1>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div id="signup-confirm" class="dialog-confirm">
+  <figure>
+    <h5 class="confirm-user-number" id="confirm-user-number"></h5>
+    <div style="margin: 30px;"> 입력하신 사항으로 가입하시겠습니까?</div>
+  </figure>
+</div>
+
+<script type ="text/javascript">
+    $(function() {
+        var keyNumber = '';
+        $("#phoneNumber").on("input propertychange",function() {
+            var val = this.value.replace(/\D/g, '');
+            var newVal = '';
+            keyNumber = $(this).val();
+
+            if (val.length > 3 && val.length < 8) {
+                newVal += val.substr(0, 3) + '-';
+                val = val.substr(3);
+            }else if (val.length > 7) {
+                newVal += val.substr(0, 3) + '-' + val.substr(3, 4) + '-';
+                val = val.substr(7);
+            }
+            newVal += val;
+            this.value = newVal;
+
+            if($(this).val().length > 13) {
+                $(this).val(keyNumber.substr(0, keyNumber.length - 1));
+            }
+        });
+
+        $('#btn_send').on('click',
+            function() {
+                $.toast.config.align = 'center';
+                $.toast.config.width = 210;
+
+                var loginEmail = $('#loginEmail').val();
+                var loginPassword = $('#loginPassword').val();
+                var loginPasswordConfirm = $('#loginPasswordConfirm').val();
+
+                if (loginEmail == "") {
+                    $.toast('<h4>E-Mail</h4>을 입력하세요!!.', { type: 'info', duration: 3000 });
+                    $('#loginEmail').focus();
+                    return;
+                }
+
+                if (loginPassword == "") {
+                    $.toast('<h4>Password</h4>를 입력하세요!!.', { type: 'info', duration: 3000 });
+                    $('#loginPassword').focus();
+                    return;
+                }
+
+                if (loginPasswordConfirm == "") {
+                    $.toast.config.width = 270;
+                    $.toast('<h4>Password Confirm</h4>를 입력하세요!!.', { type: 'info', duration: 3000 });
+                    $('#loginPassword').focus();
+                    return;
+                }
+
+                var loginInfo = '{"login_email":"' + loginEmail + '"}';
+                $.ajax({
+                    url: $("#url").val()+'/login/userCheck',
+                    type: 'GET',
+                    traditional:true,
+                    data: JSON.parse(loginInfo),
+                    success: function(data) {;
+                        if(data.loginEmailCheck == '1'){
+                            $.toast('<h4>존재하는 E-Mail</h4>입니다!.', { type: 'danger', duration: 3000 });
+                        }else {
+                            if(loginPassword != loginPasswordConfirm) {
+                                $.toast('<h4>비밀 번호</h4>를 확인하세요!!.', { type: 'danger', duration: 3000 });
+                            }else {
+                                if($("#authCheck").val() == "true") {
+                                    $("#signup-confirm").dialog({
+                                        resizable: false,
+                                        modal: true,
+                                        title: "파파 스탬프 회원 가입",
+                                        height: 210,
+                                        width: 500,
+                                        resizable:false,
+                                        buttons: {
+                                            "예": function () {
+                                                location.href = $("#url").val();
+                                            },
+                                            "아니오": function () {
+                                                $(this).dialog('close');
+                                            }
+                                        }
+                                    });
+                                }else {
+                                    $.toast.config.width = 300;
+                                    $.toast('<h4>전화 번호 인증</h4>을 진행하시기 바랍니다.!.', { type: 'danger', duration: 3000 });
+                                }
+                            }
+                        }
+                    },
+                    error: function(request, status, error) {
+                        console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        console.log('Error occured');
+                    }
+                });
+            });
+
+        $('#signup').on('click',
+            function() {
+                alert('가입');
+            });
+    });
+
+    function authNumber() {
+        $.toast.config.align = 'center';
+        $.toast.config.width = 230;
+        var code = "";
+
+        var authCheckText = $("#authButton").text();
+        if(authCheckText == "인증번호 확인") {
+            var auth = $("#authCode").val();
+            if(auth == '') {
+                $.toast('<h4>발송된 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
+            } else {
+                if(code == auth) {
+                    $("#authCheck").val("true");
+                    $.toast('<h4>인증</h4>이 완료되었습니다.', {type: 'info', duration: 3000});
+                }
+            }
+        }else {
+            if ($("#phoneNumber").val() == '') {
+                $.toast('<h4>핸드폰 번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
+                $('#phoneNumber').focus();
+                return;
+            }
+
+            if ($("#phoneNumber").val().length < 13) {
+                $.toast('<h4>올바른 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
+            } else {
+                // code 발송
+                $("#authButton").html("인증번호 확인");
+                $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

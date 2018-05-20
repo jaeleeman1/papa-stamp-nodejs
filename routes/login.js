@@ -19,6 +19,10 @@ router.get('/', function(req, res, next) {
     }
 });
 
+router.get('/signup', function(req, res, next) {
+    res.render('signup', {url:config.url});
+});
+
 router.get('/logout', function(req, res, next) {
     req.session.destory(function(err){
         if(err) console.err('err', err);

@@ -30,11 +30,14 @@
   <input type="hidden" name="url" id="url" value="<%= url %>"/>
 </form>
 
-<form action="shop/v1/main" method="post" style="display:none" name="sendform" id="sendform">
+<form action="shop/v1/main" method="post" style="display:none" name="sendLoginForm" id="sendLoginForm">
   <input type="hidden" name="user_id" id="user_id" value=""/>
   <input type="hidden" name="current_lat" id="current_lat" value=""/>
   <input type="hidden" name="current_lng" id="current_lng" value=""/>
   <input type="hidden" name="web_check" id="web_check" value="true"/>
+</form>
+
+<form action="sign" method="get" style="display:none" name="sendSignupForm" id="sendSignupForm">
 </form>
 
 <body class="login">
@@ -58,14 +61,15 @@
             <input type="password" class="form-control" placeholder="Password" required="" id="loginPassword"/>
           </div>
           <div>
-            <a class="btn btn-default submit" id="btn_send">로그인</a>
+            <a class="btn btn-default submit" id="btn_send" style="font-size: 20px;margin-bottom: 50px;">로그인</a>
+            <a id="kakao-login-btn"></a>
           </div>
 
           <div class="clearfix"></div>
 
           <div class="separator">
             <p class="change_link">
-              <a href="#signup" class="to_register">회원 가입! </a>
+              <a href="signup" class="to_register" id="signup">회원 가입! </a>
             </p>
 
             <div class="clearfix"></div>
@@ -87,14 +91,16 @@
     $(function() {
         $('#btn_send').on('click',
             function() {
+                $.toast.config.align = 'center';
+                $.toast.config.width = 210;
                 if ($('#loginEmail').val() == "") {
-                    $.toast('<h4>E-Mail</h4>을 입력하세요!!.', { type: 'info', duration: 3000 });
+                    $.toast('<h4>E-Mail</h4>을 입력하세요!!.', { type: 'danger', duration: 3000 });
                     $('#loginEmail').focus();
                     return;
                 }
 
                 if ($('#loginPassword').val() == "") {
-                    $.toast('<h4>Password</h4>를 입력하세요!!.', { type: 'info', duration: 3000 });
+                    $.toast('<h4>Password</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 });
                     $('#loginPassword').focus();
                     return;
                 }
@@ -111,7 +117,7 @@
                             $('#current_lat').val(data.currentLat);
                             $('#current_lng').val(data.currentLng);
 
-                            $('#sendform').submit();
+                            $('#sendLoginForm').submit();
                         }else {
                             if(data.loginEmailCheck == '0') {
                                 $.toast('<h4>올바른 E-Mail</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 });
@@ -125,6 +131,11 @@
                         console.log('Error occured');
                     }
                 });
+            });
+
+        $('#signup').on('click',
+            function() {
+                $('#sendSignupForm').submit();
             });
     });
 </script>

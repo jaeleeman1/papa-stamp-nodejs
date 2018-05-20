@@ -47,7 +47,11 @@
           <h1>Admin Portal 로그인 화면</h1>
           <!--<form action="/login/initPage" method="post" id="sendform" class="form-inline">-->
             <div>
-              <input type="text" class="form-control" placeholder="<%= userId %>" required="" id="loginId"/>
+              <% if(adminEmail == "관리자 E-Mail") {%>
+                <input type="text" class="form-control" placeholder="<%= adminEmail %>" required="" id="loginId"/>
+              <% }else {%>
+                <input type="text" class="form-control" placeholder="<%= adminEmail %>" value="<%= adminEmail %>" required="" id="loginId"/>
+              <% }%>
             </div>
             <div>
               <input type="password" class="form-control" placeholder="Password" required="" id="loginPassword"/>
@@ -100,7 +104,7 @@
                     type: 'GET',
                     traditional:true,
                     data: JSON.parse(loginInfo),
-                    success: function(data) {;
+                    success: function(data) {
                         if(data.signinIdCheck == '1' && data.signinPwCheck == '1'){
                             $('#shop_id').val(data.shopId);
                             $('#shop_name').val(data.shopName);
