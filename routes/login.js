@@ -4,6 +4,8 @@ var config = require('../config/service_config');
 var getConnection = require('../config/db_connection');
 var logger = require('../config/logger');
 var mysql = require('mysql');
+var https = require("https");
+var credential = 'Basic '+new Buffer('Papastamp:bc87948654b711e8a20d0cc47a1fcfae').toString('base64');
 
 const TAG = '[LOGIN INFO] ';
 
@@ -22,6 +24,46 @@ router.get('/', function(req, res, next) {
 router.get('/signup', function(req, res, next) {
     res.render('signup', {url:config.url});
 });
+
+router.get('/sendSms', function(req, res, next) {
+    var data = {
+        "sender"     : "01037291715",
+        "receivers"  : ["01026181715"],
+        "content"    : "1234"
+    }
+    var body = JSON.stringify(data);
+
+    var options = {
+        host: 'api.bluehouselab.com',
+        port: 443,
+        path: '/smscenter/v1.0/sendsms',
+        headers: {
+            'Authorization': credential,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Length': Buffer.byteLength(body)
+        },
+        method: 'POST'
+    };
+    var req = https.request(options, function(res) {
+        console.log(res.statusCode);
+        var body = "";
+        res.on('data', function(d) {
+            body += d;
+        });
+        res.on('end', function(d) {
+            if(res.statusCode==200)
+                console.log(JSON.parse(body));
+            else
+                console.log(body);
+        });
+    });
+    req.write(body);
+    req.end();
+    req.on('error', function(e) {
+        console.error(e);
+    });
+});
+
 
 router.get('/logout', function(req, res, next) {
     req.session.destory(function(err){

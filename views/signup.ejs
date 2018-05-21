@@ -154,7 +154,7 @@
                     type: 'GET',
                     traditional:true,
                     data: JSON.parse(loginInfo),
-                    success: function(data) {;
+                    success: function(data) {
                         if(data.loginEmailCheck == '1'){
                             $.toast('<h4>존재하는 E-Mail</h4>입니다!.', { type: 'danger', duration: 3000 });
                         }else {
@@ -224,9 +224,29 @@
             if ($("#phoneNumber").val().length < 13) {
                 $.toast('<h4>올바른 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
-                // code 발송
-                $("#authButton").html("인증번호 확인");
-                $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
+                /*code == '12345678';
+                var headers = {};
+                headers["Access-Control-Allow-Origin"] = '*';
+                headers["Access-Control-Allow-Methods"] = 'GET, POST, DELETE, PUT, OPTIONS, HEAD';
+                headers["Authorization"] = 'QmFzaWMgUGFwYXN0YW1wOmJjODc5NDg2NTRiNzExZThhMjBkMGNjNDdhMWZjZmFl';
+                headers["Content-Type"] = 'application/json; charset=utf-8';*/
+
+//                var loginInfo = "{'sender':'01037291715', 'receivers':['01026181715'], 'content':'12345678'}";
+//                var loginInfo = '{"sender":"01037291715", "receivers":["01026181715"], "content":"12345678"}';
+                $.ajax({
+                    url: $("#url").val()+'/sendsms',
+                    type: 'GET',
+                    success: function (data) {
+                        console.log("ddd : ", data);
+                        $("#authButton").html("인증번호 확인");
+                        $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
+                    },
+                    error: function(request, status, error) {
+                        $.toast('<h4>인증 번호</h4>발송이 실패하였습니다.', {type: 'danger', duration: 3000});
+                        console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        console.log('Error occured');
+                    }
+                });
             }
         }
     }
