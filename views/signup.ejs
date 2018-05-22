@@ -67,10 +67,13 @@
             <span class="input-group-btn">
               <button id="authButton" style="margin-bottom:20px;" class="btn btn-default" type="button" onclick="authNumber();">인증번호 요청</button>
             </span>
+
           </div>
+          <div class="auth-timer" id="ViewTimer"></div>
+          <div class="clearfix"></div>
+
           <div>
             <a class="btn btn-default submit" id="btn_send" style="font-size: 20px;margin-bottom: 50px;">회원가입</a>
-            <a id="kakao-login-btn"></a>
           </div>
 
           <div class="clearfix"></div>
@@ -101,6 +104,9 @@
 </div>
 
 <script type ="text/javascript">
+    var tid;
+    var SetTime = 180;
+
     $(function() {
         if (navigator.geolocation) {
             // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
@@ -254,7 +260,7 @@
 
     function authNumber() {
         $.toast.config.align = 'center';
-        $.toast.config.width = 230;
+        $.toast.config.width = 300;
         var userNumber = $("#phoneNumber").val();
 
         var authCheckText = $("#authButton").text();
@@ -267,9 +273,9 @@
                 if(authNum == authCode) {
                     $("#authCheck").val("true");
                     $("#authButton").html("인증확인 완료");
-                    $.toast('<h4>인증</h4>이 완료되었습니다.', {type: 'info', duration: 3000});
+                    clearInterval(tid);		// 타이머 해제
+                    $("#ViewTimer").html("인증 완료");
                 }else {
-                    $.toast.config.width = 300;
                     $.toast('<h4>올바른 인증 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
                 }
             }
@@ -281,7 +287,6 @@
             }
 
             if (userNumber.length < 13) {
-                $.toast.config.width = 250;
                 $.toast('<h4>올바른 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
                 var numberString = {'login_number': userNumber};
@@ -292,7 +297,6 @@
                     data : numberString,
                     success: function (data) {
                         if(data.result == 'exist') {
-                            $.toast.config.width = 250;
                             $.toast('이미 가입된 <h4>사용자 번호</h4> 입니다.', {type: 'info', duration: 3000});
                         }else {
                             var randNum = Math.floor(Math.random() * 1000000)+100000;
@@ -310,6 +314,8 @@
                                     if(data.result == 'success') {
                                         $("#authButton").html("인증번호 확인");
                                         $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
+
+                                        TimerStart();
                                     }
                                 },
                                 error: function(request, status, error) {
@@ -328,6 +334,27 @@
                 });
             }
         }
+    }
+
+    function TimerStart() {
+        tid=setInterval('msg_time()',1000);
+    }
+
+    function msg_time() {	// 1초씩 카운트
+
+        m = Math.floor(SetTime / 60) + "분 " + (SetTime % 60) + "초";	// 남은 시간 계산
+        var msg = "인증번호 입력 남은 시간은 " + m + " 입니다.";
+
+        $("#ViewTimer").html(msg);		// div 영역에 보여줌
+
+        SetTime--;					// 1초씩 감소
+
+        if (SetTime < 0) {			// 시간이 종료 되었으면..
+            $("#authNum").val('');
+            clearInterval(tid);		// 타이머 해제
+            $("#ViewTimer").html("입력 시간이 종료 되었습니다.");
+        }
+
     }
 </script>
 

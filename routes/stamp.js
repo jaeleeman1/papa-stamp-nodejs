@@ -280,7 +280,7 @@ router.get('/selectPopupStampDate', function(req, res) {
                 res.status(400);
                 res.send('Select stamp date error');
             }else {
-                var selectShopUserQuery = 'select SUPI.USER_STAMP, SSI.SHOP_FRONT_IMG, SSI.SHOP_BACK_IMG, SSI.SHOP_STAMP_IMG ' +
+                var selectShopUserQuery = 'select SUPI.USER_STAMP, SSI.SHOP_FRONT_IMG, SSI.SHOP_STAMP_IMG ' +
                     'from SB_USER_PUSH_INFO as SUPI ' +
                     'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
                     'where SUPI.SHOP_ID = ' + mysql.escape(shopId) + ' and SUPI.USER_ID = ' + mysql.escape(userId) +' and SUPI.DEL_YN = "N"';

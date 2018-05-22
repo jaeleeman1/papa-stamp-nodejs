@@ -92,7 +92,7 @@
         $('#btn_send').on('click',
             function() {
                 $.toast.config.align = 'center';
-                $.toast.config.width = 210;
+                $.toast.config.width = 300;
                 if ($('#loginEmail').val() == "") {
                     $.toast('<h4>E-Mail</h4>을 입력하세요!!.', { type: 'danger', duration: 3000 });
                     $('#loginEmail').focus();
@@ -138,8 +138,11 @@
 
                             $('#sendLoginForm').submit();
                         }else {
-                            $.toast.config.width = 300;
-                            $.toast('<h4>회원 정보</h4>가 없습니다. 회원 가입하세요!!.', { type: 'danger', duration: 3000 });
+                            if(data.loginEmailCheck == '0') {
+                                $.toast('<h4>회원 정보</h4>가 없습니다. 회원 가입하세요!!.', { type: 'danger', duration: 3000 });
+                            }else if(data.loginPwCheck == '0') {
+                                $.toast('<h4>올바른 Password</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 });
+                            }
                         }
                     },
                     error: function(request, status, error) {

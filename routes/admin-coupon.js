@@ -306,7 +306,7 @@ router.post('/createCoupon', function(req, res, next) {
      }*/
 
     getConnection(function (err, connection) {
-        var selectCouponImgQuery = 'select SHOP_FRONT_IMG from SB_SHOP_INFO where  SHOP_ID = ' + mysql.escape(shopId);
+        var selectCouponImgQuery = 'select SHOP_BACK_IMG from SB_SHOP_INFO where  SHOP_ID = ' + mysql.escape(shopId);
         connection.query(selectCouponImgQuery, function (err, couponImgData) {
             if (err) {
                 console.error("*** initPage select id Error : ", err);
@@ -317,9 +317,9 @@ router.post('/createCoupon', function(req, res, next) {
                 var inputLength = couponNumberSplit.length;
                 for(var i=0; i<inputLength; i++) {
                     if(i != (inputLength - 1)) {
-                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_FRONT_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + '), ';
+                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_BACK_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + '), ';
                     }else {
-                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_FRONT_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ')';
+                        inputData += '("'+ shopId +'", "'+couponImgData[0].SHOP_BACK_IMG+'", "' + couponNumberSplit[i] + '", "' + couponName + '", ' + couponPrice + ')';
                     }
                 }
                 var selectCouponListQuery = 'insert into SB_USER_COUPON (SHOP_ID, COUPON_IMG, COUPON_NUMBER, COUPON_NAME, COUPON_PRICE) value ' + inputData;

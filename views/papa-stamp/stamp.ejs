@@ -6,11 +6,10 @@
         <div class="my-container">
             <% var shopId = stampShopListData[i].SHOP_ID
                 var shopFrontImg = stampShopListData[i].SHOP_FRONT_IMG
-                var shopBackImg = stampShopListData[i].SHOP_BACK_IMG
                 var shopStampImg = stampShopListData[i].SHOP_STAMP_IMG %>
-            <div class="my-card" onclick="focusOpenLayer('layerCardPopup', '<%= shopId %>', '<%= shopFrontImg %>', '<%= shopBackImg %>', '<%=shopStampImg %>');">
+            <div class="my-card" onclick="focusOpenLayer('layerCardPopup', '<%= shopId %>', '<%= shopFrontImg %>', '<%=shopStampImg %>');">
                 <figure class="front">
-                    <img class="base-img" src="/images/shop-card/back/<%= shopBackImg %>" alt="back">
+                    <img class="base-img" src="/images/shop-card/front/<%= shopFrontImg %>" alt="front">
                     <div class="img-repeat-<%=shopId%>">
                         <% var userStamp = (stampShopListData[i].USER_STAMP % 10)  %>
                         <% for (var j=1; j<=userStamp; j++) {%>
@@ -49,9 +48,9 @@
             <span class="delete-card" id="delete_card">카드 삭제</span>
             <span class="close-card" onclick="closeCard();">닫기</span>
         </p>
-        <div class="card-img">
-            <div class="container">
-                <div class="card flipped" id="popup-card">
+        <div class="my-card-shop">
+            <div class="my-container">
+                <div class="my-card" id="popup-card">
                 </div>
             </div>
         </div>
@@ -203,7 +202,7 @@
         });
     }
 
-    function focusOpenLayer(showDivId, shopId, frontImg, backImg, stampImg) {
+    function focusOpenLayer(showDivId, shopId, frontImg, stampImg) {
         $('html, body').css({'overflow': 'hidden', 'height': '100%'});
 
         $("#shop_id").val(shopId);
@@ -226,8 +225,8 @@
                 });
 
                 var popupCardData = document.getElementById('popup-card');
-                var appendData = '<figure class="back">' +
-                    '<img class="base-img" src="/images/shop-card/back/'+ backImg +'" alt="back">' +
+                var appendData = '<figure class="front">' +
+                    '<img class="base-img" src="/images/shop-card/front/'+ frontImg +'" alt="front">' +
                     '<div class="img-repeat-'+ shopId +'">';
 
                 var stampCount = data.stampCount % 10;
@@ -241,6 +240,7 @@
                 }
                 appendData += '</div>' +
                     '</figure>';
+
                 popupCardData.innerHTML = appendData;
 
                 if(stampCount != stampLength) {
@@ -288,8 +288,8 @@
                 var scrollPosition = $(document).scrollTop();
 
                 var popupCardData = document.getElementById('popup-card');
-                var appendData = '<figure class="back">' +
-                    '<img class="base-img" src="/images/shop-card/back/'+ data.shopUserData.SHOP_BACK_IMG +'" alt="back">' +
+                var appendData = '<figure class="front">' +
+                    '<img class="base-img" src="/images/shop-card/front/'+ data.shopUserData.SHOP_FRONT_IMG +'" alt="front">' +
                     '<div class="img-repeat-'+ shopId +'">';
                 for(var i=0; i<data.stampDateList.length; i++) {
                     appendData += '<div class="stamp-popup-icon-'+ shopId +'" id="stamp_popup_icon_'+i+'>">'+
@@ -348,9 +348,9 @@
                     var appendData = '<ul class="my-card-list" id="card-list">' +
                         '<li class="my-card-shop" id="' + shopId + '">' +
                         '<div class="my-container">' +
-                        '<div class="my-card" onclick="focusOpenLayer(' + '\'layerCardPopup\'' + ', \'' + shopId + '\', \'' + data.shopData.SHOP_FRONT_IMG + '\', \'' + data.shopData.SHOP_BACK_IMG + '\', \'' + data.shopData.SHOP_STAMP_IMG + '\')">' +
+                        '<div class="my-card" onclick="focusOpenLayer(' + '\'layerCardPopup\'' + ', \'' + shopId + '\', \'' + data.shopData.SHOP_FRONT_IMG + '\', \'' + data.shopData.SHOP_STAMP_IMG + '\')">' +
                         '<figure class="front">' +
-                        '<img class="base-img" src="/images/shop-card/back/' + data.shopData.SHOP_BACK_IMG + '" alt="back">' +
+                        '<img class="base-img" src="/images/shop-card/front/' + data.shopData.SHOP_STAMP_IMG + '" alt="front">' +
                         '<div class="img-repeat-' + shopId + '">' +
                         '</div>' +
                         '</figure>' +
@@ -622,9 +622,9 @@
                         var appendData = '<ul class="my-card-list" id="select-card">' +
                             '<li class="my-card-shop" id="'+ shopData.SHOP_ID +'">'+
                             '<div class="my-container">' +
-                            '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopData.SHOP_ID +'\', \''+ shopData.SHOP_FRONT_IMG +'\', \''+ shopData.SHOP_BACK_IMG +'\', \''+ shopData.SHOP_STAMP_IMG +'\')">' +
+                            '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopData.SHOP_ID +'\', \''+ shopData.SHOP_FRONT_IMG +'\', \''+ shopData.SHOP_STAMP_IMG +'\')">' +
                             '<figure class="front">' +
-                            '<img class="base-img" src="/images/shop-card/back/'+ shopData.SHOP_BACK_IMG +'" alt="back">' +
+                            '<img class="base-img" src="/images/shop-card/front/'+ shopData.SHOP_FRONT_IMG +'" alt="front">' +
                             '<div class="img-repeat-'+ shopData.SHOP_ID +'">';
                         for(var i=0; i<visitRateCnt; i++) {
                             appendData += '<div class="stamp-icon-'+ shopData.SHOP_ID +'" id="stamp_icon_'+i+'>">' +

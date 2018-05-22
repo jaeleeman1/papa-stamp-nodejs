@@ -215,66 +215,10 @@ figure .base-img{
     background: rgba(0, 0, 0, 0.3);
 }
 
-.my-card-list figure .caption h5 {
-    width: 30%;
-    font-size: 0.8em;
-    border: 2px solid #74DF00;
-    padding: 6px;
-    margin-top: 5px;
-}
-
-.my-card-list figure .caption h4 {
-    float: right;
-    width: 125px;
-    font-size: 1.2em;
-    color: #e8ff00;
-    padding: 10px 0 5px 10px;
-    margin-top: -40px;
-    letter-spacing: 2px;
-    font-weight: 500;
-    line-height: 1.7em;
-    text-align: right;
-}
-
-.my-card-list figure .caption h3{
-    float: left;
-    font-size: 1em;
-    margin-top: 0.5em;
-}
-
-.my-card-list figure .caption h3 span{
-    font-size: 0.9em;
-    padding: 5px;
-    color: #e94739;
-}
-
-.my-card-list figure .caption h4 span{
-    float: right;
-    font-size: 0.9em;
-    color: #999;
-    letter-spacing: 1px;
-}
-
-.my-card-list figure .caption span{
-    font-weight: bold;
-    font-size: 1em;
-    color: #272833;
-}
-
 .my-card-list figure .caption .title-setting {
     font-size: 1.5em;
     color: #999;
     margin-left: -50px;
-}
-
-.coupon-name {
-    width: 100%;
-    float: left;
-    font-size: 1em;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    color: darkorange;
-    text-align: right;
 }
 
 .delete-coupon {
@@ -311,19 +255,6 @@ figure .base-img{
     border-radius: 10px;
     box-shadow: 0 20px 17px 0 rgba(0, 0, 0, 0.5);
     transform-origin: bottom center;
-}
-
-figure .caption h6{
-    width: 100%;
-    margin-left: 10px;
-    text-align: right;
-    font-size: 11px;
-    color: #fff;
-    padding: 10px;
-    margin-top: 8em;
-    letter-spacing: 1px;
-    font-weight: 500;
-    font-family: 'Yantramanav', sans-serif;
 }
 
 .front h2{
