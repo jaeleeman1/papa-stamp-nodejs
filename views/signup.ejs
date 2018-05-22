@@ -33,9 +33,11 @@
 </head>
 
 <form action="/" method="get" style="display:none" name="list_setting" id="list_setting">
-  <input type="hidden" name="url" id="url" value="<%= url %>"/>
-  <input type="hidden" name="authCheck" id="authCheck" value="true"/>
-  <input type="hidden" name="authNum" id="authNum" value=""/>
+    <input type="hidden" name="url" id="url" value="<%= url %>"/>
+    <input type="hidden" name="current_lat" id="current_lat" value=""/>
+    <input type="hidden" name="current_lng" id="current_lng" value=""/>
+    <input type="hidden" name="authCheck" id="authCheck" value="false"/>
+    <input type="hidden" name="authNum" id="authNum" value=""/>
 </form>
 
 <body class="login">
@@ -100,6 +102,27 @@
 
 <script type ="text/javascript">
     $(function() {
+        if (navigator.geolocation) {
+            // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+            if (navigator.geolocation) {
+                // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    currentLat = position.coords.latitude; // 위도
+                    currentLng = position.coords.longitude; // 경도
+
+                    $("#current_lat").val(currentLat);
+                    $("#current_lng").val(currentLng);
+                });
+            } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+                console.error("geolocation error : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        }
+
+        if($("#current_lat").val().length == 0 && $("#current_lng").val().length == 0) {
+            $('#current_lat').val('37.4979887529');
+            $('#current_lng').val('127.0296421998');
+        }
+
         var keyNumber = '';
         $("#phoneNumber").on("input propertychange",function() {
             var val = this.value.replace(/\D/g, '');
@@ -156,8 +179,7 @@
                     traditional:true,
                     data: JSON.parse(loginInfo),
                     success: function(data) {
-                        console.log('userId : ', data.userId);
-                        if(data.userId > 0 || data.loginEmailCheck == '1'){
+                        if(data.loginEmailCheck == '1'){
                             $.toast('<h4>존재하는 E-Mail</h4>입니다!.', { type: 'danger', duration: 3000 });
                         }else {
                             if(loginPassword != loginPasswordConfirm) {
@@ -182,8 +204,8 @@
                                         }
                                     });
                                 }else {
-                                    $.toast.config.width = 300;
-                                    $.toast('<h4>전화 번호 인증</h4>을 진행하시기 바랍니다.!.', { type: 'danger', duration: 3000 });
+                                    $.toast.config.width = 310;
+                                    $.toast('<h4>전화 번호 인증</h4>을 진행하시기 바랍니다.!', { type: 'danger', duration: 3000 });
                                 }
                             }
                         }
@@ -207,7 +229,7 @@
         var userPassword = $('#loginPassword').val();
         var headers = {};
         headers["user_number"] = userNumber;
-        var dataString = {'user_email': userEmail, 'user_password': userPassword};
+        var dataString = {'user_email': userEmail, 'user_password': userPassword, 'current_lat': $('#current_lat').val(), 'current_lng': $('#current_lng').val()};
         $.ajax({
             url: $("#url").val() + '/user/v1/userInfo',
             type: 'POST',
@@ -218,8 +240,8 @@
                 if(data.result = 'success') {
                     setTimeout(function() {
                         location.href = $("#url").val();
-                    }, 3000);
-                    $.toast('<h4>회원가입</h4>이 완료되었습니다.', {type: 'info', duration: 3000});
+                    }, 2000);
+                    $.toast('<h4>회원가입</h4>이 완료되었습니다.', {type: 'info', duration: 2000});
                 }else {
                     console.error('error');
                 }
@@ -244,6 +266,7 @@
             } else {
                 if(authNum == authCode) {
                     $("#authCheck").val("true");
+                    $("#authButton").html("인증확인 완료");
                     $.toast('<h4>인증</h4>이 완료되었습니다.', {type: 'info', duration: 3000});
                 }else {
                     $.toast.config.width = 300;

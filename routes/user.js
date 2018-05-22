@@ -183,6 +183,8 @@ router.post('/userInfo', function(req, res, next) {
     var accessToken = req.body.access_token;
     var userEmail = req.body.user_email;
     var userPassword = req.body.user_password;
+    var currentLat = req.body.current_lat;
+    var currentLng = req.body.current_lng;
 
     getConnection(function (err, connection){
         var selectLoginCheckQuery = "select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ") as EMAIL_CHECK";
@@ -195,9 +197,10 @@ router.post('/userInfo', function(req, res, next) {
                 logger.debug(TAG, 'Select user login success : ' + JSON.stringify(userLoginCheck));
                 // Insert User Infomation
                 if(userLoginCheck[0].EMAIL_CHECK ==  '0') {
-                    var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, USER_PASSWORD, USER_TYPE) " +
-                        "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + ",password(" + mysql.escape(userPassword) + "), '300') " +
+                    var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, USER_TYPE) " +
+                        "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + "), '300') " +
                         "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=300";
+                    console.log('pw : ', insertUserInfo);
                     connection.query(insertUserInfo, function (err, userInfoData) {
                         if (err) {
                             logger.error(TAG, "Insert User Info Error : " + err);
@@ -205,6 +208,10 @@ router.post('/userInfo', function(req, res, next) {
                             throw err;
                         } else {
                             logger.debug(TAG, "Insert User Info Success ### " + JSON.stringify(userInfoData));
+                            var userInfo = {
+                                user_email : userEmail
+                            }
+                            req.session.userInfo = userInfo;
                             res.status(200);
                             res.send({result:'success'});
                         }
@@ -515,7 +522,7 @@ router.get('/userCheck', function(req, res, next) {
                 if(loginEmailCheck == '1') {
                     var selectPwQuery = 'select count(*) as PW_CHECK, USER_ID, CURRENT_LAT, CURRENT_LNG ' +
                         'from SB_USER_INFO ' +
-                        'where USER_TYPE = "300" and USER_EMAIL = ' + mysql.escape(loginEmail) + ' and USER_PASSWORD = ' + mysql.escape(loginPassword);
+                        'where USER_TYPE = "300" and USER_EMAIL = ' + mysql.escape(loginEmail) + ' and USER_PASSWORD = password(' + mysql.escape(loginPassword) + ')';
                     connection.query(selectPwQuery, function (err, loginPwData) {
                         if (err) {
                             console.error("*** initPage select password Error : ", err);
