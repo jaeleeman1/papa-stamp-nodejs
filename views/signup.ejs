@@ -35,6 +35,7 @@
 <form action="/" method="get" style="display:none" name="list_setting" id="list_setting">
   <input type="hidden" name="url" id="url" value="<%= url %>"/>
   <input type="hidden" name="authCheck" id="authCheck" value="true"/>
+  <input type="hidden" name="authNum" id="authNum" value=""/>
 </form>
 
 <body class="login">
@@ -74,7 +75,7 @@
 
           <div class="separator">
             <p class="change_link">
-              <a href="#signup" class="to_register" id="signup">ID / Password 찾기</a>
+              <a href="#findIdPw" class="to_register" id="signup">ID / Password 찾기</a>
             </p>
 
             <div class="clearfix"></div>
@@ -150,12 +151,13 @@
 
                 var loginInfo = '{"login_email":"' + loginEmail + '"}';
                 $.ajax({
-                    url: $("#url").val()+'/login/userCheck',
+                    url: $("#url").val()+'/user/v1/userCheck',
                     type: 'GET',
                     traditional:true,
                     data: JSON.parse(loginInfo),
                     success: function(data) {
-                        if(data.loginEmailCheck == '1'){
+                        console.log('userId : ', data.userId);
+                        if(data.userId > 0 || data.loginEmailCheck == '1'){
                             $.toast('<h4>존재하는 E-Mail</h4>입니다!.', { type: 'danger', duration: 3000 });
                         }else {
                             if(loginPassword != loginPasswordConfirm) {
@@ -171,7 +173,8 @@
                                         resizable:false,
                                         buttons: {
                                             "예": function () {
-                                                location.href = $("#url").val();
+                                                signupcallback();
+                                                $(this).dialog('close');
                                             },
                                             "아니오": function () {
                                                 $(this).dialog('close');
@@ -192,57 +195,110 @@
                 });
             });
 
-        $('#signup').on('click',
+        $('#findIdPw').on('click',
             function() {
                 alert('가입');
             });
     });
 
+    function signupcallback() {
+        var userNumber = $("#phoneNumber").val();
+        var userEmail = $('#loginEmail').val();
+        var userPassword = $('#loginPassword').val();
+        var headers = {};
+        headers["user_number"] = userNumber;
+        var dataString = {'user_email': userEmail, 'user_password': userPassword};
+        $.ajax({
+            url: $("#url").val() + '/user/v1/userInfo',
+            type: 'POST',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                if(data.result = 'success') {
+                    setTimeout(function() {
+                        location.href = $("#url").val();
+                    }, 3000);
+                    $.toast('<h4>회원가입</h4>이 완료되었습니다.', {type: 'info', duration: 3000});
+                }else {
+                    console.error('error');
+                }
+            },
+            error: function(request, status, error) {
+                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
     function authNumber() {
         $.toast.config.align = 'center';
         $.toast.config.width = 230;
-        var code = "";
+        var userNumber = $("#phoneNumber").val();
 
         var authCheckText = $("#authButton").text();
         if(authCheckText == "인증번호 확인") {
-            var auth = $("#authCode").val();
-            if(auth == '') {
+            var authNum = $("#authNum").val();
+            var authCode = $("#authCode").val();
+            if(authCode == '') {
                 $.toast('<h4>발송된 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
-                if(code == auth) {
+                if(authNum == authCode) {
                     $("#authCheck").val("true");
                     $.toast('<h4>인증</h4>이 완료되었습니다.', {type: 'info', duration: 3000});
+                }else {
+                    $.toast.config.width = 300;
+                    $.toast('<h4>올바른 인증 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
                 }
             }
         }else {
-            if ($("#phoneNumber").val() == '') {
+            if (userNumber == '') {
                 $.toast('<h4>핸드폰 번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
                 $('#phoneNumber').focus();
                 return;
             }
 
-            if ($("#phoneNumber").val().length < 13) {
+            if (userNumber.length < 13) {
+                $.toast.config.width = 250;
                 $.toast('<h4>올바른 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
-                /*code == '12345678';
-                var headers = {};
-                headers["Access-Control-Allow-Origin"] = '*';
-                headers["Access-Control-Allow-Methods"] = 'GET, POST, DELETE, PUT, OPTIONS, HEAD';
-                headers["Authorization"] = 'QmFzaWMgUGFwYXN0YW1wOmJjODc5NDg2NTRiNzExZThhMjBkMGNjNDdhMWZjZmFl';
-                headers["Content-Type"] = 'application/json; charset=utf-8';*/
-
-//                var loginInfo = "{'sender':'01037291715', 'receivers':['01026181715'], 'content':'12345678'}";
-//                var loginInfo = '{"sender":"01037291715", "receivers":["01026181715"], "content":"12345678"}';
+                var numberString = {'login_number': userNumber};
                 $.ajax({
-                    url: $("#url").val()+'/sendsms',
+                    url: $("#url").val() + '/user/v1/numberCheck',
                     type: 'GET',
+                    dataType: 'json',
+                    data : numberString,
                     success: function (data) {
-                        console.log("ddd : ", data);
-                        $("#authButton").html("인증번호 확인");
-                        $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
+                        if(data.result == 'exist') {
+                            $.toast.config.width = 250;
+                            $.toast('이미 가입된 <h4>사용자 번호</h4> 입니다.', {type: 'info', duration: 3000});
+                        }else {
+                            var randNum = Math.floor(Math.random() * 1000000)+100000;
+                            if(randNum>1000000){
+                                randNum = randNum - 100000;
+                            }
+                            $("#authNum").val(randNum);
+                            var dataString = {'user_number': userNumber, 'send_type': 'signup', 'auth_code': randNum};
+                            $.ajax({
+                                url: $("#url").val() + '/notification/v1/sendsms',
+                                type: 'GET',
+                                dataType: 'json',
+                                data : dataString,
+                                success: function (data) {
+                                    if(data.result == 'success') {
+                                        $("#authButton").html("인증번호 확인");
+                                        $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
+                                    }
+                                },
+                                error: function(request, status, error) {
+                                    $.toast('<h4>인증 번호</h4>발송이 실패하였습니다.', {type: 'danger', duration: 3000});
+                                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                                    console.log('Error occured');
+                                }
+                            });
+                        }
+
                     },
                     error: function(request, status, error) {
-                        $.toast('<h4>인증 번호</h4>발송이 실패하였습니다.', {type: 'danger', duration: 3000});
                         console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         console.log('Error occured');
                     }

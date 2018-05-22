@@ -8,6 +8,8 @@ var http = require('http');
 var path = require('path');
 var FCM = require('fcm-push');
 var crypto = require( "crypto" );
+var https = require("https");
+var credential = 'Basic '+new Buffer('Papastamp:bc87948654b711e8a20d0cc47a1fcfae').toString('base64');
 
 const TAG = '[NOTIFICATION INFO] ';
 const serverKey = 'AAAAHIVXzfk:APA91bHqH863OCv5t6oNHwoYjDp5kmqd-D6GtrrU-QW_ikVCkW2HteP6pnvCT58XhKH4bobu0jOPZyzF2w1DFE1z4ktQ1bVS59iXQi70qqGFyW8g9LNLR8KgksXrm9lzQ1_FVsDsQZt0';
@@ -337,6 +339,66 @@ router.post('/issued-coupon', function (req, res, next) {
             connection.release();
         });
     });
+});
+
+router.get('/sendsms', function(req, res, next) {
+    var userNumber = req.query.user_number;
+    var sendType = req.query.send_type;
+    var authCode = req.query.auth_code;
+    userNumber = userNumber.replace(/-/gi, '');
+
+    console.log(userNumber);
+    console.log(sendType);
+    console.log(authCode);
+
+    var sendMsg = '';
+
+    if(sendType == 'signup') {
+        sendMsg = '가입 인증번호는 ['
+    }
+
+    var data = {
+        "sender"     : "01026181715",
+        "receivers"  : [userNumber],
+        "content"    : sendMsg + authCode + '] - 파파 스탬프'
+    }
+
+    res.send({result:"success"});
+    /*
+
+
+
+    var body = JSON.stringify(data);
+
+    var options = {
+        host: 'api.bluehouselab.com',
+        port: 443,
+        path: '/smscenter/v1.0/sendsms',
+        headers: {
+            'Authorization': credential,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Length': Buffer.byteLength(body)
+        },
+        method: 'POST'
+    };
+    var req = https.request(options, function(res) {
+        console.log(res.statusCode);
+        var body = "";
+        res.on('data', function(d) {
+            body += d;
+        });
+        res.on('end', function(d) {
+            if(res.statusCode==200)
+                console.log(JSON.parse(body));
+            else
+                console.log(body);
+        });
+    });
+    req.write(body);
+    req.end();
+    req.on('error', function(e) {
+        console.error(e);
+    });*/
 });
 
 module.exports = router;

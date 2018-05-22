@@ -107,11 +107,11 @@
 
                 var loginInfo = '{"login_email":"' + $('#loginEmail').val() + '", "login_password":"' + $('#loginPassword').val() + '"}';
                 $.ajax({
-                    url: $("#url").val()+'/login/userCheck',
+                    url: $("#url").val()+'/user/v1/userCheck',
                     type: 'GET',
                     traditional:true,
                     data: JSON.parse(loginInfo),
-                    success: function(data) {;
+                    success: function(data) {
                         if(data.loginEmailCheck == '1' && data.loginPwCheck == '1'){
                             $('#user_id').val(data.userId);
                             $('#current_lat').val(data.currentLat);
