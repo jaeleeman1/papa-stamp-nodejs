@@ -352,13 +352,13 @@
     color: #B5B5B5;
 }
 
-.btn {
+/*.btn {
     margin: 200px 3px 0 3px;
     border: 0;
     background: #ffffff;
     display: none;
     z-index: 500;
-}
+}*/
 
 #prev_btn {
     width: 45px;
