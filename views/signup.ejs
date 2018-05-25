@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Gentelella Alela! | </title>
+  <title>Papa-stamp</title>
 
   <!-- Bootstrap -->
   <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -32,18 +32,18 @@
   <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 </head>
 
+<body class="login">
+
 <form action="/" method="get" style="display:none" name="list_setting" id="list_setting">
-    <input type="hidden" name="url" id="url" value="<%= url %>"/>
-    <input type="hidden" name="current_lat" id="current_lat" value=""/>
-    <input type="hidden" name="current_lng" id="current_lng" value=""/>
-    <input type="hidden" name="authCheck" id="authCheck" value="false"/>
-    <input type="hidden" name="authNum" id="authNum" value=""/>
+  <input type="hidden" name="url" id="url" value="<%= url %>"/>
+  <input type="hidden" name="current_lat" id="current_lat" value="<%= currentLat %>"/>
+  <input type="hidden" name="current_lng" id="current_lng" value="<%= currentLng %>"/>
+  <input type="hidden" name="authCheck" id="authCheck" value="false"/>
+  <input type="hidden" name="authNum" id="authNum" value=""/>
 </form>
 
-<body class="login">
 <div>
   <a class="hiddenanchor" id="signup"></a>
-  <a class="hiddenanchor" id="signin"></a>
 
   <div class="login_wrapper">
     <div class="animate form login_form">
@@ -72,19 +72,12 @@
           <div class="auth-timer" id="ViewTimer"></div>
           <div class="clearfix"></div>
 
-          <div>
-            <a class="btn btn-default submit" id="btn_send" style="font-size: 20px;margin-bottom: 50px;">회원가입</a>
-          </div>
-
-          <div class="clearfix"></div>
-
           <div class="separator">
-            <p class="change_link">
-              <a href="#findIdPw" class="to_register" id="signup">ID / Password 찾기</a>
-            </p>
+            <div>
+              <a class="btn btn-default submit" id="btn_send" style="font-size: 20px;margin-bottom: 50px;">회원가입</a>
+            </div>
 
             <div class="clearfix"></div>
-            <br />
 
             <div>
               <h1><img style="width:80px;margin-right:20px;" src="/images/papastamp_icon.png"/> 파파 스탬프 !!! </h1>
@@ -108,27 +101,6 @@
     var SetTime = 180;
 
     $(function() {
-        if (navigator.geolocation) {
-            // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-            if (navigator.geolocation) {
-                // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    currentLat = position.coords.latitude; // 위도
-                    currentLng = position.coords.longitude; // 경도
-
-                    $("#current_lat").val(currentLat);
-                    $("#current_lng").val(currentLng);
-                });
-            } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
-                console.error("geolocation error : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-        }
-
-        if($("#current_lat").val().length == 0 && $("#current_lng").val().length == 0) {
-            $('#current_lat').val('37.4979887529');
-            $('#current_lng').val('127.0296421998');
-        }
-
         var keyNumber = '';
         $("#phoneNumber").on("input propertychange",function() {
             var val = this.value.replace(/\D/g, '');
