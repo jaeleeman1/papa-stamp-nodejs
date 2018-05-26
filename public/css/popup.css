@@ -323,8 +323,8 @@
 .user-info-title {
     font-size:15px;
     color: #999;
-    width: 95px;
-    margin: 0 7px 0 9px;
+    width: 70px;
+    margin: 0 0px 0 9px;
     padding: 0px 0px 5px 0px;
     display: inline-block;
     cursor: pointer;
@@ -372,7 +372,7 @@
 
 .text-input {
     border: 2px solid #bfbfbf;
-    width: 60%;
+    width: 72%;
     height: 40px;
     font-size: 15px;
     margin: 1px 5px 5px 1px;
@@ -382,7 +382,7 @@
 
 .text-input-custom {
     border: 2px solid #bfbfbf;
-    width: 34%;
+    width: 45%;
     height: 40px;
     font-size: 15px;
     margin: 1px 5px 5px 1px;
