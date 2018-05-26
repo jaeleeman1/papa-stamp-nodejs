@@ -183,6 +183,7 @@ router.post('/userInfo', function(req, res, next) {
     var accessToken = req.body.access_token;
     var userEmail = req.body.user_email;
     var userPassword = req.body.user_password;
+    var termsYn = req.body.terms_yn;
     var currentLat = req.body.current_lat;
     var currentLng = req.body.current_lng;
 
@@ -197,8 +198,8 @@ router.post('/userInfo', function(req, res, next) {
                 logger.debug(TAG, 'Select user login success : ' + JSON.stringify(userLoginCheck));
                 // Insert User Infomation
                 if(userLoginCheck[0].EMAIL_CHECK ==  '0') {
-                    var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, USER_TYPE) " +
-                        "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + "), '300') " +
+                    var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS, USER_TYPE) " +
+                        "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + ")," + termsYn + ", '300') " +
                         "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=300";
                     console.log('pw : ', insertUserInfo);
                     connection.query(insertUserInfo, function (err, userInfoData) {

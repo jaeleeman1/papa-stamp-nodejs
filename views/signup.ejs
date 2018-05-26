@@ -36,10 +36,11 @@
 
 <form action="/" method="get" style="display:none" name="list_setting" id="list_setting">
   <input type="hidden" name="url" id="url" value="<%= url %>"/>
+  <input type="hidden" name="terms_yn" id="terms_yn" value="<%= termsYn %>"/>
   <input type="hidden" name="current_lat" id="current_lat" value="<%= currentLat %>"/>
   <input type="hidden" name="current_lng" id="current_lng" value="<%= currentLng %>"/>
-  <input type="hidden" name="authCheck" id="authCheck" value="false"/>
-  <input type="hidden" name="authNum" id="authNum" value=""/>
+  <input type="hidden" name="auth_check" id="auth_check" value="false"/>
+  <input type="hidden" name="auth_num" id="auth_num" value=""/>
 </form>
 
 <div>
@@ -51,19 +52,19 @@
         <form>
           <h1>파파스탬프 회원가입</h1>
           <div>
-            <input type="text" class="form-control" placeholder="E-Mail" required="" id="loginEmail"/>
+            <input type="text" class="form-control" placeholder="E-Mail" required="" id="login_email"/>
           </div>
           <div>
-            <input type="password" class="form-control" placeholder="Password" required="" id="loginPassword"/>
+            <input type="password" class="form-control" placeholder="Password" required="" id="login_password"/>
           </div>
           <div>
-            <input type="password" class="form-control" placeholder="Password-Cofirm" required="" id="loginPasswordConfirm"/>
+            <input type="password" class="form-control" placeholder="Password-Cofirm" required="" id="login_password_confirm"/>
           </div>
           <div>
-            <input type="text" class="form-control" placeholder="Phone-Number" required="" id="phoneNumber"/>
+            <input type="text" class="form-control" placeholder="Phone-Number" required="" id="phone_number"/>
           </div>
           <div class="input-group">
-            <input id="authCode" type="text" class="form-control" placeholder="인증번호를 입력하세요!" pattern="^(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}$">
+            <input id="auth_code" type="text" class="form-control" placeholder="인증번호를 입력하세요!" pattern="^(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}$">
             <span class="input-group-btn">
               <button id="authButton" style="margin-bottom:20px;" class="btn btn-default" type="button" onclick="authNumber();">인증번호 요청</button>
             </span>
@@ -102,7 +103,7 @@
 
     $(function() {
         var keyNumber = '';
-        $("#phoneNumber").on("input propertychange",function() {
+        $("#phone_number").on("input propertychange",function() {
             var val = this.value.replace(/\D/g, '');
             var newVal = '';
             keyNumber = $(this).val();
@@ -127,26 +128,26 @@
                 $.toast.config.align = 'center';
                 $.toast.config.width = 210;
 
-                var loginEmail = $('#loginEmail').val();
-                var loginPassword = $('#loginPassword').val();
-                var loginPasswordConfirm = $('#loginPasswordConfirm').val();
+                var loginEmail = $('#login_email').val();
+                var loginPassword = $('#login_password').val();
+                var loginPasswordConfirm = $('#login_password_confirm').val();
 
                 if (loginEmail == "") {
                     $.toast('<h4>E-Mail</h4>을 입력하세요!!.', { type: 'info', duration: 3000 });
-                    $('#loginEmail').focus();
+                    $('#login_email').focus();
                     return;
                 }
 
                 if (loginPassword == "") {
                     $.toast('<h4>Password</h4>를 입력하세요!!.', { type: 'info', duration: 3000 });
-                    $('#loginPassword').focus();
+                    $('#login_password').focus();
                     return;
                 }
 
                 if (loginPasswordConfirm == "") {
                     $.toast.config.width = 270;
                     $.toast('<h4>Password Confirm</h4>를 입력하세요!!.', { type: 'info', duration: 3000 });
-                    $('#loginPassword').focus();
+                    $('#login_password_confirm').focus();
                     return;
                 }
 
@@ -163,7 +164,7 @@
                             if(loginPassword != loginPasswordConfirm) {
                                 $.toast('<h4>비밀 번호</h4>를 확인하세요!!.', { type: 'danger', duration: 3000 });
                             }else {
-                                if($("#authCheck").val() == "true") {
+                                if($("#auth_check").val() == "true") {
                                     $("#signup-confirm").dialog({
                                         resizable: false,
                                         modal: true,
@@ -202,12 +203,12 @@
     });
 
     function signupcallback() {
-        var userNumber = $("#phoneNumber").val();
-        var userEmail = $('#loginEmail').val();
-        var userPassword = $('#loginPassword').val();
+        var userNumber = $("#phone_number").val();
+        var userEmail = $('#login_email').val();
+        var userPassword = $('#login_password').val();
         var headers = {};
         headers["user_number"] = userNumber;
-        var dataString = {'user_email': userEmail, 'user_password': userPassword, 'current_lat': $('#current_lat').val(), 'current_lng': $('#current_lng').val()};
+        var dataString = {'user_email': userEmail, 'user_password': userPassword, 'terms_yn': $('#terms_yn').val(), 'current_lat': $('#current_lat').val(), 'current_lng': $('#current_lng').val()};
         $.ajax({
             url: $("#url").val() + '/user/v1/userInfo',
             type: 'POST',
@@ -233,17 +234,17 @@
     function authNumber() {
         $.toast.config.align = 'center';
         $.toast.config.width = 300;
-        var userNumber = $("#phoneNumber").val();
+        var userNumber = $("#phone_number").val();
 
         var authCheckText = $("#authButton").text();
         if(authCheckText == "인증번호 확인") {
-            var authNum = $("#authNum").val();
-            var authCode = $("#authCode").val();
+            var authNum = $("#auth_num").val();
+            var authCode = $("#auth_code").val();
             if(authCode == '') {
                 $.toast('<h4>발송된 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
                 if(authNum == authCode) {
-                    $("#authCheck").val("true");
+                    $("#auth_check").val("true");
                     $("#authButton").html("인증확인 완료");
                     clearInterval(tid);		// 타이머 해제
                     $("#ViewTimer").html("인증 완료");
@@ -254,7 +255,7 @@
         }else {
             if (userNumber == '') {
                 $.toast('<h4>핸드폰 번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
-                $('#phoneNumber').focus();
+                $('#phone_number').focus();
                 return;
             }
 
@@ -275,7 +276,7 @@
                             if(randNum>1000000){
                                 randNum = randNum - 100000;
                             }
-                            $("#authNum").val(randNum);
+                            $("#auth_num").val(randNum);
                             var dataString = {'user_number': userNumber, 'send_type': 'signup', 'auth_code': randNum};
                             $.ajax({
                                 url: $("#url").val() + '/notification/v1/sendsms',
@@ -322,7 +323,7 @@
         SetTime--;					// 1초씩 감소
 
         if (SetTime < 0) {			// 시간이 종료 되었으면..
-            $("#authNum").val('');
+            $("#auth_num").val('');
             clearInterval(tid);		// 타이머 해제
             $("#ViewTimer").html("입력 시간이 종료 되었습니다.");
         }

@@ -4,8 +4,18 @@ var config = require('../config/service_config');
 var getConnection = require('../config/db_connection');
 var logger = require('../config/logger');
 var mysql = require('mysql');
+var crypto = require( "crypto" );
 
 const TAG = "[SETTING INFO] ";
+
+var decryptUid = function(uid) {
+    var secrect = config.secrectKey;
+    var cipher = crypto.createDecipher('aes-128-ecb', secrect);
+    var decrypted = cipher.update(uid, 'hex', 'utf8');
+    decrypted += cipher.final('utf8');
+    var returnValue = decrypted.substr(3,3) + '-' + decrypted.substr(6,4) + '-' + decrypted.substr(10,4);
+    return returnValue;
+}
 
 //Get Setting Page
 router.get('/main', function(req, res, next) {
@@ -33,7 +43,7 @@ router.get('/main', function(req, res, next) {
                 }else{
                     logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
                     res.status(200);
-                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
+                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, userNumber:decryptUid(userId) , shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
                 }
                 connection.release();
             });
@@ -41,7 +51,7 @@ router.get('/main', function(req, res, next) {
     }else {
         logger.debug(TAG, 'Blank user info success');
         res.status(200);
-        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
+        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', userNumber:'로그인 하시기 바랍니다.', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
     }
 
 });
@@ -72,7 +82,7 @@ router.post('/main', function(req, res, next) {
                 }else{
                     logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
                     res.status(200);
-                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
+                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, userNumber:decryptUid(userId) , shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
                 }
                 connection.release();
             });
@@ -80,7 +90,7 @@ router.post('/main', function(req, res, next) {
     }else {
         logger.debug(TAG, 'Blank user info success');
         res.status(200);
-        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
+        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', userNumber:'로그인 하시기 바랍니다.', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
     }
 
 });
