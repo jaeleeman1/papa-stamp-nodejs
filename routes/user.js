@@ -176,6 +176,48 @@ router.get('/userCreate', function(req, res, next) {
 });
 
 /* POST user info */
+router.post('/userLogin', function(req, res, next) {
+    var userId = req.headers.user_id;
+    var accessToken = req.body.access_token;
+    var userEmail = req.body.user_email;
+    var userPassword = req.body.user_password;
+
+    getConnection(function (err, connection){
+        var selectLoginCheckQuery = "select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ") as EMAIL_CHECK";
+        connection.query(selectLoginCheckQuery, function (err, userLoginCheck) {
+            if (err) {
+                logger.error(TAG, "DB selectLoginQuery error : " + err);
+                res.status(400);
+                res.send('User sign in error');
+            }else{
+                logger.debug(TAG, 'Select user login success : ' + JSON.stringify(userLoginCheck));
+                // Insert User Infomation
+                if(userLoginCheck[0].EMAIL_CHECK ==  '0') {
+                    var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, USER_PASSWORD, USER_TYPE) " +
+                        "values(" + mysql.escape(userId) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + ",password(" + mysql.escape(userPassword) + "), '100') " +
+                        "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=200";
+                    connection.query(insertUserInfo, function (err, userInfoData) {
+                        if (err) {
+                            logger.error(TAG, "Insert User Info Error : " + err);
+                            res.status(500);
+                            throw err;
+                        } else {
+                            logger.debug(TAG, "Insert User Info Success ### " + JSON.stringify(userInfoData));
+                            res.status(200);
+                            res.send();
+                        }
+                    });
+                }else {
+                    res.status(400);
+                    res.send();
+                }
+            }
+            connection.release();
+        });
+    });
+});
+
+/* POST user info */
 router.post('/userInfo', function(req, res, next) {
     var userNumber = req.headers.user_number;
     var accessToken = req.body.access_token;
@@ -230,7 +272,7 @@ router.put('/accessToekn', function (req, res, next) {
     logger.info(TAG, 'Update user location');
 
     var userId = req.headers.user_id;
-    var accessToken = req.body.access_token;
+    var accessToken = req.parms.access_token;
 
     logger.debug(TAG, 'User iD : ' + userId);
     logger.debug(TAG, 'Access Token : ' + accessToken);
