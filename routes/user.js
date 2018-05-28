@@ -99,54 +99,42 @@ router.get('/userLocation', function (req, res, next) {
 });
 
 // Get User Login
-router.post('/userLogin', function(req, res, next) {
+router.get('/userLogin', function(req, res, next) {
     logger.info(TAG, 'Get user login');
 
-    var userId = req.headers.user_id;
-    logger.debug(TAG, 'User ID : ' + userId);
+    var loginEmail = req.query.login_email;
+    var loginPassword = req.query.login_password;
 
-    var userEmail = req.body.user_email;
-    var userPassword = req.body.user_password;
+    logger.debug(TAG, 'Login EMAIL : ' + loginEmail);
+    logger.debug(TAG, 'Login PW : ' + loginPassword);
 
-    logger.debug(TAG, 'Login EMAIL : ' + userEmail);
-    logger.debug(TAG, 'Login PW : ' + userPassword);
-
-    if(userEmail == null || userEmail == undefined &&
-        userPassword == null || userPassword == undefined) {
+    if(loginEmail == null || loginEmail == undefined &&
+        loginPassword == null || loginPassword == undefined) {
         logger.debug(TAG, 'Invalid parameter');
         res.status(400);
         res.send('Invalid parameter error');
     }
 
     getConnection(function (err, connection){
-        var userEmailCheck = '0';
-        var userPwCheck = '0';
-        var selectLoginQuery = "select USER_ID, count(*) as PW_CHECK, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ")) as EMAIL_CHECK" +
-            " from SB_USER_INFO where USER_TYPE = '300' and USER_EMAIL = "+ mysql.escape(userEmail) + " and USER_PASSWORD = password(" + mysql.escape(userPassword) + ")";
+        var selectLoginQuery = "select USER_ID, count(*) as PW_CHECK, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(loginEmail) + ")) as EMAIL_CHECK" +
+            " from SB_USER_INFO where USER_TYPE = '300' and USER_EMAIL = "+ mysql.escape(loginEmail) + " and USER_PASSWORD = password(" + mysql.escape(loginPassword) + ")";
         connection.query(selectLoginQuery, function (err, userLogin) {
             if (err) {
                 logger.error(TAG, "DB selectLoginQuery error : " + err);
                 res.status(400);
                 res.send('User sign in error');
             }else{
-                logger.debug(TAG, 'Select user login success : ' + JSON.stringify(userLogin));
-                if(userLogin.length < 1) {
-                    res.status(500);
-                    res.send('No user info');
-                }else {
-                    var userInfo = {
-                        user_id : userId
-                    }
+                logger.debug(TAG, 'User login info ', userLogin);
 
-                    userEmailCheck = userLogin[0].EMAIL_CHECK;
-                    userPwCheck = userLogin[0].PW_CHECK
-
-                    // req.session.userInfo = userInfo;
-                    res.send({userId: userLogin[0].USER_ID, userEmailCheck: userEmailCheck, userPwCheck: userPwCheck});
+                var userInfo = {
+                    user_email : loginEmail
                 }
+
+                // req.session.userInfo = userInfo;
+                res.send({userId: userLogin[0].USER_ID, loginEmailCheck: userLogin[0].EMAIL_CHECK, loginPwCheck: userLogin[0].PW_CHECK});
             }
-            connection.release();
         });
+        connection.release();
     });
 });
 
@@ -176,48 +164,6 @@ router.get('/userCreate', function(req, res, next) {
 });
 
 /* POST user info */
-router.post('/userLogin', function(req, res, next) {
-    var userId = req.headers.user_id;
-    var accessToken = req.body.access_token;
-    var userEmail = req.body.user_email;
-    var userPassword = req.body.user_password;
-
-    getConnection(function (err, connection){
-        var selectLoginCheckQuery = "select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ") as EMAIL_CHECK";
-        connection.query(selectLoginCheckQuery, function (err, userLoginCheck) {
-            if (err) {
-                logger.error(TAG, "DB selectLoginQuery error : " + err);
-                res.status(400);
-                res.send('User sign in error');
-            }else{
-                logger.debug(TAG, 'Select user login success : ' + JSON.stringify(userLoginCheck));
-                // Insert User Infomation
-                if(userLoginCheck[0].EMAIL_CHECK ==  '0') {
-                    var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, USER_PASSWORD, USER_TYPE) " +
-                        "values(" + mysql.escape(userId) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + ",password(" + mysql.escape(userPassword) + "), '100') " +
-                        "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=200";
-                    connection.query(insertUserInfo, function (err, userInfoData) {
-                        if (err) {
-                            logger.error(TAG, "Insert User Info Error : " + err);
-                            res.status(500);
-                            throw err;
-                        } else {
-                            logger.debug(TAG, "Insert User Info Success ### " + JSON.stringify(userInfoData));
-                            res.status(200);
-                            res.send();
-                        }
-                    });
-                }else {
-                    res.status(400);
-                    res.send();
-                }
-            }
-            connection.release();
-        });
-    });
-});
-
-/* POST user info */
 router.post('/userInfo', function(req, res, next) {
     var userNumber = req.headers.user_number;
     var accessToken = req.body.access_token;
@@ -228,42 +174,26 @@ router.post('/userInfo', function(req, res, next) {
     var currentLng = req.body.current_lng;
 
     getConnection(function (err, connection){
-        var selectLoginCheckQuery = "select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ") as EMAIL_CHECK";
-        connection.query(selectLoginCheckQuery, function (err, userLoginCheck) {
+        var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS, USER_TYPE) " +
+            "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + ")," + termsYn + ", '300') " +
+            "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=300";
+        console.log('pw : ', insertUserInfo);
+        connection.query(insertUserInfo, function (err, userInfoData) {
             if (err) {
-                logger.error(TAG, "DB selectLoginQuery error : " + err);
-                res.status(400);
-                res.send('User sign in error');
-            }else{
-                logger.debug(TAG, 'Select user login success : ' + JSON.stringify(userLoginCheck));
-                // Insert User Infomation
-                if(userLoginCheck[0].EMAIL_CHECK ==  '0') {
-                    var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS, USER_TYPE) " +
-                        "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + ")," + termsYn + ", '300') " +
-                        "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=300";
-                    console.log('pw : ', insertUserInfo);
-                    connection.query(insertUserInfo, function (err, userInfoData) {
-                        if (err) {
-                            logger.error(TAG, "Insert User Info Error : " + err);
-                            res.status(500);
-                            throw err;
-                        } else {
-                            logger.debug(TAG, "Insert User Info Success ### " + JSON.stringify(userInfoData));
-                            var userInfo = {
-                                user_email : userEmail
-                            }
-                            req.session.userInfo = userInfo;
-                            res.status(200);
-                            res.send({result:'success'});
-                        }
-                    });
-                }else {
-                    res.status(400);
-                    res.send({result:'fail'});
+                logger.error(TAG, "Insert User Info Error : " + err);
+                res.status(500);
+                throw err;
+            } else {
+                logger.debug(TAG, "Insert User Info Success ### " + JSON.stringify(userInfoData));
+                var userInfo = {
+                    user_email : userEmail
                 }
+                req.session.userInfo = userInfo;
+                res.status(200);
+                res.send({result:'success'});
             }
-            connection.release();
         });
+        connection.release();
     });
 });
 
@@ -529,56 +459,39 @@ router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
     });
 });
 
-router.get('/numberCheck', function(req, res, next) {
-    var loginNumber = req.query.login_number;
-    getConnection(function (err, connection){
-        var selectNumberQuery = 'select exists (select * from SB_USER_INFO where USER_TYPE="300" and USER_ID = ' + mysql.escape(encryptUid(loginNumber)) + ') as NUMBER_CHECK';
-        connection.query(selectNumberQuery, function (err, loginNumberData) {
-            if (err) {
-                console.error("*** initPage select id Error : " , err);
-            }else{
-                var loginNumberCheck = loginNumberData[0].NUMBER_CHECK;
-                if(loginNumberCheck == '1') {
-                    res.send({result:'exist'});
-                }else {
-                    res.send({result:'signup'});
-                }
-            }
-            connection.release();
-        });
-    });
-});
-
 router.get('/userCheck', function(req, res, next) {
-    var loginEmail = req.query.login_email;
-    var loginPassword = req.query.login_password;
+    var userNumber = req.query.user_number;
+    var userEmail = req.query.user_email;
+
+    if(userNumber == null || userNumber == undefined &&
+        userEmail == null || userNumber == userEmail) {
+        logger.debug(TAG, 'Invalid parameter error');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
     getConnection(function (err, connection){
-        var selectIdQuery = 'select exists (select * from SB_USER_INFO where USER_TYPE="300" and USER_EMAIL = ' + mysql.escape(loginEmail) + ') as ID_CHECK';
-        connection.query(selectIdQuery, function (err, loginEmailData) {
+        var selectUserNumberQuery = 'select exists (select * from SB_USER_INFO where USER_TYPE="300" and USER_ID = ' + mysql.escape(encryptUid(userNumber)) + ') as USER_NUMBER_CHECK';
+        connection.query(selectUserNumberQuery, function (err, userNumberCheckData) {
             if (err) {
-                console.error("*** initPage select id Error : " , err);
+                logger.error(TAG, "Select user number check error : " + err);
             }else{
-                var loginEmailCheck = loginEmailData[0].ID_CHECK;
-                var loginPwCheck = '0';
-                if(loginEmailCheck == '1') {
-                    var selectPwQuery = 'select count(*) as PW_CHECK, USER_ID, CURRENT_LAT, CURRENT_LNG ' +
-                        'from SB_USER_INFO ' +
-                        'where USER_TYPE = "300" and USER_EMAIL = ' + mysql.escape(loginEmail) + ' and USER_PASSWORD = password(' + mysql.escape(loginPassword) + ')';
-                    connection.query(selectPwQuery, function (err, loginPwData) {
-                        if (err) {
-                            console.error("*** initPage select password Error : ", err);
-                        } else {
-                            loginPwCheck = loginPwData[0].PW_CHECK;
-                            var userInfo = {
-                                user_email : loginEmail
-                            }
-                            req.session.userInfo = userInfo;
-                            res.send({loginEmailCheck: loginEmailCheck, loginPwCheck: loginPwCheck, userId: loginPwData[0].USER_ID, currentLat:loginPwData[0].CURRENT_LAT, currentLng: loginPwData[0].CURRENT_LNG});
-                        }
-                    });
-                }else {
-                    res.send({loginEmailCheck: loginEmailCheck, loginPwCheck: loginPwCheck});
-                }
+                logger.debug(TAG, 'Check user number success : ' + JSON.stringify(userNumberCheckData));
+                var selectEmailCheckQuery = "select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ") as EMAIL_CHECK";
+                connection.query(selectEmailCheckQuery, function (err, userEmailCheck) {
+                    if (err) {
+                        logger.error(TAG, "DB selectLoginQuery error : " + err);
+                        res.status(400);
+                        res.send('User sign in error');
+                    } else {
+                        logger.debug(TAG, 'Check user number success : ' + JSON.stringify(userEmailCheck));
+
+                        var userNumberCheck = userNumberCheckData[0].USER_NUMBER_CHECK;
+                        var userEmailCheck = userEmailCheck[0].EMAIL_CHECK;
+
+                        res.send({signupPhoneNumberCheck: userNumberCheck, signupEmailCheck:userEmailCheck});
+                    }
+                });
             }
             connection.release();
         });

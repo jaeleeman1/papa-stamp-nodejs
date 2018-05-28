@@ -52,13 +52,13 @@
         <form>
           <h1>파파스탬프 회원가입</h1>
           <div>
-            <input type="text" class="form-control" placeholder="E-Mail" required="" id="login_email"/>
+            <input type="text" class="form-control" placeholder="E-Mail" required="" id="signup_email"/>
           </div>
           <div>
-            <input type="password" class="form-control" placeholder="Password" required="" id="login_password"/>
+            <input type="password" class="form-control" placeholder="Password" required="" id="signup_password"/>
           </div>
           <div>
-            <input type="password" class="form-control" placeholder="Password-Cofirm" required="" id="login_password_confirm"/>
+            <input type="password" class="form-control" placeholder="Password-Cofirm" required="" id="signup_password_confirm"/>
           </div>
           <div>
             <input type="text" class="form-control" placeholder="Phone-Number" required="" id="phone_number"/>
@@ -81,7 +81,7 @@
             <div class="clearfix"></div>
 
             <div>
-              <h1><img style="width:80px;margin-right:20px;" src="/images/papastamp_icon.png"/> 파파 스탬프 !!! </h1>
+              <h1>온라인 스탬프 관리<img style="width:80px;margin-left:20px;" src="/images/papastamp_icon.png"/></h1>
             </div>
           </div>
         </form>
@@ -103,7 +103,7 @@
 
     $(function() {
         var keyNumber = '';
-        $("#phone_number").on("input propertychange",function() {
+        $("#phone_number").on("input propertychange", function () {
             var val = this.value.replace(/\D/g, '');
             var newVal = '';
             keyNumber = $(this).val();
@@ -111,122 +111,123 @@
             if (val.length > 3 && val.length < 8) {
                 newVal += val.substr(0, 3) + '-';
                 val = val.substr(3);
-            }else if (val.length > 7) {
+            } else if (val.length > 7) {
                 newVal += val.substr(0, 3) + '-' + val.substr(3, 4) + '-';
                 val = val.substr(7);
             }
             newVal += val;
             this.value = newVal;
 
-            if($(this).val().length > 13) {
+            if ($(this).val().length > 13) {
                 $(this).val(keyNumber.substr(0, keyNumber.length - 1));
             }
         });
 
         $('#btn_send').on('click',
-            function() {
+            function () {
                 $.toast.config.align = 'center';
                 $.toast.config.width = 210;
-
-                var loginEmail = $('#login_email').val();
-                var loginPassword = $('#login_password').val();
-                var loginPasswordConfirm = $('#login_password_confirm').val();
-
-                if (loginEmail == "") {
-                    $.toast('<h4>E-Mail</h4>을 입력하세요!!.', { type: 'info', duration: 3000 });
-                    $('#login_email').focus();
+                var signupEmail = $('#signup_email').val();
+                var signupPassword = $('#signup_password').val();
+                var signupPasswordConfirm = $('#signup_password_confirm').val();
+                var signupNumber = $('#phone_number').val();
+                if (signupEmail == "") {
+                    $.toast('<h4>E-Mail</h4>을 입력하세요!!.', {type: 'info', duration: 3000});
+                    $('#signup_email').focus();
                     return;
                 }
-
-                if (loginPassword == "") {
-                    $.toast('<h4>Password</h4>를 입력하세요!!.', { type: 'info', duration: 3000 });
-                    $('#login_password').focus();
+                if (signupPassword == "") {
+                    $.toast('<h4>Password</h4>를 입력하세요!!.', {type: 'info', duration: 3000});
+                    $('#signup_password').focus();
                     return;
                 }
-
-                if (loginPasswordConfirm == "") {
+                if (signupPasswordConfirm == "") {
                     $.toast.config.width = 270;
-                    $.toast('<h4>Password Confirm</h4>를 입력하세요!!.', { type: 'info', duration: 3000 });
-                    $('#login_password_confirm').focus();
+                    $.toast('<h4>Password Confirm</h4>를 입력하세요!!.', {type: 'info', duration: 3000});
+                    $('#signup_password_confirm').focus();
                     return;
                 }
-
-                var loginInfo = '{"login_email":"' + loginEmail + '"}';
+                var signupInfo = {'user_number': signupNumber, 'user_email': signupEmail};
                 $.ajax({
-                    url: $("#url").val()+'/user/v1/userCheck',
+                    url: $("#url").val() + '/user/v1/userCheck',
                     type: 'GET',
-                    traditional:true,
-                    data: JSON.parse(loginInfo),
-                    success: function(data) {
-                        if(data.loginEmailCheck == '1'){
-                            $.toast('<h4>존재하는 E-Mail</h4>입니다!.', { type: 'danger', duration: 3000 });
-                        }else {
-                            if(loginPassword != loginPasswordConfirm) {
-                                $.toast('<h4>비밀 번호</h4>를 확인하세요!!.', { type: 'danger', duration: 3000 });
-                            }else {
-                                if($("#auth_check").val() == "true") {
-                                    $("#signup-confirm").dialog({
-                                        resizable: false,
-                                        modal: true,
-                                        title: "파파 스탬프 회원 가입",
-                                        height: 210,
-                                        width: 500,
-                                        resizable:false,
-                                        buttons: {
-                                            "예": function () {
-                                                signupcallback();
-                                                $(this).dialog('close');
-                                            },
-                                            "아니오": function () {
-                                                $(this).dialog('close');
-                                            }
+                    traditional: true,
+                    data: JSON.parse(signupInfo),
+                    success: function (data) {
+                        if (data.signupPhoneNumberCheck == '1') {
+                            $.toast('<h4>존재하는 폰번호</h4>입니다!.', {type: 'danger', duration: 3000});
+                            return;
+                        }
+                        if (data.signupEmailCheck == '1') {
+                            $.toast('<h4>존재하는 이메일</h4>입니다!.', {type: 'danger', duration: 3000});
+                            return;
+                        }
+                        if (signupPassword != signupPasswordConfirm) {
+                            $.toast('<h4>비밀 번호</h4>를 확인하세요!!.', {type: 'danger', duration: 3000});
+                        } else {
+                            if ($("#auth_check").val() == "true") {
+                                $("#signup-confirm").dialog({
+                                    resizable: false,
+                                    modal: true,
+                                    title: "파파 스탬프 회원 가입",
+                                    height: 210,
+                                    width: 500,
+                                    resizable: false,
+                                    buttons: {
+                                        "예": function () {
+                                            signupcallback();
+                                            $(this).dialog('close');
+                                        },
+                                        "아니오": function () {
+                                            $(this).dialog('close');
                                         }
-                                    });
-                                }else {
-                                    $.toast.config.width = 310;
-                                    $.toast('<h4>전화 번호 인증</h4>을 진행하시기 바랍니다.!', { type: 'danger', duration: 3000 });
-                                }
+                                    }
+                                });
+                            } else {
+                                $.toast.config.width = 310;
+                                $.toast('<h4>전화 번호 인증</h4>을 진행하시기 바랍니다.!', {type: 'danger', duration: 3000});
                             }
                         }
                     },
-                    error: function(request, status, error) {
-                        console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                         console.log('Error occured');
                     }
                 });
             });
-
-        $('#findIdPw').on('click',
-            function() {
-                alert('가입');
-            });
-    });
-
+        }
+    );
     function signupcallback() {
         var userNumber = $("#phone_number").val();
-        var userEmail = $('#login_email').val();
-        var userPassword = $('#login_password').val();
+        var signupEmail = $('#signup_email').val();
+        var signupPassword = $('#signup_password').val();
         var headers = {};
         headers["user_number"] = userNumber;
-        var dataString = {'user_email': userEmail, 'user_password': userPassword, 'terms_yn': $('#terms_yn').val(), 'current_lat': $('#current_lat').val(), 'current_lng': $('#current_lng').val()};
+        var dataString = {
+            'user_email': signupEmail,
+            'user_password': signupPassword,
+            'terms_yn': $('#terms_yn').val(),
+            'current_lat': $('#current_lat').val(),
+            'current_lng': $('#current_lng').val()
+        };
         $.ajax({
             url: $("#url").val() + '/user/v1/userInfo',
             type: 'POST',
-            headers : headers,
+            headers: headers,
             dataType: 'json',
-            data : dataString,
-            success: function(data) {
-                if(data.result = 'success') {
-                    setTimeout(function() {
+            data: dataString,
+            success: function (data) {
+                if (data.result = 'success') {
+                    setTimeout(function () {
                         location.href = $("#url").val();
                     }, 2000);
                     $.toast('<h4>회원가입</h4>이 완료되었습니다.', {type: 'info', duration: 2000});
-                }else {
+                } else {
                     console.error('error');
                 }
             },
-            error: function(request, status, error) {
-                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            error: function (request, status, error) {
+                console.error("used delete card : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
             }
         });
     }
@@ -235,73 +236,73 @@
         $.toast.config.align = 'center';
         $.toast.config.width = 300;
         var userNumber = $("#phone_number").val();
-
         var authCheckText = $("#authButton").text();
-        if(authCheckText == "인증번호 확인") {
+        if (authCheckText == "인증번호 확인") {
             var authNum = $("#auth_num").val();
             var authCode = $("#auth_code").val();
-            if(authCode == '') {
+            if (authCode == '') {
                 $.toast('<h4>발송된 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
-                if(authNum == authCode) {
+                if (authNum == authCode) {
                     $("#auth_check").val("true");
                     $("#authButton").html("인증확인 완료");
                     clearInterval(tid);		// 타이머 해제
                     $("#ViewTimer").html("인증 완료");
-                }else {
+                } else {
                     $.toast('<h4>올바른 인증 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
                 }
             }
-        }else {
+        } else {
             if (userNumber == '') {
                 $.toast('<h4>핸드폰 번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
                 $('#phone_number').focus();
                 return;
             }
-
             if (userNumber.length < 13) {
                 $.toast('<h4>올바른 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
-                var numberString = {'login_number': userNumber};
+                var numberString = {'user_number': userNumber, 'user_email':'none'};
                 $.ajax({
-                    url: $("#url").val() + '/user/v1/numberCheck',
+                    url: $("#url").val() + '/user/v1/userCheck',
                     type: 'GET',
                     dataType: 'json',
-                    data : numberString,
+                    data: numberString,
                     success: function (data) {
-                        if(data.result == 'exist') {
+                        if (data.signupPhoneNumberCheck == '1') {
                             $.toast('이미 가입된 <h4>사용자 번호</h4> 입니다.', {type: 'info', duration: 3000});
-                        }else {
-                            var randNum = Math.floor(Math.random() * 1000000)+100000;
-                            if(randNum>1000000){
+                        } else {
+                            var randNum = Math.floor(Math.random() * 1000000) + 100000;
+                            if (randNum > 1000000) {
                                 randNum = randNum - 100000;
                             }
                             $("#auth_num").val(randNum);
-                            var dataString = {'user_number': userNumber, 'send_type': 'signup', 'auth_code': randNum};
+                            var dataString = {
+                                'user_number': userNumber,
+                                'send_type': 'signup',
+                                'auth_code': randNum
+                            };
                             $.ajax({
                                 url: $("#url").val() + '/notification/v1/sendsms',
                                 type: 'GET',
                                 dataType: 'json',
-                                data : dataString,
+                                data: dataString,
                                 success: function (data) {
-                                    if(data.result == 'success') {
+                                    if (data.result == 'success') {
                                         $("#authButton").html("인증번호 확인");
                                         $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
-
                                         TimerStart();
                                     }
                                 },
-                                error: function(request, status, error) {
+                                error: function (request, status, error) {
                                     $.toast('<h4>인증 번호</h4>발송이 실패하였습니다.', {type: 'danger', duration: 3000});
-                                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                                     console.log('Error occured');
                                 }
                             });
                         }
-
                     },
-                    error: function(request, status, error) {
-                        console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                         console.log('Error occured');
                     }
                 });
@@ -310,7 +311,7 @@
     }
 
     function TimerStart() {
-        tid=setInterval('msg_time()',1000);
+        tid = setInterval('msg_time()', 1000);
     }
 
     function msg_time() {	// 1초씩 카운트
@@ -329,6 +330,7 @@
         }
 
     }
+
 </script>
 
 </body>

@@ -298,7 +298,7 @@
 
                 var loginInfo = '{"login_email":"' + $('#loginEmail').val() + '", "login_password":"' + $('#loginPassword').val() + '"}';
                 $.ajax({
-                    url: $("#url").val()+'/user/v1/userCheck',
+                    url: $("#url").val()+'/user/v1/userLogin',
                     type: 'GET',
                     traditional:true,
                     data: JSON.parse(loginInfo),
