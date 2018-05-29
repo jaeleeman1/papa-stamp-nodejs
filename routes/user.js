@@ -99,11 +99,11 @@ router.get('/userLocation', function (req, res, next) {
 });
 
 // Get User Login
-router.get('/userLogin', function(req, res, next) {
+router.post('/userLogin', function(req, res, next) {
     logger.info(TAG, 'Get user login');
 
-    var loginEmail = req.query.login_email;
-    var loginPassword = req.query.login_password;
+    var loginEmail = req.body.login_email;
+    var loginPassword = req.body.login_password;
 
     logger.debug(TAG, 'Login EMAIL : ' + loginEmail);
     logger.debug(TAG, 'Login PW : ' + loginPassword);
@@ -463,8 +463,7 @@ router.get('/userCheck', function(req, res, next) {
     var userNumber = req.query.user_number;
     var userEmail = req.query.user_email;
 
-    if(userNumber == null || userNumber == undefined &&
-        userEmail == null || userNumber == userEmail) {
+    if(userNumber == null || userNumber == undefined) {
         logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
         res.send('Invalid parameter error');

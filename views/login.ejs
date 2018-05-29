@@ -274,8 +274,8 @@
         } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
             $("#current_lat").val('37.65067382324312');
             $("#current_lng").val('126.88702399396053');
-            $("#init_lat").val(currentLat);
-            $("#init_lng").val(currentLng);
+            $("#init_lat").val('37.65067382324312');
+            $("#init_lng").val('126.88702399396053');
             console.error("geolocation error : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
         }
 
@@ -284,24 +284,28 @@
             function() {
                 $.toast.config.align = 'center';
                 $.toast.config.width = 300;
-                if ($('#loginEmail').val() == "") {
+
+                var loginEmail = $('#loginEmail').val();
+                var loginPassword = $('#loginPassword').val();
+
+                if (loginEmail == "") {
                     $.toast('<h4>E-Mail</h4>을 입력하세요!!.', { type: 'danger', duration: 3000 });
                     $('#loginEmail').focus();
                     return;
                 }
 
-                if ($('#loginPassword').val() == "") {
+                if (loginPassword == "") {
                     $.toast('<h4>Password</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 });
                     $('#loginPassword').focus();
                     return;
                 }
 
-                var loginInfo = '{"login_email":"' + $('#loginEmail').val() + '", "login_password":"' + $('#loginPassword').val() + '"}';
+                var dataString = {'login_email':loginEmail, 'login_password':loginPassword};
                 $.ajax({
                     url: $("#url").val()+'/user/v1/userLogin',
-                    type: 'GET',
-                    traditional:true,
-                    data: JSON.parse(loginInfo),
+                    type: 'POST',
+                    dataType: 'json',
+                    data: dataString,
                     success: function(data) {
                         if(data.loginEmailCheck == '1' && data.loginPwCheck == '1'){
                             $('#user_id').val(data.userId);

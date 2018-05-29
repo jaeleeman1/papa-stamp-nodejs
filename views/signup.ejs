@@ -261,7 +261,7 @@
             if (userNumber.length < 13) {
                 $.toast('<h4>올바른 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
-                var numberString = {'user_number': userNumber, 'user_email':'none'};
+                var numberString = {'user_number':userNumber, 'user_email':''};
                 $.ajax({
                     url: $("#url").val() + '/user/v1/userCheck',
                     type: 'GET',
@@ -315,8 +315,7 @@
     }
 
     function msg_time() {	// 1초씩 카운트
-
-        m = Math.floor(SetTime / 60) + "분 " + (SetTime % 60) + "초";	// 남은 시간 계산
+        var m = Math.floor(SetTime / 60) + "분 " + (SetTime % 60) + "초";	// 남은 시간 계산
         var msg = "인증번호 입력 남은 시간은 " + m + " 입니다.";
 
         $("#ViewTimer").html(msg);		// div 영역에 보여줌
@@ -328,7 +327,6 @@
             clearInterval(tid);		// 타이머 해제
             $("#ViewTimer").html("입력 시간이 종료 되었습니다.");
         }
-
     }
 
 </script>
