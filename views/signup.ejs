@@ -147,10 +147,10 @@
                     $('#signup_password_confirm').focus();
                     return;
                 }
-                var signupInfo = {'user_number': signupNumber, 'user_email': signupEmail};
+                var signupInfo = {'signup_number': signupNumber, 'signup_email': signupEmail};
                 $.ajax({
                     url: $("#url").val() + '/user/v1/userCheck',
-                    type: 'GET',
+                    type: 'POST',
                     traditional: true,
                     data: JSON.parse(signupInfo),
                     success: function (data) {
@@ -261,10 +261,10 @@
             if (userNumber.length < 13) {
                 $.toast('<h4>올바른 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
-                var numberString = {'user_number':userNumber, 'user_email':''};
+                var numberString = {'signup_number':userNumber, 'signup_email':''};
                 $.ajax({
                     url: $("#url").val() + '/user/v1/userCheck',
-                    type: 'GET',
+                    type: 'POST',
                     dataType: 'json',
                     data: numberString,
                     success: function (data) {
@@ -283,7 +283,7 @@
                             };
                             $.ajax({
                                 url: $("#url").val() + '/notification/v1/sendsms',
-                                type: 'GET',
+                                type: 'POST',
                                 dataType: 'json',
                                 data: dataString,
                                 success: function (data) {

@@ -459,9 +459,9 @@ router.get('/shopCodeToShopId/:shop_code', function (req, res, next) {
     });
 });
 
-router.get('/userCheck', function(req, res, next) {
-    var userNumber = req.query.user_number;
-    var userEmail = req.query.user_email;
+router.post('/userCheck', function(req, res, next) {
+    var userNumber = req.body.signup_number;
+    var userEmail = req.body.signup_email;
 
     if(userNumber == null || userNumber == undefined) {
         logger.debug(TAG, 'Invalid parameter error');

@@ -341,10 +341,10 @@ router.post('/issued-coupon', function (req, res, next) {
     });
 });
 
-router.get('/sendsms', function(req, res, next) {
-    var userNumber = req.query.user_number;
-    var sendType = req.query.send_type;
-    var authCode = req.query.auth_code;
+router.post('/sendsms', function(req, res, next) {
+    var userNumber = req.body.user_number;
+    var sendType = req.body.send_type;
+    var authCode = req.body.auth_code;
     userNumber = userNumber.replace(/-/gi, '');
 
     console.log(userNumber);
