@@ -43,7 +43,6 @@ router.get('/signin/userCheck', function(req, res, next) {
                     var selectAdminQuery = 'select count(*) as PW_CHECK, SUI.SHOP_ID, SSI.SHOP_STAMP_IMG, SSI.SHOP_NAME from SB_USER_INFO as SUI ' +
                         'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SUI.SHOP_ID ' +
                         'where SUI.USER_TYPE = "200" and SUI.USER_EMAIL = ' + mysql.escape(signinEmail) + ' and SUI.USER_PASSWORD = password(' + mysql.escape(signinPassword) +')';
-                    console.log(selectAdminQuery);
                     connection.query(selectAdminQuery, function (err, signinAdminData) {
                         if (err) {
                             console.error("*** initPage select password Error : ", err);
