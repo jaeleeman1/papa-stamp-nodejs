@@ -369,6 +369,57 @@
                 buttons: {
                     "확인": function () {
                         $(this).dialog('close');
+                        authNumberSendsms();
+                    },
+                    "취소": function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+        }
+
+        function authNumberSendsms() {
+            var randNum = Math.floor(Math.random() * 1000000) + 100000;
+            if (randNum > 1000000) {
+                randNum = randNum - 100000;
+            }
+            $("#auth-number").text(randNum);
+            var userNumber = $("#phone-text").val();
+            var dataString = {
+                'user_number': userNumber,
+                'send_type': 'usingCoupon',
+                'auth_code': randNum
+            };
+            $.ajax({
+                url: $("#url").val() + '/notification/v1/sendsms',
+                type: 'POST',
+                dataType: 'json',
+                data: dataString,
+                success: function (data) {
+                    if (data.result == 'success') {
+                        authCodeConfirm();
+                        $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
+                    }
+                },
+                error: function (request, status, error) {
+                    $.toast('<h4>인증 번호</h4>발송이 실패하였습니다.', {type: 'danger', duration: 3000});
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    console.log('Error occured');
+                }
+            });
+        }
+
+        function authCodeConfirm() {
+            $("#auth-code-confirm").dialog({
+                resizable: false,
+                modal: true,
+                title: "파파스탬프 쿠폰 코드 확인! (TABLET)",
+                height: 400,
+                width: 700,
+                resizable:false,
+                buttons: {
+                    "확인": function () {
+                        $(this).dialog('close');
                         adminUseCouponCallback(userId);
                         $("#phone-text").val('');
                     },
@@ -378,6 +429,5 @@
                 }
             });
         }
-
     });
 </script>

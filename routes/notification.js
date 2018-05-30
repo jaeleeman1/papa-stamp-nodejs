@@ -355,6 +355,8 @@ router.post('/sendsms', function(req, res, next) {
 
     if(sendType == 'signup') {
         sendMsg = '가입 인증번호는 ['
+    }else if(sendType == 'usingCoupon'){
+        sendMsg = '쿠폰 사용 인증번호는 ['
     }
 
     var data = {
