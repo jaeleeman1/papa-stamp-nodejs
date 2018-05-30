@@ -198,7 +198,7 @@ router.post('/userInfo', function(req, res, next) {
 });
 
 //Put User Location
-router.put('/accessToekn', function (req, res, next) {
+router.put('/accessToekn/:access_token', function (req, res, next) {
     logger.info(TAG, 'Update user location');
 
     var userId = req.headers.user_id;
