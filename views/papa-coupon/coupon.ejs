@@ -29,11 +29,9 @@
                             <div class="use-coupon-<%= shopID %>" id="use-coupon-date-<%= shopID %>-<%= couponNumber %>">사용날짜 : <span class="use-coupon-number-<%= shopID %>"><%= usedDate %></span></div>
                             <h6 class="use-coupon-date-<%= shopID %>">✿ 유효 기간 : <%= expirationDate %></h6>
                             <%}else {%>
-                                <%if(webCheck == 'true') {%>
-                            <h5 class="use-coupon-btn-<%= shopID %>" onclick="webCheckCoupon();">사용하기</h5>
-                                <%}else {%>
+
                             <h5 class="use-coupon-btn-<%= shopID %>" id="use-coupon-<%= shopID %>-<%= couponNumber %>" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>');">사용하기</h5>
-                            <%}%>
+
                             <h3 class="use-shop-name-<%= shopID %>"><%= shopName %><span class="use-shop-subname-<%= shopID %>">(<%= shopSubName %>)</span></h3>
                             <h4 class="use-coupon-name-<%= shopID %>"><%= couponName %><span class="use-coupon-price-<%= shopID %>"><%= couponPrice %>원</span></h4>
                             <div class="use-coupon-<%= shopID %>" id="use-coupon-date-<%= shopID %>-<%= couponNumber %>">쿠폰 번호 : <span class="use-coupon-number-<%= shopID %>"><%= couponNumber %></span></div>
@@ -90,10 +88,10 @@
 <script type="text/javascript">
     function useCouponAndroid(shopId, couponNumber) {
         var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
-        document.getElementById("use-coupon-btn-"+couponNumber).className = 'delete-coupon';
-        document.getElementById("use-coupon-btn-"+couponNumber).onclick = function(){deleteCoupon();};
-        document.getElementById("use-coupon-btn-"+couponNumber).innerHTML = '삭제하기';
-        document.getElementById("use-coupon-date-btn-"+couponNumber).innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + usedDate +'</span>';
+        document.getElementById("use-coupon-"+shopId+"-"+couponNumber).className = 'delete-coupon';
+        document.getElementById("use-coupon-"+shopId+"-"+couponNumber).onclick = function(){deleteCoupon();};
+        document.getElementById("use-coupon-"+shopId+"-"+couponNumber).innerHTML = '삭제하기';
+        document.getElementById("use-coupon-date-"+shopId+"-"+couponNumber).innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + usedDate +'</span>';
         $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
     }
 
@@ -199,7 +197,7 @@
         var shopId = $("#shop_id").val();
         var couponNumber = $("#confirm-coupon-number").text();
         var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber, 'request_check' : 'false'};
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber, 'retry_check' : 'false'};
         var headers = {};
         headers["user_id"] = userId;
 
@@ -253,6 +251,7 @@
     var convertUrl = ($("#url").val().substr(0, 5) == 'https') ? $("#url").val() : $("#url").val().substr(0,16);
     var socket = io.connect(convertUrl+':8060');
     socket.on(pushUserId, function(data) {
+        console.log('pushUserId ', pushUserId);
         var shopId = $("#shop_id").val();
         if(shopId == data.sendId) {
             if (data.type == "request-coupon") {

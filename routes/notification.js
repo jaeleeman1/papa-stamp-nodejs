@@ -123,7 +123,7 @@ router.post('/request-stamp', function (req, res, next) {
     logger.info(TAG, 'request user stamp');
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
-    var requestCheck = req.body.request_check;
+    var retryCheck = req.body.retry_check;
 
     getConnection(function (err, connection) {
         var selectStampCount = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
@@ -146,7 +146,7 @@ router.post('/request-stamp', function (req, res, next) {
                         res.send('Select coupon error');
                     } else {
                         logger.debug(TAG, 'Select coupon success');
-                        if(requestCheck == 'true') {
+                        if(retryCheck == 'true') {
                             io.sockets.emit(userId, {type:"request-stamp", sendId: shopId});
                         }
                         if(selectStampCountData.length > 0) {
@@ -251,7 +251,7 @@ router.post('/request-coupon', function (req, res, next) {
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
     var couponNumber = req.body.coupon_number;
-    var requestCheck = req.body.request_check;
+    var retryCheck = req.body.retry_check;
     logger.info(TAG, 'request userId' , userId);
     logger.info(TAG, 'request shopId', shopId);
     logger.info(TAG, 'request couponNumber', couponNumber);
@@ -277,7 +277,7 @@ router.post('/request-coupon', function (req, res, next) {
                         res.send('Select coupon error');
                     } else {
                         logger.debug(TAG, 'Select coupon success');
-                        if(requestCheck == 'true') {
+                        if(retryCheck == 'true') {
                             io.sockets.emit(userId, {type:"request-coupon", sendId: shopId});
                         }
                         if(selectStampCountData.length > 0) {

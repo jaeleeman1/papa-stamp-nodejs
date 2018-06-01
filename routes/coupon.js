@@ -409,7 +409,7 @@ router.get('/selectCoupon', function(req, res, next) {
                 res.status(400);
                 res.send('Select coupon error');
             }else{
-                logger.debug(TAG, 'Select coupon success');
+                logger.debug(TAG, 'Select coupon success', selectCouponData);
                 res.send({userNumber: decryptUid(userId), selectCouponData: selectCouponData[0]});
             }
             connection.release();

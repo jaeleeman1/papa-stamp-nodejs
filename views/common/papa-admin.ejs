@@ -544,7 +544,6 @@
         var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
         var headers = {};
         headers["user_id"] = sendId;
-
         $.ajax({
             url: $("#url").val() + '/coupon/v1/selectCoupon',
             type: 'GET',
