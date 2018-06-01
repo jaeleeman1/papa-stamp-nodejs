@@ -144,7 +144,7 @@ router.get('/shopList', function (req, res, next) {
             'inner join SB_USER_PUSH_INFO as SUPI on SUPI.SHOP_ID = SSI.SHOP_ID ' +
             'where SUPI.DEL_YN = "N" and SUPI.USER_ID =' + mysql.escape(userId) + ' ' +
             'having distance < 250 ' +
-            'order by distance limit 0, 10';
+            'order by distance';
         connection.query(selectShopListQuery, function (err, shopListData) {
             if (err) {
                 console.error("Select shop lIst Error : ", err);
@@ -398,7 +398,7 @@ router.put('/deleteCard', function(req, res, next) {
                 logger.debug(TAG, 'Delete push info success');
 
                 var deletePushHistory = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" ' +
-                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId);
+                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId) +'limit 10';
                 connection.query(deletePushHistory, function (err, DeletePushHisData) {
                     if (err) {
                         logger.error(TAG, "DB deletePushHis error : " + err);
