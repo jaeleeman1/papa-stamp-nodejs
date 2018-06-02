@@ -129,7 +129,6 @@
             resizable:false,
             buttons: {
                 "확인": function () {
-                    $("#shop_id").val('');
                     useCouponCallback(shopId, couponNum);
                     $(this).dialog('close');
                 },
@@ -208,6 +207,7 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
+                $("#shop_id").val('');
                 console.log(data.resultData);
             },
             error: function(request, status, error) {
@@ -220,7 +220,7 @@
         $("#shop-manager-confirm").dialog({
             resizable: false,
             modal: true,
-            title: "쿠폰 발급",
+            title: "쿠폰 사용 요청",
             height: 200,
             width: '90%',
             resizable:false,
@@ -231,12 +231,14 @@
                         'buttons',
                         {
                             "닫기": function () {
+                                $("#shop_id").val('');
                                 $(this).dialog('close');
                            }
                         }
                     );
                 },
                 "닫기": function () {
+                    $("#shop_id").val('');
                     $(this).dialog('close');
                 }
             }
@@ -251,7 +253,6 @@
     var convertUrl = ($("#url").val().substr(0, 5) == 'https') ? $("#url").val() : $("#url").val().substr(0,16);
     var socket = io.connect(convertUrl+':8060');
     socket.on(pushUserId, function(data) {
-        console.log('pushUserId ', pushUserId);
         var shopId = $("#shop_id").val();
         if(shopId == data.sendId) {
             if (data.type == "request-coupon") {
