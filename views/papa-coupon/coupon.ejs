@@ -29,9 +29,11 @@
                             <div class="use-coupon-<%= shopID %>" id="use-coupon-date-<%= shopID %>-<%= couponNumber %>">사용날짜 : <span class="use-coupon-number-<%= shopID %>"><%= usedDate %></span></div>
                             <h6 class="use-coupon-date-<%= shopID %>">✿ 유효 기간 : <%= expirationDate %></h6>
                             <%}else {%>
-
-                            <h5 class="use-coupon-btn-<%= shopID %>" id="use-coupon-<%= shopID %>-<%= couponNumber %>" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>');">사용하기</h5>
-
+                                <%if(webCheck == 'true') {%>
+                                    <h5 class="use-coupon-btn-<%= shopID %>" onclick="webCheckCoupon();">사용하기</h5>
+                                <%}else {%>
+                                    <h5 class="use-coupon-btn-<%= shopID %>" id="use-coupon-<%= shopID %>-<%= couponNumber %>" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>');">사용하기</h5>
+                                <%}%>
                             <h3 class="use-shop-name-<%= shopID %>"><%= shopName %><span class="use-shop-subname-<%= shopID %>">(<%= shopSubName %>)</span></h3>
                             <h4 class="use-coupon-name-<%= shopID %>"><%= couponName %><span class="use-coupon-price-<%= shopID %>"><%= couponPrice %>원</span></h4>
                             <div class="use-coupon-<%= shopID %>" id="use-coupon-date-<%= shopID %>-<%= couponNumber %>">쿠폰 번호 : <span class="use-coupon-number-<%= shopID %>"><%= couponNumber %></span></div>
