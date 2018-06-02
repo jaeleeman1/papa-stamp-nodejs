@@ -9,80 +9,9 @@ var path = require('path');
 var FCM = require('fcm-push');
 var crypto = require( "crypto" );
 var https = require("https");
-var credential = 'Basic '+new Buffer('Papastamp:bc87948654b711e8a20d0cc47a1fcfae').toString('base64');
+var credential = 'Basic '+new Buffer('Papastamp:'+config.smsKey).toString('base64');
 
 const TAG = '[NOTIFICATION INFO] ';
-const serverKey = 'AAAAHIVXzfk:APA91bHqH863OCv5t6oNHwoYjDp5kmqd-D6GtrrU-QW_ikVCkW2HteP6pnvCT58XhKH4bobu0jOPZyzF2w1DFE1z4ktQ1bVS59iXQi70qqGFyW8g9LNLR8KgksXrm9lzQ1_FVsDsQZt0';
-
-var notificationType = {
-    "NOTIFICATION_TYPE_UNDEFINED" : 0,
-    "NOTIFICATION_TYPE_ORDER_NOTIFICATION" : 1
-};
-
-router.post('/finish_order/:uid/', function(req, res, next) {
-    console.log(TAG, 'POST: Send notification');
-
-    var uid = req.params.uid;
-
-    console.log(TAG, 'requested UID: ' + uid);
-
-    var info = {
-        uid: uid,
-        ordermessage: "고객님~ 주문한 상품 준비되었습니다.!",
-        finishmessage: "상품을 수령하시면 감사하겠습니다 ^.^"
-    };
-
-    sendNotification("e_9dzLDGHk0:APA91bFkENFMoPZsVDQKE4iotXFhLVyv_FZAbRZBINZ2A1I9PAMyLytXJhOXOGoUJEM2-nc_v3kmuztbVcuV1PAEx3f-Fia10kfCKg9y7DG9XbQMXonPv9tzS1xbrg5dCtX35T8xDQqT",
-        notificationType.NOTIFICATION_TYPE_ORDER_NOTIFICATION, info);
-
-    res.status(200);
-    res.send('sendSsupNotification response ok');
-});
-
-var sendNotification = function sendNotification(accessToken, notiType, info) {
-
-    switch (notiType) {
-        case notificationType.NOTIFICATION_TYPE_ORDER_NOTIFICATION:
-            var callapse_key = 'ORDER';
-            var title = info.ordermessage;
-            var body = info.finishmessage;
-            var icon = '/images/papastamp_icon.png';
-            var tag = 1;
-            break;
-        default:
-            console.log(TAG, 'Undefined notification type');
-            return;
-    }
-
-
-    var message = {
-        to: accessToken,
-        collapse_key: callapse_key,
-        notification: {
-            title: title,
-            body: body,
-            icon: icon,
-            tag: tag
-        },
-        data: {
-            msgType: callapse_key,
-            uid: info.uid,
-            shopid: "SB-SHOP-00002",
-            ordermessage: info.ordermessage,
-            finishmessage: info.finishmessage
-        }
-    };
-
-
-    var fcm = new FCM(serverKey);
-    fcm.send(message, function(err, res){
-        if (err) {
-            console.log(TAG, "Failed to send notification, error: " + err);
-        } else {
-            console.log(TAG, "Successfully sent with response: ", res);
-        }
-    });
-};
 
 var encryptUid = function(unumber) {
     unumber = unumber.replace(/-/gi, '');
@@ -347,9 +276,9 @@ router.post('/sendsms', function(req, res, next) {
     var authCode = req.body.auth_code;
     userNumber = userNumber.replace(/-/gi, '');
 
-    console.log(userNumber);
-    console.log(sendType);
-    console.log(authCode);
+    logger.debug(TAG, 'User Number : ' + userNumber);
+    logger.debug(TAG, 'Send Type : ' + sendType);
+    logger.debug(TAG, 'Auth Code : ' + authCode);
 
     var sendMsg = '';
 
@@ -360,15 +289,10 @@ router.post('/sendsms', function(req, res, next) {
     }
 
     var data = {
-        "sender"     : "01026181715",
+        "sender"     : "01037291715",
         "receivers"  : [userNumber],
         "content"    : sendMsg + authCode + '] - 파파 스탬프'
     }
-
-    res.send({result:"success"});
-    /*
-
-
 
     var body = JSON.stringify(data);
 
@@ -400,7 +324,9 @@ router.post('/sendsms', function(req, res, next) {
     req.end();
     req.on('error', function(e) {
         console.error(e);
-    });*/
+    });
+
+    res.send({result:"success"});
 });
 
 module.exports = router;

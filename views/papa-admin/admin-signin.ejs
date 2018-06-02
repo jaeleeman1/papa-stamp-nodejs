@@ -54,7 +54,11 @@
               <% }%>
             </div>
             <div>
-              <input type="password" class="form-control" placeholder="Password" required="" id="signinPassword"/>
+              <% if(adminEmail == "관리자 E-Mail") {%>
+                <input type="password" class="form-control" placeholder="<%= adminPw %>" required="" id="signinPassword"/>
+              <% }else {%>
+                <input type="password" class="form-control" placeholder="<%= adminPw %>" value="<%= adminPw %>" required="" id="signinPassword"/>
+              <% }%>
             </div>
             <div>
             <a class="btn btn-default submit" id="btn_send">관리자 로그인</a>
@@ -105,8 +109,6 @@
                     traditional:true,
                     data: JSON.parse(loginInfo),
                     success: function(data) {
-                        console.log(data.signinEmailCheck);
-                        console.log(data.signinPasswordCheck);
                         if(data.signinEmailCheck == '1' && data.signinPasswordCheck == '1'){
                             $('#shop_id').val(data.shopId);
                             $('#shop_name').val(data.shopName);

@@ -36,6 +36,8 @@
 </head>
 <meta name="viewport" content="width=device-width, user-scalable=no">
 
+<body>
+
 <form name="footerAction" style="display:none">
     <input type="hidden" name="user_id" id="user_id" value="<%= userId %>"/>
     <input type="hidden" name="shop_id" id="shop_id" value="<%= shopId %>"/>
@@ -51,7 +53,6 @@
     <input type="hidden" name="auth_num" id="auth_num" value=""/>
 </form>
 
-<body>
 <div class="frame">
 
     <div class="header">
@@ -135,11 +136,9 @@
             </menu>
         </nav>
     </div>
-
-
 </div>
+
 </body>
-</html>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=1a30d2b7d0dec9ecdbd9665afa6ea7b1&libraries=clusterer,services"></script>
 <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -254,3 +253,5 @@
         }
     });
 </script>
+
+</html>

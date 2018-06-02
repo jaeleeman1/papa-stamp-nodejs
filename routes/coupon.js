@@ -13,8 +13,8 @@ var decryptUid = function(uid) {
     var cipher = crypto.createDecipher('aes-128-ecb', secrect);
     var decrypted = cipher.update(uid, 'hex', 'utf8');
     decrypted += cipher.final('utf8');
-    decrypted = decrypted.substr(3,11);
-    return decrypted;
+    var returnValue = decrypted.substr(3,3) + '-' + decrypted.substr(6,4) + '-' + decrypted.substr(10,4);
+    return returnValue;
 }
 
 //Get Coupon Shop Page

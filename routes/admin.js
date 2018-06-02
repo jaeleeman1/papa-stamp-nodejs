@@ -10,13 +10,15 @@ const TAG = '[ADMIN INFO] ';
 
 /* GET users listing. */
 router.get('/signin', function(req, res, next) {
-    var admin_email = '';
+    var adminEmail = '';
+    var adminPw = '';
     if(req.session.userInfo) {
         var userInfo = req.session.userInfo;
-        admin_email = userInfo.admin_email;
-        res.render('papa-admin/admin-signin', {url:config.url, adminEmail: admin_email});
+        adminEmail = userInfo.admin_email;
+        adminPw = userInfo.admin_pw;
+        res.render('papa-admin/admin-signin', {url:config.url, adminEmail:adminEmail, adminPw:adminPw});
     }else {
-        res.render('papa-admin/admin-signin', {url:config.url, adminEmail: "관리자 E-Mail"});
+        res.render('papa-admin/admin-signin', {url:config.url, adminEmail: "관리자 E-Mail", adminPw:"관리자 패스워드"});
     }
 });
 
@@ -49,7 +51,8 @@ router.get('/signin/userCheck', function(req, res, next) {
                         } else {
                             signinPasswordCheck = signinAdminData[0].PW_CHECK;
                             var userInfo = {
-                                admin_email : signinEmail
+                                admin_email : signinEmail,
+                                admin_pw : signinPassword
                             }
                             req.session.userInfo = userInfo;
                             res.send({signinEmailCheck: signinEmailCheck, signinPasswordCheck: signinPasswordCheck, shopId: signinAdminData[0].SHOP_ID, signinEmail:signinEmail, shopName: signinAdminData[0].SHOP_NAME, shopIcon: signinAdminData[0].SHOP_STAMP_IMG});
