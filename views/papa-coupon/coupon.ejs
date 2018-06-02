@@ -269,7 +269,7 @@
                     success: function (data) {
                         $("#shop-manager-confirm").dialog('close');
                         $("#use-coupon-confirm").dialog('close');
-                        document.getElementById("use-coupon-"+data.shopId+"-"+ data.couponNumber).className = 'delete-coupon';
+                        document.getElementById("use-coupon-"+data.shopId+"-"+ data.couponNumber).className = 'use-coupon-btn-'+ data.shopId +' delete-coupon';
                         document.getElementById("use-coupon-"+data.shopId+"-"+ data.couponNumber).onclick = function () {
                             deleteCoupon();
                         };
