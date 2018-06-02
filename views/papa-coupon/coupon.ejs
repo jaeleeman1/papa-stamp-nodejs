@@ -86,15 +86,6 @@
 </div>
 
 <script type="text/javascript">
-    function useCouponAndroid(shopId, couponNumber) {
-        var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
-        document.getElementById("use-coupon-"+shopId+"-"+couponNumber).className = 'delete-coupon';
-        document.getElementById("use-coupon-"+shopId+"-"+couponNumber).onclick = function(){deleteCoupon();};
-        document.getElementById("use-coupon-"+shopId+"-"+couponNumber).innerHTML = '삭제하기';
-        document.getElementById("use-coupon-date-"+shopId+"-"+couponNumber).innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + usedDate +'</span>';
-        $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
-    }
-
     function useCouponCallback(shopId, couponNumber) {
         var dataString = {'shop_id': shopId};
 
@@ -158,7 +149,7 @@
                 $.toast('<h4>사용한 쿠폰 삭제</h4>가 완료 되었습니다.', {type: 'info', duration: 3000 });
                 setTimeout(function () {
                     location.reload();
-                }, 3100);
+                }, 3000);
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -277,6 +268,7 @@
                         document.getElementById("use-coupon-"+data.shopId+"-"+data.couponNumber).innerHTML = '삭제하기';
                         document.getElementById("use-coupon-date-"+data.shopId+"-"+ data.couponNumber).innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + data.viewDate + '</span>';
                         $("#" + data.shopId + "-" + data.couponNumber).addClass("used-deemed");
+                        $("#shop_id").val('');
                     },
                     error: function (request, status, error) {
                         console.error("selectStampDate : code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);

@@ -386,6 +386,7 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
+                alert($('#user-data').length);
                 if($('#user-data').length > 0) {
                     var userHisData = document.getElementById('user-data');
                     var appendData = '';
@@ -409,9 +410,9 @@
                     }
                     userHisData.innerHTML = appendData + userHisData.innerHTML;
                     stampLength.innerHTML = addLength +' 개';
-                    $("input:radio[name=paramStampValue]:checked").prop("checked", false);
-                    $("input:radio[name=paramStampValue]:radio[value='1']").prop("checked", true);
                 }
+                $("input:radio[name=paramStampValue]:checked").prop("checked", false);
+                $("input:radio[name=paramStampValue]:radio[value='1']").prop("checked", true);
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -435,6 +436,7 @@
             success: function (data) {
                 if (data.result == "success") {
                     $("#phone-text").val('');
+                    $('#phone-text').focus();
                     $.toast.config.align = 'center';
                     $.toast.config.width = 500;
                     $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">스탬프 적립</h4>이 완료되었습니다.!!!.</span>', { type: 'info', duration: 3000 });
@@ -551,7 +553,7 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                $(".user-number").html(data.userNumber);
+                $(".user-number").html(formatNumber(data.userNumber));
                 $("#confirm-coupon-number").html(data.selectCouponData.COUPON_NUMBER + ' / ' + data.selectCouponData.COUPON_NAME + ' / ' + data.selectCouponData.EXPIRATION_DT);
 
                 $("#admin-coupon-confirm").dialog({
@@ -576,6 +578,19 @@
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
+    }
+
+    function formatNumber(val) {
+        var newVal = '';
+        if (val.length > 3 && val.length < 8) {
+            newVal += val.substr(0, 3) + '-';
+            val = val.substr(3);
+        }else if (val.length > 7) {
+            newVal += val.substr(0, 3) + '-' + val.substr(3, 4) + '-';
+            val = val.substr(7);
+        }
+        newVal += val;
+        return newVal;
     }
 </script>
 
