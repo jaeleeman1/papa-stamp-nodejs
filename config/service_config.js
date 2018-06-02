@@ -7,7 +7,8 @@ config.host = 'papastamp.cgbapsrwofhr.ap-northeast-1.rds.amazonaws.com';
 config.port = 43306;
 config.username = 'ipark';
 config.password = 'lee2336^^';
-config.database = 'BEST_FOOD';
+config.database = 'PAPA_STAMP';
+// config.database = 'BEST_FOOD';
 
 //Domain
 // config.url = 'http://localhost:8080';
@@ -24,5 +25,8 @@ config.fcmKey = 'key=AIzaSyASnovAUqeRII4F7npkdPPea7j8oxUUu6A';
 
 //AES Key
 config.secrectKey = 'Glu0r6o0GzBZIe0Qsrh2FA==';
+
+//Send SMS
+config.smsKey = '52dd6cd8667611e894300cc47a1fcfae';
 
 module.exports = config;
