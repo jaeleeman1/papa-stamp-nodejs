@@ -10,9 +10,11 @@
                 </figure>
                 <figure class="back">
                     <img class="papa-base-img" src="/images/shop-card/back/<%= shopListMainData[i].SHOP_BACK_IMG %>" alt="back">
+                    <% if(existShop[i] == 0) { %>
                     <div class="caption">
-                        <h5 class="shop-create-btn-<%= shopListMainData[i].SHOP_ID %>" onclick="createMyStamp('<%= shopListMainData[i].SHOP_ID %>');">마이스탬프 생성하기</h5>
+                        <h5 class="shop-create-btn-<%= shopListMainData[i].SHOP_ID %>" onclick="createMyStamp('<%= shopListMainData[i].SHOP_ID %>');">마이스탬프 카드 생성하기</h5>
                     </div>
+                    <% }%>
                 </figure>
             </div>
         </div>

@@ -43,8 +43,32 @@ router.get('/main', function(req, res, next) {
                 res.send('Select shop list main error');
             }else{
                 logger.debug(TAG, 'Select shop list main success : ' + JSON.stringify(shopListMainData));
-                res.status(200);
-                res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', shopListMainData:shopListMainData, webCheck:webCheck});
+                var selectUserShopQuery = 'select SHOP_ID from SB_USER_PUSH_INFO where USER_ID = ' + mysql.escape(userId);
+                connection.query(selectUserShopQuery, function (err, userShopListData) {
+                    if (err) {
+                        logger.error(TAG, "Select shop list main error : " + err);
+                        res.status(400);
+                        res.send('Select shop list main error');
+                    }else{
+                        logger.debug(TAG, 'Select user shop list success : ' + JSON.stringify(userShopListData));
+                        var existShop = [];
+                        var tempShop = [];
+                        for(var i=0; i<userShopListData.length; i++) {
+                            tempShop.push(userShopListData[i].SHOP_ID);
+                        }
+
+                        for(var i=0; i<shopListMainData.length; i++) {
+                            if((tempShop.indexOf(shopListMainData[i].SHOP_ID) > -1)) {
+                                existShop.push(1);
+                            }else {
+                                existShop.push(0);
+                            }
+                        }
+
+                        res.status(200);
+                        res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', shopListMainData:shopListMainData, existShop:existShop, webCheck:webCheck});
+                    }
+                });
             }
             connection.release();
         });
@@ -88,8 +112,32 @@ router.post('/main', function(req, res, next) {
                 res.send('Select shop list main error');
             }else{
                 logger.debug(TAG, 'Select shop list main success : ' + JSON.stringify(shopListMainData));
-                res.status(200);
-                res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', shopListMainData:shopListMainData, webCheck:webCheck});
+                var selectUserShopQuery = 'select SHOP_ID from SB_USER_PUSH_INFO where USER_ID = ' + mysql.escape(userId);
+                connection.query(selectUserShopQuery, function (err, userShopListData) {
+                    if (err) {
+                        logger.error(TAG, "Select shop list main error : " + err);
+                        res.status(400);
+                        res.send('Select shop list main error');
+                    }else{
+                        logger.debug(TAG, 'Select user shop list success : ' + JSON.stringify(userShopListData));
+                        var existShop = [];
+                        var tempShop = [];
+                        for(var i=0; i<userShopListData.length; i++) {
+                            tempShop.push(userShopListData[i].SHOP_ID);
+                        }
+
+                        for(var i=0; i<shopListMainData.length; i++) {
+                            if((tempShop.indexOf(shopListMainData[i].SHOP_ID) > -1)) {
+                                existShop.push(1);
+                            }else {
+                                existShop.push(0);
+                            }
+                        }
+
+                        res.status(200);
+                        res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', shopListMainData:shopListMainData, existShop:existShop, webCheck:webCheck});
+                    }
+                });
             }
             connection.release();
         });
