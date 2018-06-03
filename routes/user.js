@@ -163,8 +163,8 @@ router.get('/userCreate', function(req, res, next) {
         });
 });
 
-/* POST user info */
-router.post('/userInfo', function(req, res, next) {
+/* POST user info (web) */
+router.post('/userInfoWeb', function(req, res, next) {
     var userNumber = req.headers.user_number;
     var accessToken = req.body.access_token;
     var userEmail = req.body.user_email;
@@ -176,6 +176,39 @@ router.post('/userInfo', function(req, res, next) {
     getConnection(function (err, connection){
         var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS, USER_TYPE) " +
             "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + ")," + termsYn + ", '300') " +
+            "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=300";
+        connection.query(insertUserInfo, function (err, userInfoData) {
+            if (err) {
+                logger.error(TAG, "Insert User Info Error : " + err);
+                res.status(500);
+                throw err;
+            } else {
+                logger.debug(TAG, "Insert User Info Success ### " + JSON.stringify(userInfoData));
+                var userInfo = {
+                    user_email : userEmail
+                }
+                req.session.userInfo = userInfo;
+                res.status(200);
+                res.send({result:'success'});
+            }
+        });
+        connection.release();
+    });
+});
+
+/* POST user info */
+router.post('/userInfo', function(req, res, next) {
+    var userId = req.headers.user_id;
+    var accessToken = req.body.access_token;
+    var userEmail = req.body.user_email;
+    var userPassword = req.body.user_password;
+    var termsYn = req.body.terms_yn;
+    var currentLat = req.body.current_lat;
+    var currentLng = req.body.current_lng;
+
+    getConnection(function (err, connection){
+        var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS, USER_TYPE) " +
+            "values(" + mysql.escape(userId) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + ")," + termsYn + ", '300') " +
             "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=300";
         connection.query(insertUserInfo, function (err, userInfoData) {
             if (err) {
