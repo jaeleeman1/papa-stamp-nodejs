@@ -33,6 +33,14 @@
 }
 
 /* SB-SHOP-00001 stamp image */
+.shop-create-btn-SB-SHOP-00001 {
+    width: 30%;
+    font-size: 0.8em;
+    border: 2px solid mediumvioletred;
+    padding: 6px;
+    margin-top: 5px;
+}
+
 .stamp-img-SB-SHOP-00001{
     width: 45px;
     margin-left: 10px;

@@ -124,7 +124,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li class="">
               <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <img src="images/img.jpg" alt=""><%= userEmail %>
+                <img src="/images/shop-stamp/<%= shopIcon %>" alt=""><%= userEmail %>
                 <span class=" fa fa-angle-down"></span>
               </a>
               <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -296,10 +296,10 @@
     });
 </script>
 <script>
-    $(document).ready(function() {
+    /*$(document).ready(function() {
         var pushCountView = document.getElementById('push-count');
         pushCountView.innerHTML = 0;
-    });
+    });*/
 
     function mainView() {
         document.menuAction.action = '/admin/v1/signin/initPage';
@@ -340,7 +340,10 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                alert($('#user-data').length);
+                $.toast.config.align = 'center';
+                $.toast.config.width = 500;
+                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 발급</h4>이 완료되었습니다.</span>', {type: 'success', sticky: true});
+
                 if($('#user-data').length > 0) {
                     var userHisData = document.getElementById('user-data');
                     var appendData = '';
@@ -465,6 +468,10 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
+                $.toast.config.align = 'center';
+                $.toast.config.width = 500;
+                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 발급</h4>이 완료되었습니다.</span>', {type: 'success', sticky: true});
+
                 if($('#user-data').length > 0) {
                     var userHisData = document.getElementById('user-data');
                     var couponLength = document.getElementById('coupon-length');

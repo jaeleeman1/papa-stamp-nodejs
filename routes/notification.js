@@ -9,7 +9,7 @@ var path = require('path');
 var FCM = require('fcm-push');
 var crypto = require( "crypto" );
 var https = require("https");
-var credential = 'Basic '+new Buffer('Papastamp:'+config.smsKey).toString('base64');
+var credential = 'Basic '+new Buffer('Papa-stamp:'+config.smsKey).toString('base64');
 
 const TAG = '[NOTIFICATION INFO] ';
 

@@ -204,6 +204,16 @@ figure .base-img{
     transform-origin: bottom center;
 }
 
+.cards figure .caption {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+    backface-visibility: hidden;
+}
+
 .my-card-list figure .caption {
     position: absolute;
     top: 0;

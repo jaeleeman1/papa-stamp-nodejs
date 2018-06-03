@@ -368,6 +368,41 @@ router.post('/update-stamp-admin', function(req, res, next) {
     });
 });
 
+//Insert Card Data
+router.put('/insertCard', function(req, res, next) {
+    logger.info(TAG, 'Insert card data');
+
+    var userId = req.headers.user_id;
+    var shopId = req.body.shop_id;
+
+    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'Shop ID : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid parameter');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    //Card Data API
+    getConnection(function (err, connection) {
+        var insertPushInfo = 'insert into SB_USER_PUSH_INFO (USER_ID, SHOP_ID, USER_STAMP) value ' +
+            '('+mysql.escape(userId)+','+mysql.escape(shopId)+', 0) on duplicate key update DEL_YN = "N"';
+        connection.query(insertPushInfo, function (err, insertPushInfoData) {
+            if (err) {
+                logger.error(TAG, "DB insertPushInfo error : " + err);
+                res.status(400);
+                res.send('Insert push info error');
+            }else{
+                logger.debug(TAG, 'Insert push info success');
+                res.send({result: 'success'});
+            }
+            connection.release();
+        });
+    });
+});
+
 //Put Card Data
 router.put('/deleteCard', function(req, res, next) {
     logger.info(TAG, 'Delete card data');

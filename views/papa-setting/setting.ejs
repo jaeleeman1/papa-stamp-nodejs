@@ -758,7 +758,7 @@
         if(loginEmail.length > 0 && loginPassword.length > 0 ) {
             var headers = {};
             headers["user_id"] = userId;
-            var dataString = {'user_email': loginEmail, 'user_password': loginPassword};
+            var dataString = {'login_email': loginEmail, 'login_password': loginPassword};
             $.ajax({
                 url: $("#url").val() + '/user/v1/userLogin',
                 type: 'POST',
@@ -766,12 +766,17 @@
                 dataType: 'json',
                 data : dataString,
                 success: function(data) {
-                    if(data.userEmailCheck == '1') {
-                        if(data.userPwCheck == '1') {
+                    if(data.loginEmailCheck == '1') {
+                        if(data.loginPwCheck == '1') {
                             if(window.Bridge) {
                                 window.Bridge.loginActivity();
                             }
-                            location.href = $("#url").val()+'/shop/v1/main?user_id='+ data.userId +'&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                            $("#user_id").val(data.userId);
+                            $("#current_lat").val('37.65067382324312');
+                            $("#current_lng").val('126.88702399396053');
+                            document.footerAction.method = 'post';
+                            document.footerAction.action = '/shop/v1/main';
+                            document.footerAction.submit();
                         }else {
                             $.toast.config.width = 225;
                             $.toast('<h4>비밀번호</h4>를 확인하세요.!!', {type: 'danger', duration: 3000});
@@ -805,7 +810,10 @@
                     if(window.Bridge) {
                         window.Bridge.logoutActivity();
                     }
-                    location.href = $("#url").val()+'/shop/v1/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                    $("#user_id").val('');
+                    document.footerAction.method = 'post';
+                    document.footerAction.action = '/shop/v1/main';
+                    document.footerAction.submit();
                 },
                 "아니오": function () {
                     $(this).dialog('close');
