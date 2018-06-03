@@ -53,7 +53,7 @@
         var headers = {};
         headers["user_id"] = userId;
 
-        if(user_id.length > 0) {
+        if(userId.length > 0) {
             $.ajax({
                 url: $("#url").val() + '/stamp/v1/insertCard',
                 type: 'PUT',

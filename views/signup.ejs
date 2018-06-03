@@ -153,8 +153,8 @@
                 $.ajax({
                     url: $("#url").val() + '/user/v1/userCheck',
                     type: 'POST',
-                    traditional: true,
-                    data: JSON.parse(signupInfo),
+                    dataType: 'json',
+                    data: signupInfo,
                     success: function (data) {
                         if (data.signupPhoneNumberCheck == '1') {
                             $.toast('<h4>존재하는 폰번호</h4>입니다!.', {type: 'danger', duration: 3000});
@@ -203,15 +203,21 @@
         var userNumber = $("#phone_number").val();
         var signupEmail = $('#signup_email').val();
         var signupPassword = $('#signup_password').val();
+        var termsYn = $('#terms_yn').val();
+        var currentLat = $('#current_lat').val();
+        var currentLng = $('#current_lng').val();
+
         var headers = {};
         headers["user_number"] = userNumber;
         var dataString = {
             'user_email': signupEmail,
             'user_password': signupPassword,
-            'terms_yn': $('#terms_yn').val(),
-            'current_lat': $('#current_lat').val(),
-            'current_lng': $('#current_lng').val()
+            'access_token': '',
+            'terms_yn': '"'+termsYn+'"',
+            'current_lat': currentLat,
+            'current_lng': currentLng
         };
+
         $.ajax({
             url: $("#url").val() + '/user/v1/userInfo',
             type: 'POST',
@@ -242,6 +248,7 @@
         if (authCheckText == "인증번호 확인") {
             var authNum = $("#auth_num").val();
             var authCode = $("#auth_code").val();
+
             if (authCode == '') {
                 $.toast('<h4>발송된 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
