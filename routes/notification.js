@@ -294,7 +294,7 @@ router.post('/sendsms', function(req, res, next) {
         "content"    : sendMsg + authCode + '] - 파파 스탬프'
     }
 
-    var body = JSON.stringify(data);
+    /*var body = JSON.stringify(data);
 
     var options = {
         host: 'api.bluehouselab.com',
@@ -324,7 +324,7 @@ router.post('/sendsms', function(req, res, next) {
     req.end();
     req.on('error', function(e) {
         console.error(e);
-    });
+    });*/
 
     res.send({result:"success"});
 });
