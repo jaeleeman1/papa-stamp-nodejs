@@ -173,6 +173,14 @@ router.post('/userInfoWeb', function(req, res, next) {
     var currentLat = req.body.current_lat;
     var currentLng = req.body.current_lng;
 
+    logger.debug(TAG, 'User Number : ' + userNumber);
+    logger.debug(TAG, 'Access Token : ' + accessToken);
+    logger.debug(TAG, 'User Email : ' + userEmail);
+    logger.debug(TAG, 'User Password : ' + userPassword);
+    logger.debug(TAG, 'Terms YN : ' + termsYn);
+    logger.debug(TAG, 'Current Lat : ' + currentLat);
+    logger.debug(TAG, 'Current Lng : ' + currentLng);
+
     getConnection(function (err, connection){
         var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS, USER_TYPE) " +
             "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + ")," + termsYn + ", '300') " +
@@ -205,6 +213,14 @@ router.post('/userInfo', function(req, res, next) {
     var termsYn = req.body.terms_yn;
     var currentLat = req.body.current_lat;
     var currentLng = req.body.current_lng;
+
+    logger.debug(TAG, 'User ID : ' + userId);
+    logger.debug(TAG, 'Access Token : ' + accessToken);
+    logger.debug(TAG, 'User Email : ' + userEmail);
+    logger.debug(TAG, 'User Password : ' + userPassword);
+    logger.debug(TAG, 'Terms YN : ' + termsYn);
+    logger.debug(TAG, 'Current Lat : ' + currentLat);
+    logger.debug(TAG, 'Current Lng : ' + currentLng);
 
     getConnection(function (err, connection){
         var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS, USER_TYPE) " +
