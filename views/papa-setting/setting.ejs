@@ -707,7 +707,7 @@
 
     function changeUserInfo() {
         if($('#web_check').val() == 'false') {
-            $.toast.config.align = 'center';
+            $.toast.config.align = 'left';
             $.toast.config.width = 200;
             $.toast('<h4>앱에서만</h4> 수정 가능합니다.', {type: 'info', duration: 3000 });
         }else {

@@ -280,7 +280,7 @@ router.post('/sendsms', function(req, res, next) {
     logger.debug(TAG, 'Send Type : ' + sendType);
     logger.debug(TAG, 'Auth Code : ' + authCode);
 
-    var sendMsg = '';
+    /*var sendMsg = '';
 
     if(sendType == 'signup') {
         sendMsg = '가입 인증번호는 ['
@@ -324,7 +324,7 @@ router.post('/sendsms', function(req, res, next) {
     req.end();
     req.on('error', function(e) {
         console.error(e);
-    });
+    });*/
 
     res.send({result:"success"});
 });

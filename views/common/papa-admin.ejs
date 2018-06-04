@@ -189,7 +189,7 @@
     <label style="margin-bottom: 30px;" for="terms">적립된 쿠폰을 사용하시겠습니까?</label><br/>
     <div id="user-coupon-data" style="float:left;margin-left:20px;width: 85%;">
       <div style="margin-bottom:50px;">
-        <input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="' + data.selectCouponData[i].COUPON_NUMBER + '" checked="checked">
+        <input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="" checked="checked">
         <h5 style="padding-top:16px;" class="confirm-coupon-number" id="confirm-user-coupon-number"></h5>
         </input>
       </div>
@@ -205,7 +205,7 @@
     <label style="margin-bottom: 30px;" for="terms">적립된 쿠폰을 사용하시겠습니까?</label><br/>
     <div id="admin-coupon-list" style="float:left;margin-left:20px;width: 85%;">
       <div style="margin-bottom:50px;">
-        <input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="' + data.selectCouponData[i].COUPON_NUMBER + '" checked="checked">
+        <input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="" checked="checked">
           <h5 style="padding-top:16px;" class="confirm-coupon-number" id="confirm-coupon-number"></h5>
         </input>
         </div>
@@ -340,9 +340,9 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                $.toast.config.align = 'center';
-                $.toast.config.width = 500;
-                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 발급</h4>이 완료되었습니다.</span>', {type: 'success', sticky: true});
+                $.toast.config.align = 'left';
+                $.toast.config.width = 600;
+                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">스탬프 적립</h4>이 완료되었습니다.</span>', {type: 'success', duration: 3000 });
 
                 if($('#user-data').length > 0) {
                     var userHisData = document.getElementById('user-data');
@@ -394,8 +394,8 @@
                 if (data.result == "success") {
                     $("#phone-text").val('');
                     $('#phone-text').focus();
-                    $.toast.config.align = 'center';
-                    $.toast.config.width = 500;
+                    $.toast.config.align = 'left';
+                    $.toast.config.width = 600;
                     $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">스탬프 적립</h4>이 완료되었습니다.!!!.</span>', { type: 'info', duration: 3000 });
                     var visitRateCnt = data.stampCnt % 10;
                     var sumStamp = Number(visitRateCnt) + Number(stampNumber);
@@ -411,8 +411,8 @@
                             dataType: 'json',
                             data: dataString,
                             success: function (data) {
-                                $.toast.config.align = 'center';
-                                $.toast.config.width = 500;
+                                $.toast.config.align = 'left';
+                                $.toast.config.width = 600;
                                 $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 발급</h4>이 완료되었습니다.</span>', {type: 'success', sticky: true});
                             },
                             error: function (request, status, error) {
@@ -468,9 +468,9 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                $.toast.config.align = 'center';
-                $.toast.config.width = 500;
-                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 발급</h4>이 완료되었습니다.</span>', {type: 'success', sticky: true});
+                $.toast.config.align = 'left';
+                $.toast.config.width = 600;
+                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 사용</h4>이 완료되었습니다.</span>', {type: 'success', duration: 3000});
 
                 if($('#user-data').length > 0) {
                     var userHisData = document.getElementById('user-data');

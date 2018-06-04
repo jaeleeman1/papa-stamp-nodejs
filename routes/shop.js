@@ -43,7 +43,7 @@ router.get('/main', function(req, res, next) {
                 res.send('Select shop list main error');
             }else{
                 logger.debug(TAG, 'Select shop list main success : ' + JSON.stringify(shopListMainData));
-                var selectUserShopQuery = 'select SHOP_ID from SB_USER_PUSH_INFO where USER_ID = ' + mysql.escape(userId);
+                var selectUserShopQuery = 'select SHOP_ID from SB_USER_PUSH_INFO where USER_ID = ' + mysql.escape(userId) +' and DEL_YN = "N"';
                 connection.query(selectUserShopQuery, function (err, userShopListData) {
                     if (err) {
                         logger.error(TAG, "Select shop list main error : " + err);
@@ -112,7 +112,7 @@ router.post('/main', function(req, res, next) {
                 res.send('Select shop list main error');
             }else{
                 logger.debug(TAG, 'Select shop list main success : ' + JSON.stringify(shopListMainData));
-                var selectUserShopQuery = 'select SHOP_ID from SB_USER_PUSH_INFO where USER_ID = ' + mysql.escape(userId);
+                var selectUserShopQuery = 'select SHOP_ID from SB_USER_PUSH_INFO where USER_ID = ' + mysql.escape(userId) +' and DEL_YN = "N"';
                 connection.query(selectUserShopQuery, function (err, userShopListData) {
                     if (err) {
                         logger.error(TAG, "Select shop list main error : " + err);

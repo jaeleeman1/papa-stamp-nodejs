@@ -244,7 +244,7 @@
                 popupCardData.innerHTML = appendData;
 
                 if(stampCount != stampLength) {
-                    $.toast.config.align = 'center';
+                    $.toast.config.align = 'left';
                     $.toast.config.width = 200;
                     $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
                 }
@@ -252,7 +252,7 @@
                 $('#stamp-request').unbind('click');
                 $("#stamp-request").bind('click', function() {
                     if($('#web_check').val() == 'true') {
-                        $.toast.config.align = 'center';
+                        $.toast.config.align = 'left';
                         $.toast.config.width = 200;
                         $.toast('<h4>앱에서만</h4> 사용 가능합니다.', {type: 'info', duration: 3000 });
                     }else {
@@ -305,7 +305,7 @@
                 var stampLength = data.stampDateList.length % 10;
 
                 if(stampCount != stampLength) {
-                    $.toast.config.align = 'center';
+                    $.toast.config.align = 'left';
                     $.toast.config.width = 200;
                     $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
                 }
@@ -389,7 +389,7 @@
                                     $("#" + shopId).find($(".img-repeat-" + shopId)).empty();
                                     $("#popup-card").find($(".img-repeat-" + shopId)).empty();
                                     //Toast Success Message
-                                    $.toast.config.align = 'center';
+                                    $.toast.config.align = 'left';
                                     $.toast.config.width = 200;
                                     $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', {type: 'success', sticky: true});
 
@@ -437,16 +437,17 @@
             }
         }
 
-        function viewStamp(viewtStampNumberr) {
+        function viewStamp(viewtStampNumber) {
             var appendStamp = '';
-            for (var i = 0; i < viewtStampNumberr; i++) {
+            for (var i = 0; i < viewtStampNumber; i++) {
                 appendStamp += '<div class="stamp-icon-' + shopId + '">' +
                     '<img class="stamp-img-' + shopId + '" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
                     '</div>';
             }
             $("#" + shopId).find($(".img-repeat-" + shopId)).append(appendStamp);
+            $("#select-" + shopId).find($(".img-repeat-" + shopId)).append(appendStamp);
 
-            for (var j = 0; j < viewtStampNumberr; j++) {
+            for (var j = 0; j < viewtStampNumber; j++) {
                 (function (delayTime) {
                     setTimeout(function () {
                         $("#layerCardPopup").find($(".img-repeat-" + shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
@@ -620,7 +621,7 @@
 
                         var appendId = $('#common-template');
                         var appendData = '<ul class="my-card-list" id="select-card">' +
-                            '<li class="my-card-shop" id="'+ shopData.SHOP_ID +'">'+
+                            '<li class="my-card-shop" id="select-'+ shopData.SHOP_ID +'">'+
                             '<div class="my-container">' +
                             '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopData.SHOP_ID +'\', \''+ shopData.SHOP_FRONT_IMG +'\', \''+ shopData.SHOP_STAMP_IMG +'\')">' +
                             '<figure class="front">' +

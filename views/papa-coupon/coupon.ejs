@@ -146,12 +146,7 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                $.toast.config.align = 'center';
-                $.toast.config.width = 260;
-                $.toast('<h4>사용한 쿠폰 삭제</h4>가 완료 되었습니다.', {type: 'info', duration: 3000 });
-                setTimeout(function () {
-                    location.reload();
-                }, 3000);
+                location.reload();
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -180,7 +175,7 @@
     }
 
     function webCheckCoupon() {
-        $.toast.config.align = 'center';
+        $.toast.config.align = 'left';
         $.toast.config.width = 200;
         $.toast('<h4>앱에서만</h4> 사용 가능합니다.', {type: 'info', duration: 3000 });
     }
@@ -200,7 +195,6 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                $("#shop_id").val('');
                 console.log(data.resultData);
             },
             error: function(request, status, error) {

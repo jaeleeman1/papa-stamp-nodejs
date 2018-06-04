@@ -154,7 +154,7 @@
 
                         tabletNumber = $("#phone-text").val();
                         if(tabletNumber.length < 13) {
-                            $.toast.config.align = 'center';
+                            $.toast.config.align = 'left';
                             $.toast.config.width = 470;
                             $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">올바른 번호</h4>를 입력하세요!!.</span>', { type: 'danger', duration: 3000 });
                         }else {
@@ -189,7 +189,7 @@
                         tabletNumber = $("#phone-text").val();
 
                         if (tabletNumber.length < 13) {
-                            $.toast.config.align = 'center';
+                            $.toast.config.align = 'left';
                             $.toast.config.width = 470;
                             $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">올바른 번호</h4>를 입력하세요!!.</span>', {
                                 type: 'danger',
@@ -215,7 +215,7 @@
                                 couponList.innerHTML = appendData;
                                 adminUseCoupon(inputData);
                             } else {
-                                $.toast.config.align = 'center';
+                                $.toast.config.align = 'left';
                                 $.toast.config.width = 430;
                                 $.toast('<span style="font-size:1.8em;">사용 가능한 <h4 style="font-size:2em;">쿠폰</h4>이 없습니다.!</span>', {
                                     type: 'success',
@@ -347,9 +347,9 @@
                 dataType: 'json',
                 data: dataString,
                 success: function (data) {
-                    $.toast.config.align = 'center';
+                    $.toast.config.align = 'left';
                     $.toast.config.width = 600;
-                    $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰</h4> 사용이 완료되었습니다.</span>', {type: 'success', sticky: true});
+                    $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰</h4> 사용이 완료되었습니다.</span>', {type: 'success', duration: 3000 });
                     $("#phone-text").val('');
                 },
                 error: function (request, status, error) {
@@ -369,7 +369,7 @@
                 buttons: {
                     "확인": function () {
                         $(this).dialog('close');
-                        authNumberSendsms();
+                        authNumberSendsms(userId);
                     },
                     "취소": function () {
                         $(this).dialog('close');
@@ -378,7 +378,7 @@
             });
         }
 
-        function authNumberSendsms() {
+        function authNumberSendsms(userId) {
             var randNum = Math.floor(Math.random() * 1000000) + 100000;
             if (randNum > 1000000) {
                 randNum = randNum - 100000;
@@ -397,7 +397,7 @@
                 data: dataString,
                 success: function (data) {
                     if (data.result == 'success') {
-                        authCodeConfirm();
+                        authCodeConfirm(userId);
                         $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
                     }
                 },
@@ -409,7 +409,7 @@
             });
         }
 
-        function authCodeConfirm() {
+        function authCodeConfirm(userId) {
             $("#auth-code-confirm").dialog({
                 resizable: false,
                 modal: true,

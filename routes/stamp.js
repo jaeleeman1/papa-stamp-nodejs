@@ -432,8 +432,8 @@ router.put('/deleteCard', function(req, res, next) {
             }else{
                 logger.debug(TAG, 'Delete push info success');
 
-                var deletePushHistory = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" ' +
-                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId) +'limit 10';
+                var deletePushHistory = 'delete from SB_USER_PUSH_HIS ' +
+                    'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId) +' and DEL_YN = "N"';
                 connection.query(deletePushHistory, function (err, DeletePushHisData) {
                     if (err) {
                         logger.error(TAG, "DB deletePushHis error : " + err);

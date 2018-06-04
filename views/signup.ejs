@@ -127,7 +127,7 @@
 
         $('#btn_send').on('click',
             function () {
-                $.toast.config.align = 'center';
+                $.toast.config.align = 'left';
                 $.toast.config.width = 210;
                 var signupEmail = $('#signup_email').val();
                 var signupPassword = $('#signup_password').val();
@@ -241,7 +241,7 @@
     }
 
     function authNumber() {
-        $.toast.config.align = 'center';
+        $.toast.config.align = 'left';
         $.toast.config.width = 300;
         var userNumber = $("#phone_number").val();
         var authCheckText = $("#authButton").text();
