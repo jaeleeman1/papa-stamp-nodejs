@@ -21,7 +21,7 @@ router.get('/main', function(req, res, next) {
     logger.debug(TAG, 'Shop id : ' + shopId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
-    logger.debug(TAG, 'Web check : ' + userId);
+    logger.debug(TAG, 'Web check : ' + webCheck);
 
     if(userId == null || userId == undefined ||
         shopId == null || shopId == undefined ||
@@ -72,7 +72,7 @@ router.post('/main', function(req, res, next) {
     logger.debug(TAG, 'Shop id : ' + shopId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
-    logger.debug(TAG, 'Web check : ' + userId);
+    logger.debug(TAG, 'Web check : ' + webCheck);
 
     if(userId == null || userId == undefined ||
         shopId == null || shopId == undefined ||
@@ -271,30 +271,69 @@ router.get('/selectPopupStampDate', function(req, res) {
     }
 
     getConnection(function (err, connection){
-        var selectStampPushCount = 'select date_format(SUPH.REG_DT, "%y-%m-%d") as REG_DT ' +
-            'from SB_USER_PUSH_HIS as SUPH ' +
-            'where SUPH.USED_YN = "N" and SUPH.DEL_YN = "N" and SUPH.SHOP_ID = '+mysql.escape(shopId)+' and SUPH.USER_ID = '+mysql.escape(userId);
-        connection.query(selectStampPushCount, function (err, stampDateList) {
+        var checkPushUser = 'select exists (select * from SB_USER_PUSH_INFO where USER_ID = '+mysql.escape(userId)+') as PUSH_CHECK'
+        connection.query(checkPushUser, function (err, pushUserDate) {
             if (err) {
-                logger.error(TAG, "Select stamp date error : " + err);
+                logger.error(TAG, "Check push user error : " + err);
                 res.status(400);
-                res.send('Select stamp date error');
+                res.send('Check push user error');
             }else {
-                var selectShopUserQuery = 'select SUPI.USER_STAMP, SSI.SHOP_FRONT_IMG, SSI.SHOP_STAMP_IMG ' +
-                    'from SB_USER_PUSH_INFO as SUPI ' +
-                    'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
-                    'where SUPI.SHOP_ID = ' + mysql.escape(shopId) + ' and SUPI.USER_ID = ' + mysql.escape(userId) +' and SUPI.DEL_YN = "N"';
-                connection.query(selectShopUserQuery, function (err, shopUserData) {
-                    if (err) {
-                        logger.error(TAG, "Select available coupon error : " + err);
-                        res.status(400);
-                        res.send('Select available coupon error');
-                    } else {
-                        logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(shopUserData));
-                        res.status(200);
-                        res.send({stampDateList: stampDateList, shopUserData: shopUserData[0]});
-                    }
-                });
+                if(pushUserDate[0].PUSH_CHECK == '1') {
+                    var selectStampPushCount = 'select date_format(SUPH.REG_DT, "%y-%m-%d") as REG_DT ' +
+                        'from SB_USER_PUSH_HIS as SUPH ' +
+                        'where SUPH.USED_YN = "N" and SUPH.DEL_YN = "N" and SUPH.SHOP_ID = '+mysql.escape(shopId)+' and SUPH.USER_ID = '+mysql.escape(userId);
+                    connection.query(selectStampPushCount, function (err, stampDateList) {
+                        if (err) {
+                            logger.error(TAG, "Select stamp date error : " + err);
+                            res.status(400);
+                            res.send('Select stamp date error');
+                        }else {
+                            logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(stampDateList));
+                            var selectShopUserQuery = 'select SUPI.USER_STAMP, SSI.SHOP_FRONT_IMG, SSI.SHOP_STAMP_IMG ' +
+                                'from SB_USER_PUSH_INFO as SUPI ' +
+                                'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SUPI.SHOP_ID ' +
+                                'where SUPI.SHOP_ID = ' + mysql.escape(shopId) + ' and SUPI.USER_ID = ' + mysql.escape(userId) + ' and SUPI.DEL_YN = "N"';
+                            connection.query(selectShopUserQuery, function (err, shopUserData) {
+                                if (err) {
+                                    logger.error(TAG, "Select available coupon error : " + err);
+                                    res.status(400);
+                                    res.send('Select available coupon error');
+                                } else {
+                                    logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(shopUserData));
+                                    res.status(200);
+                                    res.send({stampDateList: stampDateList, shopUserData: shopUserData[0]});
+                                }
+                            });
+                        }
+                    });
+                }else {
+                    var insertUserPushInfo = 'insert into SB_USER_PUSH_INFO (SHOP_ID, USER_ID) ' +
+                        'values('+mysql.escape(shopId) + "," + mysql.escape(userId)+') ' +
+                        'on duplicate key update DEL_YN="N", USER_STAMP = 0';
+                    connection.query(insertUserPushInfo, function (err, insertUserPushInfoDate) {
+                        if (err) {
+                            logger.error(TAG, "Insert user push info error : " + err);
+                            res.status(400);
+                            res.send('Insert user push info error');
+                        }else {
+                            logger.debug(TAG, 'Insert user push info success');
+                            var selectShopUserQuery = 'select SSI.SHOP_FRONT_IMG, SSI.SHOP_STAMP_IMG, 0 as USER_STAMP'
+                                'from SB_SHOP_INFO as SSI ' +
+                                'where SSI.SHOP_ID = ' + mysql.escape(shopId);
+                            connection.query(selectShopUserQuery, function (err, shopUserData) {
+                                if (err) {
+                                    logger.error(TAG, "Select available coupon error : " + err);
+                                    res.status(400);
+                                    res.send('Select available coupon error');
+                                } else {
+                                    logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(shopUserData));
+                                    res.status(200);
+                                    res.send({stampDateList: stampDateList, shopUserData: shopUserData[0]});
+                                }
+                            });
+                        }
+                    });
+                }
             }
             connection.release();
         });

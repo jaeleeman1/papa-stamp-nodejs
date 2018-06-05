@@ -19,7 +19,7 @@ router.get('/main', function(req, res, next) {
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
-    logger.debug(TAG, 'Web check : ' + userId);
+    logger.debug(TAG, 'Web check : ' + webCheck);
 
     if(userId == null || userId == undefined ||
         currentLat == null || currentLat == undefined ||

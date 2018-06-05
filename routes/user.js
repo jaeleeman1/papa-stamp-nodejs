@@ -182,7 +182,7 @@ router.post('/userInfoWeb', function(req, res, next) {
     logger.debug(TAG, 'Current Lng : ' + currentLng);
 
     getConnection(function (err, connection){
-        var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS, USER_TYPE) " +
+        var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS_YN, USER_TYPE) " +
             "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + ")," + termsYn + ", '300') " +
             "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", USER_TYPE=300";
         connection.query(insertUserInfo, function (err, userInfoData) {
@@ -518,27 +518,18 @@ router.post('/userCheck', function(req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectUserNumberQuery = 'select exists (select * from SB_USER_INFO where USER_TYPE="300" and USER_ID = ' + mysql.escape(encryptUid(userNumber)) + ') as USER_NUMBER_CHECK';
-        connection.query(selectUserNumberQuery, function (err, userNumberCheckData) {
+        var checkUserNumberEmailQuery = 'select count(*) as EMAIL_CHECK, (select exists (select * from SB_USER_INFO where USER_TYPE="300" and USER_ID = ' + mysql.escape(encryptUid(userNumber)) + ')) as USER_NUMBER_CHECK' +
+            " from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail);
+        connection.query(checkUserNumberEmailQuery, function (err, userNumberEmailCheckData) {
             if (err) {
                 logger.error(TAG, "Select user number check error : " + err);
             }else{
-                logger.debug(TAG, 'Check user number success : ' + JSON.stringify(userNumberCheckData));
-                var selectEmailCheckQuery = "select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail) + ") as EMAIL_CHECK";
-                connection.query(selectEmailCheckQuery, function (err, userEmailCheck) {
-                    if (err) {
-                        logger.error(TAG, "DB selectLoginQuery error : " + err);
-                        res.status(400);
-                        res.send('User sign in error');
-                    } else {
-                        logger.debug(TAG, 'Check user number success : ' + JSON.stringify(userEmailCheck));
+                logger.debug(TAG, 'Check user email, number success : ' + JSON.stringify(userNumberEmailCheckData));
 
-                        var userNumberCheck = userNumberCheckData[0].USER_NUMBER_CHECK;
-                        var userEmailCheck = userEmailCheck[0].EMAIL_CHECK;
+                var userNumberCheck = userNumberEmailCheckData[0].USER_NUMBER_CHECK;
+                var userEmailCheck = userNumberEmailCheckData[0].EMAIL_CHECK;
 
-                        res.send({signupPhoneNumberCheck: userNumberCheck, signupEmailCheck:userEmailCheck});
-                    }
-                });
+                res.send({signupPhoneNumberCheck: userNumberCheck, signupEmailCheck:userEmailCheck});
             }
             connection.release();
         });

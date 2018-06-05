@@ -25,6 +25,7 @@ router.get('/main', function(req, res, next) {
     var webCheck = req.query.web_check;
 
     logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Web check : ' + webCheck);
 
     if(userId == null || userId == undefined) {
         logger.debug(TAG, 'Invalid user id parameter error');
@@ -64,6 +65,7 @@ router.post('/main', function(req, res, next) {
     var webCheck = req.body.web_check;
 
     logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Web check : ' + webCheck);
 
     if(userId == null || userId == undefined) {
         logger.debug(TAG, 'Invalid user id parameter error');
