@@ -317,18 +317,18 @@ router.get('/selectPopupStampDate', function(req, res) {
                             res.send('Insert user push info error');
                         }else {
                             logger.debug(TAG, 'Insert user push info success');
-                            var selectShopUserQuery = 'select SSI.SHOP_FRONT_IMG, SSI.SHOP_STAMP_IMG, 0 as USER_STAMP'
-                                'from SB_SHOP_INFO as SSI ' +
-                                'where SSI.SHOP_ID = ' + mysql.escape(shopId);
-                            connection.query(selectShopUserQuery, function (err, shopUserData) {
+                            var selectShopInfoQuery = 'select SHOP_FRONT_IMG, SHOP_STAMP_IMG, 0 as USER_STAMP'
+                                'from SB_SHOP_INFO ' +
+                                'where SHOP_ID = ' + mysql.escape(shopId);
+                            connection.query(selectShopInfoQuery, function (err, shopInfoData) {
                                 if (err) {
-                                    logger.error(TAG, "Select available coupon error : " + err);
+                                    logger.error(TAG, "Select init shop info error : " + err);
                                     res.status(400);
-                                    res.send('Select available coupon error');
+                                    res.send('Select init shoperror');
                                 } else {
-                                    logger.debug(TAG, 'Select available coupon success : ' + JSON.stringify(shopUserData));
+                                    logger.debug(TAG, 'Select init shop success : ' + JSON.stringify(shopInfoData));
                                     res.status(200);
-                                    res.send({stampDateList: stampDateList, shopUserData: shopUserData[0]});
+                                    res.send({stampDateList: stampDateList, shopUserData: shopInfoData[0]});
                                 }
                             });
                         }
