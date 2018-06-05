@@ -116,7 +116,7 @@ router.post('/userLogin', function(req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectLoginQuery = "select USER_ID, count(*) as PW_CHECK, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(loginEmail) + ")) as EMAIL_CHECK" +
+        var selectLoginQuery = "select USER_ID, TERMS_YN, count(*) as PW_CHECK, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(loginEmail) + ")) as EMAIL_CHECK" +
             " from SB_USER_INFO where USER_TYPE = '300' and USER_EMAIL = "+ mysql.escape(loginEmail) + " and USER_PASSWORD = password(" + mysql.escape(loginPassword) + ")";
         connection.query(selectLoginQuery, function (err, userLogin) {
             if (err) {
@@ -131,7 +131,7 @@ router.post('/userLogin', function(req, res, next) {
                 }
 
                 // req.session.userInfo = userInfo;
-                res.send({userId: userLogin[0].USER_ID, loginEmailCheck: userLogin[0].EMAIL_CHECK, loginPwCheck: userLogin[0].PW_CHECK});
+                res.send({userId:userLogin[0].USER_ID, termsYn:userLogin[0].TERMS_YN ,loginEmailCheck: userLogin[0].EMAIL_CHECK, loginPwCheck: userLogin[0].PW_CHECK});
             }
         });
         connection.release();
