@@ -317,7 +317,7 @@ router.get('/selectPopupStampDate', function(req, res) {
                             res.send('Insert user push info error');
                         }else {
                             logger.debug(TAG, 'Insert user push info success');
-                            var selectShopInfoQuery = 'select SHOP_FRONT_IMG, SHOP_STAMP_IMG, 0 as USER_STAMP '
+                            var selectShopInfoQuery = 'select SHOP_FRONT_IMG, SHOP_STAMP_IMG, 0 as USER_STAMP ' +
                                 'from SB_SHOP_INFO ' +
                                 'where SHOP_ID = ' + mysql.escape(shopId);
                             connection.query(selectShopInfoQuery, function (err, shopInfoData) {
