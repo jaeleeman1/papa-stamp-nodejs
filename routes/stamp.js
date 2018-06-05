@@ -271,7 +271,7 @@ router.get('/selectPopupStampDate', function(req, res) {
     }
 
     getConnection(function (err, connection){
-        var checkPushUser = 'select exists (select * from SB_USER_PUSH_INFO where USER_ID = '+mysql.escape(userId)+') as PUSH_CHECK'
+        var checkPushUser = 'select exists (select * from SB_USER_PUSH_INFO where USER_ID = '+mysql.escape(userId)+' and DEL_YN="N") as PUSH_CHECK'
         connection.query(checkPushUser, function (err, pushUserDate) {
             if (err) {
                 logger.error(TAG, "Check push user error : " + err);
