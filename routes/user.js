@@ -250,7 +250,7 @@ router.put('/accessToken/:access_token', function (req, res, next) {
     logger.info(TAG, 'Update user location');
 
     var userId = req.headers.user_id;
-    var accessToken = req.parms.access_token;
+    var accessToken = req.params.access_token;
 
     logger.debug(TAG, 'User iD : ' + userId);
     logger.debug(TAG, 'Access Token : ' + accessToken);
@@ -268,8 +268,8 @@ router.put('/accessToken/:access_token', function (req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var updateAccessTokenQuery = 'insert into SB_USER_INFO (ACCESS_TOKEN) value ("'+ accessToken +'") ' +
-            'on duplicate key update USER_ID = "'+ userId;
+        var updateAccessTokenQuery = "update SB_USER_INFO set ACCESS_TOKEN = '"+ accessToken +"' "+
+            "where USER_ID = "+ mysql.escape(userId);
         connection.query(updateAccessTokenQuery, function (err, accessTokenData) {
             if (err) {
                 logger.error(TAG, "DB updateUserLocationQuery error : " + err);
