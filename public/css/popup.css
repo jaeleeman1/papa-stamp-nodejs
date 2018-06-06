@@ -128,7 +128,7 @@
 }
 
 .layerSettingPopup .pop_up_body {
-    padding: 10.5px 0 10.5px;
+    padding: 10px 0 10px 0;
 }
 
 .layerSettingPopup .pop_up_body .btn_txt_nor {
@@ -153,7 +153,7 @@
     font-size: 16px;
     text-align: center;
     line-height:32px;
-    margin: 10px 90px 7px;
+    margin: 20px 90px 7px;
     border-radius: 10px;
     padding: 2px;
     font-weight: bold;
@@ -375,6 +375,16 @@
     width: 72%;
     height: 40px;
     font-size: 15px;
+    margin: 1px 5px 5px 1px;
+    color: black;
+    padding-left: 7px;
+}
+
+.text-input-pw-custom {
+    border: 2px solid #bfbfbf;
+    width: 42%;
+    height: 40px;
+    font-size: 13px;
     margin: 1px 5px 5px 1px;
     color: black;
     padding-left: 7px;

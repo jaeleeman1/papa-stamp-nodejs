@@ -1,3 +1,8 @@
+<form name="admin_config" id="admin_config" style="display:none">
+    <input type="hidden" name="user_number" id="user_number" value=""/>
+    <input type="hidden" name="fcm_key" id="fcm_key" value="<%= fcmKey %>"/>
+</form>
+
 <ul class="my-card-list">
     <li class="card-setting">
         <div class="my-container">
@@ -52,9 +57,22 @@
     </li>
 </ul>
 
+<div id="change-password-confirm" class="dialog-confirm">
+    <figure>
+        <div style="margin-top: 15px;">비밀번호를 변경 하시겠습니까?</div>
+    </figure>
+</div>
+
+<div id="new-password-confirm" class="dialog-confirm">
+    <figure>
+        <div style="margin-top: 15px;">입력하신 비밀번호로 변경 하시겠습니까?</div>
+    </figure>
+</div>
+
 <div id="change-phone-number-confirm" class="dialog-confirm">
     <figure>
-        <div style="margin-top: 15px;">핸드폰 번호를 변경 하시겠습니까?</div>
+        <div style="margin-top: 15px;">핸드폰 번호 변경은 <br>관리자의 확인이 필요합니다.<br>
+            핸드폰 번호를 변경 하시겠습니까?</div>
     </figure>
 </div>
 
@@ -86,7 +104,7 @@
             <div class="faq">
                 <div class="user-info-title">이메일</div><input class="text-input" type="text" id="e-mail" name="name">
                 <hr class="setting-line">
-                <div class="user-info-title">비밀번호</div><input class="text-input" type="password" id="e-password" name="name">
+                <div id="change-password"><div class="user-info-title">비밀번호</div><p class="change-ti-custom" id="password-btn" onclick="changePassword();">변경하기</p><input class="text-input-pw-custom" type="password" placeholder="기존 비밀번호 입력" id="e-password" name="name"></div>
                 <hr class="setting-line">
                 <div class="user-info-title">폰 번호</div><p class="change-ti-custom" id="phone-number-btn" onclick="changePhoneNumber();">변경하기</p><input class="text-input-custom" type="text" id="phone-number" name="name" disabled="disabled">
                 <div class="auth-timer" id="ViewTimer"></div>
@@ -95,7 +113,7 @@
                 <hr class="setting-line">
             </div>
         </div>
-        <p class="change-ti" onclick="changeUserInfo();">수정하기</p>
+        <!--<p class="change-ti" onclick="changeUserInfo();">수정하기</p>-->
         <p class="change-ti" onclick="logoutUser();">로그아웃</p>
         <p class="change-ti" onclick="deleteUser();">회원탈퇴</p>
     </div>
@@ -430,14 +448,6 @@
             }
         });
 
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible',
-            'callback': function (response) {
-                // reCAPTCHA solved, allow signInWithPhoneNumber.
-                $("#confirm-number").attr("placeholder", "인증 번호 입력");
-            }
-        });
-
         var time = 500;
         var idx = idx2 = 0;
         var slide_width = $("#slider").width();
@@ -500,19 +510,143 @@
         openLayer(showDivId, popupHeight, 0, browserHeight);
     }
 
+    function changePassword() {
+        if($('#web_check').val() == 'true') {
+            $.toast.config.align = 'left';
+            $.toast.config.width = 200;
+            $.toast('<h4>앱에서만</h4> 수정 가능합니다.', {type: 'info', duration: 3000 });
+            return;
+        }
+
+        var checkPwBtn = $('#password-btn').text();
+        if(checkPwBtn == "변경하기") {
+            var confirmEmail = $('#e-mail').val();
+            var confirmPassword = $('#e-password').val();
+            if(confirmPassword.length > 0) {
+                var dataString = {'login_email':confirmEmail, 'login_password':confirmPassword};
+                $.ajax({
+                    url: $("#url").val() + '/user/v1/userLogin',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: dataString,
+                    success: function (data) {
+                        if (data.loginEmailCheck == '1' && data.loginPwCheck == '1') {
+                            $("#change-password-confirm").dialog({
+                                resizable: false,
+                                modal: true,
+                                title: "비밀번호 변경",
+                                height: 200,
+                                width: '90%',
+                                resizable: false,
+                                buttons: {
+                                    "예": function () {
+                                        $('#password-btn').text("확인");
+                                        $('#e-password').val('');
+                                        $('#e-password').attr('placeholder', '비밀번호 입력');
+                                        var appendPw = $('#change-password');
+                                        var confirmPw = '<div class="user-info-title"></div><input class="text-input-pw-custom" type="password" placeholder="비밀번호 입력 확인" id="e-confirm-password" name="name">';
+                                        appendPw.append(confirmPw);
+                                        $(this).dialog('close');
+                                    },
+                                    "아니오": function () {
+                                        $(this).dialog('close');
+                                    }
+                                }
+                            });
+                        } else {
+                            $.toast.config.width = 250;
+                            $.toast('<h4>올바른 비밀번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
+                        }
+                    }
+                });
+            }else {
+                $.toast.config.width = 200;
+                $.toast('<h4>비밀번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
+            }
+        }else {
+            newPassword();
+        }
+    }
+
+    function newPassword() {
+        var ePassword = $("#e-password").val();
+        var eConfirmPassword = $("#e-confirm-password").val();
+
+        if (ePassword.length > 0 && eConfirmPassword.length > 0) {
+            if (ePassword == eConfirmPassword) {
+                $("#new-password-confirm").dialog({
+                    resizable: false,
+                    modal: true,
+                    title: "내 정보 수정",
+                    height: 200,
+                    width: 360,
+                    resizable: false,
+                    buttons: {
+                        "예": function () {
+                            changePassowrdCallback(ePassword);
+                            $(this).dialog('close');
+                        },
+                        "아니오": function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+            } else {
+                $.toast.config.width = 225;
+                $.toast('올바른 <h4>비밀번호를</h4> 입력하세요.!!', {type: 'danger', duration: 3000});
+            }
+        } else {
+            $.toast.config.width = 225;
+            $.toast('<h4>비밀번호</h4>를 입력하세요.!!', {type: 'danger', duration: 3000});
+        }
+    }
+
+    function changePassowrdCallback(inputPassword) {
+        var userId = $("#user_id").val();
+        var headers = {};
+        headers["user_id"] = userId;
+        var dataString = {'input_password': inputPassword};
+
+        $.ajax({
+            url: $("#url").val() + '/setting/v1/changePassword',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                if(data.result == "success") {
+                    $.toast('<h4>비밀번호</h4> 변경이 완료되었습니다.', { type: 'info', duration: 3000 } );
+                    var newPasswordInput = document.getElementById('change-password');
+                    newPasswordInput.innerHTML = '<div class="user-info-title">비밀번호</div><p class="change-ti-custom" id="password-btn" onclick="changePassword();">변경하기</p><input class="text-input-pw-custom" type="password" placeholder="기존 비밀번호 입력" id="e-password" name="name">'
+                };
+            },
+            error: function(request, status, error) {
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
     function changePhoneNumber() {
+        /*if($('#web_check').val() == 'true') {
+            $.toast.config.align = 'left';
+            $.toast.config.width = 200;
+            $.toast('<h4>앱에서만</h4> 수정 가능합니다.', {type: 'info', duration: 3000 });
+            return;
+        }
+        */
         var userNumber = $('#phone-number').val();
         if(document.getElementById('phone-number').hasAttribute('disabled')) {
             $("#change-phone-number-confirm").dialog({
                 resizable: false,
                 modal: true,
                 title: "핸드폰 번호 변경",
-                height: 200,
+                height: 250,
                 width: '90%',
                 resizable:false,
                 buttons: {
                     "예": function () {
-                        $('#phone-number-btn').html('인증번호 요청');
+                        $('#phone-number-btn').html('변경 요청');
+                        $('#user_number').val(userNumber);
                         $('#phone-number').val('');
                         $('#phone-number').focus();
                         document.getElementById('phone-number').removeAttribute("disabled");
@@ -525,8 +659,8 @@
             });
         }else {
             if (userNumber == '') {
-                $.toast.config.width = 200;
-                $.toast('<h4>핸드폰 번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
+                $.toast.config.width = 240;
+                $.toast('변경할 <h4>핸드폰 번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
                 $('#phone-number').focus();
                 return;
             }
@@ -534,14 +668,15 @@
             if (userNumber.length < 13) {
                 $.toast('<h4>올바른 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
-                var numberString = {'login_number': userNumber};
+                var ePassword = $("#e-password").val();
+                var numberString = {'signup_number': userNumber, 'signup_email': ePassword};
                 $.ajax({
-                    url: $("#url").val() + '/user/v1/numberCheck',
-                    type: 'GET',
+                    url: $("#url").val() + '/user/v1/userCheck',
+                    type: 'POST',
                     dataType: 'json',
                     data : numberString,
                     success: function (data) {
-                        if(data.result == 'exist') {
+                        if(data.signupPhoneNumberCheck == '1') {
                             $.toast('이미 가입된 <h4>사용자 번호</h4> 입니다.', {type: 'info', duration: 3000});
                         }else {
                             var randNum = Math.floor(Math.random() * 1000000)+100000;
@@ -549,28 +684,9 @@
                                 randNum = randNum - 100000;
                             }
                             $("#auth_num").val(randNum);
-                            var dataString = {'user_number': userNumber, 'send_type': 'signup', 'auth_code': randNum};
-                            $.ajax({
-                                url: $("#url").val() + '/notification/v1/sendsms',
-                                type: 'GET',
-                                dataType: 'json',
-                                data : dataString,
-                                success: function (data) {
-                                    if(data.result == 'success') {
-                                        $('#phone-number-btn').html("발송 완료");
-                                        $.toast('<h4>인증 번호</h4>가 발송되었습니다.', {type: 'info', duration: 3000});
 
-                                        TimerStart();
-                                    }
-                                },
-                                error: function(request, status, error) {
-                                    $.toast('<h4>인증 번호</h4>발송이 실패하였습니다.', {type: 'danger', duration: 3000});
-                                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                                    console.log('Error occured');
-                                }
-                            });
+                            changePhoneNumberPush(userNumber, randNum);
                         }
-
                     },
                     error: function(request, status, error) {
                         console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -579,6 +695,50 @@
                 });
             }
         }
+    }
+
+    function changePhoneNumberPush(userNumber, authNum) {
+        var headers = {};
+        headers["user_id"] = '010-0000-0000';
+        var oldNumber = $('#user_number').val();
+        $.ajax({
+            url: $("#url").val() + '/user/v1/accessToken',
+            type: 'GET',
+            headers : headers,
+            dataType: 'json',
+            success: function(data) {
+                if(data.accessToken != null) {
+                    var headers = {};
+                    headers["Authorization"] = $("#fcm_key").val();
+                    var accessToken = data.accessToken;
+                    var dataString = {"to": accessToken,
+                        "data": {"title": " 고객번호 : " + oldNumber+" 변경 요청!", "body": "[변경번호] : "+userNumber+", [인증번호] : " + authNum}};
+                    $.ajax({
+                        url: 'https://fcm.googleapis.com/fcm/send',
+                        type: 'POST',
+                        headers : headers,
+                        contentType : 'application/json',
+                        dataType: 'json',
+                        data: JSON.stringify(dataString),
+                        success: function(data) {
+                            $('#phone-number-btn').html("발송 완료");
+                            TimerStart();
+                            $.toast.config.width = 300;
+                            $.toast('<h4>관리자</h4>가 확인 중입니다. 잠시만 기다리세요~', {type: 'info', duration: 3000});
+                            $('#auth_code').focus();
+                        },
+                        error: function(request, status, error) {
+                            console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                }else {
+                    console.log("fail");
+                }
+            },
+            error: function(request, status, error) {
+                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
     }
 
     function changePhoneNumberConfirm() {
@@ -619,48 +779,6 @@
 
     }
 
-    function authPhoneNumber() {
-        var phoneNumber = $("#phone-number").val()
-
-        if(phoneNumber.length > 0) {
-            var inputPhoneNumber = "+82"+phoneNumber.toString();
-            var appVerifier = window.recaptchaVerifier;
-            firebase.auth().signInWithPhoneNumber(inputPhoneNumber, appVerifier)
-                .then(function (confirmationResult) {
-                    // SMS sent. Prompt user to type the code from the message, then sign the
-                    // user in with confirmationResult.confirm(code).
-                    window.confirmationResult = confirmationResult;
-                    $.toast.config.width = 230;
-                    $.toast('<h4>인증번호</h4>를 확인하세요.!!', { type: 'danger', duration: 3000 } );
-                }).catch(function (error) {
-                $.toast.config.width = 280;
-                $.toast('<h4>로봇인증</h4>을 정상적으로 진행하세요.!!', { type: 'danger', duration: 3000 } );
-                grecaptcha.reset(window.recaptchaWidgetId);
-                // Or, if you haven't stored the widget ID:
-                window.recaptchaVerifier.render().then(function(widgetId) {
-                    grecaptcha.reset(widgetId);
-                });
-                // Error; SMS not sent
-                // ...
-            });
-        }else {
-            $.toast.config.width = 200;
-            $.toast('<h4>휴대폰 번호</h4>를 입력하세요.!!', { type: 'danger', duration: 1500 } );
-        }
-    }
-
-    function authPhoneNumberConfirm() {
-        var code = $("#confirm-number").val().toString();
-        confirmationResult.confirm(code).then(function (result) {
-            // User signed in successfully.
-            $.toast('<h4>사용자 인증</h4>이 완료되었습니다.', { type: 'info', duration: 3000 } );
-            authComplate = true;
-        }).catch(function (error) {
-            $.toast.config.width = 280;
-            $.toast('<h4>사용자 인증</h4>을 정상적으로 진행하세요.!!', { type: 'danger', duration: 3000 } );
-        });
-    }
-
     function loginLayer(showDivId) {
         var browserHeight = $(document).height();
         var popupHeight = browserHeight * 0.17;
@@ -677,77 +795,8 @@
         openLayer(showDivId, popupHeight, 0, browserHeight);
     }
 
-    function changePassowrdCallback(inputPassword) {
-        var userId = $("#user_id").val();
-        var headers = {};
-        headers["user_id"] = userId;
-        var dataString = {'input_password': inputPassword};
-
-        $.ajax({
-            url: $("#url").val() + '/setting/v1/changePassword',
-            type: 'PUT',
-            headers : headers,
-            dataType: 'json',
-            data : dataString,
-            success: function(data) {
-                if(data.result == "success") {
-                    $.toast('<h4>비밀번호</h4> 변경이 완료되었습니다.', { type: 'info', duration: 3000 } );
-                    closeLayer('layerUserInfoPopup');
-                };
-            },
-            error: function(request, status, error) {
-                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-        });
-    }
-
     function changePhoneNumberCallback(inputPassword) {
         $.toast('<h4>핸드폰 번호 변경</h4>이 완료되었습니다.', {type: 'info', duration: 3000 });
-    }
-
-    function changeUserInfo() {
-        if($('#web_check').val() == 'false') {
-            $.toast.config.align = 'left';
-            $.toast.config.width = 200;
-            $.toast('<h4>앱에서만</h4> 수정 가능합니다.', {type: 'info', duration: 3000 });
-        }else {
-            var ePassword = $("#e-password").val();
-            var authCheck = $("#auth_check").val();
-
-            if (ePassword.length > 0) {
-                if (authCheck == "false") {
-                    $.toast.config.width = 225;
-                    $.toast('핸드폰 <h4>인증</h4>을 진행하세요.!!', {type: 'danger', duration: 3000});
-                } else {
-                    var authCheck = $("#auth_check").val();
-                    if (authCheck) {
-                        $("#change-userinfo-confirm").dialog({
-                            resizable: false,
-                            modal: true,
-                            title: "내 정보 수정",
-                            height: 200,
-                            width: 360,
-                            resizable: false,
-                            buttons: {
-                                "예": function () {
-                                    $(this).dialog('close');
-                                    changePhoneNumberCallback();
-                                },
-                                "아니오": function () {
-                                    $(this).dialog('close');
-                                }
-                            }
-                        });
-                    } else {
-                        $.toast.config.width = 225;
-                        $.toast('올바른 <h4>인증번호</h4>를 입력하세요.!!', {type: 'danger', duration: 3000});
-                    }
-                }
-            } else {
-                $.toast.config.width = 225;
-                $.toast('<h4>비밀번호</h4>를 입력하세요.!!', {type: 'danger', duration: 3000});
-            }
-        }
     }
 
     function loginUser() {

@@ -255,16 +255,11 @@ router.put('/accessToken/:access_token', function (req, res, next) {
     logger.debug(TAG, 'User iD : ' + userId);
     logger.debug(TAG, 'Access Token : ' + accessToken);
 
-    if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid user id value');
+    if(userId == null || userId == undefined &&
+        accessToken == null || accessToken == undefined) {
+        logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
-        res.send('Invalid user id error');
-    }
-
-    if(accessToken == null || accessToken == undefined) {
-        logger.debug(TAG, 'Invalid access token value');
-        res.status(400);
-        res.send('Invalid access token error');
+        res.send('Invalid parameter error');
     }
 
     getConnection(function (err, connection){

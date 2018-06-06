@@ -45,9 +45,9 @@ figure.back,
 }
 
 .card-img {
-    width: 340px;
+    width: 332px;
     position: relative;
-    height: 222px;
+    height: 216px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;
@@ -135,10 +135,10 @@ figure .papa-base-img{
 }
 
 .my-card-shop {
-    width: 340px;
+    width: 332px;
     background: #ffffff;
     position: relative;
-    height: 222px;
+    height: 216px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;
@@ -153,8 +153,8 @@ figure .papa-base-img{
 }
 
 .my-container, figure {
-    width: 320px;
-    height: 200px;
+    width: 312px;
+    height: 195px;
 }
 
 .my-card {
@@ -192,10 +192,10 @@ figure .base-img{
 
 /* Coupon */
 .my-card-coupon {
-    width: 340px;
+    width: 332px;
     background: #407ded;
     position: relative;
-    height: 222px;
+    height: 216px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;
@@ -241,10 +241,10 @@ figure .base-img{
 
 /* Event */
 .card-event {
-    width: 340px;
+    width: 322px;
     background: #000000;
     position: relative;
-    height: 222px;
+    height: 216px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;
@@ -255,10 +255,10 @@ figure .base-img{
 
 /* Setting */
 .card-setting {
-    width: 340px;
+    width: 332px;
     background: #848484;
     position: relative;
-    height: 222px;
+    height: 216px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;

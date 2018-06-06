@@ -44,7 +44,7 @@ router.get('/main', function(req, res, next) {
                 }else{
                     logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
                     res.status(200);
-                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, userNumber:decryptUid(userId) , shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
+                    res.render('common/papa-stamp', {view:'setting', url:config.url, fcmKey:config.fcmKey, userId:userId, userNumber:decryptUid(userId) , shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
                 }
                 connection.release();
             });
@@ -52,7 +52,7 @@ router.get('/main', function(req, res, next) {
     }else {
         logger.debug(TAG, 'Blank user info success');
         res.status(200);
-        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', userNumber:'로그인 하시기 바랍니다.', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
+        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', fcmKey:config.fcmKey, userNumber:'로그인 하시기 바랍니다.', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
     }
 
 });
@@ -84,7 +84,7 @@ router.post('/main', function(req, res, next) {
                 }else{
                     logger.debug(TAG, 'Select user info success : ' + JSON.stringify(userInfoData));
                     res.status(200);
-                    res.render('common/papa-stamp', {view:'setting', url:config.url, userId:userId, userNumber:decryptUid(userId) , shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
+                    res.render('common/papa-stamp', {view:'setting', url:config.url, fcmKey:config.fcmKey, userId:userId, userNumber:decryptUid(userId) , shopId:'', userInfoData:userInfoData[0], webCheck:webCheck});
                 }
                 connection.release();
             });
@@ -92,7 +92,7 @@ router.post('/main', function(req, res, next) {
     }else {
         logger.debug(TAG, 'Blank user info success');
         res.status(200);
-        res.render('common/papa-stamp', {view:'setting', url:config.url, userId:'', userNumber:'로그인 하시기 바랍니다.', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
+        res.render('common/papa-stamp', {view:'setting', url:config.url, fcmKey:config.fcmKey, userId:'', userNumber:'로그인 하시기 바랍니다.', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
     }
 
 });
@@ -133,25 +133,28 @@ router.put('/changePassword', function(req, res, next) {
     logger.info(TAG, 'Update user password data');
 
     var userId = req.headers.user_id;
+    var newPassword = req.body.input_password;
 
     logger.debug(TAG, 'User id : ' + userId);
 
-    if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid id parameter error');
+    if(userId == null || userId == undefined &&
+        newPassword == null || newPassword == undefined)  {
+        logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
-        res.send('Invalid id parameter error');
+        res.send('Invalid parameter error');
     }
 
     //Update Change Password Data API
     getConnection(function (err, connection) {
-        var selectPasswordQuery = 'select USER_PASSWORD from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
+        var selectPasswordQuery = "update SB_USER_INFO set USER_PASSWORD = password(" + mysql.escape(newPassword) + ") " +
+            "where USER_ID = " + mysql.escape(userId);
         connection.query(selectPasswordQuery, function (err, DeleteCouponData) {
             if (err) {
-                logger.error(TAG, "Select user password error : " + err);
+                logger.error(TAG, "Update user password error : " + err);
                 res.status(400);
-                res.send('Select user password error');
+                res.send('Update user password error');
             }else{
-                logger.debug(TAG, 'Select user password success');
+                logger.debug(TAG, 'Update user password success');
                 res.send({result: 'success'});
             }
             connection.release();
