@@ -29,7 +29,7 @@ figure{
     transition: 0.6s;
     transform-style: preserve-3d;
     box-shadow: 0 1px 5px rgba(0,0,0,0.9);
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 figure.front {
@@ -47,7 +47,7 @@ figure.back,
 .card-img {
     width: 332px;
     position: relative;
-    height: 216px;
+    height: 211px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;
@@ -138,7 +138,7 @@ figure .papa-base-img{
     width: 332px;
     background: #ffffff;
     position: relative;
-    height: 216px;
+    height: 211px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;
@@ -153,8 +153,8 @@ figure .papa-base-img{
 }
 
 .my-container, figure {
-    width: 312px;
-    height: 195px;
+    width: 320px;
+    height: 200px;
 }
 
 .my-card {
@@ -195,7 +195,7 @@ figure .base-img{
     width: 332px;
     background: #407ded;
     position: relative;
-    height: 216px;
+    height: 211px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;
@@ -241,10 +241,10 @@ figure .base-img{
 
 /* Event */
 .card-event {
-    width: 322px;
+    width: 332px;
     background: #000000;
     position: relative;
-    height: 216px;
+    height: 211px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;
@@ -258,7 +258,7 @@ figure .base-img{
     width: 332px;
     background: #848484;
     position: relative;
-    height: 216px;
+    height: 211px;
     margin-bottom: 5vh;
     margin-left: auto;
     margin-right: auto;
