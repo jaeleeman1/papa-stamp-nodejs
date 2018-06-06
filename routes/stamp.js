@@ -328,7 +328,7 @@ router.get('/selectPopupStampDate', function(req, res) {
                                 } else {
                                     logger.debug(TAG, 'Select init shop success : ' + JSON.stringify(shopInfoData));
                                     res.status(200);
-                                    res.send({stampDateList: stampDateList, shopUserData: shopInfoData[0]});
+                                    res.send({stampDateList: [], shopUserData: shopInfoData[0]});
                                 }
                             });
                         }
