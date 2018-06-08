@@ -116,8 +116,8 @@ router.post('/userLogin', function(req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var selectLoginQuery = "select USER_ID, TERMS_YN, count(*) as PW_CHECK, (select exists (select * from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(loginEmail) + ")) as EMAIL_CHECK" +
-            " from SB_USER_INFO where USER_TYPE = '300' and USER_EMAIL = "+ mysql.escape(loginEmail) + " and USER_PASSWORD = password(" + mysql.escape(loginPassword) + ")";
+        var selectLoginQuery = "select USER_ID, TERMS_YN, count(*) as PW_CHECK, (select exists (select * from SB_USER_INFO where DEL_YN='N' and USER_EMAIL = "+ mysql.escape(loginEmail) + ")) as EMAIL_CHECK" +
+            " from SB_USER_INFO where USER_TYPE = '300' and DEL_YN='N' and USER_EMAIL = "+ mysql.escape(loginEmail) + " and USER_PASSWORD = password(" + mysql.escape(loginPassword) + ")";
         connection.query(selectLoginQuery, function (err, userLogin) {
             if (err) {
                 logger.error(TAG, "DB selectLoginQuery error : " + err);
@@ -356,8 +356,8 @@ router.put('/updateLocation', function (req, res, next) {
     });
 });
 
-//Update User Signout
-router.put('/userSignout', function (req, res, next) {
+//Update User Delete
+router.put('/userDelete', function (req, res, next) {
     logger.info(TAG, 'Update user signout');
 
     var userId = req.headers.user_id;

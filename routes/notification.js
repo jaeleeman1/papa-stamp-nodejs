@@ -84,7 +84,7 @@ router.post('/request-stamp', function (req, res, next) {
                             io.sockets.emit(shopId, {type:"request-stamp", sendId: userId, phoneNumber: decryptUid(userId), userStamp: 0, selectCouponData: selectCouponData});
                         }
                         res.status(200);
-                        res.send({resultData: 'request success'});
+                        res.send({result: 'success'});
                     }
                 });
             }
@@ -215,7 +215,7 @@ router.post('/request-coupon', function (req, res, next) {
                             io.sockets.emit(shopId, {type:"request-coupon", sendId: userId, phoneNumber: decryptUid(userId), couponNumber:couponNumber, userStamp: 0, selectCouponData: selectCouponData});
                         }
                         res.status(200);
-                        res.send({resultData: 'request success'});
+                        res.send({result: 'success'});
                     }
                 });
             }

@@ -424,7 +424,8 @@
 
 <script type="text/javascript">
     var tid;
-    var SetTime = 180;
+    var SetTime = 300;
+    $.toast.config.align = 'center';
 
     $(function() {
         var keyNumber = '';
@@ -512,9 +513,8 @@
 
     function changePassword() {
         if($('#web_check').val() == 'true') {
-            $.toast.config.align = 'left';
             $.toast.config.width = 200;
-            $.toast('<h4>앱에서만</h4> 수정 가능합니다.', {type: 'info', duration: 3000 });
+            $.toast('<h3>앱</h3>에서만 수정 가능합니다.', {type: 'info', duration: 3000 });
             return;
         }
 
@@ -522,7 +522,7 @@
         if(checkPwBtn == "변경하기") {
             var confirmEmail = $('#e-mail').val();
             var confirmPassword = $('#e-password').val();
-            if(confirmPassword.length > 0) {
+            if(confirmEmail.length > 0  && confirmPassword.length > 0) {
                 var dataString = {'login_email':confirmEmail, 'login_password':confirmPassword};
                 $.ajax({
                     url: $("#url").val() + '/user/v1/userLogin',
@@ -530,38 +530,48 @@
                     dataType: 'json',
                     data: dataString,
                     success: function (data) {
-                        if (data.loginEmailCheck == '1' && data.loginPwCheck == '1') {
-                            $("#change-password-confirm").dialog({
-                                resizable: false,
-                                modal: true,
-                                title: "비밀번호 변경",
-                                height: 200,
-                                width: '90%',
-                                resizable: false,
-                                buttons: {
-                                    "예": function () {
-                                        $('#password-btn').text("확인");
-                                        $('#e-password').val('');
-                                        $('#e-password').attr('placeholder', '비밀번호 입력');
-                                        var appendPw = $('#change-password');
-                                        var confirmPw = '<div class="user-info-title"></div><input class="text-input-pw-custom" type="password" placeholder="비밀번호 입력 확인" id="e-confirm-password" name="name">';
-                                        appendPw.append(confirmPw);
-                                        $(this).dialog('close');
-                                    },
-                                    "아니오": function () {
-                                        $(this).dialog('close');
+                        if (data.loginEmailCheck == '1') {
+                            if (data.loginPwCheck == '1') {
+                                $("#change-password-confirm").dialog({
+                                    resizable: false,
+                                    modal: true,
+                                    title: "비밀번호 변경",
+                                    height: 200,
+                                    width: '90%',
+                                    resizable: false,
+                                    buttons: {
+                                        "예": function () {
+                                            $('#password-btn').text("확인");
+                                            $('#e-password').val('');
+                                            $('#e-password').attr('placeholder', '비밀번호 입력');
+                                            var appendPw = $('#change-password');
+                                            var confirmPw = '<div class="user-info-title"></div><input class="text-input-pw-custom" type="password" placeholder="비밀번호 입력 확인" id="e-confirm-password" name="name">';
+                                            appendPw.append(confirmPw);
+                                            $(this).dialog('close');
+                                        },
+                                        "아니오": function () {
+                                            $(this).dialog('close');
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            } else {
+                                    $.toast.config.width = 230;
+                                    $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
+                            }
                         } else {
-                            $.toast.config.width = 250;
-                            $.toast('<h4>올바른 비밀번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
+                            if (data.loginPwCheck == '1') {
+                                $.toast.config.width = 220;
+                                $.toast('올바른 <h3>이메일</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
+                            }else {
+                                $.toast.config.width = 230;
+                                $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
+                            }
                         }
                     }
                 });
             }else {
-                $.toast.config.width = 200;
-                $.toast('<h4>비밀번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
+                $.toast.config.width = 240;
+                $.toast('올바른 <h3>회원 정보</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
             }
         }else {
             newPassword();
@@ -592,12 +602,12 @@
                     }
                 });
             } else {
-                $.toast.config.width = 225;
-                $.toast('올바른 <h4>비밀번호를</h4> 입력하세요.!!', {type: 'danger', duration: 3000});
+                $.toast.config.width = 230;
+                $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
             }
         } else {
-            $.toast.config.width = 225;
-            $.toast('<h4>비밀번호</h4>를 입력하세요.!!', {type: 'danger', duration: 3000});
+            $.toast.config.width = 230;
+            $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
         }
     }
 
@@ -615,6 +625,7 @@
             data : dataString,
             success: function(data) {
                 if(data.result == "success") {
+                    $.toast.config.width = 230;
                     $.toast('<h4>비밀번호</h4> 변경이 완료되었습니다.', { type: 'info', duration: 3000 } );
                     var newPasswordInput = document.getElementById('change-password');
                     newPasswordInput.innerHTML = '<div class="user-info-title">비밀번호</div><p class="change-ti-custom" id="password-btn" onclick="changePassword();">변경하기</p><input class="text-input-pw-custom" type="password" placeholder="기존 비밀번호 입력" id="e-password" name="name">'
@@ -628,9 +639,8 @@
 
     function changePhoneNumber() {
         if($('#web_check').val() == 'true') {
-            $.toast.config.align = 'left';
             $.toast.config.width = 200;
-            $.toast('<h4>앱에서만</h4> 수정 가능합니다.', {type: 'info', duration: 3000 });
+            $.toast('<h3>앱</h3>에서만 수정 가능합니다.', {type: 'info', duration: 3000 });
             return;
         }
 
@@ -659,14 +669,15 @@
             });
         }else {
             if (userNumber == '') {
-                $.toast.config.width = 240;
-                $.toast('변경할 <h4>핸드폰 번호</h4>를 입력하세요!!.', {type: 'danger', duration: 3000});
+                $.toast.config.width = 250;
+                $.toast('변경할 <h3>핸드폰 번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
                 $('#phone-number').focus();
                 return;
             }
 
             if (userNumber.length < 13) {
-                $.toast('<h4>올바른 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
+                $.toast.config.width = 210;
+                $.toast('<h3>올바른 번호</h3>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
                 var ePassword = $("#e-password").val();
                 var numberString = {'signup_number': userNumber, 'signup_email': ePassword};
@@ -677,7 +688,8 @@
                     data : numberString,
                     success: function (data) {
                         if(data.signupPhoneNumberCheck == '1') {
-                            $.toast('이미 가입된 <h4>사용자 번호</h4> 입니다.', {type: 'info', duration: 3000});
+                            $.toast.config.width = 240;
+                            $.toast('이미 가입된 <h3>사용자 번호</h3> 입니다.', {type: 'info', duration: 3000});
                         }else {
                             var randNum = Math.floor(Math.random() * 1000000)+100000;
                             if(randNum>1000000){
@@ -723,8 +735,8 @@
                         success: function(data) {
                             $('#phone-number-btn').html("발송 완료");
                             TimerStart();
-                            $.toast.config.width = 300;
-                            $.toast('<h4>관리자</h4>가 확인 중입니다. 잠시만 기다리세요~', {type: 'info', duration: 3000});
+                            $.toast.config.width = 310;
+                            $.toast('<h3>관리자</h3>가 확인 중입니다. 잠시만 기다리세요~', {type: 'info', duration: 3000});
                             $('#auth_code').focus();
                         },
                         error: function(request, status, error) {
@@ -745,7 +757,8 @@
         var authNum = $("#auth_num").val();
         var authCode = $("#auth_code").val();
         if(authCode == '') {
-            $.toast('<h4>발송된 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
+            $.toast.config.width = 210;
+            $.toast('<h3>발송된 번호</h3>를 입력하세요!.</span>', {type: 'danger', duration: 3000});
         } else {
             if(authNum == authCode) {
                 $("#auth_check").val("true");
@@ -753,7 +766,8 @@
                 clearInterval(tid);		// 타이머 해제
                 $("#ViewTimer").html("인증 완료");
             }else {
-                $.toast('<h4>올바른 인증 번호</h4>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
+                $.toast.config.width = 250;
+                $.toast('<h3>올바른 인증 번호</h3>를 입력하세요!.</span>', {type: 'danger', duration: 3000});
             }
         }
     }
@@ -796,7 +810,8 @@
     }
 
     function changePhoneNumberCallback(inputPassword) {
-        $.toast('<h4>핸드폰 번호 변경</h4>이 완료되었습니다.', {type: 'info', duration: 3000 });
+        $.toast.config.width = 270;
+        $.toast('<h3>핸드폰 번호 변경</h3>이 완료되었습니다.', {type: 'info', duration: 3000 });
     }
 
     function loginUser() {
@@ -827,12 +842,17 @@
                             document.footerAction.action = '/shop/v1/main';
                             document.footerAction.submit();
                         }else {
-                            $.toast.config.width = 225;
-                            $.toast('<h4>비밀번호</h4>를 확인하세요.!!', {type: 'danger', duration: 3000});
+                            $.toast.config.width = 230;
+                            $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
                         }
                     }else {
-                        $.toast.config.width = 225;
-                        $.toast('<h4>E-Mail</h4> 정보를 확인하세요.!!', {type: 'danger', duration: 3000});
+                        if(data.loginPwCheck == '1') {
+                            $.toast.config.width = 220;
+                            $.toast('올바른 <h3>이메일</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
+                        }else {
+                            $.toast.config.width = 230;
+                            $.toast('<h3>회원정보</h3>가 존재하지 않습니다.!', {type: 'danger', duration: 3000});
+                        }
                     }
                 },
                 error: function(request, status, error) {
@@ -840,8 +860,8 @@
                 }
             });
         }else {
-            $.toast.config.width = 225;
-            $.toast('<h4>로그인</h4> 정보를 입력하세요.!!', {type: 'danger', duration: 3000});
+            $.toast.config.width = 240;
+            $.toast('올바른 <h3>회원 정보</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
         }
     }
 
@@ -871,12 +891,12 @@
         });
     }
 
-    function userSignout() {
+    function userDelete() {
         var userId = $("#user_id").val();
         var headers = {};
         headers["user_id"] = userId;
         $.ajax({
-            url: $("#url").val() + '/user/v1/userSignout',
+            url: $("#url").val() + '/user/v1/userDelete',
             type: 'PUT',
             headers : headers,
             dataType: 'json',
@@ -885,10 +905,13 @@
                     if(window.Bridge) {
                         window.Bridge.logoutActivity();
                     }
-                    location.href = $("#url").val()+'/shop/v1/main?user_id=&shop_id=&current_lat=37.65067382324312&current_lng=126.88702399396053';
+                    $("#user_id").val('');
+                    document.footerAction.method = 'post';
+                    document.footerAction.action = '/shop/v1/main';
+                    document.footerAction.submit();
                 }else {
-                    $.toast.config.width = 225;
-                    $.toast('<h4>회원 탈퇴</h4>를 다시 하세요.!!', {type: 'danger', duration: 3000});
+                    $.toast.config.width = 220;
+                    $.toast('<h3>회원 탈퇴</h3>에 실패하였습니다.', {type: 'danger', duration: 3000});
                 }
             },
             error: function(request, status, error) {
@@ -907,7 +930,7 @@
             resizable:false,
             buttons: {
                 "예": function () {
-                    userSignout();
+                    userDelete();
                 },
                 "아니오": function () {
                     $(this).dialog('close');

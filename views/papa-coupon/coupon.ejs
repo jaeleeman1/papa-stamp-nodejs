@@ -88,6 +88,8 @@
 </div>
 
 <script type="text/javascript">
+    $.toast.config.align = 'center';
+
     function useCouponCallback(shopId, couponNumber) {
         var dataString = {'shop_id': shopId};
 
@@ -103,6 +105,8 @@
                 }
             },
             error: function(request, status, error) {
+                $.toast.config.width = 250;
+                $.toast('<h3>쿠폰 사용</h3> 요청에 실패 하였습니다.', { type: 'danger', duration: 3000 } );
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
@@ -149,6 +153,8 @@
                 location.reload();
             },
             error: function(request, status, error) {
+                $.toast.config.width = 220;
+                $.toast('<h3>쿠폰 삭제</h3>에 실패 하였습니다.', { type: 'danger', duration: 3000 } );
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
@@ -175,9 +181,8 @@
     }
 
     function webCheckCoupon() {
-        $.toast.config.align = 'left';
         $.toast.config.width = 200;
-        $.toast('<h4>앱에서만</h4> 사용 가능합니다.', {type: 'info', duration: 3000 });
+        $.toast('<h3>앱</h3>에서만 사용 가능합니다.', {type: 'info', duration: 3000 });
     }
 
     function retryCoupon() {
@@ -195,7 +200,10 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                console.log(data.resultData);
+                if(data.result == "success") {
+                    $.toast.config.width = 220;
+                    $.toast('<h3>쿠폰 사용</h3> 재요청 하였습니다.', {type: 'info', duration: 3000 });
+                }
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

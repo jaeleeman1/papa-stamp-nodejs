@@ -20,8 +20,8 @@ router.get('/main', function(req, res, next) {
     logger.debug(TAG, 'Current longitude : ' + currentLng);
     logger.debug(TAG, 'Web check : ' + webCheck);
 
-    if(userId == null || userId == undefined ||
-        currentLat == null || currentLat == undefined ||
+    if(userId == null || userId == undefined &&
+        currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
         logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
@@ -77,7 +77,7 @@ router.get('/main', function(req, res, next) {
 
 //Get Shop Main Page
 router.post('/main', function(req, res, next) {
-    logger.info(TAG, 'Get shop main information');
+    logger.info(TAG, 'Post shop main information');
 
     var userId = req.body.user_id;
     var currentLat = req.body.current_lat;
@@ -89,8 +89,8 @@ router.post('/main', function(req, res, next) {
     logger.debug(TAG, 'Current longitude : ' + currentLng);
     logger.debug(TAG, 'Web check : ' + webCheck);
 
-    if(userId == null || userId == undefined ||
-        currentLat == null || currentLat == undefined ||
+    if(userId == null || userId == undefined &&
+        currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
         logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
@@ -174,6 +174,42 @@ router.get('/shopData', function(req, res, next) {
                 logger.debug(TAG, 'Select shop data success : ' + JSON.stringify(shopData));
                 res.status(200);
                 res.send({shopData: shopData[0]});
+            }
+            connection.release();
+        });
+    });
+});
+
+
+//Insert Card Data
+router.put('/insertCard', function(req, res, next) {
+    logger.info(TAG, 'Insert card data');
+
+    var userId = req.headers.user_id;
+    var shopId = req.body.shop_id;
+
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid parameter');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    //Card Data API
+    getConnection(function (err, connection) {
+        var insertPushInfo = 'insert into SB_USER_PUSH_INFO (USER_ID, SHOP_ID, USER_STAMP) value ' +
+            '('+mysql.escape(userId)+','+mysql.escape(shopId)+', 0) on duplicate key update DEL_YN = "N"';
+        connection.query(insertPushInfo, function (err, insertPushInfoData) {
+            if (err) {
+                logger.error(TAG, "Insert push info error : " + err);
+                res.status(400);
+                res.send('Insert push info error');
+            }else{
+                logger.debug(TAG, 'Insert push info success');
+                res.send({result: 'success'});
             }
             connection.release();
         });

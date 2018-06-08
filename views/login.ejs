@@ -259,6 +259,7 @@
 </body>
 
 <script type ="text/javascript">
+    $.toast.config.align = 'center';
     $(function() {
         if (navigator.geolocation) {
             // GeoLocation을 이용해서 접속 위치를 얻어옵니다
@@ -282,20 +283,19 @@
 
         $('#btn_send').on('click',
             function() {
-                $.toast.config.align = 'left';
-                $.toast.config.width = 300;
-
                 var loginEmail = $('#loginEmail').val();
                 var loginPassword = $('#loginPassword').val();
 
                 if (loginEmail == "") {
-                    $.toast('<h4>E-Mail</h4>을 입력하세요!!.', { type: 'danger', duration: 3000 });
+                    $.toast.config.width = 220;
+                    $.toast('올바른 <h3>이메일</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
                     $('#loginEmail').focus();
                     return;
                 }
 
                 if (loginPassword == "") {
-                    $.toast('<h4>Password</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 });
+                    $.toast.config.width = 230;
+                    $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
                     $('#loginPassword').focus();
                     return;
                 }
@@ -307,20 +307,27 @@
                     dataType: 'json',
                     data: dataString,
                     success: function(data) {
-                        if(data.loginEmailCheck == '1' && data.loginPwCheck == '1'){
-                            $('#user_id').val(data.userId);
+                        if (data.loginEmailCheck == '1') {
+                            if (data.loginPwCheck == '1') {
+                                $('#user_id').val(data.userId);
 
-                            if($("#current_lat").val().length == 0 && $("#current_lng").val().length == 0) {
-                                $('#current_lat').val(data.currentLat);
-                                $('#current_lng').val(data.currentLng);
+                                if ($("#current_lat").val().length == 0 && $("#current_lng").val().length == 0) {
+                                    $('#current_lat').val(data.currentLat);
+                                    $('#current_lng').val(data.currentLng);
+                                }
+
+                                $('#sendLoginForm').submit();
+                            } else {
+                                $.toast.config.width = 230;
+                                $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
                             }
-
-                            $('#sendLoginForm').submit();
                         }else {
-                            if(data.loginEmailCheck == '0') {
-                                $.toast('<h4>회원 정보</h4>가 없습니다. 회원 가입하세요!!.', { type: 'danger', duration: 3000 });
-                            }else if(data.loginPwCheck == '0') {
-                                $.toast('<h4>올바른 패스워드</h4>를 입력하세요!!.', { type: 'danger', duration: 3000 });
+                            if(data.loginPwCheck == '1') {
+                                $.toast.config.width = 220;
+                                $.toast('올바른 <h3>이메일</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
+                            }else {
+                                $.toast.config.width = 230;
+                                $.toast('<h3>회원정보</h3>가 존재하지 않습니다.!', {type: 'danger', duration: 3000});
                             }
                         }
                     },

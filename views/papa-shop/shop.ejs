@@ -12,7 +12,7 @@
                     <img class="papa-base-img" src="/images/shop-card/back/<%= shopListMainData[i].SHOP_BACK_IMG %>" alt="back">
                     <% if(existShop[i] == 0 && userId.length > 0) { %>
                     <div class="caption">
-                        <h5 class="shop-create-btn-<%= shopListMainData[i].SHOP_ID %>" onclick="createMyStamp('<%= shopListMainData[i].SHOP_ID %>');">마이스탬프 카드 생성하기</h5>
+                        <h5 class="shop-create-btn-<%= shopListMainData[i].SHOP_ID %>" onclick="createMyStampCard('<%= shopListMainData[i].SHOP_ID %>');">마이스탬프 카드 생성하기</h5>
                     </div>
                     <% }%>
                 </figure>
@@ -47,36 +47,35 @@
 
 <script type="text/javascript">
     function insertStampCallback(shopId) {
-        $.toast.config.align = 'left';
-        $.toast.config.width = 280;
+        $.toast.config.align = 'center';
+        $.toast.config.width = 270;
 
         var userId = $("#user_id").val();
         var dataString = {'shop_id': shopId};
         var headers = {};
         headers["user_id"] = userId;
 
-        if(userId.length > 0) {
-            $.ajax({
-                url: $("#url").val() + '/stamp/v1/insertCard',
-                type: 'PUT',
-                headers : headers,
-                dataType: 'json',
-                data : dataString,
-                success: function(data) {
-                    if(data.result == "success") {
-                        $.toast('선택한 지점의<h4>카드</h4>가 생성되었습니다.', { type: 'info', duration: 3000 } );
-                    }
-                },
-                error: function(request, status, error) {
-                    console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        $.ajax({
+            url: $("#url").val() + '/shop/v1/insertCard',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                if(data.result == "success") {
+                    $.toast('선택한 지점의 <h3>카드</h3>가 생성되었습니다.', { type: 'info', duration: 3000 } );
+                }else {
+                    $.toast('<h3>스탬프 카드</h3> 생성에 실패 하였습니다.', { type: 'danger', duration: 3000 } );
                 }
-            });
-        }else {
-            $.toast('파파 스탬프<h4> 로그인</h4> 하시기 바랍니다.', { type: 'info', duration: 3000 } );
-        }
+            },
+            error: function(request, status, error) {
+                $.toast('<h3>스탬프 카드</h3> 생성에 실패 하였습니다.', { type: 'danger', duration: 3000 } );
+                console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
     }
 
-    function createMyStamp(shopId) {
+    function createMyStampCard(shopId) {
         $("#create-stamp-confirm").dialog({
             resizable: false,
             modal: true,
