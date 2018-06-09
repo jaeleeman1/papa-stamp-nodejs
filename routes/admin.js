@@ -10,13 +10,15 @@ const TAG = '[ADMIN INFO] ';
 
 /* GET users listing. */
 router.get('/signin', function(req, res, next) {
-    var admin_email = '';
+    var adminEmail = '';
+    var adminPw = '';
     if(req.session.userInfo) {
         var userInfo = req.session.userInfo;
-        admin_email = userInfo.admin_email;
-        res.render('papa-admin/admin-signin', {url:config.url, adminEmail: admin_email});
+        adminEmail = userInfo.admin_email;
+        adminPw = userInfo.admin_pw;
+        res.render('papa-admin/admin-signin', {url:config.url, adminEmail:adminEmail, adminPw:adminPw});
     }else {
-        res.render('papa-admin/admin-signin', {url:config.url, adminEmail: "관리자 E-Mail"});
+        res.render('papa-admin/admin-signin', {url:config.url, adminEmail: "관리자 E-Mail", adminPw:"관리자 패스워드"});
     }
 });
 
@@ -29,34 +31,35 @@ router.get('/signout', function(req, res, next) {
 
 router.get('/signin/userCheck', function(req, res, next) {
     getConnection(function (err, connection){
-        var signinId = req.query.signin_id;
+        var signinEmail = req.query.signin_email;
         var signinPassword = req.query.signin_password;
 
-        var selectIdQuery = 'select exists (select * from SB_USER_INFO as SUI where SUI.USER_EMAIL = ' + mysql.escape(signinId) + ') as ID_CHECK';
-        connection.query(selectIdQuery, function (err, rowId) {
+        var selectSigninEmailQuery = 'select exists (select * from SB_USER_INFO as SUI where SUI.USER_EMAIL = ' + mysql.escape(signinEmail) + ') as EMAIL_CHECK';
+        connection.query(selectSigninEmailQuery, function (err, signinEmailData) {
             if (err) {
                 console.error("*** initPage select id Error : " , err);
             }else{
-                var signinIdCheck = rowId[0].ID_CHECK;
-                var signinPwCheck = '0';
-                if(signinIdCheck == '1') {
-                    var selectPwQuery = 'select count(*) as PW_CHECK, SUI.SHOP_ID, SSI.SHOP_STAMP_IMG, SSI.SHOP_NAME from SB_USER_INFO as SUI ' +
+                var signinEmailCheck = signinEmailData[0].EMAIL_CHECK;
+                var signinPasswordCheck = '0';
+                if(signinEmailCheck == '1') {
+                    var selectAdminQuery = 'select count(*) as PW_CHECK, SUI.SHOP_ID, SSI.SHOP_STAMP_IMG, SSI.SHOP_NAME from SB_USER_INFO as SUI ' +
                         'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SUI.SHOP_ID ' +
-                        'where SUI.USER_TYPE = "200" and SUI.USER_EMAIL = ' + mysql.escape(signinId) + ' and SUI.USER_PASSWORD = ' + mysql.escape(signinPassword);
-                    connection.query(selectPwQuery, function (err, dataPw) {
+                        'where SUI.USER_TYPE = "200" and SUI.USER_EMAIL = ' + mysql.escape(signinEmail) + ' and SUI.USER_PASSWORD = password(' + mysql.escape(signinPassword) +')';
+                    connection.query(selectAdminQuery, function (err, signinAdminData) {
                         if (err) {
                             console.error("*** initPage select password Error : ", err);
                         } else {
-                            signinPwCheck = dataPw[0].PW_CHECK;
+                            signinPasswordCheck = signinAdminData[0].PW_CHECK;
                             var userInfo = {
-                                admin_email : signinId
+                                admin_email : signinEmail,
+                                admin_pw : signinPassword
                             }
                             req.session.userInfo = userInfo;
-                            res.send({signinIdCheck: signinIdCheck, signinPwCheck: signinPwCheck, shopId: dataPw[0].SHOP_ID, signinId:signinId, shopName: dataPw[0].SHOP_NAME, shopIcon: dataPw[0].SHOP_STAMP_IMG});
+                            res.send({signinEmailCheck: signinEmailCheck, signinPasswordCheck: signinPasswordCheck, shopId: signinAdminData[0].SHOP_ID, signinEmail:signinEmail, shopName: signinAdminData[0].SHOP_NAME, shopIcon: signinAdminData[0].SHOP_STAMP_IMG});
                         }
                     });
                 }else {
-                    res.send({signinIdCheck: signinIdCheck, signinPwCheck: signinPwCheck});
+                    res.send({signinEmailCheck: signinEmailCheck, signinPasswordCheck: signinPasswordCheck});
                 }
             }
             connection.release();

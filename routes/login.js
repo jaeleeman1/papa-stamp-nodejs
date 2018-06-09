@@ -20,7 +20,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/signup', function(req, res, next) {
-    res.render('signup', {url:config.url});
+    var termsYn = req.query.terms_yn;
+    var currentLat = req.query.init_lat;
+    var currentLng = req.query.init_lng;
+    res.render('signup', {url:config.url, termsYn:termsYn, currentLat:currentLat, currentLng:currentLng});
 });
 
 router.get('/logout', function(req, res, next) {

@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="images/favicon.ico" type="image/ico" />
 
-  <title>Papa-stamp Admin! | </title>
+  <title>Papa-stamp Admin!</title>
 
   <link rel="stylesheet" href="/css/jquery.toast.min.css" type="text/css"/>
 
@@ -37,6 +37,8 @@
 
 </head>
 
+<body class="nav-md">
+
 <form name="menuAction" method="get" style="display:none">
   <input type="hidden" name="url" id="url" value="<%= url %>"/>
   <input type="hidden" name="user_id" id="user_id" value=""/>
@@ -46,7 +48,6 @@
   <input type="hidden" name="user_email" id="user_email" value="<%= userEmail %>"/>
 </form>
 
-<body class="nav-md">
 <div class="container body">
   <div class="main_container">
     <div class="col-md-3 left_col">
@@ -121,58 +122,14 @@
           </div>
 
           <ul class="nav navbar-nav navbar-right">
-
             <li class="">
               <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <img src="images/img.jpg" alt=""><%= userEmail %>
+                <img src="/images/shop-stamp/<%= shopIcon %>" alt=""><%= userEmail %>
                 <span class=" fa fa-angle-down"></span>
               </a>
               <ul class="dropdown-menu dropdown-usermenu pull-right">
-                <li><a onclick="test();">Help</a></li>
+                <li><a>Help</a></li>
                 <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
-              </ul>
-            </li>
-
-            <li role="presentation" class="dropdown">
-              <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-envelope-o"></i>
-                <span id="push-count" class="badge bg-green"></span>
-              </a>
-              <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                <!--<li>
-                  <a>
-                    <span class="image"><img src="images/img.jpg" alt="stamp Image" /></span>
-                    <span>
-                          <span>010-2618-1715</span>
-                          <span class="time">1 mins ago</span>
-                        </span>
-                    <span class="message">
-                         스탬프 적립
-                        </span>
-                  </a>
-                </li>
-
-                <li>
-                  <a>
-                    <span class="image"><img src="images/img.jpg" alt="coupon Image" /></span>
-                    <span>
-                          <span>010-3729-1715</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                    <span class="message">
-                          쿠폰 사용
-                        </span>
-                  </a>
-                </li>-->
-
-                <!--<li>
-                  <div class="text-center">
-                    <a>
-                      <strong>See All Alerts</strong>
-                      <i class="fa fa-angle-right"></i>
-                    </a>
-                  </div>
-                </li>-->
               </ul>
             </li>
           </ul>
@@ -224,6 +181,22 @@
   </figure>
 </div>
 
+<div id="user-coupon-confirm" class="dialog-confirm">
+  <figure>
+    <div id="user-stamp-user-count"></div>
+    <div id="user-coupon-user-count"></div>
+    <span class="user-number"></span>
+    <label style="margin-bottom: 30px;" for="terms">적립된 쿠폰을 사용하시겠습니까?</label><br/>
+    <div id="user-coupon-data" style="float:left;margin-left:20px;width: 85%;">
+      <div style="margin-bottom:50px;">
+        <input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="" checked="checked">
+        <h5 style="padding-top:16px;" class="confirm-coupon-number" id="confirm-user-coupon-number"></h5>
+        </input>
+      </div>
+    </div>
+  </figure>
+</div>
+
 <div id="admin-coupon-confirm" class="dialog-confirm">
   <figure>
     <div id="admin-stamp-user-count"></div>
@@ -232,7 +205,7 @@
     <label style="margin-bottom: 30px;" for="terms">적립된 쿠폰을 사용하시겠습니까?</label><br/>
     <div id="admin-coupon-list" style="float:left;margin-left:20px;width: 85%;">
       <div style="margin-bottom:50px;">
-        <input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="' + data.selectCouponData[i].COUPON_NUMBER + '" checked="checked">
+        <input style="float:left;margin: 10px 10px 10px 10px;" type="radio" name="paramCouponValue" value="" checked="checked">
           <h5 style="padding-top:16px;" class="confirm-coupon-number" id="confirm-coupon-number"></h5>
         </input>
         </div>
@@ -256,6 +229,14 @@
   </figure>
 </div>
 
+<div id="auth-code-confirm" class="dialog-confirm">
+  <figure>
+    <div style="color:#ba9d37;font-size:35px;margin:20px;" id="auth-number"></div>
+    <label style="margin:20px;" for="terms">사용자 확인 코드 확인되셨습니까?</label><br/>
+  </figure>
+</div>
+
+</body>
 
 <!-- jQuery -->
 <script src="/vendors/jquery/dist/jquery.min.js"></script>
@@ -307,18 +288,18 @@
             $(".user-number").html(data.phoneNumber);
             var stampCount = Number(data.userStamp)%10;
             var couponCount = data.selectCouponData.length;
-            $("#admin-stamp-user-count").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ stampCount +'개)</h4>');
-            $("#admin-coupon-user-count").html('<h4 class="coupon-count" id="coupon-count">(현재까지 미사용 쿠폰 : '+ couponCount +'장)</h4>');
+            $("#user-stamp-user-count").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : '+ stampCount +'개)</h4>');
+            $("#user-coupon-user-count").html('<h4 class="coupon-count" id="coupon-count">(현재까지 미사용 쿠폰 : '+ couponCount +'장)</h4>');
 
             pushUseCoupon(data.sendId, data.couponNumber);
         }
     });
 </script>
 <script>
-    $(document).ready(function() {
+    /*$(document).ready(function() {
         var pushCountView = document.getElementById('push-count');
         pushCountView.innerHTML = 0;
-    });
+    });*/
 
     function mainView() {
         document.menuAction.action = '/admin/v1/signin/initPage';
@@ -345,27 +326,6 @@
         document.menuAction.submit();
     }
 
-    function test() {
-        var pushCountView = document.getElementById('push-count');
-        var pushCount = pushCountView.innerHTML;
-        pushCount++;
-        pushCountView.innerHTML = pushCount;
-
-        var pushData = document.getElementById('menu1');
-        var appendData = '<li>' +
-            '<a>' +
-            '<span class="image"><img src="images/img.jpg" alt="coupon Image" /></span>' +
-            '<span>' +
-            '<span>010-3729-1715</span>' +
-            '<span class="time">3 mins ago</span>' +
-            '</span>' +
-            '<span class="message">쿠폰 사용</span>' +
-            '</a>' +
-            '</li>';
-        pushData.innerHTML += appendData;
-        useCoupon();
-    }
-
     function pushStampCallback(userId) {
         var shopId = $("#shop_id").val();
         var stampNumber = $("input:radio[name=paramStampValue]:checked").val();
@@ -380,6 +340,10 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
+                $.toast.config.align = 'left';
+                $.toast.config.width = 600;
+                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">스탬프 적립</h4>이 완료되었습니다.</span>', {type: 'success', duration: 3000 });
+
                 if($('#user-data').length > 0) {
                     var userHisData = document.getElementById('user-data');
                     var appendData = '';
@@ -403,9 +367,9 @@
                     }
                     userHisData.innerHTML = appendData + userHisData.innerHTML;
                     stampLength.innerHTML = addLength +' 개';
-                    $("input:radio[name=paramStampValue]:checked").prop("checked", false);
-                    $("input:radio[name=paramStampValue]:radio[value='1']").prop("checked", true);
                 }
+                $("input:radio[name=paramStampValue]:checked").prop("checked", false);
+                $("input:radio[name=paramStampValue]:radio[value='1']").prop("checked", true);
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -429,8 +393,9 @@
             success: function (data) {
                 if (data.result == "success") {
                     $("#phone-text").val('');
-                    $.toast.config.align = 'center';
-                    $.toast.config.width = 500;
+                    $('#phone-text').focus();
+                    $.toast.config.align = 'left';
+                    $.toast.config.width = 600;
                     $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">스탬프 적립</h4>이 완료되었습니다.!!!.</span>', { type: 'info', duration: 3000 });
                     var visitRateCnt = data.stampCnt % 10;
                     var sumStamp = Number(visitRateCnt) + Number(stampNumber);
@@ -446,8 +411,8 @@
                             dataType: 'json',
                             data: dataString,
                             success: function (data) {
-                                $.toast.config.align = 'center';
-                                $.toast.config.width = 500;
+                                $.toast.config.align = 'left';
+                                $.toast.config.width = 600;
                                 $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 발급</h4>이 완료되었습니다.</span>', {type: 'success', sticky: true});
                             },
                             error: function (request, status, error) {
@@ -503,6 +468,10 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
+                $.toast.config.align = 'left';
+                $.toast.config.width = 600;
+                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 사용</h4>이 완료되었습니다.</span>', {type: 'success', duration: 3000});
+
                 if($('#user-data').length > 0) {
                     var userHisData = document.getElementById('user-data');
                     var couponLength = document.getElementById('coupon-length');
@@ -538,7 +507,6 @@
         var dataString = {'shop_id': shopId, 'coupon_number': couponNumber};
         var headers = {};
         headers["user_id"] = sendId;
-
         $.ajax({
             url: $("#url").val() + '/coupon/v1/selectCoupon',
             type: 'GET',
@@ -547,9 +515,9 @@
             data : dataString,
             success: function(data) {
                 $(".user-number").html(data.userNumber);
-                $("#confirm-coupon-number").html(data.selectCouponData.COUPON_NUMBER + ' / ' + data.selectCouponData.COUPON_NAME + ' / ' + data.selectCouponData.EXPIRATION_DT);
+                $("#confirm-user-coupon-number").html(data.selectCouponData.COUPON_NUMBER + ' / ' + data.selectCouponData.COUPON_NAME + ' / ' + data.selectCouponData.EXPIRATION_DT);
 
-                $("#admin-coupon-confirm").dialog({
+                $("#user-coupon-confirm").dialog({
                     resizable: false,
                     modal: true,
                     title: "파파스탬프 쿠폰 사용 요청! (도장)",
@@ -574,7 +542,6 @@
     }
 </script>
 
-</body>
 </html>
 
 

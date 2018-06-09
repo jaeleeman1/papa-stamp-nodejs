@@ -1,173 +1,31 @@
 <!DOCTYPE html>
 <html id="wrapper">
 <head>
-    <title>papa-stamp</title>
+    <title>Papa-stamp</title>
     <link rel='stylesheet' href='/css/layout-style.css' type='text/css'/>
     <link rel='stylesheet' href='/css/card-style.css' type='text/css'/>
     <link rel='stylesheet' href='/css/stamp-style.css' type='text/css'/>
     <link rel='stylesheet' href='/css/popup.css' type='text/css'/>
+    <link rel='stylesheet' href='/css/map-style.css' type='text/css'/>
     <link rel="stylesheet" href="/css/jquery.toast.min.css" type="text/css"/>
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
 
     <script src='/js/jquery-2.2.3.min.js' type='text/javascript'></script>
     <script src='/js/popup.js' type='text/javascript'></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
-
     <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
     <script src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+    <script src='/js/jquery.toast.min.js' type='text/javascript'></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=1a30d2b7d0dec9ecdbd9665afa6ea7b1&libraries=clusterer,services"></script>
+    <script type="text/javascript">
+        $(function () {
+            daum.maps.load(function() {
+                var currentLat = '';//37.4979887529;
+                var currentLng = '';//127.0296421998;
+                var userId = $("#user_id").val();
 
-    <style>
-        html, body {width:100%;height:100%;margin:0;padding:0;}
-        .map_wrap {position:relative;overflow:hidden;width:100%;height:350px;}
-        .radius_border{border:1px solid #919191;border-radius:5px;}
-        .custom_zoomcontrol {position:relative;float:right;top:100px;right:15px;width:36px;height:80px;overflow:hidden;z-index:2;background-color:#f5f5f5;}
-        .custom_zoomcontrol span {display:block;width:36px;height:40px;text-align:center;cursor:pointer;}
-        .custom_zoomcontrol span img {width:15px;padding:12px 0;border:none;}
-        .custom_zoomcontrol span:first-child{border-bottom:1px solid #bfbfbf;}
-        .dot {overflow:hidden;float:left;width:12px;height:12px;background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/mini_circle.png');}
-        .dotOverlay {position:relative;bottom:10px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;float:left;font-size:12px;padding:5px;background:#fff;}
-        .dotOverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
-        .number {font-weight:bold;color:#ee6152;}
-        .dotOverlay:after {content:'';position:absolute;margin-left:-6px;left:50%;bottom:-8px;width:11px;height:8px;background:url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white_small.png')}
-        .distanceInfo {position:relative;top:5px;left:5px;list-style:none;margin:0;}
-        .distanceInfo .label {display:inline-block;width:50px;}
-        .distanceInfo:after {content:none;}
-    </style>
-</head>
-<meta name="viewport" content="width=device-width, user-scalable=no">
-
-<form name="footerAction" style="display:none">
-    <input type="hidden" name="user_id" id="user_id" value="<%= userId %>"/>
-    <input type="hidden" name="shop_id" id="shop_id" value="<%= shopId %>"/>
-    <input type="hidden" name="current_lat" id="current_lat" value=""/>
-    <input type="hidden" name="current_lng" id="current_lng" value=""/>
-    <input type="hidden" name="web_check" id="web_check" value="<%= webCheck %>"/>
-</form>
-
-<form name="papa_config" id="papa_config" style="display:none">
-    <input type="hidden" name="view" id="view" value="<%= view %>"/>
-    <input type="hidden" name="url" id="url" value="<%= url %>"/>
-    <input type="hidden" name="auth_check" id="auth_check" value="false"/>
-</form>
-
-<body>
-<div class="frame">
-
-    <div class="header">
-        <div class="top-status-bar">
-            <div class="header-title" id="map-icon"><i class="fa fa-map-marker" style="color: whitesmoke;"></i></div>
-            <img class="top-icon" src="/images/papastamp_icon.png"/>
-            <div class="top-title">파파스탬프</div>
-            <div class="top-description">스탬프<br>관리 시스템</div>
-        </div>
-    </div>
-
-    <div class="content">
-        <div class="all" id="common-template">
-            <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
-            <div id="mapPop" class="layerMapPopup">
-                <div class="custom_zoomcontrol radius_border">
-                    <span onclick="zoomIn()"><img src="/images/shop-map/ico_plus.png" alt="확대"></span>
-                    <span onclick="zoomOut()"><img src="/images/shop-map/ico_minus.png" alt="축소"></span>
-                </div>
-
-                <!-- map -->
-                <div id="map" class="map_wrap"></div>
-                <!-- //map -->
-
-                <div class="shop-container">
-                    <div class="contact-row agileits-w3layouts">
-                        <div class="col-xs-6 col-sm-6 contact-w3lsright" id="map_list_wrap">
-                        </div>
-                        <div class="clearfix"> </div>
-                    </div>
-                </div>
-            </div>
-
-            <% if(view == 'shop') { %>
-            <div class="hero-shop"></div>
-            <% include ../papa-shop/shop.ejs %>
-            <% } else if(view == 'stamp') { %>
-            <div class="hero-stamp"></div>
-            <% include ../papa-stamp/stamp.ejs %>
-            <% } else if(view == 'coupon') { %>
-            <div class="hero-coupon"></div>
-            <% include ../papa-coupon/coupon.ejs %>
-            <% } else if(view == 'event') { %>
-            <div class="hero-event"></div>
-            <% include ../papa-event/event.ejs %>
-            <% } else { %>
-            <div class="hero-setting"></div>
-            <% include ../papa-setting/setting.ejs %>
-            <% } %>
-        </div>
-    </div>
-
-    <div class="footer-menu">
-        <nav class="bottom">
-            <menu>
-                <li class="footer-style">
-                    <a class="c1 menu-toggle" href="#" >
-                        <span><i class="fa fa-home footer-icon"><div class="menu-text">홈</div></i></span>
-                    </a>
-                </li>
-                <li class="footer-style">
-                    <a class="c2 menu-toggle" href="#" >
-                        <span><i class="fa fa-gavel footer-icon"><div class="menu-text">마이스탬프</div></i></span>
-                    </a>
-                </li>
-                <li class="footer-style">
-                    <a class="c3 menu-toggle" href="#" >
-                        <span><i class="fa fa-credit-card footer-icon"><div class="menu-text">마이쿠폰</div></i></span>
-                    </a>
-                </li>
-                <li class="footer-style">
-                    <a class="c4 menu-toggle" href="#" >
-                        <span><i class="fa fa-gift footer-icon"><div class="menu-text">이벤트</div></i></span>
-                    </a>
-                </li>
-                <li class="footer-style">
-                    <a class="c5 menu-toggle" href="#" >
-                        <span><i class="fa fa-cog footer-icon"><div class="menu-text">설정</div></i></span>
-                    </a>
-                </li>
-            </menu>
-        </nav>
-    </div>
-
-
-</div>
-</body>
-</html>
-
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=1a30d2b7d0dec9ecdbd9665afa6ea7b1&libraries=clusterer,services"></script>
-<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-<script src='/js/jquery.toast.min.js' type='text/javascript'></script>
-<script type="text/javascript">
-    $(function () {
-        daum.maps.load(function() {
-            var currentLat = '';//37.4979887529;
-            var currentLng = '';//127.0296421998;
-            var userId = $("#user_id").val();
-            if($("#web_check").val()) {
-                //web 에서 위치 정보
-                if (navigator.geolocation) {
-                    // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-                    if (navigator.geolocation) {
-                        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-                        navigator.geolocation.getCurrentPosition(function (position) {
-                            currentLat = position.coords.latitude; // 위도
-                            currentLng = position.coords.longitude; // 경도
-
-                            $("#current_lat").val(currentLat);
-                            $("#current_lng").val(currentLng);
-                        });
-                    } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
-                        console.error("geolocation error : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                    }
-                }
-            }else {
                 if(userId.length > 0) {
                     var headers = {};
                     headers["user_id"] = userId;
@@ -192,82 +50,189 @@
                     $("#current_lat").val('37.65067382324312');
                     $("#current_lng").val('126.88702399396053');
                 }
-            }
-        });
+            });
 
-        $(document).on('click', '.shop', function(){
-            $(this).toggleClass('flipped');
-        });
+            $(document).on('click', '.shop', function(){
+                $(this).toggleClass('flipped');
+            });
 
-        var initView = $("#view").val();
-        var initCheck;
-        if(initView == 'shop') {
-            initCheck = 0;
-        } else if(initView == 'stamp') {
-            initCheck = 1;
-        } else if(initView == 'coupon') {
-            initCheck = 2;
-        } else if(initView == 'event') {
-            initCheck = 3;
-        } else {
-            initCheck = 4;
-        }
-
-        var footermenu = $('.footer-menu li');
-
-        footermenu.eq(initCheck).find('a').addClass('show');
-
-        footermenu.click(function(){
-            footermenu.find('a').removeClass('show');
-            var index = footermenu.index(this);
-            var webCheck = $('#web_check').val();
-            if(webCheck == 'true') {
-                document.footerAction.method = 'post'
-            }else {
-                document.footerAction.method = 'get'
+            var initView = $("#view").val();
+            var initCheck;
+            if(initView == 'shop') {
+                initCheck = 0;
+            } else if(initView == 'stamp') {
+                initCheck = 1;
+            } else if(initView == 'coupon') {
+                initCheck = 2;
+            } else if(initView == 'event') {
+                initCheck = 3;
+            } else {
+                initCheck = 4;
             }
 
-            if(index == 0) {
-                document.footerAction.action = '/shop/v1/main';
-            }else if(index == 1) {
-                document.footerAction.action = '/stamp/v1/main';
-            }else if(index == 2) {
-                document.footerAction.action = '/coupon/v1/main';
-            }else if(index == 3) {
-                document.footerAction.action = '/event/v1/main';
-            }else {
-                document.footerAction.action = '/setting/v1/main';
-            }
-            document.footerAction.submit();
-        });
+            var footermenu = $('.footer-menu li');
 
-        var mapIcon = document.getElementById('map-icon');
+            footermenu.eq(initCheck).find('a').addClass('show');
 
-        if(initView != 'setting') {
-            if($('.my-card-list li').hasClass('blank-card')) {
-                mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: black;"></i>';
-            }else {
-                $("#map-icon").click(
-                    function() {
-                        if($("#mapPop").css("display") == "none") {
-                            $("#card-list").css("display", "none");
-                            openMapLayer("mapPop");
-                            mapPapaShop();
-                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: red;"></i>';
-                        }else {
-                            $("#select-card").remove();
-                            $("#card-list").css("display", "block");
-                            closeMapLayer("mapPop");
-                            distanceOverlay = null;
-                            drawingFlag = true;
-                            clickCheck = false;
-                            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: whitesmoke;"></i>';
+            footermenu.click(function(){
+                footermenu.find('a').removeClass('show');
+                var index = footermenu.index(this);
+                var webCheck = $('#web_check').val();
+                if(webCheck == 'true') {
+                    document.footerAction.method = 'post'
+                }else {
+                    document.footerAction.method = 'get'
+                }
+
+                if(index == 0) {
+                    document.footerAction.action = '/shop/v1/main';
+                }else if(index == 1) {
+                    document.footerAction.action = '/stamp/v1/main';
+                }else if(index == 2) {
+                    document.footerAction.action = '/coupon/v1/main';
+                }else if(index == 3) {
+                    document.footerAction.action = '/event/v1/main';
+                }else {
+                    document.footerAction.action = '/setting/v1/main';
+                }
+                document.footerAction.submit();
+            });
+
+            var mapIcon = document.getElementById('map-icon');
+
+            if(initView != 'setting') {
+                if($('.my-card-list li').hasClass('blank-card')) {
+                    mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: black;"></i>';
+                }else {
+                    $("#map-icon").click(
+                        function() {
+                            if($("#mapPop").css("display") == "none") {
+                                $("#card-list").css("display", "none");
+                                openMapLayer("mapPop");
+                                mapPapaShop();
+                                mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: red;"></i>';
+                            }else {
+                                $("#select-card").remove();
+                                $("#card-list").css("display", "block");
+                                closeMapLayer("mapPop");
+                                distanceOverlay = null;
+                                drawingFlag = true;
+                                clickCheck = false;
+                                mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: whitesmoke;"></i>';
+                            }
                         }
-                    }
-                );
+                    );
+                }
+            }else {
+                mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: black"></i>';
             }
-        }else {
-            mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: black"></i>';
-        }
-    });
-</script>
+        });
+    </script>
+</head>
+
+<meta name="viewport" content="width=device-width, user-scalable=no">
+
+<body>
+
+    <form name="footerAction" style="display:none">
+        <input type="hidden" name="user_id" id="user_id" value="<%= userId %>"/>
+        <input type="hidden" name="shop_id" id="shop_id" value="<%= shopId %>"/>
+        <input type="hidden" name="current_lat" id="current_lat" value=""/>
+        <input type="hidden" name="current_lng" id="current_lng" value=""/>
+        <input type="hidden" name="web_check" id="web_check" value="<%= webCheck %>"/>
+    </form>
+
+    <form name="papa_config" id="papa_config" style="display:none">
+        <input type="hidden" name="view" id="view" value="<%= view %>"/>
+        <input type="hidden" name="url" id="url" value="<%= url %>"/>
+        <input type="hidden" name="auth_check" id="auth_check" value="false"/>
+        <input type="hidden" name="auth_num" id="auth_num" value=""/>
+    </form>
+
+    <div class="frame">
+
+        <div class="header">
+            <div class="top-status-bar">
+                <div class="header-title" id="map-icon"><i class="fa fa-map-marker" style="color: whitesmoke;"></i></div>
+                <img class="top-icon" src="/images/papastamp_icon.png"/>
+                <div class="top-title">파파스탬프</div>
+                <div class="top-description">스탬프<br>관리 시스템</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="all" id="common-template">
+                <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+                <div id="mapPop" class="layerMapPopup">
+                    <div class="custom_zoomcontrol radius_border">
+                        <span onclick="zoomIn()"><img src="/images/shop-map/ico_plus.png" alt="확대"></span>
+                        <span onclick="zoomOut()"><img src="/images/shop-map/ico_minus.png" alt="축소"></span>
+                    </div>
+
+                    <!-- map -->
+                    <div id="map" class="map_wrap"></div>
+                    <!-- //map -->
+
+                    <div class="shop-container">
+                        <div class="contact-row agileits-w3layouts">
+                            <div class="col-xs-6 col-sm-6 contact-w3lsright" id="map_list_wrap">
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                    </div>
+                </div>
+
+                <% if(view == 'shop') { %>
+                <div class="hero-shop"></div>
+                <% include ../papa-shop/shop.ejs %>
+                <% } else if(view == 'stamp') { %>
+                <div class="hero-stamp"></div>
+                <% include ../papa-stamp/stamp.ejs %>
+                <% } else if(view == 'coupon') { %>
+                <div class="hero-coupon"></div>
+                <% include ../papa-coupon/coupon.ejs %>
+                <% } else if(view == 'event') { %>
+                <div class="hero-event"></div>
+                <% include ../papa-event/event.ejs %>
+                <% } else { %>
+                <div class="hero-setting"></div>
+                <% include ../papa-setting/setting.ejs %>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="footer-menu">
+            <nav class="bottom">
+                <menu>
+                    <li class="footer-style">
+                        <a class="c1 menu-toggle" href="#" >
+                            <span><i class="fa fa-home footer-icon"><div class="menu-text">파파매장</div></i></span>
+                        </a>
+                    </li>
+                    <li class="footer-style">
+                        <a class="c2 menu-toggle" href="#" >
+                            <span><i class="fa fa-gavel footer-icon"><div class="menu-text">마이스탬프</div></i></span>
+                        </a>
+                    </li>
+                    <li class="footer-style">
+                        <a class="c3 menu-toggle" href="#" >
+                            <span><i class="fa fa-credit-card footer-icon"><div class="menu-text">마이쿠폰</div></i></span>
+                        </a>
+                    </li>
+                    <li class="footer-style">
+                        <a class="c4 menu-toggle" href="#" >
+                            <span><i class="fa fa-gift footer-icon"><div class="menu-text">이벤트</div></i></span>
+                        </a>
+                    </li>
+                    <li class="footer-style">
+                        <a class="c5 menu-toggle" href="#" >
+                            <span><i class="fa fa-cog footer-icon"><div class="menu-text">설정</div></i></span>
+                        </a>
+                    </li>
+                </menu>
+            </nav>
+        </div>
+    </div>
+
+</body>
+</html>

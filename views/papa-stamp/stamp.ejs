@@ -81,30 +81,7 @@
         }
     });
 
-    function deleteCardcallback(shopId) {
-        var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId};
-        var headers = {};
-        headers["user_id"] = userId;
-
-        $.ajax({
-            url: $("#url").val() + '/stamp/v1/deleteCard',
-            type: 'PUT',
-            headers : headers,
-            dataType: 'json',
-            data : dataString,
-            success: function(data) {
-                if(data.result = 'success') {
-                    location.reload();
-                }else {
-                    console.error('error');
-                }
-            },
-            error: function(request, status, error) {
-                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-        });
-    }
+    $.toast.config.align = 'center';
 
     function requestStamp(shopId) {
         var dataString = {'shop_id': shopId};
@@ -121,6 +98,8 @@
                 }
             },
             error: function(request, status, error) {
+                $.toast.config.width = 270;
+                $.toast('<h3>스탬프 발급</h3> 요청에 실패 하였습니다.', { type: 'danger', duration: 3000 } );
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
@@ -129,7 +108,7 @@
     function retryStamp() {
         var shopId = $("#shop_id").val();
         var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId, 'request_check' : 'false'};
+        var dataString = {'shop_id': shopId, 'retry_check' : 'false'};
         var headers = {};
         headers["user_id"] = userId;
 
@@ -140,37 +119,13 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                console.log(data.resultData);
+                if(data.result == "success") {
+                    $.toast.config.width = 240;
+                    $.toast('<h3>스탬프 발급</h3> 재요청 하였습니다.', {type: 'info', duration: 3000 });
+                }
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-        });
-    }
-
-    function closeCard() {
-        $("#shop_id").val('');
-        $('html, body').css({'overflow': 'visible', 'height': '100%'});
-        closeLayer('layerCardPopup');
-    }
-
-    function deleteCard(shopId) {
-        $("#delete-card-confirm").dialog({
-            resizable: false,
-            modal: true,
-            title: "카드 삭제",
-            height: 200,
-            width: '90%',
-            resizable:false,
-            buttons: {
-                "예": function () {
-                    $('#delete_card').unbind('click');
-                    $(this).dialog('close');
-                    deleteCardcallback(shopId);
-                },
-                "아니오": function () {
-                    $(this).dialog('close');
-                }
             }
         });
     }
@@ -244,23 +199,21 @@
                 popupCardData.innerHTML = appendData;
 
                 if(stampCount != stampLength) {
-                    $.toast.config.align = 'center';
-                    $.toast.config.width = 200;
-                    $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
+                    $.toast.config.width = 240;
+                    $.toast('<h3>스탬프 오류</h3> 관리자에게 문의!.', { type: 'danger', sticky : true } );
                 }
 
                 $('#stamp-request').unbind('click');
                 $("#stamp-request").bind('click', function() {
                     if($('#web_check').val() == 'true') {
-                        $.toast.config.align = 'center';
                         $.toast.config.width = 200;
-                        $.toast('<h4>앱에서만</h4> 사용 가능합니다.', {type: 'info', duration: 3000 });
+                        $.toast('<h3>앱</h3>에서만 사용 가능합니다.', {type: 'info', duration: 3000 });
                     }else {
                         requestStamp(shopId);
                     }
                 });
 
-                var popupHeight = browserHeight * 0.15;
+                var popupHeight = browserHeight * 0.2;
                 openLayer(showDivId, popupHeight, 0, browserHeight);
             },
             error: function(request, status, error) {
@@ -305,9 +258,8 @@
                 var stampLength = data.stampDateList.length % 10;
 
                 if(stampCount != stampLength) {
-                    $.toast.config.align = 'center';
-                    $.toast.config.width = 200;
-                    $.toast('<h4>스탬프 오류</h4> 관리자에게 문의!.', { type: 'danger', sticky : true } );
+                    $.toast.config.width = 240;
+                    $.toast('<h3>스탬프 오류</h3> 관리자에게 문의!.', { type: 'danger', sticky : true } );
                 }
 
                 $('#stamp-request').unbind('click');
@@ -315,11 +267,67 @@
                     requestStamp(shopId);
                 });
 
-                var popupHeight = browserHeight * 0.15;
+                var popupHeight = browserHeight * 0.2;
                 openLayer(showDivId, popupHeight, 0, browserHeight);
             },
             error: function(request, status, error) {
                 console.error("used stamp date : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
+    function closeCard() {
+        $("#shop_id").val('');
+        $('html, body').css({'overflow': 'visible', 'height': '100%'});
+        closeLayer('layerCardPopup');
+    }
+
+    function deleteCardcallback(shopId) {
+        var userId = $("#user_id").val();
+        var headers = {};
+        headers["user_id"] = userId;
+        var dataString = {'shop_id': shopId};
+
+        $.ajax({
+            url: $("#url").val() + '/stamp/v1/deleteCard',
+            type: 'PUT',
+            headers : headers,
+            dataType: 'json',
+            data : dataString,
+            success: function(data) {
+                if(data.result = 'success') {
+                    location.reload();
+                }else {
+                    $.toast.config.width = 270;
+                    $.toast('<h3>스탬프 카드</h3> 삭제에 실패 하였습니다.', { type: 'danger', duration: 3000 } );
+                    console.error('error');
+                }
+            },
+            error: function(request, status, error) {
+                $.toast.config.width = 270;
+                $.toast('<h3>스탬프 카드</h3> 삭제에 실패 하였습니다.', { type: 'danger', duration: 3000 } );
+                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+
+    function deleteCard(shopId) {
+        $("#delete-card-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "카드 삭제",
+            height: 200,
+            width: '90%',
+            resizable:false,
+            buttons: {
+                "예": function () {
+                    $('#delete_card').unbind('click');
+                    $(this).dialog('close');
+                    deleteCardcallback(shopId);
+                },
+                "아니오": function () {
+                    $(this).dialog('close');
+                }
             }
         });
     }
@@ -389,9 +397,9 @@
                                     $("#" + shopId).find($(".img-repeat-" + shopId)).empty();
                                     $("#popup-card").find($(".img-repeat-" + shopId)).empty();
                                     //Toast Success Message
-                                    $.toast.config.align = 'center';
-                                    $.toast.config.width = 200;
-                                    $.toast('<h4>쿠폰</h4> 발급이 완료되었습니다.', {type: 'success', sticky: true});
+                                    $.toast.config.align = 'left';
+                                    $.toast.config.width = 230;
+                                    $.toast('<h3>쿠폰</h3> 발급이 완료되었습니다.', {type: 'success', sticky: true});
 
                                     setTimeout(function () {
                                         var appendStamp = '';
@@ -437,16 +445,17 @@
             }
         }
 
-        function viewStamp(viewtStampNumberr) {
+        function viewStamp(viewtStampNumber) {
             var appendStamp = '';
-            for (var i = 0; i < viewtStampNumberr; i++) {
+            for (var i = 0; i < viewtStampNumber; i++) {
                 appendStamp += '<div class="stamp-icon-' + shopId + '">' +
                     '<img class="stamp-img-' + shopId + '" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
                     '</div>';
             }
             $("#" + shopId).find($(".img-repeat-" + shopId)).append(appendStamp);
+            $("#select-" + shopId).find($(".img-repeat-" + shopId)).append(appendStamp);
 
-            for (var j = 0; j < viewtStampNumberr; j++) {
+            for (var j = 0; j < viewtStampNumber; j++) {
                 (function (delayTime) {
                     setTimeout(function () {
                         $("#layerCardPopup").find($(".img-repeat-" + shopId)).append('<img id="stamp-action" class="stamp-action" src="/images/shop-stamp/' + data.shopData.SHOP_STAMP_IMG + '"/>' +
@@ -620,7 +629,7 @@
 
                         var appendId = $('#common-template');
                         var appendData = '<ul class="my-card-list" id="select-card">' +
-                            '<li class="my-card-shop" id="'+ shopData.SHOP_ID +'">'+
+                            '<li class="my-card-shop" id="select-'+ shopData.SHOP_ID +'">'+
                             '<div class="my-container">' +
                             '<div class="my-card" onclick="focusOpenLayer('+'\'layerCardPopup\''+', \'' + shopData.SHOP_ID +'\', \''+ shopData.SHOP_FRONT_IMG +'\', \''+ shopData.SHOP_STAMP_IMG +'\')">' +
                             '<figure class="front">' +

@@ -13,8 +13,8 @@ var decryptUid = function(uid) {
     var cipher = crypto.createDecipher('aes-128-ecb', secrect);
     var decrypted = cipher.update(uid, 'hex', 'utf8');
     decrypted += cipher.final('utf8');
-    decrypted = decrypted.substr(3,11);
-    return decrypted;
+    var returnValue = decrypted.substr(3,3) + '-' + decrypted.substr(6,4) + '-' + decrypted.substr(10,4);
+    return returnValue;
 }
 
 //Get Coupon Shop Page
@@ -29,11 +29,11 @@ router.get('/main', function(req, res, next) {
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
-    logger.debug(TAG, 'Web check : ' + userId);
+    logger.debug(TAG, 'Web check : ' + webCheck);
 
 
-    if(userId == null || userId == undefined ||
-        currentLat == null || currentLat == undefined ||
+    if(userId == null || userId == undefined &&
+        currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
         logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
@@ -50,7 +50,7 @@ router.get('/main', function(req, res, next) {
             'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
             'where SUC.MAPPING_YN = "Y" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
             'having distance < 250 ' +
-            'order by distance, field(USED_YN, "N", "Y"), ISSUED_DT ASC';
+            'order by field(USED_YN, "N", "Y"), distance, ISSUED_DT ASC';
         connection.query(selectCouponList, function (err, couponListData) {
             if (err) {
                 logger.error(TAG, "DB select coupon shop main error : " + err);
@@ -78,11 +78,11 @@ router.post('/main', function(req, res, next) {
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
-    logger.debug(TAG, 'Web check : ' + userId);
+    logger.debug(TAG, 'Web check : ' + webCheck);
 
 
-    if(userId == null || userId == undefined ||
-        currentLat == null || currentLat == undefined ||
+    if(userId == null || userId == undefined &&
+        currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
         logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
@@ -99,7 +99,7 @@ router.post('/main', function(req, res, next) {
             'inner join SB_SHOP_INFO as SSI on SUC.SHOP_ID = SSI.SHOP_ID ' +
             'where SUC.MAPPING_YN = "Y" and SUC.DEL_YN="N" and SUC.USER_ID = ' + mysql.escape(userId) + ' ' +
             'having distance < 250 ' +
-            'order by distance, field(USED_YN, "N", "Y"), ISSUED_DT ASC';
+            'order by field(USED_YN, "N", "Y"), distance, ISSUED_DT ASC';
         connection.query(selectCouponList, function (err, couponListData) {
             if (err) {
                 logger.error(TAG, "DB select coupon shop main error : " + err);
@@ -120,24 +120,19 @@ router.get('/shopList', function (req, res, next) {
     logger.info(TAG, 'Get coupon shop list');
 
     var userId = req.headers.user_id;
-    logger.debug(TAG, 'User id : ' + userId);
-
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
+
+    logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
 
-    if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid user id parameter error');
-        res.status(400);
-        res.send('Invalid user id parameter error');
-    }
-
-    if(currentLat == null || currentLat == undefined ||
+    if(userId == null || userId == undefined &&
+        currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
-        logger.debug(TAG, 'Invalid location parameter error');
+        logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
-        res.send('Invalid location parameter error');
+        res.send('Invalid parameter error');
     }
 
     //Shop List API
@@ -172,26 +167,20 @@ router.get('/shopData', function(req, res, next) {
     logger.info(TAG, 'Get coupon shop data');
 
     var userId = req.headers.user_id;
-    logger.debug(TAG, 'User id : ' + userId);
-
     var currentLat = req.query.current_lat;
     var currentLng = req.query.current_lng;
+
+    logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
 
-    if(userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid user id parameter error');
-        res.status(400);
-        res.send('Invalid user id parameter error');
-    }
-
-    if(currentLat == null || currentLat == undefined ||
+    if(userId == null || userId == undefined &&
+        currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
-        logger.debug(TAG, 'Invalid location parameter error');
+        logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
-        res.send('Invalid location parameter error');
+        res.send('Invalid parameter error');
     }
-
 
     //Shop Data API
     getConnection(function (err, connection) {
@@ -302,16 +291,11 @@ router.put('/useCoupon', function(req, res, next) {
     logger.debug(TAG, 'Coupon number : ' + couponNumber);
 
     if(shopId == null || shopId == undefined &&
-        userId == null || userId == undefined) {
+        userId == null || userId == undefined &&
+        couponNumber == null || couponNumber == undefined) {
         logger.debug(TAG, 'Invalid id parameter error');
         res.status(400);
         res.send('Invalid id parameter error');
-    }
-
-    if(couponNumber == null || couponNumber == undefined) {
-        logger.debug(TAG, 'Invalid coupon number parameter error');
-        res.status(400);
-        res.send('Invalid coupon number parameter error');
     }
 
     //Use Coupon Data API
@@ -344,41 +328,6 @@ router.put('/useCoupon', function(req, res, next) {
     });
 });
 
-/*//Get Coupon Data
-router.get('/selectPushCoupon', function(req, res, next) {
-    logger.info(TAG, 'Update delete coupon data');
-
-    var userId = req.headers.user_id;
-    var shopId = req.query.shop_id;
-
-    logger.debug(TAG, 'User id : ' + userId);
-    logger.debug(TAG, 'Shop id : ' + shopId);
-
-    if(shopId == null || shopId == undefined &&
-        userId == null || userId == undefined) {
-        logger.debug(TAG, 'Invalid id parameter error');
-        res.status(400);
-        res.send('Invalid id parameter error');
-    }
-
-    //Selectg Coupon Data API
-    getConnection(function (err, connection) {
-        var selectCouponQuery = 'select COUPON_NAME, COUPON_NUMBER, EXPIRATION_DT from SB_USER_COUPON ' +
-            'where SHOP_ID = '+mysql.escape(shopId)+' and USER_ID = '+mysql.escape(userId) +' and MAPPING_YN="Y" and USED_YN="N"';
-        connection.query(selectCouponQuery, function (err, selectCouponData) {
-            if (err) {
-                logger.error(TAG, "Select Coupon error : " + err);
-                res.status(400);
-                res.send('Select coupon error');
-            }else{
-                logger.debug(TAG, 'Select coupon success');
-                res.send({selectCouponData: selectCouponData});
-            }
-            connection.release();
-        });
-    });
-});*/
-
 //Get Coupon Data
 router.get('/selectCoupon', function(req, res, next) {
     logger.info(TAG, 'Select push coupon data');
@@ -392,7 +341,8 @@ router.get('/selectCoupon', function(req, res, next) {
     logger.debug(TAG, 'Coupon number : ' + couponNumber);
 
     if(shopId == null || shopId == undefined &&
-        userId == null || userId == undefined) {
+        userId == null || userId == undefined &&
+        couponNumber == null || couponNumber == undefined) {
         logger.debug(TAG, 'Invalid id parameter error');
         res.status(400);
         res.send('Invalid id parameter error');
@@ -409,7 +359,7 @@ router.get('/selectCoupon', function(req, res, next) {
                 res.status(400);
                 res.send('Select coupon error');
             }else{
-                logger.debug(TAG, 'Select coupon success');
+                logger.debug(TAG, 'Select coupon success', selectCouponData);
                 res.send({userNumber: decryptUid(userId), selectCouponData: selectCouponData[0]});
             }
             connection.release();
@@ -430,16 +380,11 @@ router.put('/deleteCoupon', function(req, res, next) {
     logger.debug(TAG, 'Coupon number : ' + couponNumber);
 
     if(shopId == null || shopId == undefined &&
-        userId == null || userId == undefined) {
+        userId == null || userId == undefined &&
+        couponNumber == null || couponNumber == undefined) {
         logger.debug(TAG, 'Invalid id parameter error');
         res.status(400);
         res.send('Invalid id parameter error');
-    }
-
-    if(couponNumber == null || couponNumber == undefined) {
-        logger.debug(TAG, 'Invalid coupon number parameter error');
-        res.status(400);
-        res.send('Invalid coupon number parameter error');
     }
 
     //Delete Coupon Data API

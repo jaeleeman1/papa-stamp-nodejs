@@ -18,10 +18,10 @@ router.get('/main', function(req, res, next) {
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
-    logger.debug(TAG, 'Web check : ' + userId);
+    logger.debug(TAG, 'Web check : ' + webCheck);
 
-    if(userId == null || userId == undefined ||
-        currentLat == null || currentLat == undefined ||
+    if(userId == null || userId == undefined &&
+        currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
         logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
@@ -43,8 +43,32 @@ router.get('/main', function(req, res, next) {
                 res.send('Select shop list main error');
             }else{
                 logger.debug(TAG, 'Select shop list main success : ' + JSON.stringify(shopListMainData));
-                res.status(200);
-                res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', shopListMainData:shopListMainData, webCheck:webCheck});
+                var selectUserShopQuery = 'select SHOP_ID from SB_USER_PUSH_INFO where USER_ID = ' + mysql.escape(userId) +' and DEL_YN = "N"';
+                connection.query(selectUserShopQuery, function (err, userShopListData) {
+                    if (err) {
+                        logger.error(TAG, "Select shop list main error : " + err);
+                        res.status(400);
+                        res.send('Select shop list main error');
+                    }else{
+                        logger.debug(TAG, 'Select user shop list success : ' + JSON.stringify(userShopListData));
+                        var existShop = [];
+                        var tempShop = [];
+                        for(var i=0; i<userShopListData.length; i++) {
+                            tempShop.push(userShopListData[i].SHOP_ID);
+                        }
+
+                        for(var i=0; i<shopListMainData.length; i++) {
+                            if((tempShop.indexOf(shopListMainData[i].SHOP_ID) > -1)) {
+                                existShop.push(1);
+                            }else {
+                                existShop.push(0);
+                            }
+                        }
+
+                        res.status(200);
+                        res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', shopListMainData:shopListMainData, existShop:existShop, webCheck:webCheck});
+                    }
+                });
             }
             connection.release();
         });
@@ -53,7 +77,7 @@ router.get('/main', function(req, res, next) {
 
 //Get Shop Main Page
 router.post('/main', function(req, res, next) {
-    logger.info(TAG, 'Get shop main information');
+    logger.info(TAG, 'Post shop main information');
 
     var userId = req.body.user_id;
     var currentLat = req.body.current_lat;
@@ -63,10 +87,10 @@ router.post('/main', function(req, res, next) {
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
     logger.debug(TAG, 'Current longitude : ' + currentLng);
-    logger.debug(TAG, 'Web check : ' + userId);
+    logger.debug(TAG, 'Web check : ' + webCheck);
 
-    if(userId == null || userId == undefined ||
-        currentLat == null || currentLat == undefined ||
+    if(userId == null || userId == undefined &&
+        currentLat == null || currentLat == undefined &&
         currentLng == null || currentLng == undefined) {
         logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
@@ -88,8 +112,32 @@ router.post('/main', function(req, res, next) {
                 res.send('Select shop list main error');
             }else{
                 logger.debug(TAG, 'Select shop list main success : ' + JSON.stringify(shopListMainData));
-                res.status(200);
-                res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', shopListMainData:shopListMainData, webCheck:webCheck});
+                var selectUserShopQuery = 'select SHOP_ID from SB_USER_PUSH_INFO where USER_ID = ' + mysql.escape(userId) +' and DEL_YN = "N"';
+                connection.query(selectUserShopQuery, function (err, userShopListData) {
+                    if (err) {
+                        logger.error(TAG, "Select shop list main error : " + err);
+                        res.status(400);
+                        res.send('Select shop list main error');
+                    }else{
+                        logger.debug(TAG, 'Select user shop list success : ' + JSON.stringify(userShopListData));
+                        var existShop = [];
+                        var tempShop = [];
+                        for(var i=0; i<userShopListData.length; i++) {
+                            tempShop.push(userShopListData[i].SHOP_ID);
+                        }
+
+                        for(var i=0; i<shopListMainData.length; i++) {
+                            if((tempShop.indexOf(shopListMainData[i].SHOP_ID) > -1)) {
+                                existShop.push(1);
+                            }else {
+                                existShop.push(0);
+                            }
+                        }
+
+                        res.status(200);
+                        res.render('common/papa-stamp', {view:'shop', url:config.url, userId:userId, shopId:'', shopListMainData:shopListMainData, existShop:existShop, webCheck:webCheck});
+                    }
+                });
             }
             connection.release();
         });
@@ -126,6 +174,42 @@ router.get('/shopData', function(req, res, next) {
                 logger.debug(TAG, 'Select shop data success : ' + JSON.stringify(shopData));
                 res.status(200);
                 res.send({shopData: shopData[0]});
+            }
+            connection.release();
+        });
+    });
+});
+
+
+//Insert Card Data
+router.put('/insertCard', function(req, res, next) {
+    logger.info(TAG, 'Insert card data');
+
+    var userId = req.headers.user_id;
+    var shopId = req.body.shop_id;
+
+    logger.debug(TAG, 'User id : ' + userId);
+    logger.debug(TAG, 'Shop id : ' + shopId);
+
+    if(shopId == null || shopId == undefined &&
+        userId == null || userId == undefined) {
+        logger.debug(TAG, 'Invalid parameter');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
+
+    //Card Data API
+    getConnection(function (err, connection) {
+        var insertPushInfo = 'insert into SB_USER_PUSH_INFO (USER_ID, SHOP_ID, USER_STAMP) value ' +
+            '('+mysql.escape(userId)+','+mysql.escape(shopId)+', 0) on duplicate key update DEL_YN = "N"';
+        connection.query(insertPushInfo, function (err, insertPushInfoData) {
+            if (err) {
+                logger.error(TAG, "Insert push info error : " + err);
+                res.status(400);
+                res.send('Insert push info error');
+            }else{
+                logger.debug(TAG, 'Insert push info success');
+                res.send({result: 'success'});
             }
             connection.release();
         });

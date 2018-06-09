@@ -9,80 +9,9 @@ var path = require('path');
 var FCM = require('fcm-push');
 var crypto = require( "crypto" );
 var https = require("https");
-var credential = 'Basic '+new Buffer('Papastamp:bc87948654b711e8a20d0cc47a1fcfae').toString('base64');
+var credential = 'Basic '+new Buffer('Papa-stamp:'+config.smsKey).toString('base64');
 
 const TAG = '[NOTIFICATION INFO] ';
-const serverKey = 'AAAAHIVXzfk:APA91bHqH863OCv5t6oNHwoYjDp5kmqd-D6GtrrU-QW_ikVCkW2HteP6pnvCT58XhKH4bobu0jOPZyzF2w1DFE1z4ktQ1bVS59iXQi70qqGFyW8g9LNLR8KgksXrm9lzQ1_FVsDsQZt0';
-
-var notificationType = {
-    "NOTIFICATION_TYPE_UNDEFINED" : 0,
-    "NOTIFICATION_TYPE_ORDER_NOTIFICATION" : 1
-};
-
-router.post('/finish_order/:uid/', function(req, res, next) {
-    console.log(TAG, 'POST: Send notification');
-
-    var uid = req.params.uid;
-
-    console.log(TAG, 'requested UID: ' + uid);
-
-    var info = {
-        uid: uid,
-        ordermessage: "고객님~ 주문한 상품 준비되었습니다.!",
-        finishmessage: "상품을 수령하시면 감사하겠습니다 ^.^"
-    };
-
-    sendNotification("e_9dzLDGHk0:APA91bFkENFMoPZsVDQKE4iotXFhLVyv_FZAbRZBINZ2A1I9PAMyLytXJhOXOGoUJEM2-nc_v3kmuztbVcuV1PAEx3f-Fia10kfCKg9y7DG9XbQMXonPv9tzS1xbrg5dCtX35T8xDQqT",
-        notificationType.NOTIFICATION_TYPE_ORDER_NOTIFICATION, info);
-
-    res.status(200);
-    res.send('sendSsupNotification response ok');
-});
-
-var sendNotification = function sendNotification(accessToken, notiType, info) {
-
-    switch (notiType) {
-        case notificationType.NOTIFICATION_TYPE_ORDER_NOTIFICATION:
-            var callapse_key = 'ORDER';
-            var title = info.ordermessage;
-            var body = info.finishmessage;
-            var icon = '/images/papastamp_icon.png';
-            var tag = 1;
-            break;
-        default:
-            console.log(TAG, 'Undefined notification type');
-            return;
-    }
-
-
-    var message = {
-        to: accessToken,
-        collapse_key: callapse_key,
-        notification: {
-            title: title,
-            body: body,
-            icon: icon,
-            tag: tag
-        },
-        data: {
-            msgType: callapse_key,
-            uid: info.uid,
-            shopid: "SB-SHOP-00002",
-            ordermessage: info.ordermessage,
-            finishmessage: info.finishmessage
-        }
-    };
-
-
-    var fcm = new FCM(serverKey);
-    fcm.send(message, function(err, res){
-        if (err) {
-            console.log(TAG, "Failed to send notification, error: " + err);
-        } else {
-            console.log(TAG, "Successfully sent with response: ", res);
-        }
-    });
-};
 
 var encryptUid = function(unumber) {
     unumber = unumber.replace(/-/gi, '');
@@ -123,7 +52,7 @@ router.post('/request-stamp', function (req, res, next) {
     logger.info(TAG, 'request user stamp');
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
-    var requestCheck = req.body.request_check;
+    var retryCheck = req.body.retry_check;
 
     getConnection(function (err, connection) {
         var selectStampCount = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
@@ -146,7 +75,7 @@ router.post('/request-stamp', function (req, res, next) {
                         res.send('Select coupon error');
                     } else {
                         logger.debug(TAG, 'Select coupon success');
-                        if(requestCheck == 'true') {
+                        if(retryCheck == 'true') {
                             io.sockets.emit(userId, {type:"request-stamp", sendId: shopId});
                         }
                         if(selectStampCountData.length > 0) {
@@ -155,7 +84,7 @@ router.post('/request-stamp', function (req, res, next) {
                             io.sockets.emit(shopId, {type:"request-stamp", sendId: userId, phoneNumber: decryptUid(userId), userStamp: 0, selectCouponData: selectCouponData});
                         }
                         res.status(200);
-                        res.send({resultData: 'request success'});
+                        res.send({result: 'success'});
                     }
                 });
             }
@@ -251,7 +180,7 @@ router.post('/request-coupon', function (req, res, next) {
     var userId = req.headers.user_id;
     var shopId = req.body.shop_id;
     var couponNumber = req.body.coupon_number;
-    var requestCheck = req.body.request_check;
+    var retryCheck = req.body.retry_check;
     logger.info(TAG, 'request userId' , userId);
     logger.info(TAG, 'request shopId', shopId);
     logger.info(TAG, 'request couponNumber', couponNumber);
@@ -277,7 +206,7 @@ router.post('/request-coupon', function (req, res, next) {
                         res.send('Select coupon error');
                     } else {
                         logger.debug(TAG, 'Select coupon success');
-                        if(requestCheck == 'true') {
+                        if(retryCheck == 'true') {
                             io.sockets.emit(userId, {type:"request-coupon", sendId: shopId});
                         }
                         if(selectStampCountData.length > 0) {
@@ -286,7 +215,7 @@ router.post('/request-coupon', function (req, res, next) {
                             io.sockets.emit(shopId, {type:"request-coupon", sendId: userId, phoneNumber: decryptUid(userId), couponNumber:couponNumber, userStamp: 0, selectCouponData: selectCouponData});
                         }
                         res.status(200);
-                        res.send({resultData: 'request success'});
+                        res.send({result: 'success'});
                     }
                 });
             }
@@ -341,34 +270,31 @@ router.post('/issued-coupon', function (req, res, next) {
     });
 });
 
-router.get('/sendsms', function(req, res, next) {
-    var userNumber = req.query.user_number;
-    var sendType = req.query.send_type;
-    var authCode = req.query.auth_code;
+router.post('/sendsms', function(req, res, next) {
+    var userNumber = req.body.user_number;
+    var sendType = req.body.send_type;
+    var authCode = req.body.auth_code;
     userNumber = userNumber.replace(/-/gi, '');
 
-    console.log(userNumber);
-    console.log(sendType);
-    console.log(authCode);
+    logger.debug(TAG, 'User Number : ' + userNumber);
+    logger.debug(TAG, 'Send Type : ' + sendType);
+    logger.debug(TAG, 'Auth Code : ' + authCode);
 
     var sendMsg = '';
 
     if(sendType == 'signup') {
         sendMsg = '가입 인증번호는 ['
+    }else if(sendType == 'usingCoupon'){
+        sendMsg = '쿠폰 사용 인증번호는 ['
     }
 
     var data = {
-        "sender"     : "01026181715",
+        "sender"     : "01037291715",
         "receivers"  : [userNumber],
         "content"    : sendMsg + authCode + '] - 파파 스탬프'
     }
 
-    res.send({result:"success"});
-    /*
-
-
-
-    var body = JSON.stringify(data);
+    /*var body = JSON.stringify(data);
 
     var options = {
         host: 'api.bluehouselab.com',
@@ -399,6 +325,8 @@ router.get('/sendsms', function(req, res, next) {
     req.on('error', function(e) {
         console.error(e);
     });*/
+
+    res.send({result:"success"});
 });
 
 module.exports = router;

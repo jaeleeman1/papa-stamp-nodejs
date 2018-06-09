@@ -26,17 +26,17 @@
                             <h5 class="use-coupon-btn-<%= shopID %> delete-coupon" onclick="deleteCoupon('<%= shopID %>', '<%= couponNumber %>');">삭제하기</h5>
                             <h3 class="use-shop-name-<%= shopID %>"><%= shopName %><span class="use-shop-subname-<%= shopID %>">(<%= shopSubName %>)</span></h3>
                             <h4 class="use-coupon-name-<%= shopID %>"><%= couponName %><span class="use-coupon-price-<%= shopID %>"><%= couponPrice %>원</span></h4>
-                            <div class="use-coupon-<%= shopID %>">사용날짜 : <span class="use-coupon-number-<%= shopID %>"><%= usedDate %></span></div>
+                            <div class="use-coupon-<%= shopID %>" id="use-coupon-date-<%= shopID %>-<%= couponNumber %>">사용날짜 : <span class="use-coupon-number-<%= shopID %>"><%= usedDate %></span></div>
                             <h6 class="use-coupon-date-<%= shopID %>">✿ 유효 기간 : <%= expirationDate %></h6>
                             <%}else {%>
                                 <%if(webCheck == 'true') {%>
-                            <h5 class="use-coupon-btn-<%= shopID %>" onclick="webCheckCoupon();">사용하기</h5>
+                                    <h5 class="use-coupon-btn-<%= shopID %>" onclick="webCheckCoupon();">사용하기</h5>
                                 <%}else {%>
-                            <h5 class="use-coupon-btn-<%= shopID %>" id="use-coupon-btn-<%= couponNumber %>" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>');">사용하기</h5>
-                            <%}%>
+                                    <h5 class="use-coupon-btn-<%= shopID %>" id="use-coupon-<%= shopID %>-<%= couponNumber %>" onclick="useCoupon('<%= shopID %>', '<%= shopName %>', '<%= shopSubName %>', '<%= couponName %>', '<%= couponNumber %>');">사용하기</h5>
+                                <%}%>
                             <h3 class="use-shop-name-<%= shopID %>"><%= shopName %><span class="use-shop-subname-<%= shopID %>">(<%= shopSubName %>)</span></h3>
                             <h4 class="use-coupon-name-<%= shopID %>"><%= couponName %><span class="use-coupon-price-<%= shopID %>"><%= couponPrice %>원</span></h4>
-                            <div class="use-coupon-<%= shopID %>" id="use-coupon-date-<%= couponNumber %>">쿠폰 번호 : <span class="use-coupon-number-<%= shopID %>"><%= couponNumber %></span></div>
+                            <div class="use-coupon-<%= shopID %>" id="use-coupon-date-<%= shopID %>-<%= couponNumber %>">쿠폰 번호 : <span class="use-coupon-number-<%= shopID %>"><%= couponNumber %></span></div>
                             <h6 class="use-coupon-date-<%= shopID %>">✿ 유효 기간 : <%= expirationDate %></h6>
                             <%}%>
                         </div>
@@ -88,14 +88,7 @@
 </div>
 
 <script type="text/javascript">
-    function useCouponAndroid(shopId, couponNumber) {
-        var usedDate = new Date().toISOString().slice(0,16).replace("T",", ");
-        document.getElementById("use-coupon-btn-"+couponNumber).className = 'delete-coupon';
-        document.getElementById("use-coupon-btn-"+couponNumber).onclick = function(){deleteCoupon();};
-        document.getElementById("use-coupon-btn-"+couponNumber).innerHTML = '삭제하기';
-        document.getElementById("use-coupon-date-btn-"+couponNumber).innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + usedDate +'</span>';
-        $("#"+shopId+"-"+couponNumber).addClass("used-deemed");
-    }
+    $.toast.config.align = 'center';
 
     function useCouponCallback(shopId, couponNumber) {
         var dataString = {'shop_id': shopId};
@@ -112,6 +105,8 @@
                 }
             },
             error: function(request, status, error) {
+                $.toast.config.width = 250;
+                $.toast('<h3>쿠폰 사용</h3> 요청에 실패 하였습니다.', { type: 'danger', duration: 3000 } );
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
@@ -131,7 +126,6 @@
             resizable:false,
             buttons: {
                 "확인": function () {
-                    $('#delete_card').unbind('click');
                     useCouponCallback(shopId, couponNum);
                     $(this).dialog('close');
                 },
@@ -156,14 +150,11 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                $.toast.config.align = 'center';
-                $.toast.config.width = 260;
-                $.toast('<h4>사용한 쿠폰 삭제</h4>가 완료 되었습니다.', {type: 'info', duration: 3000 });
-                setTimeout(function () {
-                    location.reload();
-                }, 3100);
+                location.reload();
             },
             error: function(request, status, error) {
+                $.toast.config.width = 220;
+                $.toast('<h3>쿠폰 삭제</h3>에 실패 하였습니다.', { type: 'danger', duration: 3000 } );
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
@@ -179,7 +170,6 @@
             resizable:false,
             buttons: {
                 "확인": function () {
-                    $('#delete_card').unbind('click');
                     $(this).dialog('close');
                     deleteCouponCallback(shopId, couponNum);
                 },
@@ -191,16 +181,15 @@
     }
 
     function webCheckCoupon() {
-        $.toast.config.align = 'center';
         $.toast.config.width = 200;
-        $.toast('<h4>앱에서만</h4> 사용 가능합니다.', {type: 'info', duration: 3000 });
+        $.toast('<h3>앱</h3>에서만 사용 가능합니다.', {type: 'info', duration: 3000 });
     }
 
     function retryCoupon() {
         var shopId = $("#shop_id").val();
         var couponNumber = $("#confirm-coupon-number").text();
         var userId = $("#user_id").val();
-        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber, 'request_check' : 'false'};
+        var dataString = {'shop_id': shopId, 'coupon_number': couponNumber, 'retry_check' : 'false'};
         var headers = {};
         headers["user_id"] = userId;
 
@@ -211,7 +200,10 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                console.log(data.resultData);
+                if(data.result == "success") {
+                    $.toast.config.width = 220;
+                    $.toast('<h3>쿠폰 사용</h3> 재요청 하였습니다.', {type: 'info', duration: 3000 });
+                }
             },
             error: function(request, status, error) {
                 console.error("use coupon : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -223,7 +215,7 @@
         $("#shop-manager-confirm").dialog({
             resizable: false,
             modal: true,
-            title: "쿠폰 발급",
+            title: "쿠폰 사용 요청",
             height: 200,
             width: '90%',
             resizable:false,
@@ -234,12 +226,14 @@
                         'buttons',
                         {
                             "닫기": function () {
+                                $("#shop_id").val('');
                                 $(this).dialog('close');
                            }
                         }
                     );
                 },
                 "닫기": function () {
+                    $("#shop_id").val('');
                     $(this).dialog('close');
                 }
             }
@@ -271,12 +265,12 @@
                     success: function (data) {
                         $("#shop-manager-confirm").dialog('close');
                         $("#use-coupon-confirm").dialog('close');
-                        document.getElementById("use-coupon-" + data.couponNumber).className = 'delete-coupon';
-                        document.getElementById("use-coupon-" + data.couponNumber).onclick = function () {
+                        document.getElementById("use-coupon-"+data.shopId+"-"+ data.couponNumber).className = 'use-coupon-btn-'+ data.shopId +' delete-coupon';
+                        document.getElementById("use-coupon-"+data.shopId+"-"+ data.couponNumber).onclick = function () {
                             deleteCoupon();
                         };
-                        document.getElementById("use-coupon-" + data.couponNumber).innerHTML = '삭제하기';
-                        document.getElementById("use-coupon-date-btn-" + data.couponNumber).innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + data.viewDate + '</span>';
+                        document.getElementById("use-coupon-"+data.shopId+"-"+data.couponNumber).innerHTML = '삭제하기';
+                        document.getElementById("use-coupon-date-"+data.shopId+"-"+ data.couponNumber).innerHTML = '사용날짜 : ' + '<span style="font-size:1em;color:white">' + data.viewDate + '</span>';
                         $("#" + data.shopId + "-" + data.couponNumber).addClass("used-deemed");
                         $("#shop_id").val('');
                     },
@@ -453,18 +447,18 @@
                             appendData += '<h5 class="use-coupon-btn-'+ shopData.SHOP_ID +' delete-coupon" onclick="deleteCoupon(\''+ shopData.SHOP_ID +'\',\'' + shopData.COUPON_NUMBER +'\');">삭제하기</h5>' +
                                 '<h3 class="use-shop-name-'+ shopData.SHOP_ID +'">' + shopData.SHOP_NAME + '<span class="use-shop-subname-'+ shopData.SHOP_ID +'">(' + shopData.SHOP_SUB_NAME + ')</span></h3>' +
                                 '<h4 class="use-coupon-name-'+ shopData.SHOP_ID +'">' + shopData.COUPON_NAME + '<span class="use-coupon-price-'+ shopData.SHOP_ID +'">' + shopData.COUPON_PRICE + '원</span></h4>' +
-                                '<div class="use-coupon-'+ shopData.SHOP_ID +'" id="use-coupon-date-btn-' + shopData.COUPON_NUMBER + '">사용날짜 : <span class="use-coupon-number-'+ shopData.SHOP_ID +'">'+ shopData.USED_DT +'</span></div>' +
+                                '<div class="use-coupon-'+ shopData.SHOP_ID +'" id="use-coupon-date-'+ shopData.SHOP_ID +'-' + shopData.COUPON_NUMBER + '">사용날짜 : <span class="use-coupon-number-'+ shopData.SHOP_ID +'">'+ shopData.USED_DT +'</span></div>' +
                                 '<h6 class="use-coupon-date-'+ shopData.SHOP_ID +'">✿ 유효 기간 : ' + shopData.EXPIRATION_DT + '</h6>';
                         }else {
                             if(webCheck == 'true') {
                                 appendData += '<h5 class="use-coupon-btn-'+ shopData.SHOP_ID +'" onclick="webCheckCoupon();">사용하기</h5>';
                             }else {
-                                appendData += '<h5 class="use-coupon-btn-'+ shopData.SHOP_ID +'" id="use-coupon-btn-'+ shopData.COUPON_NUMBER +'" onclick="useCoupon(\''+ shopData.SHOP_ID +'\',\'' + shopData.SHOP_NAME +'\',\'' + shopData.SHOP_SUB_NAME +'\',' +
+                                appendData += '<h5 class="use-coupon-btn-'+ shopData.SHOP_ID +'" id="use-coupon-'+ shopData.SHOP_ID +'-'+ shopData.COUPON_NUMBER +'" onclick="useCoupon(\''+ shopData.SHOP_ID +'\',\'' + shopData.SHOP_NAME +'\',\'' + shopData.SHOP_SUB_NAME +'\',' +
                                     '\'' + shopData.COUPON_NAME +'\',\'' + shopData.COUPON_NUMBER +'\');">사용하기</h5>';
                             }
                             appendData += '<h3 class="use-shop-name-'+ shopData.SHOP_ID +'">' + shopData.SHOP_NAME + '<span class="use-shop-subname-'+ shopData.SHOP_ID +'">(' + shopData.SHOP_SUB_NAME + ')</span></h3>' +
                                 '<h4 class="use-coupon-name-'+ shopData.SHOP_ID +'">' + shopData.COUPON_NAME + '<span class="use-coupon-price-'+ shopData.SHOP_ID +'">' + shopData.COUPON_PRICE + '원</span></h4>' +
-                                '<div class="use-coupon-'+ shopData.SHOP_ID +'" id="use-coupon-date-btn-' + shopData.COUPON_NUMBER + '">쿠폰 번호 : <span class="use-coupon-number-'+ shopData.SHOP_ID +'">'+ shopData.COUPON_NUMBER +'</span></div>' +
+                                '<div class="use-coupon-'+ shopData.SHOP_ID +'" id="use-coupon-date-'+ shopData.SHOP_ID +'-' + shopData.COUPON_NUMBER + '">쿠폰 번호 : <span class="use-coupon-number-'+ shopData.SHOP_ID +'">'+ shopData.COUPON_NUMBER +'</span></div>' +
                                 '<h6 class="use-coupon-date-'+ shopData.SHOP_ID +'">✿ 유효 기간 : ' + shopData.EXPIRATION_DT + '</h6>';
                         }
                         appendData += '</div>' +

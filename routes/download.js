@@ -9,4 +9,10 @@ router.get('/papastamp.apk', function(req, res, next) {
     res.download(filepath);
 });
 
+router.get('/admin.apk', function(req, res, next) {
+    var filepath = __dirname + '/../download/admin-papastamp.apk'
+    console.log(TAG, 'filepath: ' + filepath);
+    res.download(filepath);
+});
+
 module.exports = router;

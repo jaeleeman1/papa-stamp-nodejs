@@ -84,6 +84,8 @@ router.get('/main', function(req, res, next) {
                                     tempViewStamp.push(shopStampTotalData[i].STAMP_CNT);
                                 }
 
+
+
                                 for(var i=0; i<shopWeeklyData.length; i++) {
                                     viewDate.push(shopWeeklyData[i].VIEW_DATE);
                                     if(i == (shopWeeklyData.length -1)) {
