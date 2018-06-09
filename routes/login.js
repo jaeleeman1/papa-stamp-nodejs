@@ -13,9 +13,9 @@ router.get('/', function(req, res, next) {
     if(req.session.userInfo) {
         var userInfo = req.session.userInfo;
         user_email = userInfo.user_email;
-        res.render('login', {url:config.url, userEmail: user_email});
+        res.render('login', {url:config.url, userEmail: user_email, privacy:"none"});
     }else {
-        res.render('login', {url:config.url, userEmail: "E-Mail"});
+        res.render('login', {url:config.url, userEmail: "E-Mail", privacy:"none"});
     }
 });
 
@@ -31,6 +31,10 @@ router.get('/logout', function(req, res, next) {
         if(err) console.err('err', err);
         res.render('papa-admin/admin-signin', {url:config.url, userId: "Username"});
     });
+});
+
+router.get('/privacy', function(req, res, next) {
+    res.render('login', {url:config.url, userEmail: "E-Mail", privacy:"privacy"});
 });
 
 module.exports = router;

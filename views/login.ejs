@@ -44,6 +44,10 @@
   <input type="hidden" name="terms_yn" id="terms_yn" value="N"/>
 </form>
 
+<form style="display:none" name="privacyForm" id="privacyForm">
+  <input type="hidden" name="privacy" id="privacy" value="<%= privacy %>"/>
+</form>
+
 <div>
   <a class="hiddenanchor" id="signin"></a>
 
@@ -261,6 +265,10 @@
 <script type ="text/javascript">
     $.toast.config.align = 'center';
     $(function() {
+        if($("#privacy").val() == "privacy") {
+            focusOpenLayer('layerSignupTermsPopup');
+        }
+
         if (navigator.geolocation) {
             // GeoLocation을 이용해서 접속 위치를 얻어옵니다
             navigator.geolocation.getCurrentPosition(function (position) {
