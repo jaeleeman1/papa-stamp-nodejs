@@ -513,8 +513,9 @@ router.post('/userCheck', function(req, res, next) {
     }
 
     getConnection(function (err, connection){
-        var checkUserNumberEmailQuery = 'select count(*) as EMAIL_CHECK, (select exists (select * from SB_USER_INFO where USER_ID = ' + mysql.escape(encryptUid(userNumber)) + ')) as USER_NUMBER_CHECK' +
-            " from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail);
+        var checkUserNumberEmailQuery = 'select count(*) as EMAIL_CHECK, (select exists (select * from SB_USER_INFO where DEL_YN="N" and USER_ID = ' + mysql.escape(encryptUid(userNumber)) + ')) as USER_NUMBER_CHECK ' +
+            "from SB_USER_INFO where USER_EMAIL = "+ mysql.escape(userEmail);
+        console.log('XX ' , checkUserNumberEmailQuery);
         connection.query(checkUserNumberEmailQuery, function (err, userNumberEmailCheckData) {
             if (err) {
                 logger.error(TAG, "Select user number check error : " + err);
