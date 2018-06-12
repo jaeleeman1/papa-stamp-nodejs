@@ -15,7 +15,7 @@
       <div class="title_right">
         <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top-search">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search for...">
+            <input type="text" class="form-control" id="search-data" placeholder="Search for...">
             <span class="input-group-btn">
               <button class="btn btn-default" type="button" onclick="searchStampData()">Go!</button>
             </span>
@@ -34,8 +34,8 @@
           <div class='input-group date' id='start-datepicker'>
             <input type='text' class="form-control" />
             <span class="input-group-addon">
-                               <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+             <span class="glyphicon glyphicon-calendar"></span>
+            </span>
           </div>
         </div>
       </div>
@@ -47,8 +47,8 @@
           <div class='input-group date' id='end-datepicker'>
             <input type='text' class="form-control" />
             <span class="input-group-addon">
-                               <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+             <span class="glyphicon glyphicon-calendar"></span>
+            </span>
           </div>
         </div>
       </div>
@@ -58,17 +58,17 @@
 
     <div style="float:right;margin-right:20px;">
       <label id="delete-check">삭제 여부</label>
-      <p>ALL: <input type="radio" class="flat" name="delete" id="delete-radio" value="ALL" />
-        Y: <input type="radio" class="flat" name="delete" id="delete-radio" value="Y" />
-        N: <input type="radio" class="flat" name="delete" id="delete-radio" value="N" checked="" required />
+      <p>ALL: <input type="radio" class="flat" name="delete" id="delete-radio" value="ALL" style="margin-right:30px;"/>
+        Y: <input type="radio" class="flat" name="delete" id="delete-radio" value="Y" style="margin-right:30px"; />
+        N: <input type="radio" class="flat" name="delete" id="delete-radio" value="N" checked="" style="margin-right:30px" />
       </p>
     </div>
 
     <div style="float:right;margin-right:60px;">
       <label>사용 여부</label>
-      <p>ALL: <input type="radio" class="flat" name="used" id="used-radio" value="ALL" />
-        Y: <input type="radio" class="flat" name="used" id="used-radio" value="Y" />
-        N: <input type="radio" class="flat" name="used" id="used-radio" value="N" checked="" required />
+      <p>ALL: <input type="radio" class="flat" name="used" id="used-radio" value="ALL" style="margin-right:30px"/>
+        Y: <input type="radio" class="flat" name="used" id="used-radio" value="Y" style="margin-right:30px"/>
+        N: <input type="radio" class="flat" name="used" id="used-radio" value="N" checked="" style="margin-right:30px"/>
       </p>
     </div>
 
@@ -101,7 +101,7 @@
           <div class="tiles">
             <div class="col-md-4 tile" style="width:15%;">
               <span>스탬프 발급 수</span>
-              <h2 id="stamp-length"><%= shopsStampTodayData.length %> 개</h2>
+              <h2 id="stamp-length"><%= shopStampTodayData.length %> 개</h2>
               <div style="display:none; margin-top:20px;">
                 <span>스탬프 카운트</span>
                 <h2 id="stamp-count"></h2>
@@ -122,8 +122,8 @@
                 <th class="column-title"> 사용자 </th>
                 <th class="column-title"> 발급일자 </th>
                 <th class="column-title no-link last"> 사용유무 </th>
-                <th class="column-title"> 삭제 </th>
                 <th class="column-title no-link last"> 삭제유무 </th>
+                <!--<th class="column-title"> 삭제 </th>-->
                 <th class="column-title no-link last"><span class="nobr"> 호출 </span>
                 </th>
                 <th class="bulk-actions" colspan="7">
@@ -133,7 +133,7 @@
               </thead>
 
               <tbody id="user-data">
-              <% for (var i=0; i<shopsStampTodayData.length; i++) { %>
+              <% for (var i=0; i<shopStampTodayData.length; i++) { %>
               <% if(i % 2 == 0) { %>
               <tr class="even pointer">
                   <% } else {%>
@@ -142,12 +142,12 @@
                 <td class="a-center ">
                   <input type="checkbox" class="flat search_checkbox" name="table_records">
                 </td>
-                <td class=" "><%= shopsStampTodayData[i].USER_ID %></td>
-                <td class=" "><%= shopsStampTodayData[i].VISIT_DATE %></td>
-                <td class=" "><%= shopsStampTodayData[i].USED_YN %></td>
-                <td class=""><a onclick="deleteStamp('<%= shopsStampTodayData[i].USER_ID %>', '<%= shopsStampTodayData[i].VISIT_DATE %>', '<%=i%>');" id="delete-<%=i%>">삭제</a>
-                <td class=" "><%= shopsStampTodayData[i].DEL_YN %></td>
-                <td class=""><a onclick="completePush('<%= shopsStampTodayData[i].USER_ID %>', '<%=i%>');"><i class="fa fa-bell blue" id="fcm-<%=i%>"></i></a>
+                <td class=" "><%= shopStampTodayData[i].USER_ID %></td>
+                <td class=" "><%= shopStampTodayData[i].VISIT_DATE %></td>
+                <td class=" "><%= shopStampTodayData[i].USED_YN %></td>
+                <td class=" "><%= shopStampTodayData[i].DEL_YN %></td>
+                <!--<td class=""><a onclick="deleteStamp('<%= shopStampTodayData[i].USER_ID %>', '<%= shopStampTodayData[i].VISIT_DATE %>', '<%=i%>');" id="delete-<%=i%>">삭제</a>-->
+                <td class=""><a onclick="completePush('<%= shopStampTodayData[i].USER_ID %>', '<%=i%>');"><i class="fa fa-bell blue" id="fcm-<%=i%>"></i></a>
                 </td>
               </tr>
               <% } %>
@@ -232,6 +232,27 @@
             var searchValue = $('input[type="checkbox"]:checked').parent("td").next().text();
             $('.top-search .input-group').find("input").val(searchValue);
         });
+
+        var keyNumber = '';
+        $("#search-data").on("input propertychange", function () {
+            var val = this.value.replace(/\D/g, '');
+            var newVal = '';
+            keyNumber = $(this).val();
+
+            if (val.length > 3 && val.length < 8) {
+                newVal += val.substr(0, 3) + '-';
+                val = val.substr(3);
+            } else if (val.length > 7) {
+                newVal += val.substr(0, 3) + '-' + val.substr(3, 4) + '-';
+                val = val.substr(7);
+            }
+            newVal += val;
+            this.value = newVal;
+
+            if ($(this).val().length > 13) {
+                $(this).val(keyNumber.substr(0, keyNumber.length - 1));
+            }
+        });
     });
 
     function searchStampData() {
@@ -269,8 +290,8 @@
                                 '<td class=" ">'+ data.userHisData[i].USER_ID +'</td>' +
                                 '<td class=" ">'+ data.userHisData[i].VISIT_DATE +'</td>' +
                                 '<td class=" ">'+ data.userHisData[i].USED_YN +'</td>' +
-                                '<td class=" last red"><a onclick="deleteStamp(\''+ data.userHisData[i].USER_ID +'\', \'' + data.userHisData[i].VISIT_DATE +'\', '+i+');" id="delete-'+i+'">삭제</a>' +
                                 '<td class=" ">'+ data.userHisData[i].DEL_YN +'</td>' +
+                                /*'<td class=" last red"><a onclick="deleteStamp(\''+ data.userHisData[i].USER_ID +'\', \'' + data.userHisData[i].VISIT_DATE +'\', '+i+');" id="delete-'+i+'">삭제</a>' +*/
                                 '<td class=" last grey"><a href="#"><i class="fa fa-bell-slash"></i></a>' +
                                 '</td>' +
                                 '</tr>';
@@ -317,8 +338,8 @@
                                 '<td class=" ">'+ data.periodData[i].USER_ID +'</td>' +
                                 '<td class=" ">'+ data.periodData[i].VISIT_DATE +'</td>' +
                                 '<td class=" ">'+ data.periodData[i].USED_YN +'</td>' +
-                                '<td class=" last"><a onclick="deleteStamp(\''+ data.periodData[i].USER_ID +'\', \'' + data.periodData[i].VISIT_DATE +'\', '+i+');" id="delete-'+i+'">삭제</a>' +
                                 '<td class=" ">'+ data.periodData[i].DEL_YN +'</td>' +
+                                /*'<td class=" last"><a onclick="deleteStamp(\''+ data.periodData[i].USER_ID +'\', \'' + data.periodData[i].VISIT_DATE +'\', '+i+');" id="delete-'+i+'">삭제</a>' +*/
                                 '<td class=" last"><a href="#"><i class="fa fa-bell-slash"></i></a>' +
                                 '</td>' +
                                 '</tr>';

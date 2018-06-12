@@ -29,10 +29,21 @@ var decryptUid = function(uid) {
 
 /* GET stamp listing. */
 router.get('/main', function(req, res, next) {
+    logger.info(TAG, 'Get Admin Stamp Main');
     var shopId = req.query.shop_id;
     var shopName = req.query.shop_name;
     var shopIcon = req.query.shop_icon;
     var userEmail = req.query.user_email;
+
+    logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'Shop name: ' + shopName);
+    logger.debug(TAG, 'User email : ' + userEmail);
+
+    if(shopId == null || shopId == undefined) {
+        logger.debug(TAG, 'Invalid parameter error');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
 
     getConnection(function (err, connection) {
         //Grgaph daily data
@@ -42,21 +53,22 @@ router.get('/main', function(req, res, next) {
             'group by COMPARE_DATE';
         connection.query(selectStampTotalQuery, function (err, shopStampTotalData) {
             if (err) {
-                console.error("*** initPage select id Error : " , err);
+                logger.error(TAG, 'Select grgaph daily data error', err);
                 res.status(400);
-                res.send('Select user push history error');
+                res.send('Select grgaph daily data error');
             }else {
-                console.log('Select user push history success : ' + JSON.stringify(shopStampTotalData));
+                logger.debug('Select grgaph daily data success : ' + JSON.stringify(shopStampTotalData));
                 //Today data
-                var selectStampTodayQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_PUSH_HIS ' +
+                var selectStampTodayQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s,%f") as VISIT_DATE from SB_USER_PUSH_HIS ' +
                     'where SHOP_ID = ' + mysql.escape(shopId) + ' and DEL_YN="N" and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") order by UPDATE_DT desc';
-                connection.query(selectStampTodayQuery, function (err, shopsStampTodayData) {
+                console.log('xxxx : ', selectStampTodayQuery);
+                connection.query(selectStampTodayQuery, function (err, shopStampTodayData) {
                     if (err) {
-                        console.error("*** initPage select id Error : " , err);
+                        logger.error(TAG, 'Select today data error', err);
                         res.status(400);
-                        res.send('Select stamp shop list error');
+                        res.send('Select today data error');
                     }else {
-                        console.log('Select coupon list success : ' + JSON.stringify(shopsStampTodayData));
+                        logger.debug('Select today data success : ' + JSON.stringify(shopStampTodayData));
                         //Weekly data
                         var selectWeeklyQuery = 'select DATE_FORMAT(DATE_NAME.WEEKLY_DAY, "%Y-%m-%d") as WEEKLY_DATE, DATE_FORMAT(DATE_NAME.WEEKLY_DAY, "%m/%d") as VIEW_DATE ' +
                             'from (select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as WEEKLY_DAY ' +
@@ -66,11 +78,11 @@ router.get('/main', function(req, res, next) {
                             'limit 10) DATE_NAME order by WEEKLY_DAY';
                         connection.query(selectWeeklyQuery, function (err, shopWeeklyData) {
                             if (err) {
-                                console.error("*** initPage select id Error : " , err);
+                                logger.error(TAG, 'Select weekly data error', err);
                                 res.status(400);
-                                res.send('Select stamp shop list error');
+                                res.send('Select weekly data error');
                             }else {
-                                console.log('Select weekly list success : ' + JSON.stringify(shopWeeklyData));
+                                logger.debug('Select weekly data success : ' + JSON.stringify(shopWeeklyData));
                                 var today;
                                 var viewDate = [];
                                 var stampDate = [];
@@ -83,8 +95,6 @@ router.get('/main', function(req, res, next) {
                                     stampDate.push(shopStampTotalData[i].COMPARE_DATE);
                                     tempViewStamp.push(shopStampTotalData[i].STAMP_CNT);
                                 }
-
-
 
                                 for(var i=0; i<shopWeeklyData.length; i++) {
                                     viewDate.push(shopWeeklyData[i].VIEW_DATE);
@@ -100,13 +110,13 @@ router.get('/main', function(req, res, next) {
                                     }
                                 }
 
-                                for(var i=0; i<shopsStampTodayData.length; i++) {
-                                    var tempId = shopsStampTodayData[i].USER_ID;
-                                    shopsStampTodayData[i].USER_ID = decryptUid(tempId);
+                                for(var i=0; i<shopStampTodayData.length; i++) {
+                                    var tempId = shopStampTodayData[i].USER_ID;
+                                    shopStampTodayData[i].USER_ID = decryptUid(tempId);
                                 }
 
                                 res.status(200);
-                                res.render('common/papa-admin',{view:'stamp', url:config.url, fcmKey:config.fcmKey, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon, today:today, shopsStampTodayData:shopsStampTodayData, viewDate:viewDate, viewStamp:viewStamp});
+                                res.render('common/papa-admin',{view:'stamp', url:config.url, fcmKey:config.fcmKey, shopId:shopId, userEmail:userEmail, shopName: shopName, shopIcon: shopIcon, today:today, shopStampTodayData:shopStampTodayData, viewDate:viewDate, viewStamp:viewStamp});
                             }
                         });
                     }
@@ -119,17 +129,20 @@ router.get('/main', function(req, res, next) {
 
 //Get User Data
 router.get('/user-data', function(req, res, next) {
-    logger.info(TAG, 'Get shop data');
+    logger.info(TAG, 'Get Admin User Data');
 
     var shopId = req.headers.shop_id;
-    logger.debug(TAG, 'Shop id : ' + shopId);
-
     var userNumber = req.query.user_number;
     var usedYn = req.query.used_yn;
     var delYn = req.query.del_yn;
-    logger.debug(TAG, 'User number : ' + userNumber);
 
-    if(userNumber == null || userNumber == undefined) {
+    logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'User number : ' + userNumber);
+    logger.debug(TAG, 'User yn : ' + usedYn);
+    logger.debug(TAG, 'Del yn : ' + delYn);
+
+    if(shopId == null || shopId == undefined &&
+        userNumber == null || userNumber == undefined) {
         logger.debug(TAG, 'Invalid parameter error');
         res.status(400);
         res.send('Invalid parameter error');
@@ -137,7 +150,7 @@ router.get('/user-data', function(req, res, next) {
 
     //Shop Data API
     getConnection(function (err, connection) {
-        var selectUserHisDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as VISIT_DATE from SB_USER_PUSH_HIS ' +
+        var selectUserHisDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s,%f") as VISIT_DATE from SB_USER_PUSH_HIS ' +
             'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(encryptUid(userNumber));
         if(usedYn != "ALL") {
             selectUserHisDataQuery += " and USED_YN = '"+ usedYn +"'";
@@ -146,22 +159,22 @@ router.get('/user-data', function(req, res, next) {
             selectUserHisDataQuery += " and DEL_YN = '" + delYn + "'";
         }
         selectUserHisDataQuery += " group by UPDATE_DT desc";
-        console.log(selectUserHisDataQuery);
         connection.query(selectUserHisDataQuery, function (err, userHisData) {
             if (err) {
-                console.error("Select shop data Error : ", err);
+                logger.error(TAG, 'Select user stamp history data error', err);
                 res.status(400);
-                res.send('Select shop data error');
+                res.send('Select user stamp history error');
             } else {
+                logger.debug('Select user stamp history success : ' + JSON.stringify(userHisData));
                 var selectUserInfoDataQuery = 'select USER_STAMP from SB_USER_PUSH_INFO ' +
                     'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = '+ mysql.escape(encryptUid(userNumber));
-                console.log(selectUserInfoDataQuery);
                 connection.query(selectUserInfoDataQuery, function (err, userInfoData) {
                     if (err) {
-                        console.error("Select shop data Error : ", err);
+                        logger.error(TAG, 'Select user stamp info data error', err);
                         res.status(400);
-                        res.send('Select shop data error');
+                        res.send('Select user stamp info data error');
                     } else {
+                        logger.debug('Select user stamp info data success : ' + JSON.stringify(userInfoData));
                         for(var i=0; i<userHisData.length; i++) {
                             var tempId = userHisData[i].USER_ID;
                             userHisData[i].USER_ID = decryptUid(tempId);
@@ -182,21 +195,24 @@ router.get('/period-data', function(req, res, next) {
     logger.info(TAG, 'Get period data');
 
     var shopId = req.headers.shop_id;
-    logger.debug(TAG, 'Shop id : ' + shopId);
-
     var startDate = req.query.start_date;
     var endDate = req.query.end_date;
     var usedYn = req.query.used_yn;
     var delYn = req.query.del_yn;
-    console.log('startDate : '+startDate);
-    console.log('endDate : ' +endDate);
 
-    /*    if(startDate == null || startDate == undefined &&
-     endDate == null || endDate == undefined) {
-     logger.debug(TAG, 'Invalid location parameter error');
-     res.status(400);
-     res.send('Invalid location parameter error');
-     }*/
+    logger.debug(TAG, 'Shop id : ' + shopId);
+    logger.debug(TAG, 'Start date : ' + startDate);
+    logger.debug(TAG, 'End date : ' + endDate);
+    logger.debug(TAG, 'Used yn : ' + usedYn);
+    logger.debug(TAG, 'Del yn : ' + delYn);
+
+    if(shopId == null || shopId == undefined &&
+        startDate == null || startDate == undefined &&
+        endDate == null || endDate == undefined) {
+        logger.debug(TAG, 'Invalid parameter error');
+        res.status(400);
+        res.send('Invalid parameter error');
+    }
 
     //Shop Data API
     getConnection(function (err, connection) {
@@ -208,45 +224,36 @@ router.get('/period-data', function(req, res, next) {
             paramStartDate = startDate.substr(6, 4) +'-'+ startDate.substr(3, 2) +'-'+ startDate.substr(0, 2);
             if(endDate.length > 0) {
                 paramEndDate = endDate.substr(6, 4) +'-'+ endDate.substr(3, 2) +'-'+ endDate.substr(0, 2);
-                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
+                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s,%f") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
                     'where UPDATE_DT between "'+ paramStartDate +'" and DATE_FORMAT(DATE_ADD("'+ paramEndDate +'",INTERVAL +1 day), "%Y-%m-%d") and SHOP_ID = ' + mysql.escape(shopId) ;
             }else {
-                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
+                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s,%f") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
                     'where UPDATE_DT between "'+ paramStartDate +'" and DATE_FORMAT(DATE_ADD("'+ paramStartDate +'",INTERVAL +1 day), "%Y-%m-%d") and SHOP_ID = ' + mysql.escape(shopId) ;
             }
-            if(usedYn != "ALL") {
-                selectPeriodDataQuery += ' and USED_YN = "' + usedYn + '"';
-            }
-            if(delYn != "ALL") {
-                selectPeriodDataQuery += ' and DEL_YN = "' + delYn + '"';
-            }
-            selectPeriodDataQuery += 'group by VISIT_DATE';
         }else {
             if(endDate.length > 0) {
                 paramEndDate = endDate.substr(6, 4) +'-'+ endDate.substr(3, 2) +'-'+ endDate.substr(0, 2);
-                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
+                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s,%f") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
                     'where UPDATE_DT between "'+ paramEndDate +'" and DATE_FORMAT(DATE_ADD("'+ paramEndDate +'",INTERVAL +1 day), "%Y-%m-%d") and SHOP_ID = ' + mysql.escape(shopId) ;
             }else {
-                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d") as "VIEW_DATE", DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
-                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d"")';
+                selectPeriodDataQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d") as "VIEW_DATE", DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s,%f") as "VISIT_DATE" from SB_USER_PUSH_HIS ' +
+                    'where UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d"") and SHOP_ID = ' + mysql.escape(shopId);
             }
-            if(usedYn != "ALL") {
-                selectPeriodDataQuery += ' and USED_YN = "' + usedYn + '"';
-            }
-            if(delYn != "ALL") {
-                selectPeriodDataQuery += ' and DEL_YN = "' + delYn + '"';
-            }
-            selectPeriodDataQuery += 'group by VISIT_DATE';
         }
-
-        console.log(selectPeriodDataQuery);
+        if(usedYn != "ALL") {
+            selectPeriodDataQuery += ' and USED_YN = "' + usedYn + '"';
+        }
+        if(delYn != "ALL") {
+            selectPeriodDataQuery += ' and DEL_YN = "' + delYn + '"';
+        }
+        selectPeriodDataQuery += ' group by VISIT_DATE';
         connection.query(selectPeriodDataQuery, function (err, periodData) {
             if (err) {
-                console.error("Select shop data Error : ", err);
+                logger.error(TAG, 'Select shop data  error', err);
                 res.status(400);
                 res.send('Select shop data error');
             } else {
-                console.log('Select shop data success : ' + JSON.stringify(periodData));
+                logger.debug('Select shop data success : ' + JSON.stringify(periodData));
                 for(var i=0; i<periodData.length; i++) {
                     var tempId = periodData[i].USER_ID;
                     periodData[i].USER_ID = decryptUid(tempId);
@@ -260,36 +267,36 @@ router.get('/period-data', function(req, res, next) {
     });
 });
 
-//Put Card Data
+//Put Stamp Data
 router.put('/deleteStamp', function(req, res, next) {
-    console.log('Delete stamp data');
+    logger.info('Delete Stamp Data');
 
     var shopId = req.headers.shop_id;
     var userId = req.body.user_id;
     var visitDate = req.body.visit_date;
 
-    console.log('User id : ' + userId);
-    console.log('Shop id : ' + shopId);
+    logger.debug('User id : ' + userId);
+    logger.debug('Shop id : ' + shopId);
 
     if(shopId == null || shopId == undefined &&
         userId == null || userId == undefined) {
-        console.log('Invalid id parameter error');
+        logger.debug('Invalid parameter error');
         res.status(400);
-        res.send('Invalid id parameter error');
+        res.send('Invalid parameter error');
     }
 
     //Card Data API
     getConnection(function (err, connection) {
         var deletePushInfo = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" ' +
-            'where SHOP_ID = "' + mysql.escape(shopId) + '" and USER_ID = "' + mysql.escape(userId) + '" and DATE_FORMAT(UPDATE_DT,"%Y-%m-%d %h:%i:%s") = "' + visitDate +'"';
+            'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(encryptUid(userId)) + ' and DATE_FORMAT(UPDATE_DT,"%Y-%m-%d %h:%i:%s,%f") = "' + visitDate +'"';
         console.log(deletePushInfo);
         connection.query(deletePushInfo, function (err, DeletePushInfoData) {
             if (err) {
-                console.error("DB deletePushInfo error : " + err);
+                logger.error("Delete stamp history data error : " + err);
                 res.status(400);
-                res.send('Delete push info error');
+                res.send('Delete stamp history data error');
             }else{
-                console.log('Delete push info success');
+                logger.log('Delete stamp history data success');
                 res.send({result: 'success'});
             }
             connection.release();

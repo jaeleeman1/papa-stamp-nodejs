@@ -3,7 +3,7 @@
   <div class="row">
     <div class="page-title">
       <div class="title_left">
-        <h3>Tables <small>Some examples to get you started</small></h3>
+        <h3>쿠폰 생성 <small>쿠폰 생성 및 발급, 사용, 미사용 확인</small></h3>
       </div>
 
       <div class="title_right">
@@ -24,7 +24,7 @@
       <div class="col-md-6 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Input Mask</h2>
+            <h2>쿠폰 생성</h2>
             <ul class="nav navbar-right panel_toolbox">
               <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
               </li>
@@ -50,12 +50,7 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-3">쿠폰 갯수</label>
                 <div class="col-md-9 col-sm-9 col-xs-9" id="coupon-count">
                   <select class="form-control">
-                    <option>갯수 선택</option>
-                    <option>3</option>
-                    <option>50</option>
                     <option>100</option>
-                    <option>150</option>
-                    <option>200</option>
                   </select>
                 </div>
               </div>
@@ -81,34 +76,6 @@
                   <input type="text" class="form-control" id="coupon-price" required="required" data-inputmask="'mask': '9,900 원'">
                 </div>
               </div>
-
-              <!--<div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-3">유효일자</label>
-                <div class='col-sm-4' style="width:75%;">
-                  Only Date Picker
-                  <div class="form-group">
-                    <div class='input-group date' id='start-datepicker'>
-                      <input type='text' class="form-control" />
-                      <span class="input-group-addon">
-                               <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class='col-sm-4' style="width:75%;float:right;">
-                  Only Date Picker
-                  <div class="form-group">
-                    <div class='input-group date' id='end-datepicker'>
-                      <input type='text' class="form-control" />
-                      <span class="input-group-addon">
-                               <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                    </div>
-                  </div>
-                </div>
-              </div>-->
 
               <div class="form-group">
                 <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
@@ -170,7 +137,7 @@
       <div class="col-md-6 col-sm-12 col-xs-12" style="width:100%;">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Stripped table <small>Stripped table subtitle</small></h2>
+            <h2>발급된 쿠폰 <small>사용(빨강), 미사용(회색)</small></h2>
             <ul class="nav navbar-right panel_toolbox">
               <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
               </li>
@@ -229,7 +196,7 @@
       <div class="col-md-6 col-sm-12 col-xs-12" style="width:100%;">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Stripped table <small>Stripped table subtitle</small></h2>
+            <h2>미발급 쿠폰 <small>미사용 쿠폰(파랑)</small></h2>
             <ul class="nav navbar-right panel_toolbox">
               <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
               </li>
@@ -267,7 +234,7 @@
                 <td><%= couponIssuedListData[i].COUPON_NUMBER %></td>
                 <td><%= couponIssuedListData[i].COUPON_NAME %></td>
                 <td><%= couponIssuedListData[i].COUPON_PRICE %></td>
-                <td><%= couponIssuedListData[i].EXPIRATION_DT %></td>
+                <td>발급된 날짜로부터 1년</td>
               </tr>
               <% } %>
 
@@ -288,27 +255,9 @@
         possible  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     $(document).ready(function() {
-        $('#start-datepicker').datetimepicker({
-            format: 'DD.MM.YYYY'
-        });
-
-        $('#end-datepicker').datetimepicker({
-            format: 'DD.MM.YYYY'
-        });
-
-        $('input[type="checkbox"]').bind('click',function() {
-            $('input[type="checkbox"]').not(this).prop("checked", false);
-            var searchValue = $('input[type="checkbox"]:checked').parent("td").next().text();
-            $('.input-group').find("input").val(searchValue);
-        });
-
-        $("#coupon-count").on("click", function(e) {
-            var couponCount = $('#coupon-count').find('select').val(),
-                len = 13;
-            if(couponCount != "갯수 선택"){
-                generateCodes(couponCount, len);
-            }
-        });
+        var couponCount = $('#coupon-count').find('select').val();
+        var length = 13;
+        generateCodes(couponCount, length);
     });
 
     function generateCodes(number, length) {

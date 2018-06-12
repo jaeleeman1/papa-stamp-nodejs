@@ -34,7 +34,7 @@ router.get('/signin/userCheck', function(req, res, next) {
         var signinEmail = req.query.signin_email;
         var signinPassword = req.query.signin_password;
 
-        var selectSigninEmailQuery = 'select exists (select * from SB_SHOP_USER_INFO as SUI where SSUI.SHOP_EMAIL = ' + mysql.escape(signinEmail) + ') as EMAIL_CHECK';
+        var selectSigninEmailQuery = 'select exists (select * from SB_SHOP_USER_INFO as SSUI where SSUI.SHOP_EMAIL = ' + mysql.escape(signinEmail) + ') as EMAIL_CHECK';
         connection.query(selectSigninEmailQuery, function (err, signinEmailData) {
             if (err) {
                 console.error("*** initPage select id Error : " , err);
@@ -44,7 +44,7 @@ router.get('/signin/userCheck', function(req, res, next) {
                 if(signinEmailCheck == '1') {
                     var selectAdminQuery = 'select count(*) as PW_CHECK, SSUI.SHOP_ID, SSI.SHOP_STAMP_IMG, SSI.SHOP_NAME from SB_SHOP_USER_INFO as SSUI ' +
                         'inner join SB_SHOP_INFO as SSI on SSI.SHOP_ID = SSUI.SHOP_ID ' +
-                        'where SSUI.SHOP_EMAIL = ' + mysql.escape(signinEmail) + ' and SSUI.SSHOP_PASSWORD = password(' + mysql.escape(signinPassword) +')';
+                        'where SSUI.SHOP_EMAIL = ' + mysql.escape(signinEmail) + ' and SSUI.SHOP_PASSWORD = password(' + mysql.escape(signinPassword) +')';
                     connection.query(selectAdminQuery, function (err, signinAdminData) {
                         if (err) {
                             console.error("*** initPage select password Error : ", err);

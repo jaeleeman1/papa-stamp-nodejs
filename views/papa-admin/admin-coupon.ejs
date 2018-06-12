@@ -1,6 +1,7 @@
 <form name="admin_config" id="admin_config" style="display:none">
   <input type="hidden" name="admin_date" id="admin_date" value="<%= viewDate %>"/>
-  <input type="hidden" name="admin_coupon" id="admin_coupon" value="<%= viewCoupon %>"/>
+  <input type="hidden" name="admin_issued_coupon" id="admin_issued_coupon" value="<%= issuedCoupon %>"/>
+  <input type="hidden" name="admin_used_coupon" id="admin_used_coupon" value="<%= usedCoupon %>"/>
 </form>
 
 <!-- page content -->
@@ -14,7 +15,7 @@
       <div class="title_right">
         <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top-search">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search for...">
+            <input type="text" class="form-control" id="search-data" placeholder="Search for...">
             <span class="input-group-btn">
               <button class="btn btn-default" type="button" onclick="searchCouponData()">Go!</button>
             </span>
@@ -33,8 +34,8 @@
           <div class='input-group date' id='start-datepicker'>
             <input type='text' class="form-control" />
             <span class="input-group-addon">
-                               <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+             <span class="glyphicon glyphicon-calendar"></span>
+            </span>
           </div>
         </div>
       </div>
@@ -46,8 +47,8 @@
           <div class='input-group date' id='end-datepicker'>
             <input type='text' class="form-control" />
             <span class="input-group-addon">
-                               <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+             <span class="glyphicon glyphicon-calendar"></span>
+            </span>
           </div>
         </div>
       </div>
@@ -57,25 +58,24 @@
 
     <div style="float:right;margin-right:20px;">
       <label id="delete-check">삭제 여부</label>
-      <p>ALL: <input type="radio" class="flat" name="delete" id="delete-radio" value="ALL" />
-        Y: <input type="radio" class="flat" name="delete" id="delete-radio" value="Y" />
-        N: <input type="radio" class="flat" name="delete" id="delete-radio" value="N" checked="" required />
+      <p>ALL: <input type="radio" class="flat" name="delete" id="delete-radio" value="ALL" style="margin-right:30px;"/>
+        Y: <input type="radio" class="flat" name="delete" id="delete-radio" value="Y" style="margin-right:30px;"/>
+        N: <input type="radio" class="flat" name="delete" id="delete-radio" value="N" checked="" style="margin-right:30px;"/>
       </p>
     </div>
 
     <div style="float:right;margin-right:60px;">
       <label>사용 여부</label>
-      <p>ALL: <input type="radio" class="flat" name="used" id="used-radio" value="ALL" />
-        Y: <input type="radio" class="flat" name="used" id="used-radio" value="Y" />
-        N: <input type="radio" class="flat" name="used" id="used-radio" value="N" checked="" required />
+      <p>Y: <input type="radio" class="flat" name="used" id="used-radio" value="Y" style="margin-right:30px;"/>
+        N: <input type="radio" class="flat" name="used" id="used-radio" value="N" checked="" style="margin-right:30px;"/>
       </p>
     </div>
 
     <div style="float:right;margin-right:60px;">
       <label>발급 여부</label>
-      <p>ALL: <input type="radio" class="flat" name="mapping" id="mapping-radio" value="ALL" />
-        Y: <input type="radio" class="flat" name="mapping" id="mapping-radio" value="Y" checked="" required />
-        N: <input type="radio" class="flat" name="mapping" id="mapping-radio" value="N" />
+      <p>ALL: <input type="radio" class="flat" name="mapping" id="mapping-radio" value="ALL" style="margin-right:30px;"/>
+        Y: <input type="radio" class="flat" name="mapping" id="mapping-radio" value="Y" checked="" style="margin-right:30px;"/>
+        N: <input type="radio" class="flat" name="mapping" id="mapping-radio" value="N" style="margin-right:30px;"/>
       </p>
     </div>
 
@@ -107,7 +107,7 @@
           <div class="tiles">
             <div class="col-md-4 tile" style="width:15%;">
               <span>쿠폰 발급 수</span>
-              <h2 id="coupon-length"><%= shopsCouponTodayData.length %> 개</h2>
+              <h2 id="coupon-length"><%= shopCouponTodayData.length %> 개</h2>
               <span class="sparkline22 graph" style="height: 160px;">
                 <canvas width="200" height="60" style="display: inline-block; vertical-align: top; width: 94px; height: 30px;"></canvas>
               </span>
@@ -124,10 +124,10 @@
                 <th class="column-title">사용자 </th>
                 <th class="column-title">쿠폰 넘버</th>
                 <th class="column-title">발급 일자</th>
+                <th class="column-title">사용 일자</th>
                 <th class="column-title">발급 유무</th>
                 <th class="column-title">사용 유무</th>
                 <th class="column-title">삭제 유무</th>
-                <th class="column-title"> 삭제 </th>
                 </th>
                 <th class="bulk-actions" colspan="7">
                   <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
@@ -137,7 +137,7 @@
 
               <tbody id="user-data">
 
-              <% for (var i=0; i<shopsCouponTodayData.length; i++) { %>
+              <% for (var i=0; i<shopCouponTodayData.length; i++) { %>
               <% if(i % 2 == 0) { %>
               <tr class="even pointer">
                   <% } else {%>
@@ -146,21 +146,19 @@
                 <td class="a-center ">
                   <input type="checkbox" class="flat search_checkbox" name="table_records">
                 </td>
-                <td class=" "><%= shopsCouponTodayData[i].USER_ID %></td>
-                <td class=" "><%= shopsCouponTodayData[i].COUPON_NUMBER %></td>
-                <td class=" "><%= shopsCouponTodayData[i].VISIT_DATE %></td>
-                <td class=" "><%= shopsCouponTodayData[i].MAPPING_YN %></td>
-                <td class=" "><%= shopsCouponTodayData[i].USED_YN %></td>
-                <td class=" "><%= shopsCouponTodayData[i].DEL_YN %></td>
-                <td class=" last"><a href="#">삭제</a>
+                <td class=" "><%= shopCouponTodayData[i].USER_ID %></td>
+                <td class=" "><%= shopCouponTodayData[i].COUPON_NUMBER %></td>
+                <td class=" "><%= shopCouponTodayData[i].VISIT_DATE %></td>
+                <td class=" "><%= shopCouponTodayData[i].USED_DATE %></td>
+                <td class=" "><%= shopCouponTodayData[i].MAPPING_YN %></td>
+                <td class=" "><%= shopCouponTodayData[i].USED_YN %></td>
+                <td class=" "><%= shopCouponTodayData[i].DEL_YN %></td>
                 </td>
               </tr>
               <% } %>
               </tbody>
             </table>
           </div>
-
-
         </div>
       </div>
     </div>
@@ -171,7 +169,7 @@
     <div class="col-md-6 col-sm-6 col-xs-12" style="width:100%;">
       <div class="x_panel">
         <div class="x_title">
-          <h2>쿠폰 발급 선 그래프<small> 10일</small></h2>
+          <h2>쿠폰 발급 및 사용 선 그래프<small> 10일</small></h2>
           <ul class="nav navbar-right panel_toolbox">
             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
             </li>
@@ -228,6 +226,27 @@
             console.log(searchValue);
             $('.top-search .input-group').find("input").val(searchValue);
         });
+
+        var keyNumber = '';
+        $("#search-data").on("input propertychange", function () {
+            var val = this.value.replace(/\D/g, '');
+            var newVal = '';
+            keyNumber = $(this).val();
+
+            if (val.length > 3 && val.length < 8) {
+                newVal += val.substr(0, 3) + '-';
+                val = val.substr(3);
+            } else if (val.length > 7) {
+                newVal += val.substr(0, 3) + '-' + val.substr(3, 4) + '-';
+                val = val.substr(7);
+            }
+            newVal += val;
+            this.value = newVal;
+
+            if ($(this).val().length > 13) {
+                $(this).val(keyNumber.substr(0, keyNumber.length - 1));
+            }
+        });
     });
 
     function searchCouponData() {
@@ -253,7 +272,7 @@
                         titleData.innerHTML = '사용자 데이터';
                         var userData = document.getElementById('user-data');
                         var appendData = '';
-                        var dataLength = data.userData.length;
+                        var dataLength = data.userCouponData.length;
                         for (var i=0; i<dataLength; i++) {
                             if(i % 2 == 0) {
                                 appendData += '<tr class="even pointer">';
@@ -263,13 +282,13 @@
                             appendData += '<td class="a-center ">' +
                                 '<input type="checkbox" class="flat search_checkbox" name="table_records">' +
                                 '</td>' +
-                                '<td class=" ">'+ data.userData[i].USER_ID +'</td>' +
-                                '<td class=" ">'+ data.userData[i].COUPON_NUMBER +'</td>' +
-                                '<td class=" ">'+ data.userData[i].VISIT_DATE +'</td>' +
-                                '<td class=" ">'+ data.userData[i].MAPPING_YN +'</td>' +
-                                '<td class=" ">'+ data.userData[i].USED_YN +'</td>' +
-                                '<td class=" ">'+ data.userData[i].DEL_YN +'</td>' +
-                                '<td class=" last"><a href="#">삭제</a>' +
+                                '<td class=" ">'+ data.userCouponData[i].USER_ID +'</td>' +
+                                '<td class=" ">'+ data.userCouponData[i].COUPON_NUMBER +'</td>' +
+                                '<td class=" ">'+ data.userCouponData[i].ISSUED_DATE +'</td>' +
+                                '<td class=" ">'+ data.userCouponData[i].USED_DATE +'</td>' +
+                                '<td class=" ">'+ data.userCouponData[i].MAPPING_YN +'</td>' +
+                                '<td class=" ">'+ data.userCouponData[i].USED_YN +'</td>' +
+                                '<td class=" ">'+ data.userCouponData[i].DEL_YN +'</td>' +
                                 '</td>' +
                                 '</tr>';
                         }
@@ -309,9 +328,11 @@
                                 '</td>' +
                                 '<td class=" ">'+ data.periodData[i].USER_ID +'</td>' +
                                 '<td class=" ">'+ data.periodData[i].COUPON_NUMBER +'</td>' +
-                                '<td class=" ">'+ data.periodData[i].VISIT_DATE +'</td>' +
+                                '<td class=" ">'+ data.periodData[i].ISSUED_DATE +'</td>' +
+                                '<td class=" ">'+ data.periodData[i].USED_DATE +'</td>' +
+                                '<td class=" ">'+ data.periodData[i].MAPPING_YN +'</td>' +
                                 '<td class=" ">'+ data.periodData[i].USED_YN +'</td>' +
-                                '<td class=" last"><a href="#">삭제</a>' +
+                                '<td class=" ">'+ data.periodData[i].DEL_YN +'</td>' +
                                 '</td>' +
                                 '</tr>';
                         }
@@ -339,8 +360,10 @@
     function coupon_charts() {
         var viewDate = $('#admin_date').val();
         var inputDate = splitStr(viewDate);
-        var viewCoupon = $('#admin_coupon').val();
-        var inputStamp = splitStr(viewCoupon);
+        var issuedCoupon = $('#admin_issued_coupon').val();
+        var inputIssuedCoupon = splitStr(issuedCoupon);
+        var usedCoupon = $('#admin_used_coupon').val();
+        var inputUsedCoupon = splitStr(usedCoupon);
 
         if ($('#lineChart').length ){
             var ctx = document.getElementById("lineChart");
@@ -350,6 +373,16 @@
                     labels: inputDate,
                     datasets: [{
                         label: "쿠폰 발급 수",
+                        backgroundColor: "rgba(3, 88, 106, 0.3)",
+                        borderColor: "rgba(3, 88, 106, 0.70)",
+                        pointBorderColor: "rgba(3, 88, 106, 0.70)",
+                        pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(151,187,205,1)",
+                        pointBorderWidth: 1,
+                        data: inputIssuedCoupon
+                    },{
+                        label: "쿠폰 사용 수",
                         backgroundColor: "rgba(233, 71, 57, 0.3)",
                         borderColor: "rgba(233, 71, 57, 0.70)",
                         pointBorderColor: "rgba(233, 71, 57, 0.70)",
@@ -357,7 +390,7 @@
                         pointHoverBackgroundColor: "#fff",
                         pointHoverBorderColor: "rgba(151,187,205,1)",
                         pointBorderWidth: 1,
-                        data: inputStamp
+                        data: inputUsedCoupon
                     }]
                 },
             });

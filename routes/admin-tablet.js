@@ -27,7 +27,7 @@ router.get('/main', function(req, res, next) {
 
     // Select shop order number
     getConnection(function (err, connection){
-        var selectShopDataQuery = 'select SHOP_CURRENT_NUM, DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") as TODAY from SB_SHOP_USER_INFO as SSM where SHOP_ID ='+mysql.escape(shopId);
+        var selectShopDataQuery = 'select SHOP_CURRENT_NUM, DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") as TODAY from SB_SHOP_USER_INFO where SHOP_ID ='+mysql.escape(shopId);
         connection.query(selectShopDataQuery, function (err, currentShopData) {
             if (err) {
                 logger.error(TAG, "DB selectShopOrderNumber error : " + err);

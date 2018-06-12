@@ -142,7 +142,7 @@ router.get('/shopList', function (req, res, next) {
             'order by distance';
         connection.query(selectShopListQuery, function (err, shopListData) {
             if (err) {
-                console.error("Select shop lIst Error : ", err);
+                console.error("Select shop lIst error : ", err);
                 res.status(400);
                 res.send('Select shop lIst error');
             } else {
