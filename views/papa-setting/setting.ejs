@@ -11,12 +11,12 @@
                     <img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">
                     <div class="caption">
                         <div class="icon-wrapper"><i class="fa fa-user custom-icon" style="font-size: 20px;"></i><span class="title-setting">로그인 정보</span></div>
-                        <% var userEmail = userInfoData.USER_EMAIL; %>
-                        <h2>E-MAIL : <span><%= userEmail %></span></h2>
-                        <% if(userEmail == 'papastamp@naver.com') { %>
+                        <% var userName = userInfoData.USER_NAME; %>
+                        <h2>이 름 : <span><%= userName %></span></h2>
+                        <% if(userName == '파파스탬프') { %>
                             <p id="user-info-btn" onclick="loginLayer('layerLoginPopup')">로그인</p>
                         <% }else { %>
-                            <p id="user-info-btn" onclick="changeUserInfoLayer('layerUserInfoPopup', '<%= userInfoData.USER_EMAIL %>', '<%= userNumber %>')">정보 수정</p>
+                            <p id="user-info-btn" onclick="changeUserInfoLayer('layerUserInfoPopup', '<%= userInfoData.USER_NAME %>', '<%= userInfoData.USER_EMAIL %>', '<%= userNumber %>')">정보 수정</p>
                         <% } %>
                     </div>
                 </figure>
@@ -72,7 +72,8 @@
 <div id="change-phone-number-confirm" class="dialog-confirm">
     <figure>
         <div style="margin-top: 15px;">핸드폰 번호 변경은 <br>관리자의 확인이 필요합니다.<br>
-            핸드폰 번호를 변경 하시겠습니까?</div>
+            (몇 일 이상의 확인 시간 소요 예정)<br>
+            그래도 핸드폰 번호를 변경 하시겠습니까?</div>
     </figure>
 </div>
 
@@ -102,7 +103,9 @@
         </p>
         <div class="faq_container">
             <div class="faq">
-                <div class="user-info-title">이메일</div><input class="text-input" type="text" id="e-mail" name="name">
+                <div class="user-info-title">이  름</div><input class="text-input" type="text" id="user-name" name="name" readonly>
+                <hr class="setting-line">
+                <div class="user-info-title">이메일</div><input class="text-input" type="text" id="e-mail" name="name" readonly>
                 <hr class="setting-line">
                 <div id="change-password"><div class="user-info-title">비밀번호</div><p class="change-ti-custom" id="password-btn" onclick="changePassword();">변경하기</p><input class="text-input-pw-custom" type="password" placeholder="기존 비밀번호 입력" id="e-password" name="name"></div>
                 <hr class="setting-line">
@@ -129,12 +132,12 @@
             <div class="faq">
                 <div class="setting-list-title">파파스탬프 오픈 이벤트(제휴 서비스 무료)</div>
                 <span class="triangle pre-click"></span>
-                <div class="notice_date">2018-02-28</div>
+                <div class="notice_date">2018-06-01</div>
                 <div class="faq_answer_container">
                     <div class="faq_answer">안녕하세요. 파파스탬프입니다.
                         <br></br>
-                        <br>오픈 이벤트 행사로 2018년 3월에 파파스탬프와 제휴를 맺으면</br>
-                        <br>2019년도 3월까지 1년간 서비스 이용 금액 무료 이벤트를 합니다. </br>
+                        <br>오픈 이벤트 행사로 2018년 6월에 파파스탬프와 제휴를 맺으면</br>
+                        <br>2018년도 12월까지 6개월간 서비스 이용 금액 무료 이벤트를 합니다. </br>
                         <br></br>
                         <br>많은 관심과 이용 부탁드립니다. 감사합니다.</br>
                     </div>
@@ -379,7 +382,7 @@
                 <span>현재 버전 : v1.0</span>
             </div>
             <div class="development-update">
-                <span>최종 업데이트 : 2018.02.28</span>
+                <span>최종 업데이트 : 2018.06.01</span>
             </div>
         </div>
     </div>
@@ -424,31 +427,10 @@
 
 <script type="text/javascript">
     var tid;
-    var SetTime = 300;
+    var SetTime = 3600;
     $.toast.config.align = 'center';
 
     $(function() {
-        var keyNumber = '';
-        $("#phone-number").on("input propertychange",function() {
-            var val = this.value.replace(/\D/g, '');
-            var newVal = '';
-            keyNumber = $(this).val();
-
-            if (val.length > 3 && val.length < 8) {
-                newVal += val.substr(0, 3) + '-';
-                val = val.substr(3);
-            }else if (val.length > 7) {
-                newVal += val.substr(0, 3) + '-' + val.substr(3, 4) + '-';
-                val = val.substr(7);
-            }
-            newVal += val;
-            this.value = newVal;
-
-            if($(this).val().length > 13) {
-                $(this).val(keyNumber.substr(0, keyNumber.length - 1));
-            }
-        });
-
         var time = 500;
         var idx = idx2 = 0;
         var slide_width = $("#slider").width();
@@ -503,7 +485,13 @@
         var browserHeight = $(document).height();
         var popupHeight;
         if(showDivId == 'layerTutorialPopup') {
-            popupHeight = browserHeight * 0.09;
+             if($('#web_check').val() == 'true') {
+                 $.toast.config.width = 200;
+                 $.toast('<h3>앱</h3> 개발 진행 중 입니다.', {type: 'info', duration: 3000 });
+                 return;
+             }else {
+                 popupHeight = browserHeight * 0.09;
+             }
         }else {
             popupHeight = browserHeight * 0.17;
         }
@@ -512,17 +500,18 @@
     }
 
     function changePassword() {
-        if($('#web_check').val() == 'true') {
+        /*if($('#web_check').val() == 'true') {
             $.toast.config.width = 200;
             $.toast('<h3>앱</h3>에서만 수정 가능합니다.', {type: 'info', duration: 3000 });
             return;
-        }
+        }*/
 
         var checkPwBtn = $('#password-btn').text();
         if(checkPwBtn == "변경하기") {
             var confirmEmail = $('#e-mail').val();
             var confirmPassword = $('#e-password').val();
-            if(confirmEmail.length > 0  && confirmPassword.length > 0) {
+
+            if(confirmPassword.length > 0) {
                 var dataString = {'login_email':confirmEmail, 'login_password':confirmPassword};
                 $.ajax({
                     url: $("#url").val() + '/user/v1/userLogin',
@@ -570,8 +559,8 @@
                     }
                 });
             }else {
-                $.toast.config.width = 240;
-                $.toast('올바른 <h3>회원 정보</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
+                $.toast.config.width = 230;
+                $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
             }
         }else {
             newPassword();
@@ -583,6 +572,12 @@
         var eConfirmPassword = $("#e-confirm-password").val();
 
         if (ePassword.length > 0 && eConfirmPassword.length > 0) {
+            if(!checkPassword(ePassword)) {
+                $.toast.config.width = 250;
+                $.toast('<h3>비밀번호</h3>를 확인하세요!.<br>(영문,숫자를 혼합하여 6~20자 이내)', {type: 'info', duration: 5000});
+                $('#password').focus();
+                return;
+            }
             if (ePassword == eConfirmPassword) {
                 $("#new-password-confirm").dialog({
                     resizable: false,
@@ -638,11 +633,11 @@
     }
 
     function changePhoneNumber() {
-        if($('#web_check').val() == 'true') {
+/*        if($('#web_check').val() == 'true') {
             $.toast.config.width = 200;
             $.toast('<h3>앱</h3>에서만 수정 가능합니다.', {type: 'info', duration: 3000 });
             return;
-        }
+        }*/
 
         var userNumber = $('#phone-number').val();
         if(document.getElementById('phone-number').hasAttribute('disabled')) {
@@ -660,6 +655,7 @@
                         $('#phone-number').val('');
                         $('#phone-number').focus();
                         document.getElementById('phone-number').removeAttribute("disabled");
+                        checkFormatNumber();
                         $(this).dialog('close');
                     },
                     "아니오": function () {
@@ -679,32 +675,38 @@
                 $.toast.config.width = 210;
                 $.toast('<h3>올바른 번호</h3>를 입력하세요!!.</span>', {type: 'danger', duration: 3000});
             } else {
-                var ePassword = $("#e-password").val();
-                var numberString = {'signup_number': userNumber, 'signup_email': ePassword};
-                $.ajax({
-                    url: $("#url").val() + '/user/v1/userCheck',
-                    type: 'POST',
-                    dataType: 'json',
-                    data : numberString,
-                    success: function (data) {
-                        if(data.signupPhoneNumberCheck == '1') {
-                            $.toast.config.width = 240;
-                            $.toast('이미 가입된 <h3>사용자 번호</h3> 입니다.', {type: 'info', duration: 3000});
-                        }else {
-                            var randNum = Math.floor(Math.random() * 1000000)+100000;
-                            if(randNum>1000000){
-                                randNum = randNum - 100000;
-                            }
-                            $("#auth_num").val(randNum);
+                if($('#phone-number-btn').html() == "발송 완료") {
+                    $.toast.config.width = 310;
+                    $.toast('<h3>관리자</h3>가 확인 중입니다. 잠시만 기다리세요~', {type: 'info', duration: 3000});
+                    $('#auth_code').focus();
+                }else {
+                    var ePassword = $("#e-password").val();
+                    var numberString = {'signup_number': userNumber, 'signup_email': ePassword};
+                    $.ajax({
+                        url: $("#url").val() + '/user/v1/userCheck',
+                        type: 'POST',
+                        dataType: 'json',
+                        data : numberString,
+                        success: function (data) {
+                            if(data.signupPhoneNumberCheck == '1') {
+                                $.toast.config.width = 240;
+                                $.toast('이미 가입된 <h3>사용자 번호</h3> 입니다.', {type: 'info', duration: 3000});
+                            }else {
+                                var randNum = Math.floor(Math.random() * 1000000)+100000;
+                                if(randNum>1000000){
+                                    randNum = randNum - 100000;
+                                }
+                                $("#auth_num").val(randNum);
 
-                            changePhoneNumberPush(userNumber, randNum);
+                                changePhoneNumberPush(userNumber, randNum);
+                            }
+                        },
+                        error: function(request, status, error) {
+                            console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                            console.log('Error occured');
                         }
-                    },
-                    error: function(request, status, error) {
-                        console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                        console.log('Error occured');
-                    }
-                });
+                    });
+                }
             }
         }
     }
@@ -800,10 +802,11 @@
         openLayer(showDivId, popupHeight, 0, browserHeight);
     }
 
-    function changeUserInfoLayer(showDivId, userEmail, userNumber) {
+    function changeUserInfoLayer(showDivId, userName, userEmail, userNumber) {
         var browserHeight = $(document).height();
         var popupHeight = browserHeight * 0.17;
 
+        $("#user-name").val(userName);
         $("#e-mail").val(userEmail);
         $("#phone-number").val(userNumber);
         openLayer(showDivId, popupHeight, 0, browserHeight);
@@ -937,5 +940,36 @@
                 }
             }
         });
+    }
+
+    function checkFormatNumber() {
+        var keyNumber = '';
+        $("#phone-number").on("input propertychange",function() {
+            var val = this.value.replace(/\D/g, '');
+            var newVal = '';
+            keyNumber = $(this).val();
+
+            if (val.length > 3 && val.length < 8) {
+                newVal += val.substr(0, 3) + '-';
+                val = val.substr(3);
+            }else if (val.length > 7) {
+                newVal += val.substr(0, 3) + '-' + val.substr(3, 4) + '-';
+                val = val.substr(7);
+            }
+            newVal += val;
+            this.value = newVal;
+
+            if($(this).val().length > 13) {
+                $(this).val(keyNumber.substr(0, keyNumber.length - 1));
+            }
+        });
+    }
+
+    function checkPassword(pwd){
+        var reg_pwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
+        if(!reg_pwd.test(pwd)){
+            return false;
+        }
+        return true;
     }
 </script>

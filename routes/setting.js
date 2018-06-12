@@ -35,7 +35,7 @@ router.get('/main', function(req, res, next) {
 
     if(userId.length > 0) {
         getConnection(function (err, connection){
-            var selectUserInfo = 'select USER_ID, USER_EMAIL from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
+            var selectUserInfo = 'select USER_ID, USER_NAME, USER_EMAIL from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
             connection.query(selectUserInfo, function (err, userInfoData) {
                 if (err) {
                     logger.error(TAG, "Select user info error : " + err);
@@ -75,7 +75,7 @@ router.post('/main', function(req, res, next) {
 
     if(userId.length > 0) {
         getConnection(function (err, connection){
-            var selectUserInfo = 'select USER_ID, USER_EMAIL from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
+            var selectUserInfo = 'select USER_ID, USER_NAME, USER_EMAIL from SB_USER_INFO where USER_ID = ' + mysql.escape(userId);
             connection.query(selectUserInfo, function (err, userInfoData) {
                 if (err) {
                     logger.error(TAG, "Select user info error : " + err);
@@ -92,7 +92,7 @@ router.post('/main', function(req, res, next) {
     }else {
         logger.debug(TAG, 'Blank user info success');
         res.status(200);
-        res.render('common/papa-stamp', {view:'setting', url:config.url, fcmKey:config.fcmKey, userId:'', userNumber:'로그인 하시기 바랍니다.', shopId:'', userInfoData:{USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
+        res.render('common/papa-stamp', {view:'setting', url:config.url, fcmKey:config.fcmKey, userId:'', userNumber:'로그인 하시기 바랍니다.', shopId:'', userInfoData:{USER_NAME:"파파스탬프", USER_EMAIL:"papastamp@naver.com"}, webCheck:webCheck});
     }
 
 });

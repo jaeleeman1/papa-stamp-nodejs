@@ -167,6 +167,7 @@ router.get('/userCreate', function(req, res, next) {
 router.post('/userInfoWeb', function(req, res, next) {
     var userNumber = req.headers.user_number;
     var accessToken = req.body.access_token;
+    var userName = req.body.user_name;
     var userEmail = req.body.user_email;
     var userPassword = req.body.user_password;
     var termsYn = req.body.terms_yn;
@@ -175,6 +176,7 @@ router.post('/userInfoWeb', function(req, res, next) {
 
     logger.debug(TAG, 'User Number : ' + userNumber);
     logger.debug(TAG, 'Access Token : ' + accessToken);
+    logger.debug(TAG, 'User Name : ' + userName);
     logger.debug(TAG, 'User Email : ' + userEmail);
     logger.debug(TAG, 'User Password : ' + userPassword);
     logger.debug(TAG, 'Terms YN : ' + termsYn);
@@ -182,9 +184,9 @@ router.post('/userInfoWeb', function(req, res, next) {
     logger.debug(TAG, 'Current Lng : ' + currentLng);
 
     getConnection(function (err, connection){
-        var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS_YN) " +
-            "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + ")," + termsYn + ") " +
-            "on duplicate key update ACCESS_TOKEN=" + mysql.escape(accessToken) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword);
+        var insertUserInfo = "insert into SB_USER_INFO (USER_ID, ACCESS_TOKEN, USER_NAME, USER_EMAIL, CURRENT_LAT, CURRENT_LNG, USER_PASSWORD, TERMS_YN) " +
+            "values(" + mysql.escape(encryptUid(userNumber)) + "," + mysql.escape(accessToken) + "," + mysql.escape(userName) + ","  + mysql.escape(userEmail) + "," + currentLat + "," + currentLng + ", password(" + mysql.escape(userPassword) + ")," + termsYn + ") " +
+            "on duplicate key update USER_NAME=" + mysql.escape(userName) + ", USER_EMAIL=" + mysql.escape(userEmail) + ", USER_PASSWORD=" + mysql.escape(userPassword) + ", DEL_YN='N'";
         connection.query(insertUserInfo, function (err, userInfoData) {
             if (err) {
                 logger.error(TAG, "Insert User Info Error : " + err);
@@ -515,7 +517,6 @@ router.post('/userCheck', function(req, res, next) {
     getConnection(function (err, connection){
         var checkUserNumberEmailQuery = 'select count(*) as EMAIL_CHECK, (select exists (select * from SB_USER_INFO where DEL_YN="N" and USER_ID = ' + mysql.escape(encryptUid(userNumber)) + ')) as USER_NUMBER_CHECK ' +
             'from SB_USER_INFO where DEL_YN="N" and USER_EMAIL = '+ mysql.escape(userEmail);
-        console.log('XX ' , checkUserNumberEmailQuery);
         connection.query(checkUserNumberEmailQuery, function (err, userNumberEmailCheckData) {
             if (err) {
                 logger.error(TAG, "Select user number check error : " + err);

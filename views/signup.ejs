@@ -52,6 +52,9 @@
         <form>
           <h1>파파스탬프 회원가입</h1>
           <div>
+            <input type="text" class="form-control" placeholder="이름" required="" id="signup_name"/>
+          </div>
+          <div>
             <input type="text" class="form-control" placeholder="E-Mail" required="" id="signup_email"/>
           </div>
           <div>
@@ -155,6 +158,7 @@
     );
 
     function signupcallback() {
+        var signupName = $("#signup_name").val();
         var userNumber = $("#phone_number").val();
         var signupEmail = $('#signup_email').val();
         var signupPassword = $('#signup_password').val();
@@ -165,6 +169,7 @@
         var headers = {};
         headers["user_number"] = userNumber;
         var dataString = {
+            'user_name': signupName,
             'user_email': signupEmail,
             'user_password': signupPassword,
             'access_token': '',
@@ -311,7 +316,8 @@
                                     $("#authButton").html("인증번호 확인");
                                     $.toast.config.width = 250;
                                     $.toast('<h3>인증번호</h3>가 발송되었습니다.<br>' +
-                                        '인증번호 입력 후 [인증번호 확인]', {type: 'info', duration: 3000});
+                                        '발송된 인증번호 입력 후 <br>' +
+                                        '[인증번호 확인] 클릭 하세요.!', {type: 'info', duration: 3000});
                                     TimerStart();
                                 }
                             },

@@ -270,7 +270,7 @@ figure .base-img{
 .front h2{
     word-spacing: 0.2em;
     font-weight: 300;
-    font-size: 1em;
+    font-size: 1.2em;
     text-align: left;
     margin-left: 40px;
     position: absolute;
@@ -282,8 +282,9 @@ figure .base-img{
 
 .front h2 span {
     font-weight: bold;
-    font-size: 1em;
+    font-size: 1.2em;
     color: #272833;
+    letter-spacing:10px;
 }
 
 .front:hover h2 span {
