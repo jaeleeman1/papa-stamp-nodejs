@@ -36,7 +36,7 @@ var decryptUid = function(uid) {
 var app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
-var httpServer =http.createServer(app).listen(8060, function(req,res){
+var httpServer =http.createServer(app).listen(8040, function(req,res){
     logger.debug(TAG, 'Socket IO server has been started');
 });
 
