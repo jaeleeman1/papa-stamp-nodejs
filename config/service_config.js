@@ -2,17 +2,17 @@
 var config = {};
 
 //Database
-// config.host = '127.0.0.1';
+//config.host = 'http://localhost:8080';
 config.host = 'papastamp.cgbapsrwofhr.ap-northeast-1.rds.amazonaws.com';
 config.port = 43306;
 config.username = 'ipark';
 config.password = 'lee2336^^';
-config.database = 'PAPA_STAMP';
-// config.database = 'BEST_FOOD';
+// config.database = 'PAPA_STAMP';
+config.database = 'BEST_FOOD';
 
 //Domain
-// config.url = 'http://localhost:8080';
-config.url = 'https://papastamp.com';
+config.url = 'http://52.69.251.194:8050';
+//config.url = 'https://papastamp.com';
 
 //Logging
 config.loglevel = 'debug';
