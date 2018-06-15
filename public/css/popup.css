@@ -221,7 +221,7 @@
 }
 
 .layerSignupTermsPopup .terms-popup-title {
-    font-size: 25px;
+    font-size: 20px;
     text-align: center;
     color: rgba(0,0,0,0.54);
     line-height: 29px;
@@ -274,7 +274,7 @@
 }
 
 .layer-stamp-popup {
-    height: 340px;
+    height: 45%;
     position: fixed;
 }
 
@@ -288,7 +288,7 @@
 }
 
 .layer-notice-popup {
-    height: 466px;
+    height: 64%;
     overflow:auto;
     position: fixed;
 }
@@ -299,19 +299,19 @@
 }
 
 .layer-signup-terms-popup {
-    height: 520px;
+    height: 75%;
     overflow:auto;
     position: fixed;
 }
 
 .layer-terms-popup {
-    height: 466px;
+    height: 70%;
     overflow:auto;
     position: fixed;
 }
 
 .layer-faq-popup {
-    height: 466px;
+    height: 63%;
     overflow: auto;
     position: fixed;
 }
