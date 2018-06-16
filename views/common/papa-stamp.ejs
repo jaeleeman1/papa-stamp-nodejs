@@ -139,7 +139,8 @@
                     $("#shop-"+id).removeClass('ie-flipped');
                     $("#img-front-"+id).attr('src', '/images/shop-card/front/' + front);
                 }else {
-                    if(existShop == 0) {
+                    var userId = $("#user_id").val();
+                    if(existShop == 0 && userId.length > 0) {
                         var param = "'" + id +"'";
                         var createMyCard = $("#shop-"+id).find('figure');
                         createMyCard.append('<div class="caption">' +
