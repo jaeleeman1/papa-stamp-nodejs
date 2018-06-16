@@ -33,15 +33,17 @@ figure{
 }
 
 figure.front {
-    -webkit-transform: rotateY(0deg);
     transform: rotateY(0deg);
+    -webkit-transform: rotateY(0deg);
+    -moz-transform: rotateY(0deg);
     z-index: 2;
 }
 
 figure.back,
 .card.flipped {
-    -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
 }
 
 .card-img {

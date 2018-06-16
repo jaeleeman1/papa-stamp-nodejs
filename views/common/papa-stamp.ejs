@@ -21,6 +21,13 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=1a30d2b7d0dec9ecdbd9665afa6ea7b1&libraries=clusterer,services"></script>
     <script type="text/javascript">
         $(function () {
+            var agent = navigator.userAgent.toLowerCase();
+            if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
+                $(".shop").removeClass('flipped');
+                $('.shop').trigger('click');
+                $(".front").attr('style', 'margin-left:6px;');
+            }
+
             daum.maps.load(function() {
                 var currentLat = '';//37.4979887529;
                 var currentLng = '';//127.0296421998;
@@ -50,10 +57,6 @@
                     $("#current_lat").val('37.65067382324312');
                     $("#current_lng").val('126.88702399396053');
                 }
-            });
-
-            $(document).on('click', '.shop', function(){
-                $(this).toggleClass('flipped');
             });
 
             var initView = $("#view").val();
@@ -127,6 +130,30 @@
                 mapIcon.innerHTML = '<i class="fa fa-map-marker" style="color: black"></i>';
             }
         });
+
+        function flippedCard(id, front, back, existShop) {
+            var agent = navigator.userAgent.toLowerCase();
+            if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
+                var checkIe = $("#shop-"+id).hasClass('ie-flipped');
+                if(checkIe) {
+                    $("#shop-"+id).removeClass('ie-flipped');
+                    $("#img-front-"+id).attr('src', '/images/shop-card/front/' + front);
+                }else {
+                    if(existShop == 0) {
+                        var param = "'" + id +"'";
+                        var createMyCard = $("#shop-"+id).find('figure');
+                        createMyCard.append('<div class="caption">' +
+                            '<h5 class="shop-create-btn-'+id+'" onclick="createMyStampCard('+param+');">마이스탬프 카드 생성하기</h5>' +
+                            '</div>');
+                    }
+
+                    $("#shop-"+id).addClass('ie-flipped');
+                    $("#img-front-"+id).attr('src','/images/shop-card/back/' + back);
+                }
+            }else {
+                $("#shop-"+id).toggleClass('flipped');
+            }
+        }
     </script>
 </head>
 

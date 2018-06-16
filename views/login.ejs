@@ -264,6 +264,7 @@
 
 <script type ="text/javascript">
     $.toast.config.align = 'center';
+
     $(function() {
         if($("#privacy").val() == "privacy") {
             focusOpenLayer('layerSignupTermsPopup');
@@ -317,14 +318,28 @@
                     success: function(data) {
                         if (data.loginEmailCheck == '1') {
                             if (data.loginPwCheck == '1') {
-                                $('#user_id').val(data.userId);
+                                var headers = {};
+                                headers["user_id"] = data.userId;
+                                $.ajax({
+                                    url: $("#url").val() + '/user/v1/userLocation',
+                                    type: 'GET',
+                                    headers : headers,
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        $('#user_id').val(data.userId);
+                                        var userLocationData = data.userLocationData;
+                                        currentLat = userLocationData.CURRENT_LAT;
+                                        currentLng = userLocationData.CURRENT_LNG;
 
-                                if ($("#current_lat").val().length == 0 && $("#current_lng").val().length == 0) {
-                                    $('#current_lat').val(data.currentLat);
-                                    $('#current_lng').val(data.currentLng);
-                                }
+                                        $("#current_lat").val(currentLat);
+                                        $("#current_lng").val(currentLng);
 
-                                $('#sendLoginForm').submit();
+                                        $('#sendLoginForm').submit();
+                                    },
+                                    error: function(request, status, error) {
+                                        console.error("userLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                                    }
+                                });
                             } else {
                                 $.toast.config.width = 230;
                                 $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
