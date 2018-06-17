@@ -297,23 +297,23 @@
 }
 
 .layer-signup-terms-popup {
-    height: 88%;
+    height: 73%;
     position: fixed;
 }
 
 .layer-signup-terms-popup .terms-text {
-    height: 250px;
+    height: 200px;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
 }
 
 .layer-terms-popup {
-    height: 63%;
+    height: 73%;
     position: fixed;
 }
 
 .layer-terms-popup .faq {
-    height: 250px;
+    height: 200px;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
 }
