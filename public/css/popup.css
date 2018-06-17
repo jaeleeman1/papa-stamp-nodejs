@@ -273,7 +273,7 @@
 }
 
 .layer-stamp-popup {
-    height: 80vw;
+    height: 89vw;
     position: fixed;
 }
 
@@ -297,7 +297,7 @@
 }
 
 .layer-signup-terms-popup {
-    height: 89vw;
+    height: 128vw;
     position: fixed;
 }
 
@@ -308,7 +308,7 @@
 }
 
 .layer-terms-popup {
-    height: 89vw;
+    height: 95vw;
     position: fixed;
 }
 
