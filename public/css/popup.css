@@ -301,14 +301,25 @@
     position: fixed;
 }
 
+.layer-signup-terms-popup .terms-text {
+    height: 250px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
 .layer-terms-popup {
-    height: 70%;
+    height: 63%;
     position: fixed;
+}
+
+.layer-terms-popup .faq {
+    height: 250px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
 }
 
 .layer-faq-popup {
     height: 73%;
-    overflow: auto;
     position: fixed;
 }
 
