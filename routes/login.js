@@ -37,4 +37,14 @@ router.get('/privacy', function(req, res, next) {
     res.render('login', {url:config.url, userEmail: "E-Mail", privacy:"privacy"});
 });
 
+router.get('/oauth', function(req, res, next) {
+    var kakaoCode = req.query.code;
+    res.render('kakao-login',{kakaoCode:kakaoCode});
+});
+
+router.get('/oauth-kakao', function(req, res, next) {
+    res.redirect('https://kauth.kakao.com/oauth/authorize?client_id=68feaa126a7ec73d49dc706ae751bfe0&redirect_uri=http://localhost:8080/oauth&response_type=code&scope=talk_message');
+});
+
+
 module.exports = router;

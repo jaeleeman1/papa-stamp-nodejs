@@ -69,9 +69,9 @@
           </div>
           <div>
             <a class="btn btn-default submit" id="btn_send" style="font-size: 20px;margin-bottom: 50px;">로그인</a>
-            <a id="kakao-login-btn" href="javascript:authKakao()">
+<!--            <a id="kakao-login-btn" href="javascript:authKakao()">
               <img src="/images/kakao_login_btn_small.png" width="80"/>
-           </a>
+           </a>-->
           </div>
 
           <div class="clearfix"></div>
@@ -376,16 +376,10 @@
     });
 
     function authKakao() {
-        var dataString = {'client_id': '1a30d2b7d0dec9ecdbd9665afa6ea7b1', 'redirect_uri' : 'https://papastamp.com/oauth', 'response_type' : 'code'};
-//        var headers = {};
-//        headers["user_id"] = userId;
-
         $.ajax({
-            url: 'https://kauth.kakao.com/oauth/authorize',
+            url: 'http://localhost:8080/oauth-kakao',
             type: 'GET',
-//            headers : headers,
             dataType: 'json',
-            data : dataString,
             success: function(data) {
                 alert(data.code);
             },
