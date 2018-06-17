@@ -256,7 +256,6 @@
     margin:10px;
     font-size:12px;
     height:150px;
-    overflow:auto;
     border:1px solid black;
     padding:10px;
 }
@@ -288,8 +287,7 @@
 }
 
 .layer-notice-popup {
-    height: 64%;
-    overflow:auto;
+    height: 74%;
     position: fixed;
 }
 
@@ -300,18 +298,16 @@
 
 .layer-signup-terms-popup {
     height: 88%;
-    overflow:auto;
     position: fixed;
 }
 
 .layer-terms-popup {
     height: 70%;
-    overflow:auto;
     position: fixed;
 }
 
 .layer-faq-popup {
-    height: 63%;
+    height: 73%;
     overflow: auto;
     position: fixed;
 }
@@ -499,7 +495,7 @@
 }
 
 #layerDevelopmentPopup .development-icon {
-    width: 40%;
+    width: 25%;
     margin-top: 5px;
 }
 
