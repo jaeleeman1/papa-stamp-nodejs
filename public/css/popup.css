@@ -302,7 +302,7 @@
 }
 
 .layer-signup-terms-popup .terms-text {
-    height: 200px;
+    height: 36vw;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
 }
@@ -313,7 +313,7 @@
 }
 
 .layer-terms-popup .faq {
-    height: 200px;
+    height: 36vw;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
 }
