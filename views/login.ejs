@@ -391,7 +391,7 @@
 
     function focusOpenLayer(showDivId) {
         var browserHeight = $(document).height();
-        var popupHeight = browserHeight * 0.1;
+        var popupHeight = browserHeight * 0.08;
 
         openLayer(showDivId, popupHeight, 0, browserHeight);
     }
@@ -422,7 +422,6 @@
 
     function allCheck() {
         if($("#allCheck").is(':checked')) {
-            console.log('1');
             $("input[name=termsCheck]").prop("checked", true);
             termsAgree(false);
         }else {
