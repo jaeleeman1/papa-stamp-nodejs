@@ -233,7 +233,7 @@
 
 .layerSignupTermsPopup .terms-all-check {
     margin-top: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     margin-left: 8px;
     font-size: 16px;
 }
@@ -287,28 +287,28 @@
 }
 
 .layer-notice-popup {
-    height: 70vh;
+    height: 75vh;
     position: fixed;
 }
 
 .layer-tutorial-popup {
-    height: 85vh;
+    height: 78vh;
     position: fixed;
 }
 
 .layer-signup-terms-popup {
-    height: 84vh;
+    height: 80vh;
     position: fixed;
 }
 
 .layer-signup-terms-popup .terms-text {
-    height: 26vh;
+    height: 24vh;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
 }
 
 .layer-terms-popup {
-    height: 80vh;
+    height: 78vh;
     position: fixed;
 }
 
@@ -319,7 +319,7 @@
 }
 
 .layer-faq-popup {
-    height: 80vh;
+    height: 78vh;
     position: fixed;
 }
 
