@@ -308,18 +308,18 @@
 }
 
 .layer-terms-popup {
-    height: 78vh;
+    height: 75vh;
     position: fixed;
 }
 
 .layer-terms-popup .faq {
-    height: 34vh;
+    height: 32vh;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
 }
 
 .layer-faq-popup {
-    height: 78vh;
+    height: 75vh;
     position: fixed;
 }
 
