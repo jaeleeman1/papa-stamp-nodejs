@@ -18,7 +18,7 @@ router.get('/signin', function(req, res, next) {
         adminPw = userInfo.admin_pw;
         res.render('papa-admin/admin-signin', {url:config.url, adminEmail:adminEmail, adminPw:adminPw});
     }else {
-        res.render('papa-admin/admin-signin', {url:config.url, adminEmail: "관리자 E-Mail", adminPw:"관리자 패스워드"});
+        res.render('papa-admin/admin-signin', {url:config.url, adminEmail: "관리자 아이디", adminPw:"관리자 패스워드"});
     }
 });
 

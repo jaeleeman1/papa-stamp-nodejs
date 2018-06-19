@@ -54,6 +54,7 @@
 <script src='/js/jquery-2.2.3.min.js' type='text/javascript'></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        $.toast.config.align = 'center';
         $('#phone-text').focus();
 
         var tabletNumber = '';
@@ -154,7 +155,6 @@
 
                         tabletNumber = $("#phone-text").val();
                         if(tabletNumber.length < 13) {
-                            $.toast.config.align = 'left';
                             $.toast.config.width = 470;
                             $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">올바른 번호</h4>를 입력하세요!!.</span>', { type: 'danger', duration: 3000 });
                         }else {
@@ -189,7 +189,6 @@
                         tabletNumber = $("#phone-text").val();
 
                         if (tabletNumber.length < 13) {
-                            $.toast.config.align = 'left';
                             $.toast.config.width = 470;
                             $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">올바른 번호</h4>를 입력하세요!!.</span>', {
                                 type: 'danger',
@@ -215,7 +214,6 @@
                                 couponList.innerHTML = appendData;
                                 adminUseCoupon(inputData);
                             } else {
-                                $.toast.config.align = 'left';
                                 $.toast.config.width = 430;
                                 $.toast('<span style="font-size:1.8em;">사용 가능한 <h4 style="font-size:2em;">쿠폰</h4>이 없습니다.!</span>', {
                                     type: 'success',
@@ -347,7 +345,6 @@
                 dataType: 'json',
                 data: dataString,
                 success: function (data) {
-                    $.toast.config.align = 'left';
                     $.toast.config.width = 600;
                     $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰</h4> 사용이 완료되었습니다.</span>', {type: 'success', duration: 3000 });
                     $("#phone-text").val('');
@@ -363,13 +360,14 @@
                 resizable: false,
                 modal: true,
                 title: "파파스탬프 쿠폰 사용 요청! (TABLET)",
-                height: 500,
+                height: 600,
                 width: 700,
                 resizable:false,
                 buttons: {
                     "확인": function () {
                         $(this).dialog('close');
-                        authNumberSendsms(userId);
+                        adminUseCouponCallback(userId);
+//                        authNumberSendsms(userId);
                     },
                     "취소": function () {
                         $(this).dialog('close');

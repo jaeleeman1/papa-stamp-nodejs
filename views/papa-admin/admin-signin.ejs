@@ -47,14 +47,14 @@
           <h1>Admin Portal 로그인</h1>
           <!--<form action="/login/initPage" method="post" id="sendform" class="form-inline">-->
             <div>
-              <% if(adminEmail == "관리자 E-Mail") {%>
+              <% if(adminEmail == "관리자 아이디") {%>
                 <input type="text" class="form-control" placeholder="<%= adminEmail %>" required="" id="signinEmail"/>
               <% }else {%>
                 <input type="text" class="form-control" placeholder="<%= adminEmail %>" value="<%= adminEmail %>" required="" id="signinEmail"/>
               <% }%>
             </div>
             <div>
-              <% if(adminEmail == "관리자 E-Mail") {%>
+              <% if(adminEmail == "관리자 아이디") {%>
                 <input type="password" class="form-control" placeholder="<%= adminPw %>" required="" id="signinPassword"/>
               <% }else {%>
                 <input type="password" class="form-control" placeholder="<%= adminPw %>" value="<%= adminPw %>" required="" id="signinPassword"/>
@@ -91,13 +91,13 @@
         $('#btn_send').on('click',
             function() {
                 if ($('#signinEmail').val() == "") {
-                    alert('사용자 ID 를 입력하세요!');
+                    alert('관리자 아이디를 입력하세요!');
                     $('#signinEmail').focus();
                     return;
                 }
 
                 if ($('#signinPassword').val() == "") {
-                    alert('Password 를 입력하세요!');
+                    alert('관리자 패스워드를 입력하세요!');
                     $('#signinPassword').focus();
                     return;
                 }
@@ -118,10 +118,10 @@
                             $('#sendform').submit(); // 전송
                         }else {
                             if(data.signinEmailCheck == '0') {
-                                alert('올바른 ID 를 입력하세요!');
+                                alert('올바른 아이디를 입력하세요!');
                             }
                             if(data.signinPasswordCheck == '0') {
-                                alert('올바른 Password 를 입력하세요!');
+                                alert('올바른 패스워드를 입력하세요!');
                             }
                         }
                     },

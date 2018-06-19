@@ -60,8 +60,7 @@ router.get('/main', function(req, res, next) {
                 logger.debug('Select grgaph daily data success : ' + JSON.stringify(shopStampTotalData));
                 //Today data
                 var selectStampTodayQuery = 'select USER_ID, USED_YN, DEL_YN, DATE_FORMAT(UPDATE_DT, "%Y-%m-%d %h:%i:%s,%f") as VISIT_DATE from SB_USER_PUSH_HIS ' +
-                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and DEL_YN="N" and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") order by UPDATE_DT desc';
-                console.log('xxxx : ', selectStampTodayQuery);
+                    'where SHOP_ID = ' + mysql.escape(shopId) + ' and USED_YN="N" and DEL_YN="N" and UPDATE_DT >= DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") order by UPDATE_DT desc';
                 connection.query(selectStampTodayQuery, function (err, shopStampTodayData) {
                     if (err) {
                         logger.error(TAG, 'Select today data error', err);
@@ -158,7 +157,7 @@ router.get('/user-data', function(req, res, next) {
         if(delYn != "ALL") {
             selectUserHisDataQuery += " and DEL_YN = '" + delYn + "'";
         }
-        selectUserHisDataQuery += " group by UPDATE_DT desc";
+        selectUserHisDataQuery += " order by UPDATE_DT desc";
         connection.query(selectUserHisDataQuery, function (err, userHisData) {
             if (err) {
                 logger.error(TAG, 'Select user stamp history data error', err);
@@ -246,7 +245,7 @@ router.get('/period-data', function(req, res, next) {
         if(delYn != "ALL") {
             selectPeriodDataQuery += ' and DEL_YN = "' + delYn + '"';
         }
-        selectPeriodDataQuery += ' group by VISIT_DATE';
+        selectPeriodDataQuery += ' order by VISIT_DATE';
         connection.query(selectPeriodDataQuery, function (err, periodData) {
             if (err) {
                 logger.error(TAG, 'Select shop data  error', err);

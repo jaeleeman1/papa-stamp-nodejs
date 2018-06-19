@@ -86,7 +86,7 @@
                 </ul>
               </li>
 
-              <li><a onclick="customNumber();"><i class="fa fa-laptop"></i>전화 번호<span class="label label-success pull-right">Coming Soon</span></a></li>
+              <li><a onclick="customNumber();"><i class="fa fa-laptop"></i>전화 번호<span class="label label-success pull-right">Main View</span></a></li>
             </ul>
           </div>
 
@@ -296,6 +296,10 @@
     });
 </script>
 <script>
+    $(document).ready(function() {
+        $.toast.config.align = 'center';
+    });
+
     /*$(document).ready(function() {
         var pushCountView = document.getElementById('push-count');
         pushCountView.innerHTML = 0;
@@ -340,7 +344,6 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                $.toast.config.align = 'left';
                 $.toast.config.width = 600;
                 $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">스탬프 적립</h4>이 완료되었습니다.</span>', {type: 'success', duration: 3000 });
 
@@ -394,7 +397,6 @@
                 if (data.result == "success") {
                     $("#phone-text").val('');
                     $('#phone-text').focus();
-                    $.toast.config.align = 'left';
                     $.toast.config.width = 600;
                     $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">스탬프 적립</h4>이 완료되었습니다.!!!.</span>', { type: 'info', duration: 3000 });
                     var visitRateCnt = data.stampCnt % 10;
@@ -411,7 +413,6 @@
                             dataType: 'json',
                             data: dataString,
                             success: function (data) {
-                                $.toast.config.align = 'left';
                                 $.toast.config.width = 600;
                                 $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 발급</h4>이 완료되었습니다.</span>', {type: 'success', sticky: true});
                             },
@@ -468,7 +469,6 @@
             dataType: 'json',
             data : dataString,
             success: function(data) {
-                $.toast.config.align = 'left';
                 $.toast.config.width = 600;
                 $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 사용</h4>이 완료되었습니다.</span>', {type: 'success', duration: 3000});
 

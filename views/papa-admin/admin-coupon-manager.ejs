@@ -161,7 +161,7 @@
               <thead>
               <tr>
                 <th>Num</th>
-                <th>Name</th>
+                <th>사용자</th>
                 <th>쿠폰 번호</th>
                 <th>사용유무</th>
                 <th>발급날짜</th>
@@ -255,6 +255,7 @@
         possible  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     $(document).ready(function() {
+        $.toast.config.align = 'center';
         var couponCount = $('#coupon-count').find('select').val();
         var length = 13;
         generateCodes(couponCount, length);
@@ -322,7 +323,6 @@
                 dataType: 'json',
                 data : dataString,
                 success: function(data) {
-                    $.toast.config.align = 'left';
                     $.toast.config.width = 430;
                     $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰 생성</h4>이 완료되었습니다.!!.</span>', { type: '', duration: 3000 } );
                     setTimeout(function () {

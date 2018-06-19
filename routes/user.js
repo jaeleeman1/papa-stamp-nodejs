@@ -125,12 +125,11 @@ router.post('/userLogin', function(req, res, next) {
                 res.send('User sign in error');
             }else{
                 logger.debug(TAG, 'User login info ', userLogin);
-
                 var userInfo = {
                     user_email : loginEmail
                 }
 
-                // req.session.userInfo = userInfo;
+                req.session.userInfo = userInfo;
                 res.send({userId:userLogin[0].USER_ID, termsYn:userLogin[0].TERMS_YN ,loginEmailCheck: userLogin[0].EMAIL_CHECK, loginPwCheck: userLogin[0].PW_CHECK});
             }
         });

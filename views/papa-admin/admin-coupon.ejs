@@ -66,16 +66,9 @@
 
     <div style="float:right;margin-right:60px;">
       <label>사용 여부</label>
-      <p>Y: <input type="radio" class="flat" name="used" id="used-radio" value="Y" style="margin-right:30px;"/>
-        N: <input type="radio" class="flat" name="used" id="used-radio" value="N" checked="" style="margin-right:30px;"/>
-      </p>
-    </div>
-
-    <div style="float:right;margin-right:60px;">
-      <label>발급 여부</label>
-      <p>ALL: <input type="radio" class="flat" name="mapping" id="mapping-radio" value="ALL" style="margin-right:30px;"/>
-        Y: <input type="radio" class="flat" name="mapping" id="mapping-radio" value="Y" checked="" style="margin-right:30px;"/>
-        N: <input type="radio" class="flat" name="mapping" id="mapping-radio" value="N" style="margin-right:30px;"/>
+      <p>ALL: <input type="radio" class="flat" name="used" id="used-radio" value="ALL" checked="" style="margin-right:30px;"/>
+        Y: <input type="radio" class="flat" name="used" id="used-radio" value="Y" style="margin-right:30px;"/>
+        N: <input type="radio" class="flat" name="used" id="used-radio" value="N" style="margin-right:30px;"/>
       </p>
     </div>
 
@@ -125,7 +118,6 @@
                 <th class="column-title">쿠폰 넘버</th>
                 <th class="column-title">발급 일자</th>
                 <th class="column-title">사용 일자</th>
-                <th class="column-title">발급 유무</th>
                 <th class="column-title">사용 유무</th>
                 <th class="column-title">삭제 유무</th>
                 </th>
@@ -149,8 +141,11 @@
                 <td class=" "><%= shopCouponTodayData[i].USER_ID %></td>
                 <td class=" "><%= shopCouponTodayData[i].COUPON_NUMBER %></td>
                 <td class=" "><%= shopCouponTodayData[i].VISIT_DATE %></td>
+                <% if(shopCouponTodayData[i].USED_DATE == null) { %>
+                <td class=" ">None</td>
+                <% } else {%>
                 <td class=" "><%= shopCouponTodayData[i].USED_DATE %></td>
-                <td class=" "><%= shopCouponTodayData[i].MAPPING_YN %></td>
+                <% } %>
                 <td class=" "><%= shopCouponTodayData[i].USED_YN %></td>
                 <td class=" "><%= shopCouponTodayData[i].DEL_YN %></td>
                 </td>
@@ -251,7 +246,6 @@
 
     function searchCouponData() {
         var searchData = $('.top-search .input-group').find("input").val();
-        var mappingYN = $("input:radio[name=mapping]:checked").val();
         var usedYN = $("input:radio[name=used]:checked").val();
         var delYN = $("input:radio[name=delete]:checked").val();
         var shopId = $("#shop_id").val();
@@ -259,7 +253,7 @@
         headers["shop_id"] = shopId;
         if(searchData.length > 0) {
             if(searchData != '날짜검색!') {
-                var dataString = {'user_number': searchData, 'mapping_yn': mappingYN, 'used_yn': usedYN, 'del_yn': delYN};
+                var dataString = {'user_number': searchData, 'used_yn': usedYN, 'del_yn': delYN};
 
                 $.ajax({
                     url: $("#url").val() + '/admin-coupon/v1/user-data',
@@ -284,10 +278,13 @@
                                 '</td>' +
                                 '<td class=" ">'+ data.userCouponData[i].USER_ID +'</td>' +
                                 '<td class=" ">'+ data.userCouponData[i].COUPON_NUMBER +'</td>' +
-                                '<td class=" ">'+ data.userCouponData[i].ISSUED_DATE +'</td>' +
-                                '<td class=" ">'+ data.userCouponData[i].USED_DATE +'</td>' +
-                                '<td class=" ">'+ data.userCouponData[i].MAPPING_YN +'</td>' +
-                                '<td class=" ">'+ data.userCouponData[i].USED_YN +'</td>' +
+                                '<td class=" ">'+ data.userCouponData[i].ISSUED_DATE +'</td>';
+                                if(data.userCouponData[i].USED_DATE == null) {
+                                    appendData += '<td class=" ">None</td>';
+                                }else {
+                                    appendData += '<td class=" ">'+ data.userCouponData[i].USED_DATE +'</td>';
+                                }
+                            appendData +='<td class=" ">'+ data.userCouponData[i].USED_YN +'</td>' +
                                 '<td class=" ">'+ data.userCouponData[i].DEL_YN +'</td>' +
                                 '</td>' +
                                 '</tr>';
@@ -303,7 +300,7 @@
             }else {
                 var startDate = $('#start-datepicker').find("input").val();
                 var endDate = $('#end-datepicker').find("input").val();
-                var dataString = {'start_date': startDate, 'end_date': endDate, 'mapping_yn': mappingYN, 'used_yn': usedYN, 'del_yn': delYN};
+                var dataString = {'start_date': startDate, 'end_date': endDate, 'used_yn': usedYN, 'del_yn': delYN};
 
                 $.ajax({
                     url: $("#url").val() + '/admin-coupon/v1/period-data',
@@ -328,10 +325,13 @@
                                 '</td>' +
                                 '<td class=" ">'+ data.periodData[i].USER_ID +'</td>' +
                                 '<td class=" ">'+ data.periodData[i].COUPON_NUMBER +'</td>' +
-                                '<td class=" ">'+ data.periodData[i].ISSUED_DATE +'</td>' +
-                                '<td class=" ">'+ data.periodData[i].USED_DATE +'</td>' +
-                                '<td class=" ">'+ data.periodData[i].MAPPING_YN +'</td>' +
-                                '<td class=" ">'+ data.periodData[i].USED_YN +'</td>' +
+                                '<td class=" ">'+ data.periodData[i].ISSUED_DATE +'</td>';
+                            if(data.periodData[i].USED_DATE == null) {
+                                appendData += '<td class=" ">None</td>';
+                            }else {
+                                appendData += '<td class=" ">'+ data.periodData[i].USED_DATE +'</td>';
+                            }
+                            appendData +='<td class=" ">'+ data.periodData[i].USED_YN +'</td>' +
                                 '<td class=" ">'+ data.periodData[i].DEL_YN +'</td>' +
                                 '</td>' +
                                 '</tr>';

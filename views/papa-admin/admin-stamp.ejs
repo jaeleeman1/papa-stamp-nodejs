@@ -102,10 +102,10 @@
             <div class="col-md-4 tile" style="width:15%;">
               <span>스탬프 발급 수</span>
               <h2 id="stamp-length"><%= shopStampTodayData.length %> 개</h2>
-              <div style="display:none; margin-top:20px;">
+              <!--<div style="display:none; margin-top:20px;">
                 <span>스탬프 카운트</span>
                 <h2 id="stamp-count"></h2>
-              </div>
+              </div>-->
               <span class="sparkline22 graph" style="height: 160px;">
                 <canvas width="200" height="60" style="display: inline-block; vertical-align: top; width: 94px; height: 30px;"></canvas>
               </span>
@@ -300,10 +300,10 @@
                         var stampLength = document.getElementById('stamp-length');
                         stampLength.innerHTML = dataLength +' 개';
 
-                        var userCount = data.userStamp;
+                        /*var userCount = data.userStamp;
                         $("#stamp-count").parent().css("display", "block");
 
-                        $("#stamp-count").text(userCount + "개");
+                        $("#stamp-count").text(userCount + "개");*/
                     },
                     error: function(request, status, error) {
                         console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -348,7 +348,7 @@
                         var stampLength = document.getElementById('stamp-length');
                         stampLength.innerHTML = dataLength +' 개';
 
-                        $("#stamp-count").parent().css("display", "none");
+//                        $("#stamp-count").parent().css("display", "none");
                     },
                     error: function(request, status, error) {
                         console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

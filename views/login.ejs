@@ -303,14 +303,14 @@
                 var loginPassword = $('#loginPassword').val();
 
                 if (loginEmail == "") {
-                    $.toast.config.width = 220;
+                    $.toast.config.width = 240;
                     $.toast('올바른 <h3>이메일</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
                     $('#loginEmail').focus();
                     return;
                 }
 
                 if (loginPassword == "") {
-                    $.toast.config.width = 230;
+                    $.toast.config.width = 260;
                     $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
                     $('#loginPassword').focus();
                     return;
