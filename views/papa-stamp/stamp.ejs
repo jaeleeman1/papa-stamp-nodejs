@@ -209,8 +209,10 @@
                 $('#stamp-request').unbind('click');
                 $("#stamp-request").bind('click', function() {
                     if($('#web_check').val() == 'true') {
-                        $.toast.config.width = 200;
-                        $.toast('<h3>앱</h3>에서만 사용 가능합니다.', {type: 'info', duration: 3000 });
+
+
+                        /*$.toast.config.width = 200;
+                        $.toast('<h3>앱</h3>에서만 사용 가능합니다.', {type: 'info', duration: 3000 });*/
                     }else {
                         requestStamp(shopId);
                     }

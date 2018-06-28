@@ -296,7 +296,6 @@
             console.error("geolocation error : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
         }
 
-
         $('#btn_send').on('click',
             function() {
                 var loginEmail = $('#loginEmail').val();
@@ -326,6 +325,8 @@
                         if (data.loginEmailCheck == '1') {
                             if (data.loginPwCheck == '1') {
                                 $('#user_id').val(data.userId);
+                                $('#sendLoginForm').submit();
+                                /*$('#user_id').val(data.userId);
                                 var headers = {};
                                 headers["user_id"] = data.userId;
                                 $.ajax({
@@ -346,7 +347,7 @@
                                     error: function(request, status, error) {
                                         console.error("userLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                                     }
-                                });
+                                });*/
                             } else {
                                 $.toast.config.width = 230;
                                 $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
