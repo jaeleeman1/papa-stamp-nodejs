@@ -350,7 +350,7 @@ router.put('/updateLocation', function (req, res, next) {
             }else{
                 logger.debug(TAG, 'Update user location success');
                 res.status(200);
-                res.send();
+                res.send({result:"success"});
             }
             connection.release();
         });

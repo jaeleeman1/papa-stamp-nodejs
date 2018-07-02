@@ -325,29 +325,24 @@
                         if (data.loginEmailCheck == '1') {
                             if (data.loginPwCheck == '1') {
                                 $('#user_id').val(data.userId);
-                                $('#sendLoginForm').submit();
-                                /*$('#user_id').val(data.userId);
                                 var headers = {};
                                 headers["user_id"] = data.userId;
+                                var dataString = {'latitude':$("#current_lat").val(), 'longitude':$("#current_lng").val()};
                                 $.ajax({
-                                    url: $("#url").val() + '/user/v1/userLocation',
-                                    type: 'GET',
+                                    url: $("#url").val() + '/user/v1/updateLocation',
+                                    type: 'PUT',
                                     headers : headers,
                                     dataType: 'json',
+                                    data : dataString,
                                     success: function(data) {
-                                        var userLocationData = data.userLocationData;
-                                        currentLat = userLocationData.CURRENT_LAT;
-                                        currentLng = userLocationData.CURRENT_LNG;
-
-                                        $("#current_lat").val(currentLat);
-                                        $("#current_lng").val(currentLng);
-
-                                        $('#sendLoginForm').submit();
+                                        if(data.result == 'success') {
+                                            $('#sendLoginForm').submit();
+                                        }
                                     },
                                     error: function(request, status, error) {
                                         console.error("userLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                                     }
-                                });*/
+                                });
                             } else {
                                 $.toast.config.width = 230;
                                 $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
