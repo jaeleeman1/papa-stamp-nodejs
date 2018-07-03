@@ -187,10 +187,10 @@
                         $("#stamp-user-count").html('<h4 class="stamp-count" id="stamp-count">(현재까지 적립된 스탬프 : ' + stampCount + '개)</h4>');
                         $("#coupon-user-count").html('<h4 class="coupon-count" id="coupon-count">(현재까지 미사용 쿠폰 : ' + couponCount + '장)</h4>');
 
-                        if (data.selectCouponCount < 10) {
-                            if(data.selectCouponCount < 3) {
+                        if (data.selectCouponCount.REMIND_COUNT < 10) {
+                            if(data.selectCouponCount.REMIND_COUNT < 3) {
                                 $.toast.config.width = 500;
-                                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">쿠폰</h4>을 생성하십시오.</span>', {
+                                $.toast('<span style="font-size:1.8em;"><h4 style="font-size:2em;">신규 쿠폰</h4>을 생성하십시오.</span>', {
                                     type: 'danger',
                                     sticky: true
                                 });
