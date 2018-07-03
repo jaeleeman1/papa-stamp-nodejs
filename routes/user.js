@@ -49,16 +49,26 @@ router.get('/couponCheck', function(req, res, next) {
                     'order by ISSUED_DT ASC';
                 connection.query(selectCouponQuery, function (err, selectCouponData) {
                     if (err) {
-                        logger.error(TAG, "Select Coupon error : " + err);
+                        logger.error(TAG, "Select coupon error : " + err);
                         res.status(400);
                         res.send('Select coupon error');
                     } else {
                         logger.debug(TAG, 'Select coupon success');
-                        if(selectStampCountData.length > 0) {
-                            res.send({userId: encryptUid(userNumber), userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
-                        }else {
-                            res.send({userId: encryptUid(userNumber), userStamp: 0, selectCouponData: selectCouponData});
-                        }
+                        var selectCouponCountQuery = 'select COUNT(*) from SB_USER_COUPON where SHOP_ID='+mysql.escape(shopId);
+                        connection.query(selectCouponCountQuery, function (err, selectCouponCountData) {
+                            if (err) {
+                                logger.error(TAG, "Select coupon count error : " + err);
+                                res.status(400);
+                                res.send('Select coupon error');
+                            } else {
+                                logger.debug(TAG, 'Select coupon count success');
+                                if(selectStampCountData.length > 0) {
+                                    res.send({userId: encryptUid(userNumber), userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
+                                }else {
+                                    res.send({userId: encryptUid(userNumber), userStamp: 0, selectCouponData: selectCouponData, selectCouponCount:selectCouponCountData[0]});
+                                }
+                            }
+                        });
                     }
                 });
             }
