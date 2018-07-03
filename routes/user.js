@@ -54,7 +54,7 @@ router.get('/couponCheck', function(req, res, next) {
                         res.send('Select coupon error');
                     } else {
                         logger.debug(TAG, 'Select coupon success');
-                        var selectCouponCountQuery = 'select COUNT(*) from SB_USER_COUPON where SHOP_ID='+mysql.escape(shopId);
+                        var selectCouponCountQuery = 'select COUNT(*) as REMIND_COUNT from SB_USER_COUPON where SHOP_ID='+mysql.escape(shopId);
                         connection.query(selectCouponCountQuery, function (err, selectCouponCountData) {
                             if (err) {
                                 logger.error(TAG, "Select coupon count error : " + err);
@@ -63,7 +63,7 @@ router.get('/couponCheck', function(req, res, next) {
                             } else {
                                 logger.debug(TAG, 'Select coupon count success');
                                 if(selectStampCountData.length > 0) {
-                                    res.send({userId: encryptUid(userNumber), userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData});
+                                    res.send({userId: encryptUid(userNumber), userStamp: selectStampCountData[0].USER_STAMP, selectCouponData: selectCouponData, selectCouponCount:selectCouponCountData[0]});
                                 }else {
                                     res.send({userId: encryptUid(userNumber), userStamp: 0, selectCouponData: selectCouponData, selectCouponCount:selectCouponCountData[0]});
                                 }
