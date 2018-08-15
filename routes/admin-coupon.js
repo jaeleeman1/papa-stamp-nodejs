@@ -267,11 +267,11 @@ router.get('/period-data', function(req, res, next) {
 
         connection.query(selectPeriodDataQuery, function (err, periodData) {
             if (err) {
-                console.error("Select shop data Error : ", err);
+                logger.error("Select shop data Error : ", err);
                 res.status(400);
                 res.send('Select shop data error');
             } else {
-                console.log('Select shop data success : ' + JSON.stringify(periodData));
+                logger.log('Select shop data success : ' + JSON.stringify(periodData));
                 for(var i=0; i<periodData.length; i++) {
                     var tempId = periodData[i].USER_ID;
                     periodData[i].USER_ID = decryptUid(tempId);
@@ -296,7 +296,7 @@ router.get('/manager', function(req, res, next) {
             'from SB_USER_COUPON where SHOP_ID = ' + mysql.escape(shopId) + ' and MAPPING_YN = "Y" group by COUPON_NUMBER order by ISSUED_DATE desc';
         connection.query(selectCouponUsedListQuery, function (err, couponUsedListData) {
             if (err) {
-                console.error("*** initPage select id Error : " , err);
+                logger.error("*** initPage select id Error : " , err);
                 res.status(400);
                 res.send('Select user push history error');
             }else {
@@ -305,14 +305,14 @@ router.get('/manager', function(req, res, next) {
                     'from SB_USER_COUPON where SHOP_ID = ' + mysql.escape(shopId) + ' and MAPPING_YN = "N" group by COUPON_NUMBER order by REG_DT desc';
                 connection.query(selectCouponIssuedListQuery, function (err, couponIssuedListData) {
                     if (err) {
-                        console.error("*** initPage select id Error : ", err);
+                        logger.error("*** initPage select id Error : ", err);
                         res.status(400);
                         res.send('Select user push history error');
                     } else {
                         var selectCurrentQuery = 'select DATE_FORMAT(CURRENT_DATE(), "%Y-%m-%d") as TODAY';
                         connection.query(selectCurrentQuery, function (err, selectCurrentData) {
                             if (err) {
-                                console.error("*** initPage select id Error : ", err);
+                                logger.error("*** initPage select id Error : ", err);
                                 res.status(400);
                                 res.send('Select user push history error');
                             } else {
@@ -362,7 +362,7 @@ router.post('/createCoupon', function(req, res, next) {
         var selectCouponImgQuery = 'select SHOP_BACK_IMG from SB_SHOP_INFO where  SHOP_ID = ' + mysql.escape(shopId);
         connection.query(selectCouponImgQuery, function (err, couponImgData) {
             if (err) {
-                console.error("*** initPage select id Error : ", err);
+                logger.error("*** initPage select id Error : ", err);
                 res.status(400);
                 res.send('Select user push history error');
             } else {
@@ -378,7 +378,7 @@ router.post('/createCoupon', function(req, res, next) {
                 var selectCouponListQuery = 'insert into SB_USER_COUPON (SHOP_ID, COUPON_IMG, COUPON_NUMBER, COUPON_NAME, COUPON_PRICE) value ' + inputData;
                 connection.query(selectCouponListQuery, function (err, couponListData) {
                     if (err) {
-                        console.error("*** initPage select id Error : " , err);
+                        logger.error("*** initPage select id Error : " , err);
                         res.status(400);
                         res.send('Select user push history error');
                     }else {

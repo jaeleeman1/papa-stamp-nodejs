@@ -428,20 +428,19 @@
                         dataType: 'json',
                         data: JSON.stringify(dataString),
                         success: function(data) {
-                            console.log("success", index);
                             $("#fcm-"+index).removeClass("blue");
                             $("#fcm-"+index).addClass("red");
                         },
                         error: function(request, status, error) {
-                            console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                            console.error("access token : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         }
                     });
                 }else {
-                    console.log("fail");
+                    console.error("access token : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                 }
             },
             error: function(request, status, error) {
-                console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                console.error("access token : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
     }

@@ -218,7 +218,6 @@
         $(document).on('click', '.search_checkbox', function() {
             $('input[type="checkbox"]').not(this).prop("checked", false);
             var searchValue = $('input[type="checkbox"]:checked').parent("td").next().text();
-            console.log(searchValue);
             $('.top-search .input-group').find("input").val(searchValue);
         });
 

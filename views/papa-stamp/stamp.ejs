@@ -148,7 +148,7 @@
                         'buttons',
                         {
                             "닫기": function() {
-                            $(this).dialog('close');
+                                $(this).dialog('close');
                             }
                         }
                     );
@@ -209,10 +209,8 @@
                 $('#stamp-request').unbind('click');
                 $("#stamp-request").bind('click', function() {
                     if($('#web_check').val() == 'true') {
-
-
-                        /*$.toast.config.width = 200;
-                        $.toast('<h3>앱</h3>에서만 사용 가능합니다.', {type: 'info', duration: 3000 });*/
+                        $.toast.config.width = 200;
+                        $.toast('<h3>앱</h3>에서만 사용 가능합니다.', {type: 'info', duration: 3000 });
                     }else {
                         requestStamp(shopId);
                     }
@@ -553,8 +551,7 @@
                 }
             },
             error: function(request, status, error) {
-                console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                console.log('Error occured');
+                console.error("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
     }
@@ -659,8 +656,7 @@
                         }
                     },
                     error: function (request, status, error) {
-                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                        console.log('Error occured');
+                        console.error("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                     }
                 });
             });

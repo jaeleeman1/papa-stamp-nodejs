@@ -14,9 +14,9 @@
                         <% var userName = userInfoData.USER_NAME; %>
                         <h2>이 름 : <span><%= userName %></span></h2>
                         <% if(userName == '파파스탬프') { %>
-                            <p id="user-info-btn" onclick="loginLayer('layerLoginPopup')">로그인</p>
+                        <p id="user-info-btn" onclick="loginLayer('layerLoginPopup')">로그인</p>
                         <% }else { %>
-                            <p id="user-info-btn" onclick="changeUserInfoLayer('layerUserInfoPopup', '<%= userInfoData.USER_NAME %>', '<%= userInfoData.USER_EMAIL %>', '<%= userNumber %>')">정보 수정</p>
+                        <p id="user-info-btn" onclick="changeUserInfoLayer('layerUserInfoPopup', '<%= userInfoData.USER_NAME %>', '<%= userInfoData.USER_EMAIL %>', '<%= userNumber %>')">정보 수정</p>
                         <% } %>
                     </div>
                 </figure>
@@ -132,14 +132,14 @@
             <div class="faq">
                 <div class="setting-list-title">파파스탬프 오픈 행사!!</div>
                 <span class="triangle pre-click"></span>
-                <div class="notice_date">2018-06-01</div>
+                <div class="notice_date">2018-07-26</div>
                 <div class="faq_answer_container">
                     <div class="faq_answer">안녕하세요. 파파스탬프입니다.
                         <br></br>
                         <br>온라인으로 스탬프 관리하는 파파스탬프!!</br>
                         <br>단골 손님들을 위한 편리한 서비스입니다. </br>
-                        <br>오픈 기념 행사로 2018년 6월 ~ 12월까지 </br>
-                        <br>할인된 가격으로 제휴 진행 중입니다. </br>
+                        <br>오픈 기념 행사로 2018년 8월부터 30개 지점까지 </br>
+                        <br>무료로 제휴 진행 중입니다. (남은 지점 29개)</br>
                         <br></br>
                         <br>많은 관심과 이용 부탁드립니다. </br>
                         <br>감사합니다.</br>
@@ -506,10 +506,10 @@
 
     function changePassword() {
         /*if($('#web_check').val() == 'true') {
-            $.toast.config.width = 200;
-            $.toast('<h3>앱</h3>에서만 수정 가능합니다.', {type: 'info', duration: 3000 });
-            return;
-        }*/
+         $.toast.config.width = 200;
+         $.toast('<h3>앱</h3>에서만 수정 가능합니다.', {type: 'info', duration: 3000 });
+         return;
+         }*/
 
         var checkPwBtn = $('#password-btn').text();
         if(checkPwBtn == "변경하기") {
@@ -549,8 +549,8 @@
                                     }
                                 });
                             } else {
-                                    $.toast.config.width = 230;
-                                    $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
+                                $.toast.config.width = 230;
+                                $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
                             }
                         } else {
                             if (data.loginPwCheck == '1') {
@@ -638,11 +638,11 @@
     }
 
     function changePhoneNumber() {
-/*        if($('#web_check').val() == 'true') {
-            $.toast.config.width = 200;
-            $.toast('<h3>앱</h3>에서만 수정 가능합니다.', {type: 'info', duration: 3000 });
-            return;
-        }*/
+        /*        if($('#web_check').val() == 'true') {
+         $.toast.config.width = 200;
+         $.toast('<h3>앱</h3>에서만 수정 가능합니다.', {type: 'info', duration: 3000 });
+         return;
+         }*/
 
         var userNumber = $('#phone-number').val();
         if(document.getElementById('phone-number').hasAttribute('disabled')) {
@@ -707,8 +707,7 @@
                             }
                         },
                         error: function(request, status, error) {
-                            console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                            console.log('Error occured');
+                            console.error("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         }
                     });
                 }
@@ -751,7 +750,7 @@
                         }
                     });
                 }else {
-                    console.log("fail");
+                    console.error("used delete card : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                 }
             },
             error: function(request, status, error) {

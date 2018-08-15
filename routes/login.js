@@ -28,7 +28,7 @@ router.get('/signup', function(req, res, next) {
 
 router.get('/logout', function(req, res, next) {
     req.session.destory(function(err){
-        if(err) console.err('err', err);
+        if(err) logger.err('err', err);
         res.render('papa-admin/admin-signin', {url:config.url, userId: "Username"});
     });
 });

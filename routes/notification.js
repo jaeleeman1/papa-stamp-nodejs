@@ -254,7 +254,6 @@ router.post('/issued-coupon', function (req, res, next) {
             'from SB_USER_COUPON ' +
             'where MAPPING_YN="Y" and DEL_YN="N" and SHOP_ID = ' + mysql.escape(shopId) + ' ' +
             'limit 1';
-        console.log('dd ' + selectCouponData);
         connection.query(selectCouponData, function (err, useCouponData) {
             if (err) {
                 logger.error(TAG, "DB useCoupon error : " + err);
@@ -308,22 +307,22 @@ router.post('/sendsms', function(req, res, next) {
         method: 'POST'
     };
     var req = https.request(options, function(res) {
-        console.log(res.statusCode);
+        logger.log(res.statusCode);
         var body = "";
         res.on('data', function(d) {
             body += d;
         });
         res.on('end', function(d) {
             if(res.statusCode==200)
-                console.log(JSON.parse(body));
+                logger.log(JSON.parse(body));
             else
-                console.log(body);
+                logger.log(body);
         });
     });
     req.write(body);
     req.end();
     req.on('error', function(e) {
-        console.error(e);
+        logger.error(e);
     });
 
     res.send({result:"success"});

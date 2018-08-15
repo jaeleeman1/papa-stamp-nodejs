@@ -288,7 +288,7 @@ router.put('/deleteStamp', function(req, res, next) {
     getConnection(function (err, connection) {
         var deletePushInfo = 'update SB_USER_PUSH_HIS set DEL_YN = "Y" ' +
             'where SHOP_ID = ' + mysql.escape(shopId) + ' and USER_ID = ' + mysql.escape(encryptUid(userId)) + ' and DATE_FORMAT(UPDATE_DT,"%Y-%m-%d %h:%i:%s,%f") = "' + visitDate +'"';
-        console.log(deletePushInfo);
+        logger.log(deletePushInfo);
         connection.query(deletePushInfo, function (err, DeletePushInfoData) {
             if (err) {
                 logger.error("Delete stamp history data error : " + err);

@@ -167,7 +167,7 @@ router.get('/shopData', function(req, res, next) {
             'where SSI.SHOP_LAT =' + mysql.escape(currentLat)+ ' and SSI.SHOP_LNG =' + mysql.escape(currentLng);
         connection.query(selectShopDataQuery, function (err, shopData) {
             if (err) {
-                console.error("Select shop data error : ", err);
+                logger.error("Select shop data error : ", err);
                 res.status(400);
                 res.send('Select shop data error');
             } else {

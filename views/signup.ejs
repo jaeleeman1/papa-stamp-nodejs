@@ -324,14 +324,12 @@
                             error: function (request, status, error) {
                                 $.toast.config.width = 280;
                                 $.toast('<h3>인증 번호</h3>발송에 실패하였습니다.', {type: 'danger', duration: 3000});
-                                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                                console.log('Error occured');
+                                console.error("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                             }
                         });
                     },
                     error: function (request, status, error) {
-                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                        console.log('Error occured');
+                        console.error("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                     }
                 });
             }

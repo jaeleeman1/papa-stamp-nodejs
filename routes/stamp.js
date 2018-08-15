@@ -142,7 +142,7 @@ router.get('/shopList', function (req, res, next) {
             'order by distance';
         connection.query(selectShopListQuery, function (err, shopListData) {
             if (err) {
-                console.error("Select shop lIst error : ", err);
+                logger.error("Select shop lIst error : ", err);
                 res.status(400);
                 res.send('Select shop lIst error');
             } else {
@@ -184,7 +184,7 @@ router.get('/shopData', function(req, res, next) {
             'where SSI.SHOP_LAT =' + mysql.escape(currentLat)+ ' and SSI.SHOP_LNG =' + mysql.escape(currentLng)  +' and SUPI.USER_ID =' +mysql.escape(userId) ;
         connection.query(selectShopDataQuery, function (err, shopData) {
             if (err) {
-                console.error("Select shop data Error : ", err);
+                logger.error("Select shop data Error : ", err);
                 res.status(400);
                 res.send('Select shop data error');
             } else {

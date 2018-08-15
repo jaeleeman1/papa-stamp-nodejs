@@ -149,7 +149,7 @@ router.get('/shopList', function (req, res, next) {
             'order by distance';
         connection.query(selectShopListQuery, function (err, shopListData) {
             if (err) {
-                console.error("Select coupon shop list Error : ", err);
+                logger.error("Select coupon shop list Error : ", err);
                 res.status(400);
                 res.send('Select coupon shop list error');
             } else {
@@ -193,7 +193,7 @@ router.get('/shopData', function(req, res, next) {
             'and SUC.USED_YN = "N" and SUC.DEL_YN = "N" limit 1';
         connection.query(selectShopDataQuery, function (err, shopData) {
             if (err) {
-                console.error("Select coupon shop data Error : ", err);
+                logger.error("Select coupon shop data Error : ", err);
                 res.status(400);
                 res.send('Select coupon shop data error');
             } else {

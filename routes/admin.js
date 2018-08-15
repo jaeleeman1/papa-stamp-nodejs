@@ -24,7 +24,7 @@ router.get('/signin', function(req, res, next) {
 
 router.get('/signout', function(req, res, next) {
     req.session.destory(function(err){
-        if(err) console.err('err', err);
+        if(err) logger.err('err', err);
         res.render('papa-admin/admin-signin', {url:config.url, userId: "Username"});
     });
 });
@@ -37,7 +37,9 @@ router.get('/signin/userCheck', function(req, res, next) {
         var selectSigninEmailQuery = 'select exists (select * from SB_SHOP_USER_INFO as SSUI where SSUI.SHOP_EMAIL = ' + mysql.escape(signinEmail) + ') as EMAIL_CHECK';
         connection.query(selectSigninEmailQuery, function (err, signinEmailData) {
             if (err) {
-                console.error("*** initPage select id Error : " , err);
+                logger.error('Signin user id check error : ' , err);
+                res.status(400);
+                res.send('Signin user id check error');
             }else{
                 var signinEmailCheck = signinEmailData[0].EMAIL_CHECK;
                 var signinPasswordCheck = '0';
@@ -47,7 +49,9 @@ router.get('/signin/userCheck', function(req, res, next) {
                         'where SSUI.SHOP_EMAIL = ' + mysql.escape(signinEmail) + ' and SSUI.SHOP_PASSWORD = password(' + mysql.escape(signinPassword) +')';
                     connection.query(selectAdminQuery, function (err, signinAdminData) {
                         if (err) {
-                            console.error("*** initPage select password Error : ", err);
+                            logger.error('Signin user password check error : ', err);
+                            res.status(400);
+                            res.send('Signin user password check error');
                         } else {
                             signinPasswordCheck = signinAdminData[0].PW_CHECK;
                             var userInfo = {
@@ -80,22 +84,22 @@ router.get('/signin/initPage', function(req, res, next) {
             "group by VIEWDATE";
         connection.query(selectShopTotalQuery, function (err, shopTotalData) {
             if (err) {
-                console.error("*** initPage select id Error : " , err);
+                logger.error('Signin initPage shop total error : ' , err);
                 res.status(400);
-                res.send('Select user push history error');
+                res.send('Signin initPage shop total error');
             }else {
-                console.log('Select user push history success : ' + JSON.stringify(shopTotalData));
+                logger.log('Select user push history success : ' + JSON.stringify(shopTotalData));
                 var selectShopCouponQuery = "select count(USER_ID) as ISSUED_CNT, USER_ID, DATE_FORMAT(ISSUED_DT,'%Y-%m-%d') as VIEWDATE " +
                     "from SB_USER_COUPON where USED_DT > date_add(now(),interval -7 day) " +
                     "and MAPPING_YN = 'Y' and SHOP_ID = " + mysql.escape(shopId) +
                     "group by VIEWDATE";
                 connection.query(selectShopCouponQuery, function (err, shopCouponData) {
                     if (err) {
-                        console.error("*** initPage select id Error : " , err);
+                        logger.error('Signin initPage shop coupon error : ' , err);
                         res.status(400);
-                        res.send('Select stamp shop list error');
+                        res.send('Signin initPage shop coupon error');
                     }else {
-                        console.log('Select coupon list success : ' + JSON.stringify(shopCouponData));
+                        logger.log('Select coupon list success : ' + JSON.stringify(shopCouponData));
                         var selectWeeklyQuery = "select DATE_FORMAT(DATE_NAME.WEEKLY_DAY,'%Y-%m-%d') as WEEKLYDATE, DATE_FORMAT(DATE_NAME.WEEKLY_DAY,'%m/%d') as VIEWDATE " +
                             "from (select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as WEEKLY_DAY " +
                             "from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a " +
@@ -104,11 +108,11 @@ router.get('/signin/initPage', function(req, res, next) {
                             "limit 7) DATE_NAME order by WEEKLY_DAY";
                         connection.query(selectWeeklyQuery, function (err, shopWeeklyData) {
                             if (err) {
-                                console.error("*** initPage select id Error : " , err);
+                                logger.error("*** initPage select id Error : " , err);
                                 res.status(400);
                                 res.send('Select stamp shop list error');
                             }else {
-                                console.log('Select weekly list success : ' + JSON.stringify(shopWeeklyData));
+                                logger.log('Select weekly list success : ' + JSON.stringify(shopWeeklyData));
                                 var today;
                                 var viewDate = [];
                                 var stampDate = [];

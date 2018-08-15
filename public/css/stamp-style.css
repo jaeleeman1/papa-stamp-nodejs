@@ -83,6 +83,7 @@
 
 .use-coupon-btn-SB-SHOP-00001 {
     width: 30%;
+    float: left;
     font-size: 0.8em;
     border: 2px solid #74DF00;
     padding: 6px;
@@ -90,7 +91,7 @@
 }
 
 .use-shop-name-SB-SHOP-00001 {
-    float: left;
+    float: right;
     font-size: 1em;
     margin-top: 0.5em;
 }
@@ -106,8 +107,8 @@
     width: 125px;
     font-size: 1.2em;
     color: #e8ff00;
-    padding: 10px 0 5px 10px;
-    margin-top: -50px;
+    padding: 10px 3px 5px 10px;
+    margin-top: -10px;
     letter-spacing: 2px;
     font-weight: 500;
     line-height: 1.7em;
@@ -125,10 +126,11 @@
     width: 100%;
     float: left;
     font-size: 1em;
-    margin-top: 25px;
+    padding-left: 10px;
+    margin-top: -5px;
     margin-bottom: 45px;
     color: darkorange;
-    text-align: right;
+    text-align: left;
 }
 
 .use-coupon-number-SB-SHOP-00001 {
@@ -139,14 +141,66 @@
 .use-coupon-date-SB-SHOP-00001 {
     width: 100%;
     margin-left: 10px;
-    text-align: right;
+    text-align: left;
     font-size: 11px;
     color: #fff;
-    padding: 10px;
     margin-top: 8em;
     letter-spacing: 1px;
     font-weight: 500;
     font-family: 'Yantramanav', sans-serif;
+}
+
+.shop-event-title-SB-SHOP-00001 {
+    font-size: 1em;
+    text-align: center;
+    letter-spacing: 1px;
+    padding: 10px;
+    color: #bce8f1;
+}
+
+.shop-event-remain-SB-SHOP-00001 {
+    width: 100%;
+    float: left;
+    font-size: 1em;
+    padding-left: 10px;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    color: red;
+    text-align: right;
+}
+
+.shop-stamp-btn-SB-SHOP-00001 {
+    width: 40%;
+    float: left;
+    font-size: 0.8em;
+    color: greenyellow;
+    border: 2px solid darkorange;
+    padding: 6px;
+    margin-top: -48px;
+}
+
+.event-stamp-count {
+    color: darkgray;
+}
+
+.shop-coupon-btn-SB-SHOP-00001 {
+    width: 40%;
+    float: left;
+    font-size: 0.8em;
+    color: yellow;
+    border: 2px solid darkorange;
+    padding: 6px;
+    margin-top: -48px;
+}
+
+.shop-event-end-SB-SHOP-00001 {
+    width: 40%;
+    float: left;
+    font-size: 0.8em;
+    color: whitesmoke;
+    border: 2px solid darkgray;
+    padding: 6px;
+    margin-top: -48px;
 }
 /* SB-SHOP-00001 stamp image */
 

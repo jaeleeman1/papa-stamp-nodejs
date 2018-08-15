@@ -168,7 +168,7 @@ router.get('/userCreate', function(req, res, next) {
         })
         .catch(function(error) {
             logger.error(TAG, 'Error creating custom token : ', error);
-            console.log("Error creating custom token:", error);
+            logger.log("Error creating custom token:", error);
         });
 });
 
@@ -308,7 +308,6 @@ router.get('/accessToken', function (req, res, next) {
     getConnection(function (err, connection){
         var getAccessTokenQuery = 'select ACCESS_TOKEN from SB_USER_INFO ' +
             'where USER_ID = "'+ encryptUid(userId) + '"';
-        console.log(getAccessTokenQuery);
         connection.query(getAccessTokenQuery, function (err, accessTokenData) {
             if (err) {
                 logger.error(TAG, "DB updateUserLocationQuery error : " + err);

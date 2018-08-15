@@ -66,9 +66,9 @@
                     $.toast('선택한 지점의 <h3>카드</h3>가 생성되었습니다.', { type: 'info', duration: 2000 } );
                     var webCheck = $('#web_check').val();
                     if(webCheck == 'true') {
-                        document.footerAction.method = 'post'
+                        document.footerAction.method = 'post';
                     }else {
-                        document.footerAction.method = 'get'
+                        document.footerAction.method = 'get';
                     }
                     document.footerAction.action = '/stamp/v1/main';
                     setTimeout(function () {
@@ -251,8 +251,7 @@
                             }
                         },
                         error: function(request, status, error) {
-                            console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                            console.log('Error occured');
+                            console.error("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         }
                     });
                 });
@@ -326,7 +325,7 @@
 
                     var distance = Math.round(clickLine.getLength()), // 선의 총 거리를 계산합니다
 //                        content = getTimeHTML(distance); // 커스텀오버레이에 추가될 내용입니다
-                          content = '<div class="dotOverlay distanceInfo">현재 위치와의 거리 : <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
+                        content = '<div class="dotOverlay distanceInfo">현재 위치와의 거리 : <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
                     // 그려진 선의 거리정보를 지도에 표시합니다
                     showDistance(content, path[path.length-1]);
 
