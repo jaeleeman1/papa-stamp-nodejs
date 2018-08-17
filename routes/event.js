@@ -11,10 +11,10 @@ const TAG = "[EVENT INFO] ";
 router.get('/main', function(req, res, next) {
     logger.info(TAG, 'Get event main information');
 
-    var userId = req.body.user_id;
-    var currentLat = req.body.current_lat;
-    var currentLng = req.body.current_lng;
-    var webCheck = req.body.web_check;
+    var userId = req.query.user_id;
+    var currentLat = req.query.current_lat;
+    var currentLng = req.query.current_lng;
+    var webCheck = req.query.web_check;
 
     logger.debug(TAG, 'User id : ' + userId);
     logger.debug(TAG, 'Current latitude : ' + currentLat);
@@ -244,35 +244,45 @@ router.put('/couponData', function(req, res, next) {
 
     //Coupon Data API
     getConnection(function (err, connection) {
-        var insertEventHistory = 'insert into SB_EVENT_HIS (EVENT_ID, SHOP_ID, USER_ID) ' +
+        var insertEventHistoryQuery = 'insert into SB_EVENT_HIS (EVENT_ID, SHOP_ID, USER_ID) ' +
             'values('+ mysql.escape(eventId) + ","+ mysql.escape(shopId) + "," + mysql.escape(userId)+') ' +
             'on duplicate key update DEL_YN="N"';
-        connection.query(insertEventHistory, function (err, insertEventHistory) {
+        connection.query(insertEventHistoryQuery, function (err, insertEventHistory) {
             if (err) {
                 logger.error(TAG, "DB insertEventHistory error : " + err);
                 res.status(400);
                 res.send('Insert event history error');
             }else{
-                logger.debug(TAG, 'Insert event history success');
-                var countDay = 'select (select date_format(NOW(), "%Y-%m-%d")) as STARTDAY, (select date_format(DATE_SUB(NOW(), INTERVAL -1 YEAR), "%Y-%m-%d")) as ENDDAY';
-                connection.query(countDay, function (err, countDayData) {
+                var updateEventCountQuery = 'update SB_SHOP_INFO set SHOP_EVENT_COUNT = SHOP_EVENT_COUNT-1 ' +
+                    'where SHOP_ID = '+ mysql.escape(shopId);
+                connection.query(updateEventCountQuery, function (err, updateEventCountData) {
                     if (err) {
-                        logger.error(TAG, "DB count day error : " + err);
+                        logger.error(TAG, "DB insertEventHistory error : " + err);
                         res.status(400);
-                        res.send('select count day error');
-                    } else {
-                        logger.debug(TAG, 'Update coupon mapping success', countDayData);
-                        var updateCouponMapping = 'update SB_USER_COUPON SET USER_ID = ' + mysql.escape(userId) + ', EVENT_ID = ' + mysql.escape(eventId) + ', MAPPING_YN = "Y", ISSUED_DT = NOW(), EXPIRATION_DT = "'+ countDayData[0].STARTDAY +' ~ '+ countDayData[0].ENDDAY +'" ' +
-                            'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' ' +
-                            'order by REG_DT ASC limit 1';
-                        connection.query(updateCouponMapping, function (err, UpdateCouponData) {
+                        res.send('Insert event history error');
+                    }else {
+                        logger.debug(TAG, 'Insert event history success');
+                        var countDay = 'select (select date_format(NOW(), "%Y-%m-%d")) as STARTDAY, (select date_format(DATE_SUB(NOW(), INTERVAL -1 YEAR), "%Y-%m-%d")) as ENDDAY';
+                        connection.query(countDay, function (err, countDayData) {
                             if (err) {
-                                logger.error(TAG, "DB updateCouponMapping error : " + err);
+                                logger.error(TAG, "DB count day error : " + err);
                                 res.status(400);
-                                res.send('Update coupon mapping error');
-                            }else{
-                                logger.debug(TAG, 'Update coupon mapping success',  UpdateCouponData);
-                                res.send({result: 'success'});
+                                res.send('select count day error');
+                            } else {
+                                logger.debug(TAG, 'Update coupon mapping success', countDayData);
+                                var updateCouponMapping = 'update SB_USER_COUPON set USER_ID = ' + mysql.escape(userId) + ', EVENT_ID = ' + mysql.escape(eventId) + ', MAPPING_YN = "Y", ISSUED_DT = NOW(), EXPIRATION_DT = "' + countDayData[0].STARTDAY + ' ~ ' + countDayData[0].ENDDAY + '" ' +
+                                    'where MAPPING_YN = "N" and USED_YN = "N" and SHOP_ID = ' + mysql.escape(shopId) + ' ' +
+                                    'order by REG_DT ASC limit 1';
+                                connection.query(updateCouponMapping, function (err, UpdateCouponData) {
+                                    if (err) {
+                                        logger.error(TAG, "DB updateCouponMapping error : " + err);
+                                        res.status(400);
+                                        res.send('Update coupon mapping error');
+                                    } else {
+                                        logger.debug(TAG, 'Update coupon mapping success', UpdateCouponData);
+                                        res.send({result: 'success'});
+                                    }
+                                });
                             }
                         });
                     }
