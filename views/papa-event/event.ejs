@@ -217,6 +217,8 @@
                         success: function(data) {
                             var shopEventData = data.shopEventData;
                             var userEventData = data.userEventData;
+                            var userEventLength = data.userEventData.length;
+
                             var clickMapData = document.getElementById('map_list_wrap');
                             clickMapData.innerHTML = '';
 
@@ -239,7 +241,7 @@
                                 '<img class="base-img" src="/images/shop-coupon/default-coupon.png" alt="back">' +
                                 '<div class="caption">' +
                                 '<h6 class="shop-event-title-'+ shopEventData.SHOP_ID +'">['+ shopEventData.SHOP_NAME +' (' + shopEventData.SHOP_SUB_NAME + ') 이벤트]</h6>';
-                            if(userEventData.length == 0 || userEventData.USER_STAMP == 0) {
+                            if(userEventLength == 0 || userEventData.USER_STAMP == 0) {
                                 appendData += '<h4>지점에서 파파스탬프를 <br>처음 적립을 하시는 고객분들에게~</h4>' +
                                     '<h5>무료 커피 쿠폰 증정 합니다!!!</h5>' +
                                     '<h3 class="shop-event-remain-'+ shopEventData.SHOP_ID +'">남은 쿠폰 갯수 : <span class="event-stamp-count">' + shopEventData.SHOP_EVENT_COUNT + ' 개</span></h3>' +

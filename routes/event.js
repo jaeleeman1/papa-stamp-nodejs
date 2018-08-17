@@ -203,10 +203,10 @@ router.get('/shopData', function(req, res, next) {
             } else {
                 logger.debug(TAG, 'Select coupon shop data success : ' + JSON.stringify(shopEventData));
                 var shopId = shopEventData[0].SHOP_ID;
-                var selectShopDataQuery = 'select SUPI.SHOP_ID, SUPI.USER_STAMP, SEH.EVENT_ID from SB_USER_PUSH_INFO as SUPI ' +
+                var selectUserDataQuery = 'select SUPI.SHOP_ID, SUPI.USER_STAMP, SEH.EVENT_ID from SB_USER_PUSH_INFO as SUPI ' +
                     'left join SB_EVENT_HIS as SEH on SUPI.SHOP_ID = SEH.SHOP_ID ' +
                     'where SUPI.USER_ID = '+ mysql.escape(userId) + ' and SUPI.SHOP_ID = '+ mysql.escape(shopId);
-                connection.query(selectShopDataQuery, function (err, userEventData) {
+                connection.query(selectUserDataQuery, function (err, userEventData) {
                     if (err) {
                         logger.error("Select event exist data Error : ", err);
                         res.status(400);
@@ -214,7 +214,7 @@ router.get('/shopData', function(req, res, next) {
                     } else {
                         logger.debug(TAG, 'Select event exist data success : ' + JSON.stringify(userEventData));
                         res.status(200);
-                        res.send({shopEventData: shopEventData[0], userEventData: userEventData[0], userId: userId});
+                        res.send({shopEventData: shopEventData[0], userEventData: userEventData, userId: userId});
                     }
                 });
             }
