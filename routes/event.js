@@ -160,6 +160,7 @@ router.post('/main', function(req, res, next) {
                                 }
                             }
                         }
+                        logger.debug(TAG, "returnEventUser "+ JSON.stringify(returnEventUser));
                         res.render('common/papa-stamp', { view: 'event', url:config.url, userId: userId, returnEventShop:returnEventShop, returnEventUser:returnEventUser, shopId:'', webCheck:webCheck});
                     }
                 });
@@ -214,7 +215,7 @@ router.get('/shopData', function(req, res, next) {
                     } else {
                         logger.debug(TAG, 'Select event exist data success : ' + JSON.stringify(userEventData));
                         res.status(200);
-                        res.send({shopEventData: shopEventData[0], userEventData: userEventData, userId: userId});
+                        res.send({shopEventData: shopEventData[0], userEventData: userEventData[0], userId: userId});
                     }
                 });
             }
