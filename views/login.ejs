@@ -300,6 +300,8 @@
             function() {
                 var loginEmail = $('#loginEmail').val();
                 var loginPassword = $('#loginPassword').val();
+                var currentLat = $("#current_lat").val();
+                var currentLng = $("#current_lng").val()
 
                 if (loginEmail == "") {
                     $.toast.config.width = 240;
@@ -315,52 +317,57 @@
                     return;
                 }
 
-                var dataString = {'login_email':loginEmail, 'login_password':loginPassword};
-                $.ajax({
-                    url: $("#url").val()+'/user/v1/userLogin',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: dataString,
-                    success: function(data) {
-                        if (data.loginEmailCheck == '1') {
-                            if (data.loginPwCheck == '1') {
-                                $('#user_id').val(data.userId);
-                                var headers = {};
-                                headers["user_id"] = data.userId;
-                                var dataString = {'latitude':$("#current_lat").val(), 'longitude':$("#current_lng").val()};
-                                $.ajax({
-                                    url: $("#url").val() + '/user/v1/updateLocation',
-                                    type: 'PUT',
-                                    headers : headers,
-                                    dataType: 'json',
-                                    data : dataString,
-                                    success: function(data) {
-                                        if(data.result == 'success') {
-                                            $('#sendLoginForm').submit();
+                if(currentLng != null || currentLng != '' && currentLng != null || currentLng != '') {
+                    var dataString = {'login_email':loginEmail, 'login_password':loginPassword};
+                    $.ajax({
+                        url: $("#url").val()+'/user/v1/userLogin',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: dataString,
+                        success: function(data) {
+                            if (data.loginEmailCheck == '1') {
+                                if (data.loginPwCheck == '1') {
+                                    $('#user_id').val(data.userId);
+
+                                    var headers = {};
+                                    headers["user_id"] = data.userId;
+                                    var dataString = {'latitude':currentLat, 'longitude':currentLng};
+                                    $.ajax({
+                                        url: $("#url").val() + '/user/v1/updateLocation',
+                                        type: 'PUT',
+                                        headers : headers,
+                                        dataType: 'json',
+                                        data : dataString,
+                                        success: function(data) {
+                                            if(data.result == 'success') {
+                                                $('#sendLoginForm').submit();
+                                            }
+                                        },
+                                        error: function(request, status, error) {
+                                            console.error("updateLocation : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                                         }
-                                    },
-                                    error: function(request, status, error) {
-                                        console.error("userLocationData : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                                    }
-                                });
-                            } else {
-                                $.toast.config.width = 230;
-                                $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
-                            }
-                        }else {
-                            if(data.loginPwCheck == '1') {
-                                $.toast.config.width = 220;
-                                $.toast('올바른 <h3>이메일</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
+                                    });
+                                } else {
+                                    $.toast.config.width = 230;
+                                    $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
+                                }
                             }else {
-                                $.toast.config.width = 230;
-                                $.toast('<h3>회원정보</h3>가 존재하지 않습니다.!', {type: 'danger', duration: 3000});
+                                if(data.loginPwCheck == '1') {
+                                    $.toast.config.width = 220;
+                                    $.toast('올바른 <h3>이메일</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
+                                }else {
+                                    $.toast.config.width = 230;
+                                    $.toast('<h3>회원정보</h3>가 존재하지 않습니다.!', {type: 'danger', duration: 3000});
+                                }
                             }
+                        },
+                        error: function(request, status, error) {
+                            console.error("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         }
-                    },
-                    error: function(request, status, error) {
-                        console.error("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                    }
-                });
+                    });
+                }else {
+                    $('#sendLoginForm').submit();
+                }
             });
 
         $('#next-btn').on('click',
