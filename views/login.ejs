@@ -301,7 +301,7 @@
                 var loginEmail = $('#loginEmail').val();
                 var loginPassword = $('#loginPassword').val();
                 var currentLat = $("#current_lat").val();
-                var currentLng = $("#current_lng").val()
+                var currentLng = $("#current_lng").val();
 
                 if (loginEmail == "") {
                     $.toast.config.width = 240;
@@ -317,18 +317,22 @@
                     return;
                 }
 
-                if(currentLng != null || currentLng != '' && currentLng != null || currentLng != '') {
-                    var dataString = {'login_email':loginEmail, 'login_password':loginPassword};
-                    $.ajax({
-                        url: $("#url").val()+'/user/v1/userLogin',
-                        type: 'POST',
-                        dataType: 'json',
-                        data: dataString,
-                        success: function(data) {
-                            if (data.loginEmailCheck == '1') {
-                                if (data.loginPwCheck == '1') {
-                                    $('#user_id').val(data.userId);
+                var dataString = {'login_email':loginEmail, 'login_password':loginPassword};
+                $.ajax({
+                    url: $("#url").val()+'/user/v1/userLogin',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: dataString,
+                    success: function(data) {
+                        if (data.loginEmailCheck == '1') {
+                            if (data.loginPwCheck == '1') {
+                                $('#user_id').val(data.userId);
 
+                                if(currentLat == null || currentLat == '' && currentLng == null || currentLng == '') {
+                                    $("#current_lat").val('37.65067382324312');
+                                    $("#current_lng").val('126.88702399396053');
+                                    $('#sendLoginForm').submit();
+                                }else {
                                     var headers = {};
                                     headers["user_id"] = data.userId;
                                     var dataString = {'latitude':currentLat, 'longitude':currentLng};
@@ -347,27 +351,25 @@
                                             console.error("updateLocation : code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                                         }
                                     });
-                                } else {
-                                    $.toast.config.width = 230;
-                                    $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
                                 }
-                            }else {
-                                if(data.loginPwCheck == '1') {
-                                    $.toast.config.width = 220;
-                                    $.toast('올바른 <h3>이메일</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
-                                }else {
-                                    $.toast.config.width = 230;
-                                    $.toast('<h3>회원정보</h3>가 존재하지 않습니다.!', {type: 'danger', duration: 3000});
-                                }
+                            } else {
+                                $.toast.config.width = 230;
+                                $.toast('올바른 <h3>비밀번호</h3>를 입력하세요!.', {type: 'danger', duration: 3000});
                             }
-                        },
-                        error: function(request, status, error) {
-                            console.error("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }else {
+                            if(data.loginPwCheck == '1') {
+                                $.toast.config.width = 220;
+                                $.toast('올바른 <h3>이메일</h3>을 입력하세요!.', {type: 'danger', duration: 3000});
+                            }else {
+                                $.toast.config.width = 230;
+                                $.toast('<h3>회원정보</h3>가 존재하지 않습니다.!', {type: 'danger', duration: 3000});
+                            }
                         }
-                    });
-                }else {
-                    $('#sendLoginForm').submit();
-                }
+                    },
+                    error: function(request, status, error) {
+                        console.error("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
             });
 
         $('#next-btn').on('click',
