@@ -61,7 +61,6 @@ router.get('/main', function(req, res, next) {
                             if(shopEventListData[i].SHOP_EVENT_COUNT > 0) {
                                 returnEventShop.push(shopEventListData[i]);
                                 var shopId = shopEventListData[i].SHOP_ID;
-
                                 if(eventUserData.length > 0) {
                                     var containCheck = 0;
                                     for(var j=0; j<eventUserData.length; j++) {
@@ -75,7 +74,7 @@ router.get('/main', function(req, res, next) {
                                         returnEventUser.push(0);
                                     }
                                 }else {
-                                    returnEventUser.push(0);
+                                    returnEventUser.push(-1);
                                 }
                             }
                         }
@@ -142,7 +141,6 @@ router.post('/main', function(req, res, next) {
                             if(shopEventListData[i].SHOP_EVENT_COUNT > 0) {
                                 returnEventShop.push(shopEventListData[i]);
                                 var shopId = shopEventListData[i].SHOP_ID;
-
                                 if(eventUserData.length > 0) {
                                     var containCheck = 0;
                                     for(var j=0; j<eventUserData.length; j++) {
@@ -156,7 +154,7 @@ router.post('/main', function(req, res, next) {
                                         returnEventUser.push(0);
                                     }
                                 }else {
-                                    returnEventUser.push(0);
+                                    returnEventUser.push(-1);
                                 }
                             }
                         }
